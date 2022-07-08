@@ -38,10 +38,10 @@ stages:
               DOCKER_IMAGE_TAG: $(version_number)
 
           - task: Bash@3
-            displayName: "TaskCTL: Build"
+            displayName: "TaskCTL: Lint"
             inputs:
               targetType: inline
-              script: taskctl build
+              script: taskctl lint
             env:
               # Dotnet Build
               SELF_REPO_SRC: $(self_repo_src)
@@ -96,9 +96,7 @@ stages:
       - deployment: AppInfraDev
         pool:
           vmImage: $(pool_vm_image)
-
         environment: ${{ variables.domain }}-dev
-
         strategy:
           runOnce:
             deploy:
