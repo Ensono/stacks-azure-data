@@ -6,11 +6,11 @@ variables:
   - name: project
     value: stacks
   - name: domain
-    value: netcore-api
+    value: core
   - name: self_repo
-    value: stacks-dotnet
+    value: stacks-data-infrastructure
   - name: self_generic_name
-    value: stacks-api
+    value: stacks-infrastructure
 
   - group: amido-stacks-webapp
 
