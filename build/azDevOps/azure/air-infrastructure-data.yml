@@ -11,7 +11,7 @@ trigger:
     include:
       - '*'
 variables:
-  - template: air-data-infrastructure-vars.yml
+  - template: air-infrastructure-data-vars.yml
 
 stages:
   - stage: Build
@@ -25,7 +25,7 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../templates/air-data-infrastructure-setup.yml
+          - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -103,7 +103,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ../templates/air-data-infrastructure-setup.yml
+                - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
