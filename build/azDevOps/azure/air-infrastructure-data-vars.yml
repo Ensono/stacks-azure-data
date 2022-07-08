@@ -6,7 +6,7 @@ variables:
   - name: project
     value: stacks
   - name: domain
-    value: core
+    value: core-data
   - name: self_repo
     value: stacks-data-infrastructure
   - name: self_generic_name

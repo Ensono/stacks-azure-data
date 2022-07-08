@@ -96,7 +96,7 @@ stages:
       - deployment: InfraNonProd
         pool:
           vmImage: $(pool_vm_image)
-        environment: ${{ variables.domain }}-dev
+        environment: ${{ variables.domain }}-nonprod
         strategy:
           runOnce:
             deploy:
