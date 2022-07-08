@@ -158,7 +158,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ../templates/air-api-setup.yml
+                - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
