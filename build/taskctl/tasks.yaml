@@ -51,15 +51,17 @@ tasks:
       - Publish-GitHubRelease -artifactsList "$env:ARTIFACTS_LIST"
     env:
       generateReleaseNotes: $true
-      #  PUBLISH_RELEASE: $true
+      # PUBLISH_RELEASE: $true
 
   update:dashboard:
     context: powershell
     description: Update the Deployment Dashboard
     command:
       - Update-InfluxDashboard
+    # yamllint disable rule:comments-indentation
     # env:
-    #  PUBLISH_RELEASE: $true
+    # PUBLISH_RELEASE: $true
+    # yamllint enable rule:comments-indentation
 
   debug:env:
     context: powershell

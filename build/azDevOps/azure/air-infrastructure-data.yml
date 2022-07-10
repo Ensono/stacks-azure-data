@@ -45,40 +45,11 @@ stages:
             env:
               # Dotnet Build
               SELF_REPO_SRC: $(self_repo_src)
-              # Azure
-              CLOUD_PROVIDER: "$(cloud_provider)" # Azure
+              CLOUD_PROVIDER: "$(cloud_provider)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              # SonarQube
-              # PROJECT_NAME: $(sonar_project_name)
-              # BUILD_BUILDNUMBER: $(version_number)
-
-
-          # Upload test coverage results as artifacts
-          # - task: PublishCodeCoverageResults@1
-          #   displayName: "Upload: coverage results"
-          #   inputs:
-          #     summaryFileLocation: $(Pipeline.Workspace)/s/coverage/Cobertura.xml
-          #     codecoverageTool: cobertura
-          #     pathToSources: $(Pipeline.Workspace)/s/$(self_repo_src)
-
-          # # Upload Unit test results
-          # - task: PublishTestResults@2
-          #   inputs:
-          #     testResultsFormat: VSTest
-          #     testResultsFiles: '**/*.trx'
-          #     searchFolder: $(Pipeline.Workspace)/s/testresults
-          #     failTaskOnFailedTests: true # Optional
-          #     testRunTitle: Unit
-
-          # # Upload functional tests as artifacts
-          # - task: PublishPipelineArtifact@1
-          #   displayName: "Upload: functional tests"
-          #   inputs:
-          #     path: $(FUNCTIONAL_TESTS_SRC_DIR)
-          #     artifact: tests
 
   - stage: NonProd
     dependsOn: Build
@@ -88,7 +59,8 @@ stages:
       - group: stacks-credentials-nonprod-kv
       - name: Environment.ShortName
         value: dev
-      - name: dns_base_domain # Available in Terraform Output, but not yet enabled to export as pipeline vars
+      # Available in Terraform Output, but not yet enabled to export as pipeline vars
+      - name: dns_base_domain
         value: nonprod.amidostacks.com
       - name: core_environment
         value: nonprod
@@ -114,7 +86,7 @@ stages:
                   env:
                     ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
-                    CLOUD_PROVIDER: "$(cloud_provider)" # Azure
+                    CLOUD_PROVIDER: "$(cloud_provider)"
                     ARM_CLIENT_ID: $(azure-client-id)
                     ARM_CLIENT_SECRET: $(azure-client-secret)
                     ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
@@ -138,6 +110,7 @@ stages:
                     TF_VAR_create_cache: false
                     TF_VAR_stage: $(Environment.ShortName)
 
+  # yamllint disable rule:comments-indentation
   # - stage: Prod
   #   dependsOn: Build
   #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
