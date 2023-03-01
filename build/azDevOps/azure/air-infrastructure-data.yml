@@ -1,0 +1,259 @@
+name: "$(Build.SourceBranchName)-init"
+
+pr:
+  - main
+
+trigger:
+  branches:
+    include:
+      - 'main'
+  paths:
+    include:
+      - '*'
+variables:
+  - template: air-infrastructure-data-vars.yml
+
+stages:
+  - stage: Build
+    variables:
+      - group: amido-stacks-infra-credentials-nonprod
+      - group: stacks-credentials-nonprod-kv
+
+    jobs:
+      - job: Validate
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - template: ../templates/air-infrastructure-data-setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Setup"
+            inputs:
+              targetType: inline
+              script: taskctl setup
+            env:
+              DOCKER_IMAGE_TAG: $(version_number)
+
+          - task: Bash@3
+            displayName: "TaskCTL: Lint"
+            inputs:
+              targetType: inline
+              script: taskctl lint
+            env:
+              # Dotnet Build
+              SELF_REPO_SRC: $(self_repo_src)
+              CLOUD_PROVIDER: "$(cloud_provider)"
+              ARM_TENANT_ID: "$(azure-tenant-id)"
+              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
+              ARM_CLIENT_ID: "$(azure-client-id)"
+              ARM_CLIENT_SECRET: "$(azure-client-secret)"
+
+  - stage: NonProd
+    dependsOn: Build
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
+    variables:
+      - group: amido-stacks-infra-credentials-nonprod
+      - group: stacks-credentials-nonprod-kv
+      - name: Environment.ShortName
+        value: dev
+      # Available in Terraform Output, but not yet enabled to export as pipeline vars
+      - name: dns_base_domain
+        value: nonprod.amidostacks.com
+      - name: core_environment
+        value: nonprod
+    jobs:
+      - deployment: InfraNonProd
+        pool:
+          vmImage: $(pool_vm_image)
+        environment: ${{ variables.domain }}-nonprod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ../templates/air-infrastructure-data-setup.yml
+                  parameters:
+                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+                - task: Bash@3
+                  displayName: "Taskctl: Infrastructure"
+                  inputs:
+                    targetType: inline
+                    script: taskctl infrastructure
+                    informationPreference: continue
+                  env:
+                    ENV_NAME: $(Environment.ShortName)
+                    # Azure Authentication
+                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    ARM_CLIENT_ID: $(azure-client-id)
+                    ARM_CLIENT_SECRET: $(azure-client-secret)
+                    ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                    ARM_TENANT_ID: $(azure-tenant-id)
+                    # Terraform Backend Configuration
+                    TF_STATE_CONTAINER: $(tf_state_container)
+                    TF_STATE_KEY: $(tf_state_key)
+                    TS_STATE_RG: $(tf_state_rg)
+                    TF_STATE_STORAGE: $(tf_state_storage)
+                    TF_BACKEND_ARGS: "key=$(TF_STATE_KEY),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    # Deployment Specific Configuration
+                    TF_VAR_core_environment: $(core_environment)
+                    TF_VAR_name_component: $(component)
+                    TF_VAR_resource_group_location: $(region)
+                    TF_VAR_name_company: $(company)
+                    TF_VAR_name_project: $(project)
+                    TF_VAR_name_domain: $(domain)
+                    TF_VAR_stage: $(Environment.ShortName)
+
+  # yamllint disable rule:comments-indentation
+  # - stage: Prod
+  #   dependsOn: Build
+  #   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  #   variables:
+  #     - group: amido-stacks-infra-credentials-prod
+  #     - group: stacks-credentials-prod-kv
+  #     - name: Environment.ShortName
+  #       value: prod
+  #     - name: dns_base_domain # Available in Terraform Output, but not yet enabled to export as pipeline vars
+  #       value: prod.amidostacks.com
+  #     - name: core_environment
+  #       value: prod
+  #   jobs:
+  #     - deployment: AppInfraProd
+  #       pool:
+  #         vmImage: $(pool_vm_image)
+
+  #       environment: ${{ variables.domain }}-prod
+
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+
+  #               - template: ../templates/air-api-setup.yml
+  #                 parameters:
+  #                   TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+  #               - task: Bash@3
+  #                 displayName: "Taskctl: Infrastructure"
+  #                 inputs:
+  #                   targetType: inline
+  #                   script: taskctl infrastructure
+  #                   informationPreference: continue
+  #                 env:
+  #                   ENV_NAME: $(Environment.ShortName)
+  #                   # Azure Authentication
+  #                   CLOUD_PROVIDER: "$(cloud_provider)" # Azure
+  #                   ARM_CLIENT_ID: $(azure-client-id)
+  #                   ARM_CLIENT_SECRET: $(azure-client-secret)
+  #                   ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+  #                   ARM_TENANT_ID: $(azure-tenant-id)
+  #                   # Terraform Backend Configuration
+  #                   TF_STATE_CONTAINER: $(tf_state_container)
+  #                   TF_STATE_KEY: $(tf_state_key)
+  #                   TS_STATE_RG: $(tf_state_rg)
+  #                   TF_STATE_STORAGE: $(tf_state_storage)
+  #                   TF_BACKEND_ARGS: "key=$(TF_STATE_KEY),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+  #                   # Deployment Specific Configuration
+  #                   TF_VAR_core_environment: $(core_environment)
+  #                   TF_VAR_name_component: $(component)
+  #                   TF_VAR_resource_group_location: $(region)
+  #                   TF_VAR_create_cdn_endpoint: false
+  #                   TF_VAR_create_dns_record: true
+  #                   TF_VAR_name_company: $(company)
+  #                   TF_VAR_name_project: $(project)
+  #                   TF_VAR_name_domain: $(domain)
+  #                   TF_VAR_create_cosmosdb: false
+  #                   TF_VAR_create_cache: false
+  #                   TF_VAR_stage: $(Environment.ShortName)
+  #                   TF_VAR_dns_record: "$(Environment.ShortName)-${{ variables.domain }}"
+  #                   TF_VAR_cosmosdb_sql_container: "Menu"
+  #                   TF_VAR_cosmosdb_sql_container_partition_key: "/id"
+  #                   TF_VAR_cosmosdb_kind: "GlobalDocumentDB"
+  #                   TF_VAR_cosmosdb_offer_type: "Standard"
+
+  #     - deployment: DeployProd
+  #       dependsOn:
+  #         - AppInfraProd
+  #       pool:
+  #         vmImage: $(pool_vm_image)
+  #       environment: prod
+  #       variables:
+  #         - name: namespace
+  #           value: "$(Environment.ShortName)-${{ variables.domain }}"
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #               - template: ../templates/air-api-setup.yml
+  #                 parameters:
+  #                   TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+  #               - task: DownloadPipelineArtifact@2
+  #                 displayName: "Download: Test Artefacts"
+  #                 inputs:
+  #                   artifact: tests
+  #                   path: $(Build.Workspace)/tests
+
+  #               - task: Bash@3
+  #                 displayName: "Taskctl: Deploy"
+  #                 inputs:
+  #                   targetType: inline
+  #                   script: taskctl deploy
+  #                   informationPreference: continue
+  #                 env:
+  #                   # Azure Authentication
+  #                   CLOUD_PROVIDER: "$(cloud_provider)" # Azure
+  #                   ARM_CLIENT_ID: $(azure-client-id)
+  #                   ARM_CLIENT_SECRET: $(azure-client-secret)
+  #                   ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+  #                   ARM_TENANT_ID: $(azure-tenant-id)
+  #                   # Terraform Backend Configuration (used for Terraform Outputs)
+  #                   TF_STATE_CONTAINER: $(tf_state_container)
+  #                   TF_STATE_KEY: $(tf_state_key)
+  #                   TS_STATE_RG: $(tf_state_rg)
+  #                   TF_STATE_STORAGE: $(tf_state_storage)
+  #                   TF_BACKEND_ARGS: "key=$(TF_STATE_KEY),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+  #                   # Deployment Specific Configuration  (used for Terraform Outputs)
+  #                   TF_VAR_core_environment: $(core_environment)
+  #                   TF_VAR_name_component: $(component)
+  #                   TF_VAR_resource_group_location: $(region)
+  #                   TF_VAR_create_cdn_endpoint: false
+  #                   TF_VAR_create_dns_record: true
+  #                   TF_VAR_name_company: $(company)
+  #                   TF_VAR_name_project: $(project)
+  #                   TF_VAR_name_domain: $(domain)
+  #                   TF_VAR_create_cosmosdb: false
+  #                   TF_VAR_create_cache: false
+  #                   TF_VAR_stage: $(Environment.ShortName)
+  #                   TF_VAR_dns_record: "$(Environment.ShortName)-${{ variables.domain }}"
+  #                   TF_VAR_cosmosdb_sql_container: "Menu"
+  #                   TF_VAR_cosmosdb_sql_container_partition_key: "/id"
+  #                   TF_VAR_cosmosdb_kind: "GlobalDocumentDB"
+  #                   TF_VAR_cosmosdb_offer_type: "Standard"
+  #                   # Docker Image Information
+  #                   DOCKER_IMAGE_NAME: $(docker_image_name)
+  #                   DOCKER_IMAGE_TAG: $(docker_image_tag)
+  #                   DOCKER_REGISTRY: $(docker_container_registry_name_nonprod).azurecr.io
+  #                   # Configuration
+  #                   ENV_NAME: $(Environment.ShortName)
+  #                   DOMAIN: ${{ variables.domain }}
+  #                   FUNCTIONAL_TESTS_RUN_DIR: $(FUNCTIONAL_TESTS_RUN_DIR) # Must match RELATIVE path from repo root that artefact is downloaded to.
+  #                   BaseUrl: $(FUNCTIONAL_TEST_BASEURL)
+  #                   # Invoke-KubeCTL control variables
+  #                   NAMESPACE: $(namespace)
+  #                   RESOURCE_DEF_NAME: $(resource_def_name)
+  #                   DEPLOYMENT_STATUS_TIMEOUT: 120s
+  #                   # Check base_ prefixed file at $(k8s_resource_file) to see what should be replaced.
+  #                   # The file deployment_list.ps1 can contain custom mappings, otherwise
+  #                   # all other ${var} syntax entries will be replaced with like named env vars
+  #                   K8S_CLUSTER_TARGET: $(k8s_cluster_target_nonprod)
+  #                   K8S_CLUSTER_IDENTIFIER: $(k8s_cluster_identifier_nonprod)
+  #                   K8S_RESOURCE_FILE: $(k8s_resource_file)
+
+  #               - task: PublishPipelineArtifact@1
+  #                 displayName: "Publish: Kubernetes Manifest"
+  #                 inputs:
+  #                   path: $(Agent.BuildDirectory)/s/$(k8s_resource_file)
+  #                   artifact: manifests_prod

@@ -1,0 +1,4 @@
+envfile
+.terraform.lock.hcl
+.terraform/
+tfplan
