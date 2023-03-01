@@ -94,3 +94,10 @@ variables:
       # DASHBOARD_INFLUX_TOKEN
       # DASHBOARD_INFLUX_SERVER
 # yamllint enable rule:comments-indentation
+  # GitHub infomration
+  - name: create_release
+    value: true
+  - name: github_release_service_connection
+    value: GitHubReleases
+  - name: github_org
+    value: $(company)
