@@ -106,7 +106,8 @@ stages:
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
 
-#   yamllint disable rule:comments-indentation
+ #   yamllint disable rule:comments-indentation
+
   - stage: Prod
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -165,14 +166,14 @@ stages:
                     TF_VAR_name_project: $(project)
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
-                    
+
   - stage: Release
     dependsOn:
       - Build
       - Prod
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['create_release'], 'true'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
+      - group: amido-stacks-infra-credentials-prod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
