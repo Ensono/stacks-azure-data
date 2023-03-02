@@ -106,20 +106,20 @@ stages:
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
 
- #   yamllint disable rule:comments-indentation
+  #   yamllint disable rule:comments-indentation
 
   - stage: Prod
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-       - group: amido-stacks-infra-credentials-prod
-       - group: stacks-credentials-prod-kv
-       - name: Environment.ShortName
-         value: prod
-       - name: dns_base_domain # Available in Terraform Output, but not yet enabled to export as pipeline vars
-         value: prod.amidostacks.com
-       - name: core_environment
-         value: prod
+      - group: amido-stacks-infra-credentials-prod
+      - group: stacks-credentials-prod-kv
+      - name: Environment.ShortName
+        value: prod
+      - name: dns_base_domain
+        value: prod.amidostacks.com
+      - name: core_environment
+        value: prod
     jobs:
       - deployment: AppInfraProd
         pool:
@@ -145,7 +145,7 @@ stages:
                   env:
                     ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
-                    CLOUD_PROVIDER: "$(cloud_provider)" # Azure
+                    CLOUD_PROVIDER: "$(cloud_provider)"
                     ARM_CLIENT_ID: $(azure-client-id)
                     ARM_CLIENT_SECRET: $(azure-client-secret)
                     ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
