@@ -93,7 +93,7 @@ variables:
       # DASHBOARD_INFLUX_BUCKET
       # DASHBOARD_INFLUX_TOKEN
       # DASHBOARD_INFLUX_SERVER
-# yamllint enable rule:comments-indentation
+  # yamllint enable rule:comments-indentation
   # GitHub infomration
   - name: create_release
     value: true
