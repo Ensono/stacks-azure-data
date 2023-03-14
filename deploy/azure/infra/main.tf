@@ -113,7 +113,7 @@ module "adls_default" {
 
 }
 
-
+/*
 # Storage containers
 resource "azurerm_storage_container" "als-containers" {
   name                  = "vhds"
@@ -126,6 +126,7 @@ resource "azurerm_storage_container" "blob-containers" {
   storage_account_name  = azurerm_storage_account.example.name
   container_access_type = "private"
 }
+*/
 
 # ADF linked Services
 resource "azurerm_data_factory_linked_service_key_vault" "linked_kv" {
