@@ -139,12 +139,12 @@ resource "azurerm_data_factory_linked_service_key_vault" "linked_kv" {
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "linked_blob" {
   name             = "blob_dataconfig"
   data_factory_id  = module.adf.adf_factory_id
-  service_endpoint = data.azurerm_storage_account.linked_blob.primary_blob_endpoint
+  service_endpoint = data.azurerm_storage_account.linked_blob_config.primary_blob_endpoint
 
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "linked_config_blob" {
   name             = "adls_datalake"
   data_factory_id  = module.adf.adf_factory_id
-  service_endpoint = data.azurerm_storage_account.linked_blob_config.primary_blob_endpoint
+  service_endpoint = data.azurerm_storage_account.linked_adls.primary_dfs_endpoint
 }
