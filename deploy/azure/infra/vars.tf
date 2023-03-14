@@ -18,9 +18,6 @@ variable "name_component" {
   default     = "data"
 }
 
-variable "name_environment" {
-  type = string
-}
 
 variable "stage" {
   type    = string
