@@ -15,7 +15,7 @@ variable "name_project" {
 variable "name_component" {
   description = "Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing`"
   type        = string
-  default = "data"
+  default     = "data"
 }
 
 variable "name_environment" {
@@ -103,14 +103,14 @@ variable "storage_account_details" {
     "account1" = {
       account_kind = "BlobStorage"
       account_tier = "Standard"
-      hns_enabled = false
-      name = "config"
+      hns_enabled  = false
+      name         = "config"
     },
-     "account2" = {
+    "account2" = {
       account_kind = "BlobStorage"
       account_tier = "Standard"
-      hns_enabled = true
-      name = "adls"
+      hns_enabled  = true
+      name         = "adls"
     },
   }
 }
@@ -122,17 +122,17 @@ variable "storage_account_details" {
 variable "adls_datalake_role_adf" {
   description = "Role Assingment for ADLS Gen2  storgage."
   type        = string
-  default = "Storage Blob Data Contributor"
+  default     = "Storage Blob Data Contributor"
 }
 
 variable "blob_dataconfig_role_adf" {
   description = "Role Assingment for config bolb storgage."
   type        = string
-  default = "Storage Blob Data Contributor"
+  default     = "Storage Blob Data Contributor"
 }
 
 variable "kv_role_adf" {
   description = "Role assingment for KeyVault."
   type        = string
-  default = "Key Vault Secrets User"
+  default     = "Key Vault Secrets User"
 }
