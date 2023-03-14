@@ -104,8 +104,8 @@ variable "storage_account_details" {
       name         = "config"
     },
     "account2" = {
-      account_kind = "BlobStorage"
-      account_tier = "StorageV2"
+      account_kind = "StorageV2"
+      account_tier = "Premium"
       hns_enabled  = true
       name         = "adls"
     },
