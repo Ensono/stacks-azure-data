@@ -205,3 +205,5 @@ stages:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
               tag: $(Build.BuildNumber)
+              releaseNotesSource: 'inline'
+              releaseNotesInline:  "$(version_major).$(version_minor).$(version_revision)" 
