@@ -71,18 +71,21 @@ variable "git_integration" {
 
 # The name of the Log Analytics workspace to be deployed
 variable "la_name" {
-  type    = string
-  default = "stacks-la"
+  type        = string
+  default     = "stacks-la"
+  description = "Specify Log Analytics Name "
 }
 
 variable "la_sku" {
-  type    = string
-  default = "PerGB2018"
+  type        = string
+  default     = "PerGB2018"
+  description = "Specifies the SKU of the Log Analytics Workspace."
 }
 
 variable "la_retention" {
-  type    = number
-  default = 30
+  type        = number
+  default     = 30
+  description = "The workspace data retention in days. Possible values are either 7 (Free Tier only) or range between 30 and 730."
 }
 
 ############################################

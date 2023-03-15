@@ -17,7 +17,7 @@ resource "azurerm_resource_group" "default" {
   tags     = var.tags
 }
 
-
+# KV for ADF
 module "kv_default" {
   source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/module-kv"
   resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
@@ -28,6 +28,7 @@ module "kv_default" {
 
 }
 
+# module call for ADF
 module "adf" {
   source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
   resource_namer          = module.default_label.id
@@ -62,6 +63,7 @@ resource "azurerm_log_analytics_workspace" "la" {
   retention_in_days   = var.la_retention
 }
 
+# Enable Daignostic settings for ADF
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
@@ -100,6 +102,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
     }
   }
 }
+
 
 # storage account for data lake
 module "adls_default" {
