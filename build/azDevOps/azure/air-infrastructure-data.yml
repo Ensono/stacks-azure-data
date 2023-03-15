@@ -128,7 +128,7 @@ stages:
               COMPANY: $(company)
 
           # Create a GitHub release with these packages
-          - task: GitHubRelease@0
+          - task: GitHubRelease@1
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
