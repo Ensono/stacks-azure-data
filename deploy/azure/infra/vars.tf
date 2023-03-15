@@ -132,7 +132,7 @@ variable "blob_dataconfig_role_adf" {
 }
 
 variable "kv_role_adf" {
-  description = "Role assingment for KeyVault."
+  description = "Role assignment for Key Vault."
   type        = string
   default     = "Key Vault Secrets User"
 }
