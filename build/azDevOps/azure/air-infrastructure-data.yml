@@ -106,37 +106,6 @@ stages:
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
 
-      - job: CreateGitHubRelease
-        pool:
-          vmImage: $(pool_vm_image)
-        steps:
-          # Check out the repo so that it can be tagged
-          - checkout: self
-            persistCredentials: true
-
-          # Create a tag in the code for this release
-          - task: Bash@3
-            displayName: Tag Code
-            inputs:
-              targetType: "inline"
-              script: |
-                git config user.name "BuildService"
-                git config user.email "builder@${COMPANY}.com"
-                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
-                git push origin v${VERSION_NUMBER}
-            env:
-              COMPANY: $(company)
-
-          # Create a GitHub release with these packages
-          - task: GitHubRelease@1
-            displayName: Create GitHub Release
-            inputs:
-              gitHubConnection: $(github_release_service_connection)
-              repositoryName: $(github_org)/$(self_repo)
-              tag: $(Build.BuildNumber)
-              releaseNotesSource: 'inline'
-              releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
-
   #   yamllint disable rule:comments-indentation
 
   - stage: Prod
@@ -230,7 +199,7 @@ stages:
               COMPANY: $(company)
 
           # Create a GitHub release with these packages
-          - task: GitHubRelease@0
+          - task: GitHubRelease@1
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
