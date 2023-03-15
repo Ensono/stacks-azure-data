@@ -69,12 +69,7 @@ variable "git_integration" {
   }
 }
 
-# The name of the Log Analytics workspace to be deployed
-variable "la_name" {
-  type        = string
-  default     = "stacks-la"
-  description = "Specify Log Analytics Name "
-}
+# Log Analytics workspace Details
 
 variable "la_sku" {
   type        = string
@@ -100,13 +95,13 @@ variable "storage_account_details" {
     hns_enabled  = bool
   }))
   default = {
-    "account1" = {
+    "data_config_storage" = {
       account_kind = "BlobStorage"
       account_tier = "Standard"
       hns_enabled  = false
       name         = "config"
     },
-    "account2" = {
+    "data_lake_storage" = {
       account_kind = "StorageV2"
       account_tier = "Standard"
       hns_enabled  = true

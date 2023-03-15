@@ -56,7 +56,7 @@ resource "azurerm_role_assignment" "storage_role_config" {
   principal_id         = module.adf.adf_managed_identity
 }
 resource "azurerm_log_analytics_workspace" "la" {
-  name                = var.la_name
+  name                = module.default_label.id
   location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
   sku                 = var.la_sku
