@@ -65,7 +65,7 @@ variable "git_integration" {
   description = "A repository integration block for ADF git integration. Can be null, github or vsts."
   validation {
     condition     = can(regex("^null$|^github$|^vsts$", var.git_integration))
-    error_message = "Err: integration value is not valid  it can be from null, github, vsts."
+    error_message = "Err: git integration value is not valid. It can be null, github, vsts."
   }
 }
 
