@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "stacks-azure-data-platform"
+version = "0.1.0"
+description = ""
+authors = ["adurkan-amido <andy.durkan@amido.com>"]
+readme = "README.md"
+packages = [{include = "stacks_azure_data_platform"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
