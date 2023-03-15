@@ -63,7 +63,7 @@ resource "azurerm_log_analytics_workspace" "la" {
   retention_in_days   = var.la_retention
 }
 
-# Enable Daignostic settings for ADF
+# Enable diagnostic settings for ADF
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
