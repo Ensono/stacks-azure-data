@@ -126,7 +126,7 @@ variable "adls_datalake_role_adf" {
 }
 
 variable "blob_dataconfig_role_adf" {
-  description = "Role Assingment for config bolb storgage."
+  description = "Role assignment for config blob storage."
   type        = string
   default     = "Storage Blob Data Contributor"
 }
