@@ -16,3 +16,12 @@ A Makefile has been created to assist with setting up the development environmen
 ```bash
 make setup_dev_environment
 ```
+
+To install packages within Poetry, use (this will add the dependency to `pyproject.toml`):
+```bash
+poetry add packagename
+```
+to install a package for use only in the dev environment, use:
+```bash
+poetry add packagename --group dev
+```

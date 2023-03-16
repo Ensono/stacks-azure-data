@@ -1,0 +1,24 @@
+{
+    "data_source_name": "example_source_2",
+    "data_source_type": "azure_sql",
+    "data_source_properties": {
+        "server_name": "",
+        "database_name": "",
+        "key_vault_secret_name_user": "",
+        "key_vault_secret_name_password": ""
+    },
+    "enabled": true,
+    "ingest_entities": [
+        {
+            "entity_type": "azure_sql_table",
+            "version": 1,
+            "displayName": "Test",
+            "name": "TestTable",
+            "schema": "dbo",
+            "type": "full",
+            "delta": "date_column",
+            "granularity": "day",
+            "enabled": true
+        }
+    ]
+}
