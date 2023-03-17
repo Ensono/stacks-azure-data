@@ -113,23 +113,11 @@ module "adls_default" {
   resource_group_location = azurerm_resource_group.default.location
   storage_account_name    = substr(replace(module.default_label.id, "-", ""), 0, 24)
   storage_account_details = var.storage_account_details
+  container_access_type   = var.container_access_type
+
 
 }
 
-/*
-# Storage containers
-resource "azurerm_storage_container" "als-containers" {
-  name                  = "vhds"
-  storage_account_name  = azurerm_storage_account.example.name
-  container_access_type = "private"
-}
-
-resource "azurerm_storage_container" "blob-containers" {
-  name                  = "vhds"
-  storage_account_name  = azurerm_storage_account.example.name
-  container_access_type = "private"
-}
-*/
 
 # ADF linked Services
 resource "azurerm_data_factory_linked_service_key_vault" "linked_kv" {

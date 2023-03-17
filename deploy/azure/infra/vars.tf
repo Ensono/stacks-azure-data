@@ -89,23 +89,26 @@ variable "la_retention" {
 
 variable "storage_account_details" {
   type = map(object({
-    account_tier = string
-    account_kind = string
-    name         = string
-    hns_enabled  = bool
+    account_tier    = string
+    account_kind    = string
+    name            = string
+    hns_enabled     = bool
+    containers_name = list(string)
   }))
   default = {
     "data_config_storage" = {
-      account_kind = "BlobStorage"
-      account_tier = "Standard"
-      hns_enabled  = false
-      name         = "config"
+      account_kind    = "BlobStorage"
+      account_tier    = "Standard"
+      hns_enabled     = false
+      name            = "config"
+      containers_name = ["config"]
     },
     "data_lake_storage" = {
-      account_kind = "StorageV2"
-      account_tier = "Standard"
-      hns_enabled  = true
-      name         = "adls"
+      account_kind    = "StorageV2"
+      account_tier    = "Standard"
+      hns_enabled     = true
+      name            = "adls"
+      containers_name = ["curated", "staging", "raw"]
     },
   }
 }
@@ -130,4 +133,13 @@ variable "kv_role_adf" {
   description = "Role assignment for Key Vault."
   type        = string
   default     = "Key Vault Secrets User"
+}
+
+############################################
+# Containers for Storage Accounts
+############################################
+variable "container_access_type" {
+  type        = string
+  description = "value"
+  default     = "private"
 }
