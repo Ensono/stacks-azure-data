@@ -23,7 +23,7 @@ stacks-azure-data-ingest
 │   ├── deployment # Utilities for deploying Azure Data Factory resources
 ├── docs # Documentation
 ├── infra # TF modules to deploy core Azure resources
-├── tests # 
+├── tests #
 │   ├── e2e # End-to-end tests (pytest, behave)
 │   ├── integration # Integration tests (pytest, behave)
 |   ├── unit # Unit tests (pytest)
