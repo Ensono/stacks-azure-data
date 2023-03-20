@@ -4,7 +4,6 @@
     "enabled": false,
     "ingest_entities": [
         {
-            "entity_type": "azure_sql_table",
             "version": 1,
             "name": "TestTable",
             "schema": "dbo",
