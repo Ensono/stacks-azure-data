@@ -10,7 +10,7 @@ In order to work on the project, developers require:
 * A Linux distribution, e.g. WSL2 https://docs.microsoft.com/en-us/windows/wsl/install
 
 ### Setup Environment
-Install the applications listed in the [Requirements](#requirements) section, and ensure Poetry is added to  your `$PATH`.
+Install the applications listed above, and ensure Poetry is added to  your `$PATH`.
 
 A Makefile has been created to assist with setting up the development environment. Run:
 ```bash
