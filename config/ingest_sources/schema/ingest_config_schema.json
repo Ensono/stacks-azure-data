@@ -1,0 +1,60 @@
+{
+    "type": "object",
+    "properties": {
+        "data_source_name": {
+            "type": "string",
+            "minLength": 3
+        },
+        "data_source_type": {
+            "type": "string",
+            "minLength": 3
+        },
+        "data_source_properties": {
+            "type": "object",
+            "minProperties": 1
+        },
+        "enabled": {
+            "type": "boolean"
+        },
+        "ingest_entities": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "version": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "schema": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "delta": {
+                        "type": "string"
+                    },
+                    "granularity": {
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "name",
+                    "enabled"
+                ]
+            }
+        }
+    },
+    "required": [
+        "data_source_name",
+        "data_source_type",
+        "enabled",
+        "ingest_entities"
+    ],
+    "additionalProperties": false
+}
