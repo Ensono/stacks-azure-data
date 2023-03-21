@@ -24,27 +24,35 @@
                     "version": {
                         "type": "integer"
                     },
-                    "name": {
-                        "type": "string"
-                    },
-                    "schema": {
-                        "type": "string"
-                    },
-                    "type": {
-                        "type": "string"
-                    },
-                    "delta": {
-                        "type": "string"
-                    },
-                    "granularity": {
+                    "display_name": {
                         "type": "string"
                     },
                     "enabled": {
                         "type": "boolean"
+                    },
+                    "schema": {
+                        "type": "string"
+                    },
+                    "table": {
+                        "type": "string"
+                    },
+                    "columns": {
+                        "type": "string"
+                    },
+                    "load_type": {
+                        "type": "string",
+                        "enum": ["full", "delta"]
+                    },
+                    "delta_date_column": {
+                        "type": ["string", "null"]
+                    },
+                    "delta_upsert_key": {
+                        "type": ["string", "null"]
                     }
                 },
                 "required": [
-                    "name",
+                    "version",
+                    "display_name",
                     "enabled"
                 ]
             }
