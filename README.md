@@ -2,7 +2,16 @@
 
 ## Overview
 
-This repository contains a template for an Azure data platform ingest solution, based around Azure Data Factory, to be used as a 'bronze' or 'landing' data lake zone.
+This repository contains a template for an Azure data platform solution, utilising Azure Data Factory for orchestration and ingestion, and Azure Data Lake Storage Gen2 for a data lake. Elements of the solution include:
+* Infrastructure-as-code for all solution components (Terraform)
+* Azure Data Factory resources and sample ingest pipeline (from sample source into landing (bronze) data lake zone)
+* Metadata-based ETL configuration files
+* Deployment pipelines for CICD / DataOps for all components
+* Automated tests
+
+### High-level architecture
+
+![High-level architecture](docs/images/Stacks_Azure_Data_Platform-Ingestion_HLD.png?raw=true "High-level architecture")
 
 ### Infrastructure deployed
 * Resource Group
@@ -38,14 +47,13 @@ stacks-azure-data-ingest
 ## Developing the solution
 
 ### Pre-requisites
-In order to work on the project, developers require:
 
 * Python 3.10
 * Poetry https://python-poetry.org/docs/
 * (Windows users) A Linux distribution, e.g. WSL2 https://docs.microsoft.com/en-us/windows/wsl/install
 
 ### Setup Environment
-Install the applications listed above, and ensure Poetry is added to  your `$PATH`.
+Install the applications listed above, and ensure Poetry is added to your `$PATH`.
 
 A Makefile has been created to assist with setting up the development environment. Run:
 ```bash
