@@ -63,7 +63,7 @@ resource "azurerm_log_analytics_workspace" "la" {
   resource_group_name = azurerm_resource_group.default.name
   sku                 = var.la_sku
   retention_in_days   = var.la_retention
-  tags           = module.default_label.tags
+  tags                = module.default_label.tags
 }
 
 # Enable diagnostic settings for ADF
