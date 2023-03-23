@@ -4,7 +4,7 @@ module "default_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
   namespace  = format("%s-%s", var.name_company, var.name_project)
   stage      = var.stage
-  name       = "${lookup(var.location_name_map, var.resource_group_location, "northeurope")}-${var.name_component}"
+  name       = "${lookup(var.location_name_map, var.resource_group_location)}-${var.name_component}"
   attributes = var.attributes
   delimiter  = "-"
   tags       = var.tags
@@ -14,17 +14,18 @@ module "default_label" {
 resource "azurerm_resource_group" "default" {
   name     = module.default_label.id
   location = var.resource_group_location
-  tags     = var.tags
+  tags     = module.default_label.tags
 }
 
 # KV for ADF
 module "kv_default" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/module-kv"
+  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=master"
   resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name       = azurerm_resource_group.default.name
   resource_group_location   = azurerm_resource_group.default.location
   create_kv_networkacl      = false
   enable_rbac_authorization = false
+  resource_tags             = module.default_label.tags
 
 }
 
@@ -35,6 +36,7 @@ module "adf" {
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
   git_integration         = var.git_integration
+  resource_tags           = module.default_label.tags
 }
 
 
@@ -104,16 +106,16 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 }
 
 
-# storage account for data lake
+# Storage accounts for data lake and config
 module "adls_default" {
 
-  source                  = "git::https://github.com/Elephantei/stacks-terraform//azurerm/modules/azurerm-adls?ref=feat/5558-adsl-de-module"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls?ref=master"
   resource_namer          = module.default_label.id
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
-  storage_account_name    = substr(replace(module.default_label.id, "-", ""), 0, 24)
   storage_account_details = var.storage_account_details
   container_access_type   = var.container_access_type
+  resource_tags           = module.default_label.tags
 
 
 }
