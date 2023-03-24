@@ -85,7 +85,7 @@ variable "la_retention" {
 }
 
 ############################################
-# Strorage Account Details 
+# Storage Account Details 
 ############################################
 
 variable "storage_account_details" {
