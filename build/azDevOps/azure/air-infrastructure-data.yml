@@ -208,3 +208,5 @@ stages:
               releaseNotesSource: 'inline'
               releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
               tagSource: 'gitTag'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
