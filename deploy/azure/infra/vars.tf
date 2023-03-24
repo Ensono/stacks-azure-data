@@ -119,7 +119,7 @@ variable "storage_account_details" {
 ############################################
 
 variable "adls_datalake_role_adf" {
-  description = "Role Assingment for ADLS Gen2  storgage."
+  description = "Role assignment for ADLS Gen2 storage."
   type        = string
   default     = "Storage Blob Data Contributor"
 }
