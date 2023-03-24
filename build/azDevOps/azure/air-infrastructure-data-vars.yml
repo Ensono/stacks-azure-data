@@ -12,6 +12,9 @@ variables:
   - name: self_generic_name
     value: stacks-infrastructure
 
+  - name: System.Debug
+    value: true
+
   - group: amido-stacks-webapp
 
   - name: cloud_provider
