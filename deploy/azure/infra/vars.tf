@@ -115,7 +115,7 @@ variable "storage_account_details" {
 }
 
 ############################################
-# Role Assingments for Adf
+# Role assignments for ADF
 ############################################
 
 variable "adls_datalake_role_adf" {
