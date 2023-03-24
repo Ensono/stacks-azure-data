@@ -34,8 +34,10 @@ variables:
     value: amidostackstfstate
   - name: tf_state_container
     value: tfstate
-  - name: tf_state_key
-    value: $(domain)
+  - name: tf_state_key_dev
+    value: $(domain)-dev
+  - name: tf_state_key_prod
+    value: $(domain)-prod
   - name: TF_FILE_LOCATION
     value: $(self_repo_tf_src)
 
