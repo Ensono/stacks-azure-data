@@ -93,7 +93,7 @@ stages:
                     ARM_TENANT_ID: $(azure-tenant-id)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key)
+                    TF_STATE_KEY: $(tf_state_key_dev)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
                     TF_BACKEND_ARGS: "key=$(TF_STATE_KEY),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
@@ -152,7 +152,7 @@ stages:
                     ARM_TENANT_ID: $(azure-tenant-id)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key)
+                    TF_STATE_KEY: $(tf_state_key_prod)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
                     TF_BACKEND_ARGS: "key=$(TF_STATE_KEY),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
@@ -199,9 +199,11 @@ stages:
               COMPANY: $(company)
 
           # Create a GitHub release with these packages
-          - task: GitHubRelease@0
+          - task: GitHubRelease@1
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
               tag: $(Build.BuildNumber)
+              releaseNotesSource: 'inline'
+              releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
