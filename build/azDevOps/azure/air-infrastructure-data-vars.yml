@@ -103,6 +103,6 @@ variables:
   - name: create_release
     value: true
   - name: github_release_service_connection
-    value:
+    value: amidostacks
   - name: github_org
     value: $(company)
