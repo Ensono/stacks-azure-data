@@ -2,7 +2,7 @@
 name = "stacks-azure-data-platform"
 version = "0.1.0"
 description = ""
-authors = ["adurkan-amido <andy.durkan@amido.com>"]
+authors = ["Andy Durkan <andy.durkan@ensono.com>"]
 readme = "README.md"
 packages = [{include = "stacks_azure_data_platform"}]
 

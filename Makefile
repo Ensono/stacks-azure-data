@@ -6,7 +6,7 @@ install_dev_environment:
 	pre-commit install
 
 test:
-	pytest tests/unit/
+	python -m pytest tests/unit/
 
 pre_commit:
 	pre-commit run --all-files

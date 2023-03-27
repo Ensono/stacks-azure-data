@@ -1,3 +1,5 @@
+import logging
+
 from collections import Counter
 from jsonschema import validate
 
@@ -14,13 +16,18 @@ def test_config_ingest_sources_schema_valid():
 
 def test_config_ingest_sources_uniqueness():
     all_configs = load_configs_as_list(INGEST_SOURCES_DIR)
-
-    # Data sources unique
-    data_source_counts = Counter(i["data_source_name"] for i in all_configs)
+    assert config_uniqueness_check(all_configs, "data_source_name")
     for config in all_configs:
-        assert data_source_counts[config["data_source_name"]] == 1
+        ingest_entities = config["ingest_entities"]
+        assert config_uniqueness_check(ingest_entities, "display_name")
 
-        # Ingest entities unique per source
-        entity_counts = Counter(i["display_name"] for i in config["ingest_entities"])
-        for entity in config["ingest_entities"]:
-            assert entity_counts[entity["display_name"]] == 1
+
+def config_uniqueness_check(config_list: list[dict], unique_key: str):
+    key_counter = Counter(i[unique_key] for i in config_list)
+    for config in config_list:
+        if key_counter[config[unique_key]] == 1:
+            continue
+        else:
+            logging.error(f"{unique_key} value is not unique: {config[unique_key]}")
+            return False
+    return True
