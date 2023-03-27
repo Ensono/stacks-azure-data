@@ -198,7 +198,7 @@ stages:
             env:
               COMPANY: $(company)
 
-          # Create a GitHub release with these packages
+          # Create a GitHub release with these latest packages
           - task: GitHubRelease@1
             displayName: Create GitHub Release
             inputs:
