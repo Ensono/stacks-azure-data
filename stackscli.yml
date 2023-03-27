@@ -7,7 +7,7 @@ pipeline:
         path: build/azDevOps/azure/air-infrastructure-data-vars.yml
     templates:
       - name: variable
-        path: build/azDevOps/templates/air-infrastructure-data-setup.yml
+        path: build/azDevOps/azure/air-infrastructure-data-vars-template.yml
 
 setup:
   operations:
