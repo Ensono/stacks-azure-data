@@ -11,10 +11,9 @@ variables:
     value: stacks-data-infrastructure
   - name: self_generic_name
     value: stacks-infrastructure
-
   - group: amido-stacks-webapp
 
-  - name: cloud_provider
+  - name: cloud_providers
     value: "azure"
 
   # Terraform Configuration
