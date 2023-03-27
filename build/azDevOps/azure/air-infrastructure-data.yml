@@ -173,7 +173,7 @@ stages:
       - Prod
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     variables:
-      - group: amido-stacks-infra-credentials-prod
+      - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
@@ -207,3 +207,6 @@ stages:
               tag: v${VERSION_NUMBER}
               releaseNotesSource: 'inline'
               releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
+              tagSource: 'gitTag'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
