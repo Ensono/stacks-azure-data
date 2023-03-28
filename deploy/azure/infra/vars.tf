@@ -148,7 +148,7 @@ variable "container_access_type" {
 
 variable "kv_secrets" {
   type        = list(string)
-  description = "Specifies the name of the Key Vault Secrets."
+  description = "Specifies the name of the Key Vault Secrets. The secrets' values will need to be updated directly once deployed. Existing secrets with the same name will not be overwritten."
   default     = ["secret1", "secret2", "secret3"]
 }
 
