@@ -156,4 +156,5 @@ resource "azurerm_key_vault_secret" "secrets" {
       value, version
     ]
   }
+  depends_on = [module.kv_default]
 }
