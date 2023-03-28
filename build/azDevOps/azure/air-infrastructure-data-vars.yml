@@ -42,7 +42,7 @@ variables:
 
   # App Specific Taxonomy
   - name: component
-    value: core-data
+    value: de
   - name: role
     value: data-infrastructure
   # - name: k8s_app_route
