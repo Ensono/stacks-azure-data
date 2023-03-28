@@ -26,7 +26,7 @@ module "kv_default" {
   create_kv_networkacl      = false
   enable_rbac_authorization = false
   resource_tags             = module.default_label.tags
-
+  contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
 }
 
 # module call for ADF
@@ -142,4 +142,18 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "linked_ad
   data_factory_id      = module.adf.adf_factory_id
   use_managed_identity = true
   url                  = module.adls_default.primary_dfs_endpoints[1]
+}
+
+# ADD secrets to KV, please note this is just going to add secret name to KV the actual value of that secret needs to be updated manually in Azure Key Valut. Existing secrets with the same name will not be overwritten.
+resource "azurerm_key_vault_secret" "secrets" {
+  for_each     = toset(var.kv_secrets)
+  name         = each.key
+  value        = ""
+  key_vault_id = module.kv_default.id
+  lifecycle {
+    ignore_changes = [
+
+      value, version
+    ]
+  }
 }

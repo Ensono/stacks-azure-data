@@ -144,3 +144,17 @@ variable "container_access_type" {
   description = "value"
   default     = "private"
 }
+
+
+variable "kv_secrets" {
+  type        = list(string)
+  description = "Specifies the name of the Key Vault Secrets."
+  default     = ["secret1", "secret2", "secret3"]
+}
+
+
+variable "contributor_object_ids" {
+  description = "A list of Azure active directory user,group or application object ID's that will have contributor role to the key vault"
+  type        = list(string)
+  default     = []
+}
