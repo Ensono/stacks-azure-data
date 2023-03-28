@@ -34,7 +34,7 @@ variables:
   - name: tf_state_container
     value: tfstate
   - name: tf_state_key_dev
-    value: $(domain)-dev
+    value: $(domain)_dev
   - name: tf_state_key_prod
     value: $(domain)-prod
   - name: TF_FILE_LOCATION
