@@ -154,7 +154,7 @@ variable "kv_secrets" {
 
 
 variable "contributor_object_ids" {
-  description = "A list of Azure active directory user,group or application object ID's that will have contributor role to the key vault"
+  description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
   type        = list(string)
   default     = []
 }
