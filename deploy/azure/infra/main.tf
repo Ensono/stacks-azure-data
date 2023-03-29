@@ -144,7 +144,7 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "linked_ad
   url                  = module.adls_default.primary_dfs_endpoints[1]
 }
 
-# ADD secrets to KV, please note this is just going to add secret name to KV the actual value of that secret needs to be updated manually in Azure Key Valut. Existing secrets with the same name will not be overwritten.
+# Add secrets to KV. Please note this is just going to add secret names to KV. The actual value of that secret needs to be updated manually in Azure Key Vault. Existing secrets with the same name will not be overwritten.
 resource "azurerm_key_vault_secret" "secrets" {
   for_each     = toset(var.kv_secrets)
   name         = each.key
