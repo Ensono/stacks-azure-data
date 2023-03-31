@@ -26,7 +26,7 @@ module "kv_default" {
   create_kv_networkacl      = false
   enable_rbac_authorization = false
   resource_tags             = module.default_label.tags
-  #contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
 }
 
 # module call for ADF
@@ -65,7 +65,7 @@ resource "azurerm_log_analytics_workspace" "la" {
   retention_in_days   = var.la_retention
   tags                = module.default_label.tags
 }
-/*
+
 # Enable diagnostic settings for ADF
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
@@ -105,7 +105,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
     }
   }
 }
-*/
+
 
 # Storage accounts for data lake and config
 module "adls_default" {
