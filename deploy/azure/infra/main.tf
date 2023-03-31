@@ -27,7 +27,6 @@ module "kv_default" {
   enable_rbac_authorization = false
   resource_tags             = module.default_label.tags
   contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  purge_protection_enabled = false
 }
 
 # module call for ADF
