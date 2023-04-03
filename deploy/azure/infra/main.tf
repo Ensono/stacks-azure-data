@@ -37,6 +37,7 @@ module "adf" {
   resource_group_location = azurerm_resource_group.default.location
   git_integration         = var.git_integration
   resource_tags           = module.default_label.tags
+  repository_name         = var.repository_name
 }
 
 

@@ -12,6 +12,8 @@ variables:
   - name: self_generic_name
     value: stacks-infrastructure
   - group: amido-stacks-webapp
+  - name: git_integration
+    value: github
 
   - name: cloud_providers
     value: "azure"

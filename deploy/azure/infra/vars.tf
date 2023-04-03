@@ -70,6 +70,12 @@ variable "git_integration" {
   }
 }
 
+variable "repository_name" {
+  type        = string
+  default     = "stacks-azure-data-ingest"
+  description = "Specifies the name of the git repository."
+}
+
 # Log Analytics workspace Details
 
 variable "la_sku" {
