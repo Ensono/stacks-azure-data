@@ -76,6 +76,13 @@ variable "repository_name" {
   description = "Specifies the name of the git repository."
 }
 
+variable "root_folder" {
+  type        = string
+  default     = "/data_factory/adf_managed"
+  description = "Specifies the root folder within the repository. Set to / for the top level."
+}
+
+
 # Log Analytics workspace Details
 
 variable "la_sku" {

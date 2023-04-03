@@ -38,6 +38,7 @@ module "adf" {
   git_integration         = var.git_integration
   resource_tags           = module.default_label.tags
   repository_name         = var.repository_name
+  root_folder             = var.root_folder
 }
 
 
