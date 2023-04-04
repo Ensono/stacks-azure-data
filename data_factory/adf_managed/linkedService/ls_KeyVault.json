@@ -1,11 +1,11 @@
 {
 	"name": "ls_KeyVault",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://stacks-data-euw.vault.azure.net/"
-		},
-		"annotations": []
-	}
+			"baseUrl": "https://amidostacksdeveuwde.vault.azure.net/"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
