@@ -124,28 +124,6 @@ module "adls_default" {
 }
 
 
-# ADF linked Services
-resource "azurerm_data_factory_linked_service_key_vault" "linked_kv" {
-  name            = "data_kv_link"
-  data_factory_id = module.adf.adf_factory_id
-  key_vault_id    = module.kv_default.id
-}
-
-
-resource "azurerm_data_factory_linked_service_azure_blob_storage" "linked_blob" {
-  name             = "blob_dataconfig"
-  data_factory_id  = module.adf.adf_factory_id
-  service_endpoint = module.adls_default.primary_blob_endpoints[0]
-
-}
-
-resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "linked_adls" {
-  name                 = "adls_datalake"
-  data_factory_id      = module.adf.adf_factory_id
-  use_managed_identity = true
-  url                  = module.adls_default.primary_dfs_endpoints[1]
-}
-
 # Add secrets to KV. Please note this is just going to add secret names to KV. The actual value of that secret needs to be updated manually in Azure Key Vault. Existing secrets with the same name will not be overwritten.
 resource "azurerm_key_vault_secret" "secrets" {
   for_each     = toset(var.kv_secrets)
