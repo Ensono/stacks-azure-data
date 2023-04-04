@@ -101,7 +101,7 @@
 		"parameters": {
 			"config_container": {
 				"type": "string",
-				"defaultValue": "adf-config"
+				"defaultValue": "config"
 			},
 			"config_path": {
 				"type": "string",
