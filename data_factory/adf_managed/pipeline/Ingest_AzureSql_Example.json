@@ -142,7 +142,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directory": {
-											"value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{utcnow()}",
+											"value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}",
 											"type": "Expression"
 										},
 										"filename": {
