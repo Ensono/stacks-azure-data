@@ -105,6 +105,7 @@ stages:
                     TF_VAR_name_project: $(project)
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
+                    TF_VAR_git_integration: $(git_integration)
 
   #   yamllint disable rule:comments-indentation
 
@@ -166,6 +167,7 @@ stages:
                     TF_VAR_name_project: $(project)
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
+                    TF_VAR_git_integration: $(git_integration)
 
   - stage: Release
     dependsOn:
