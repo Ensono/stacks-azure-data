@@ -12,9 +12,6 @@ pr:
   - main
 
 trigger:
-  branches:
-    include:
-      - '*'
   paths:
     include:
       - de_build/*
@@ -179,14 +176,15 @@ stages:
 
 
 #############################################################
-# Deploy to non Prod
+# Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
+  dependsOn: Build_Stage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
       - group: amido-stacks-de-pipeline-prod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
-  dependsOn: Build_Stage
   jobs:
   - deployment: Deploy_PRDO
     displayName: 'Deploy To PROD'
