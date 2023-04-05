@@ -6,14 +6,25 @@
 # Sample YAML file to validate and export an ARM template into a build artifact
 # Requires a package.json file located in the target repository
 
-trigger:
-#- main #collaboration branch
-- none
+name: "$(Build.SourceBranchName)-init"
 
+pr:
+  - main
+
+trigger:
+  branches:
+    include:
+      - 'main'
+  paths:
+    include:
+      - de_build/*
+      - data_factory/*
 
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  - template: adf-pipeline-data-vars.yml
 stages:
 - stage: Build_Stage
   variables:
@@ -93,7 +104,7 @@ stages:
   jobs:
   - deployment: Deploy_NonPROD
     displayName: 'Deploy To NonPROD'
-    environment: ADFUAT ###Non Prod Env
+    environment: ${{ variables.domain }}-nonprod
     pool:
       vmImage: 'ubuntu-latest'
 
@@ -176,7 +187,7 @@ stages:
   jobs:
   - deployment: Deploy_PRDO
     displayName: 'Deploy To PROD'
-    environment: ADFUAT
+    environment: ${{ variables.domain }}-prod
     pool:
       vmImage: 'ubuntu-latest'
 
