@@ -47,7 +47,7 @@ stages:
       inputs:
         command: 'custom'
         workingDir: '$(Build.Repository.LocalPath)/build' #replace with the package.json folder
-        customCommand: 'run build validate $(Build.Repository.LocalPath)/data_factory /subscriptions/$(azure-subscription-id)/resourceGroups/amido-stacks-dev-euw-adfpoc/providers/Microsoft.DataFactory/factories/amido-stacks-dev-euw-adfdev'
+        customCommand: 'run build validate $(Build.Repository.LocalPath)/data_factory /subscriptions/$(azure-subscription-id)/resourceGroups/$(resource_group)/providers/Microsoft.DataFactory/factories/$(datafactoryname)'
       displayName: 'Validate'
 
     # Validate and then generate the ARM template into the destination folder, which is the same as selecting "Publish" from the UX.
@@ -57,7 +57,7 @@ stages:
       inputs:
         command: 'custom'
         workingDir: '$(Build.Repository.LocalPath)/build' #replace with the package.json folder
-        customCommand: 'run build export $(Build.Repository.LocalPath)/data_factory /subscriptions/$(azure-subscription-id)/resourceGroups/amido-stacks-dev-euw-adfpoc/providers/Microsoft.DataFactory/factories/amido-stacks-dev-euw-adfdev "ArmTemplate"'
+        customCommand: 'run build export $(Build.Repository.LocalPath)/data_factory /subscriptions/$(azure-subscription-id)/resourceGroups/$(resource_group)/providers/Microsoft.DataFactory/factories/$(datafactoryname) "ArmTemplate"'
     #For using preview that allows you to only stop/ start triggers that are modified, please comment out the above line and uncomment the below line. Make sure the package.json contains the build-preview command. 
     #customCommand: 'run build-preview export $(Build.Repository.LocalPath) /subscriptions/222f1459-6ebd-4896-82ab-652d5f6883cf/resourceGroups/GartnerMQ2021/providers/Microsoft.DataFactory/factories/Dev-GartnerMQ2021-DataFactory "ArmTemplate"'
       displayName: 'Validate and Generate ARM template'
@@ -84,16 +84,16 @@ stages:
 #############################################################
 # Deploy to non Prod
 #############################################################
-- stage: Deploy_UAT_Stage
+- stage: Deploy_NonPROD_Stage
   variables:
       - group: amido-stacks-de-pipeline-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   dependsOn: Build_Stage
   jobs:
-  - deployment: Deploy_UAT
-    displayName: 'Deploy To UAT'
-    environment: ADFUAT
+  - deployment: Deploy_NonPROD
+    displayName: 'Deploy To NonPROD'
+    environment: ADFUAT ###Non Prod Env
     pool:
       vmImage: 'ubuntu-latest'
 
@@ -120,7 +120,7 @@ stages:
                azureSubscription: 'amido.stacks'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination config --account-name uatsaforadfpoc --overwrite'
+               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination config --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -130,8 +130,8 @@ stages:
               ScriptType: 'FilePath'
               ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
-                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -ResourceGroupName $(resource_group)
+                              -DataFactoryName $(datafactoryname)
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
@@ -141,13 +141,13 @@ stages:
              inputs:
                 azureResourceManagerConnection: 'amido.stacks'
                 subscriptionId: '$(azure-subscription-id)'
-                resourceGroupName: 'amido-stacks-dev-euw-adfpoc'
-                location: 'West Europe'
+                resourceGroupName: $(resource_group)
+                location: $(location)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName "amido-stacks-uat-euw-adfuat" 
+                overrideParameters: -factoryName $(datafactoryname) 
                                     -AzureBlobStorage_properties_typeProperties_connectionString_secretName "SA" 
-                                    -AzureKeyVault_properties_typeProperties_baseUrl "https://uatkvforadfpoc.vault.azure.net/"
+                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -157,8 +157,8 @@ stages:
               ScriptType: 'FilePath'
               ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
-                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -ResourceGroupName $(resource_group)
+                              -DataFactoryName $(datafactoryname)
                               -predeployment $false
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
@@ -174,8 +174,8 @@ stages:
         value: "$(version_major).$(version_minor).$(version_revision)"
   dependsOn: Build_Stage
   jobs:
-  - deployment: Deploy_UAT
-    displayName: 'Deploy To UAT'
+  - deployment: Deploy_PRDO
+    displayName: 'Deploy To PROD'
     environment: ADFUAT
     pool:
       vmImage: 'ubuntu-latest'
@@ -203,7 +203,7 @@ stages:
                azureSubscription: 'amido.stacks'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination config --account-name uatsaforadfpoc --overwrite'
+               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination config --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -213,8 +213,8 @@ stages:
               ScriptType: 'FilePath'
               ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
-                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -ResourceGroupName $(resource_group)
+                              -DataFactoryName $(datafactoryname)
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
@@ -224,13 +224,13 @@ stages:
              inputs:
                 azureResourceManagerConnection: 'amido.stacks'
                 subscriptionId: '$(azure-subscription-id)'
-                resourceGroupName: 'amido-stacks-dev-euw-adfpoc'
-                location: 'West Europe'
+                resourceGroupName: $(resource_group)
+                location: $(location)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName "amido-stacks-uat-euw-adfuat" 
+                overrideParameters: -factoryName $(datafactoryname) 
                                     -AzureBlobStorage_properties_typeProperties_connectionString_secretName "SA" 
-                                    -AzureKeyVault_properties_typeProperties_baseUrl "https://uatkvforadfpoc.vault.azure.net/"
+                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -240,8 +240,8 @@ stages:
               ScriptType: 'FilePath'
               ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
-                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -ResourceGroupName $(resource_group)
+                              -DataFactoryName $(datafactoryname)
                               -predeployment $false
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
