@@ -16,6 +16,10 @@ pool:
 
 stages:
 - stage: Build_Stage
+  variables:
+      - group: amido-stacks-de-pipeline-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
   - job: Build_Adf_Configfiles_Build
     displayName: 'ADF-CONFIGFILES-BUILD'
@@ -78,9 +82,96 @@ stages:
         ArtifactName: ConfigFiles
 
 #############################################################
-# Deploy to Environment
+# Deploy to non Prod
 #############################################################
 - stage: Deploy_UAT_Stage
+  variables:
+      - group: amido-stacks-de-pipeline-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  dependsOn: Build_Stage
+  jobs:
+  - deployment: Deploy_UAT
+    displayName: 'Deploy To UAT'
+    environment: ADFUAT
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    strategy:
+      runOnce:
+        deploy:  
+          steps:
+
+
+           - task: DownloadPipelineArtifact@2
+             displayName: Download Build Artifacts
+             inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)'
+           - script: dir
+             displayName: List ConfigFiles Artifact in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+           - script: dir
+             displayName: List ArmTemplates Artifact in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
+
+    # Publish Config files
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination config --account-name uatsaforadfpoc --overwrite'
+
+    # Publish ADF
+           - task: AzurePowerShell@5
+             displayName: 'Stop ADF triggers'
+             inputs:
+              azureSubscription: 'amido.stacks'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
+                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -predeployment $true
+                              -deleteDeployment $false
+              azurePowerShellVersion: 'LatestVersion'
+
+           - task: AzureResourceManagerTemplateDeployment@3
+             displayName: 'ARM Template deployment: Resource Group scope'
+             inputs:
+                azureResourceManagerConnection: 'amido.stacks'
+                subscriptionId: '$(azure-subscription-id)'
+                resourceGroupName: 'amido-stacks-dev-euw-adfpoc'
+                location: 'West Europe'
+                csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
+                csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
+                overrideParameters: -factoryName "amido-stacks-uat-euw-adfuat" 
+                                    -AzureBlobStorage_properties_typeProperties_connectionString_secretName "SA" 
+                                    -AzureKeyVault_properties_typeProperties_baseUrl "https://uatkvforadfpoc.vault.azure.net/"
+                deploymentMode: 'Incremental'
+
+           - task: AzurePowerShell@5
+             displayName: 'Clean resources and start ADF triggers'
+             inputs:
+              azureSubscription: 'amido.stacks'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+                              -ResourceGroupName "amido-stacks-dev-euw-adfpoc"
+                              -DataFactoryName "amido-stacks-uat-euw-adfuat"
+                              -predeployment $false
+                              -deleteDeployment $True
+              azurePowerShellVersion: 'LatestVersion'
+
+
+#############################################################
+# Deploy to non Prod
+#############################################################
+- stage: Deploy_Prod_Stage
+  variables:
+      - group: amido-stacks-de-pipeline-prod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
   dependsOn: Build_Stage
   jobs:
   - deployment: Deploy_UAT
