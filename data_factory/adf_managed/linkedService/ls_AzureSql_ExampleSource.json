@@ -1,0 +1,19 @@
+{
+	"name": "ls_AzureSql_ExampleSource",
+	"properties": {
+		"description": "Azure SQL example linked service. These properties will may over overridden when deployed to other environments.\nTODO: Add password to KV.",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "AzureSqlExampleAdfConnectionString"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
+}
