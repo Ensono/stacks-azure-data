@@ -158,7 +158,9 @@ stages:
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
                 overrideParameters: -factoryName $(datafactoryname) 
-                                    -AzureBlobStorage_properties_typeProperties_connectionString_secretName "SA" 
+                                    -Als_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
+                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
                                     -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
@@ -241,7 +243,9 @@ stages:
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
                 overrideParameters: -factoryName $(datafactoryname) 
-                                    -AzureBlobStorage_properties_typeProperties_connectionString_secretName "SA" 
+                                    -Als_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
+                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
                                     -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
