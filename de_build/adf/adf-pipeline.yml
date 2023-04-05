@@ -259,3 +259,16 @@ stages:
                               -predeployment $false
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
+
+          # Create a GitHub release with these packages
+           - task: GitHubRelease@1
+             displayName: Create GitHub Release
+             inputs:
+              gitHubConnection: $(github_release_service_connection)
+              repositoryName: $(github_org)/$(self_repo)
+              tag: v${VERSION_NUMBER}
+              releaseNotesSource: 'inline'
+              releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
+              tagSource: 'gitTag'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
