@@ -1,0 +1,12 @@
+{
+	"name": "amido-stacks-dev-euw-adf",
+	"properties": {
+		"globalParameters": {
+			"environment": {
+				"type": "string",
+				"value": "dev"
+			}
+		}
+	},
+	"location": "westeurope"
+}
