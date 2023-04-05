@@ -12,6 +12,10 @@ pr:
   - main
 
 trigger:
+  branches:
+   
+    include:
+      - 'main'
   paths:
     include:
       - de_build/*
@@ -179,7 +183,9 @@ stages:
 # Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
-  dependsOn: Build_Stage
+  dependsOn: 
+    - Build_Stage
+    - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
       - group: amido-stacks-de-pipeline-prod
@@ -260,10 +266,41 @@ stages:
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
 
+- stage: Release
+  dependsOn:
+      - Build_Stage
+      - Deploy_Prod_Stage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
+  variables:
+      - group: amido-stacks-infra-credentials-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  jobs:
+      - job: CreateGitHubRelease
+        pool:
+          vmImage: $(pool_vm_image)
+        steps:
+          # Check out the repo so that it can be tagged
+          - checkout: self
+            persistCredentials: true
+
+          # Create a tag in the code for this release
+          - task: Bash@3
+            displayName: Tag Code
+            inputs:
+              targetType: "inline"
+              script: |
+                git config user.name "BuildService"
+                git config user.email "builder@${COMPANY}.com"
+                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
+                git push origin v${VERSION_NUMBER}
+            env:
+              COMPANY: $(company)
+
           # Create a GitHub release with these packages
-           - task: GitHubRelease@1
-             displayName: Create GitHub Release
-             inputs:
+          - task: GitHubRelease@1
+            displayName: Create GitHub Release
+            inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
               tag: v${VERSION_NUMBER}
