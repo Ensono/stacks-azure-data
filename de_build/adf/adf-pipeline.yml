@@ -12,6 +12,9 @@ pr:
   - main
 
 trigger:
+  branches:
+    include:
+      - 'main'
   paths:
     include:
       - de_build/*
