@@ -19,6 +19,7 @@ trigger:
     include:
       - de_build/*
       - data_factory/*
+      - config/*
 
 pool:
   vmImage: 'ubuntu-latest'
