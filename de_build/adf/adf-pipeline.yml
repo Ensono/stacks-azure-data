@@ -79,7 +79,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Artifact: ArmTemplates'
       inputs:
-        targetPath: '$(Build.Repository.LocalPath)/build/ArmTemplate' #replace with the package.json folder
+        targetPath: '$(Build.Repository.LocalPath)/de_build/adf/ArmTemplate' #replace with the package.json folder
         artifact: 'ArmTemplates'
         publishLocation: 'pipeline'
 
