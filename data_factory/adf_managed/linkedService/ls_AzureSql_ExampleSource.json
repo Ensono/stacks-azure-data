@@ -1,20 +1,19 @@
 {
 	"name": "ls_AzureSql_ExampleSource",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Azure SQL example linked service. These properties will may over overridden when deployed to other environments.\nTODO: Add password to KV.",
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=amido-stacks-dev-euw-sql-test.database.windows.net;initial catalog=stacks-test;user id=test_admin",
-			"password": {
+			"connectionString": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "ls_KeyVault",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "AzureSqlExampleAdfPassword"
+				"secretName": "AzureSqlExampleAdfConnectionString"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
