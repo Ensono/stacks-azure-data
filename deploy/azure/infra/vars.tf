@@ -70,6 +70,19 @@ variable "git_integration" {
   }
 }
 
+variable "repository_name" {
+  type        = string
+  default     = "stacks-azure-data-ingest"
+  description = "Specifies the name of the git repository."
+}
+
+variable "root_folder" {
+  type        = string
+  default     = "/data_factory/adf_managed"
+  description = "Specifies the root folder within the repository. Set to / for the top level."
+}
+
+
 # Log Analytics workspace Details
 
 variable "la_sku" {
@@ -143,4 +156,18 @@ variable "container_access_type" {
   type        = string
   description = "value"
   default     = "private"
+}
+
+
+variable "kv_secrets" {
+  type        = list(string)
+  description = "Specifies the name of the Key Vault Secrets. The secrets' values will need to be updated directly once deployed. Existing secrets with the same name will not be overwritten."
+  default     = ["secret1", "secret2", "secret3"]
+}
+
+
+variable "contributor_object_ids" {
+  description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
+  type        = list(string)
+  default     = []
 }
