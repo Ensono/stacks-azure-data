@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=v1.5.3"
+  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=v1.5.4"
   resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name       = azurerm_resource_group.default.name
   resource_group_location   = azurerm_resource_group.default.location
@@ -31,7 +31,7 @@ module "kv_default" {
 
 # module call for ADF
 module "adf" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=v1.5.3"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=v1.5.4"
   resource_namer          = module.default_label.id
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
@@ -112,7 +112,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls?ref=v1.5.3"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls?ref=v1.5.4"
   resource_namer          = module.default_label.id
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
