@@ -1,62 +1,10 @@
 variables:
   - name: region
     value: westeurope
-  - name: company
-    value: amido
-  - name: project
-    value: stacks
   - name: domain
     value: core-data
   - name: self_repo
     value: stacks-azure-data-ingest
-  - name: self_generic_name
-    value: stacks-infrastructure
-  - group: amido-stacks-webapp
-  - name: git_integration
-    value: github
-
-  - name: cloud_providers
-    value: "azure"
-
-  # Terraform Configuration
-
-  # State configuration
-
-  # Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
-  # Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
-  # there are some best practices around this if you are going for feature based environments
-  # - we suggest you create a runtime variable that is dynamically set based on a branch currently running
-  # **`terraform_state_workspace: `**
-  # avoid running anything past dev that is not on master
-  # sample value: company-webapp
-  - name: tf_state_rg
-    value: Stacks-Ancillary-Resources
-  - name: tf_state_storage
-    value: amidostackstfstate
-  - name: tf_state_container
-    value: tfstate
-  - name: tf_state_key_dev
-    value: $(domain)_dev
-  - name: tf_state_key_prod
-    value: $(domain)_prod
-  - name: TF_FILE_LOCATION
-    value: $(self_repo_tf_src)
-
-  # App Specific Taxonomy
-  - name: component
-    value: de
-  - name: role
-    value: data-infrastructure
-  # - name: k8s_app_route
-  #   value: /api/menu
-  # - name: app_name
-  #   value: yumido-netcore-api
-
-  # Agent configuration
-  - name: TaskctlVersion
-    value: 1.4.2
-  - name: pool_vm_image
-    value: ubuntu-20.04
 
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
@@ -65,12 +13,14 @@ variables:
   #   value: src/api
   - name: self_repo_dir
     value: "$(Agent.BuildDirectory)/s/$(self_repo)"
-  - name: self_repo_tf_src
-    value: deploy/azure/infra
-  - name: self_repo_tf_dir
-    value: "$(self_repo_dir)/$(self_repo_tf_src)"
+  - name: self_repo_blob_config
+    value: "$(self_repo_dir)/config"
+  - name: self_repo_adf_dir
+    value: "$(self_repo_dir)/data_factory/adf_managed"
+  - name: blob_config_destination
+    value: config
 
-  # Versioning
+# Versioning
   - name: version_major
     value: 1
   - name: version_minor
@@ -80,24 +30,7 @@ variables:
   - name: version_number
     value: $(version_major).$(version_minor).$(version_revision)
 
-
-  # Dashboard
-  - name: DASHBOARD_VERSION
-    value: $(Build.BuildNumber)
-  - name: DASHBOARD_TAGS
-    value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
-  # Static definition within Influx Config
-  - name: DASHBOARD_MEASUREMENT
-    value: deployment
-  - group: amido-stacks-influx-credentials-prod
-  # yamllint disable rule:comments-indentation
-    # Group should contain:
-      # DASHBOARD_INFLUX_ORG
-      # DASHBOARD_INFLUX_BUCKET
-      # DASHBOARD_INFLUX_TOKEN
-      # DASHBOARD_INFLUX_SERVER
-  # yamllint enable rule:comments-indentation
-  # GitHub infomration
+# GitHub infomration
   - name: create_release
     value: true
   - name: github_release_service_connection
