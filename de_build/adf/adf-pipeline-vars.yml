@@ -12,7 +12,7 @@ variables:
   # - name: self_repo_src
   #   value: src/api
   - name: self_repo_dir
-    value: "$(Agent.BuildDirectory)/s/$(self_repo)"
+    value: "$(Agent.BuildDirectory)/s"
   - name: self_repo_blob_config
     value: "$(self_repo_dir)/config"
   - name: self_repo_adf_dir
