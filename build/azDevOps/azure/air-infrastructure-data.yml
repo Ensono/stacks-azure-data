@@ -9,7 +9,8 @@ trigger:
       - 'main'
   paths:
     include:
-      - '*'
+      - build/*
+      - deploy/*
 variables:
   - template: air-infrastructure-data-vars.yml
 
