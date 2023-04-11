@@ -24,3 +24,21 @@ These Terraform scripts create and configure the following resources in Azure:
 - App Service Plan: The Terraform scripts create an App Service Plan, which is used to host the data ingestion script.
 - App Service: The Terraform scripts create an App Service, which runs the Node.js data ingestion script.
 - Application Insights: The Terraform scripts create an Application Insights instance, which provides monitoring and telemetry data for the data ingestion script.
+
+Azure Data factory: Azure Data Factory (ADF) is Azure's cloud ETL service for serverless data integration and data transformation.The ADF UI allows developers to build and debug these resources visually, with all configuration saved in JSON format. Resources may also be deployed programmatically,through ARM templates.
+
+ADF-managed approach with Automated ADF publish
+- Git repo linked to Development ADF instance - dedicated path in repo managed by ADF (auto commits on saves).
+- ADF resources saved as JSON in repo.
+- Each user makes changes in their private branches.
+- Users must create a pull request to make changes in Master branch.
+- The Azure DevOps pipeline build is triggered every time a new commit is made to master. It validates the resources and generates an ARM template as an artifact if validation succeeds
+- The DevOps Release pipeline is configured to create a new release and deploy the ARM template each time a new build is available.
+
+In the approach, the build pipeline uses the ADFUtilities NPM package, which will validate all the resources and generate the ARM templates. 
+
+The build pipeline is responsible for validating Data Factory resources and generating the ARM template instead of the Data Factory UI (Publish button).
+
+Deployment in all environments is done by ADO pipeline.
+
+Pre- and post-deployment scripts for stopping, starting, and cleaning up resources are generated automatically during the build process, so there is no need to maintain these scripts separately. 
