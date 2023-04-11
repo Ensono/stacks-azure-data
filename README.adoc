@@ -27,7 +27,8 @@ These Terraform scripts create and configure the following resources in Azure:
 
 Azure Data factory: Azure Data Factory (ADF) is Azure's cloud ETL service for serverless data integration and data transformation.The ADF UI allows developers to build and debug these resources visually, with all configuration saved in JSON format. Resources may also be deployed programmatically,through ARM templates.
 
-ADF-managed approach with Automated ADF publish
+ADF-managed approach with Automated ADF publish:
+
 - Git repo linked to Development ADF instance - dedicated path in repo managed by ADF (auto commits on saves).
 - ADF resources saved as JSON in repo.
 - Each user makes changes in their private branches.
