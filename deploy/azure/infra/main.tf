@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=v1.5.4"
+  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feat-5959-add-global-parameter"
   resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name       = azurerm_resource_group.default.name
   resource_group_location   = azurerm_resource_group.default.location
