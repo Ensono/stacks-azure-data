@@ -171,3 +171,14 @@ variable "contributor_object_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "databricks_sku" {
+  type        = string
+  default    = "premium"
+  description = "The SKU to use for the databricks instance"
+
+  validation {
+    condition     = can(regex("standard|premium|trial", var.databricks_sku))
+    error_message = "Err: Valid options are 'standard', 'premium' or 'trial'."
+  }
+}

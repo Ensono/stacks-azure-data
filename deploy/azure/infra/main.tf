@@ -138,3 +138,19 @@ resource "azurerm_key_vault_secret" "secrets" {
   }
   depends_on = [module.kv_default]
 }
+
+# databricks workspace
+module "adb" {
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/azuredatabricks"
+  resource_namer          = module.default_label.id
+  resource_group_name     = azurerm_resource_group.default.name
+  resource_group_location = azurerm_resource_group.default.location
+  databricks_sku          = var.databricks_sku
+  resource_tags           = module.default_label.tags
+}
+
+resource "azurerm_role_assignment" "adb_role" {
+  scope                = module.adb.adb_databricks_id
+  role_definition_name = "Contributor"
+  principal_id         = module.adf.adf_managed_identity
+}
