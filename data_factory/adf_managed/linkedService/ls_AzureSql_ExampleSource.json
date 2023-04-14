@@ -11,7 +11,7 @@
 					"referenceName": "ls_KeyVault",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "AzureSqlExampleAdfConnectionString"
+				"secretName": "connect-string-sqldbtest"
 			}
 		}
 	},
