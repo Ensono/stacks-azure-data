@@ -155,6 +155,7 @@ module "sql" {
   sql_version             = var.sql_version
   administrator_login     = var.administrator_login
   sql_db_names            = var.sql_db_names
+  resource_tags           = module.default_label.tags
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
