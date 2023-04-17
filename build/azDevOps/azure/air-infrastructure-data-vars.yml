@@ -16,6 +16,8 @@ variables:
     value: github
   - name: git_integration_prod
     value: null
+  - name: sql_admin_login
+    value: mssqladmin
 
   - name: cloud_providers
     value: "azure"
