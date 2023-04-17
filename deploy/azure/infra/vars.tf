@@ -221,6 +221,12 @@ variable "databricks_sku" {
   }
 }
 
+variable "enable_databricksws_diagnostic" {
+  type        = bool
+  description = "Whether to enable diagnostic settings for the Azure Databricks workspace"
+  default     = true
+}
+
 variable "databricksws_diagnostic_setting_name" {
   type        = string
   default = "Databricks to Log Analytics"
