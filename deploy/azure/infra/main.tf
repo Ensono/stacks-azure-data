@@ -147,6 +147,7 @@ module "adb" {
   resource_group_location = azurerm_resource_group.default.location
   databricks_sku          = var.databricks_sku
   resource_tags           = module.default_label.tags
+  #data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
 }
 
 resource "azurerm_role_assignment" "adb_role" {
