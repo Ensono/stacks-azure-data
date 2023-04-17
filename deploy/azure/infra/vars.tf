@@ -171,3 +171,41 @@ variable "contributor_object_ids" {
   type        = list(string)
   default     = []
 }
+
+############################################
+# SQL INFORMATION
+############################################
+
+variable "sql_version" {
+  type        = string
+  default     = "12.0"
+  description = "The version for the new server. Valid values are: 2.0 (for v11 server) and 12.0 (for v12 server). Changing this forces a new resource to be created."
+}
+
+variable "administrator_login" {
+  type        = string
+  sensitive   = true
+  description = "The administrator login name for the new server. Required unless azuread_authentication_only in the azuread_administrator block is true. When omitted, Azure will generate a default username which cannot be subsequently changed. Changing this forces a new resource to be created."
+}
+
+variable "azuread_administrator" {
+  type = list(object({
+    login_username = string
+    object_id      = string
+  }))
+  description = "Specifies whether only AD Users and administrators (like azuread_administrator.0.login_username) can be used to login, or also local database users (like administrator_login). When true, the administrator_login and administrator_login_password properties can be omitted."
+  default     = []
+
+}
+
+variable "sql_db_names" {
+  type        = list(string)
+  default     = ["sqldbtest"]
+  description = "The name of the MS SQL Database. Changing this forces a new resource to be created."
+}
+
+variable "sql_password" {
+  type        = string
+  default     = "sql-password"
+  description = "Name of the Key for Sql admin Password, its not the actual value/password but the by the name its referred to."
+}
