@@ -224,7 +224,7 @@ variable "databricks_sku" {
 variable "enable_databricksws_diagnostic" {
   type        = bool
   description = "Whether to enable diagnostic settings for the Azure Databricks workspace"
-  default     = false
+  default     = true
 }
 
 variable "databricksws_diagnostic_setting_name" {
