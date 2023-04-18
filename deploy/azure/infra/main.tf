@@ -176,7 +176,6 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  log_analytics_destination_type           = var.log_analytics_destination_type
 
 }
 
