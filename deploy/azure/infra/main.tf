@@ -140,10 +140,10 @@ resource "azurerm_key_vault_secret" "secrets" {
 }
 
 resource "azurerm_key_vault_secret" "sql_password" {
-  name = var.sql_password
-  value = module.sql.sql_sa_password
+  name         = var.sql_password
+  value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
-  }
+}
 
 
 # Storage accounts for data lake and config
@@ -159,25 +159,25 @@ module "sql" {
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
-  for_each = toset(var.sql_db_names)
-  name = "connect-string-${each.key}"
-  value = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
+  for_each     = toset(var.sql_db_names)
+  name         = "connect-string-${each.key}"
+  value        = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
   key_vault_id = module.kv_default.id
-  }
+}
 
 # databricks workspace
 module "adb" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/azuredatabricks"
-  resource_namer          = module.default_label.id
-  resource_group_name     = azurerm_resource_group.default.name
-  resource_group_location = azurerm_resource_group.default.location
-  databricks_sku          = var.databricks_sku
-  resource_tags           = module.default_label.tags
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/azuredatabricks"
+  resource_namer                           = module.default_label.id
+  resource_group_name                      = azurerm_resource_group.default.name
+  resource_group_location                  = azurerm_resource_group.default.location
+  databricks_sku                           = var.databricks_sku
+  resource_tags                            = module.default_label.tags
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
   log_analytics_destination_type           = var.log_analytics_destination_type
-  
+
 }
 
 resource "azurerm_role_assignment" "adb_role" {
