@@ -5,7 +5,7 @@ Feature:Azure Data Ingest
   Scenario Outline: Test Scenario
     Given the ADF pipeline Ingest_AzureSql_Example has been triggered
     And the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
-    Then the parquet files <output_files> are present in ADLS
+    Then the parquet files <output_files> are present in the ADLS container raw in the directory example_azuresql_1
 
     Examples: Output files
     |output_files|
