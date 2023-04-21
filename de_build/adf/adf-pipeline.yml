@@ -199,8 +199,8 @@ stages:
            
            - task: UsePythonVersion@0
              inputs:
-                versionSpec: $(pythonVersion)
-                githubToken: $(github_token)
+                versionSpec: "$(pythonVersion)"
+                githubToken: "$(github_token)"
                 addToPath: true
 
              displayName: Set Python Version
