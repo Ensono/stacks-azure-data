@@ -13,6 +13,7 @@ from constants import (
     DATA_FACTORY_NAME,
     RESOURCE_GROUP_NAME
 )
+import json
 
 
 credential = DefaultAzureCredential()
@@ -54,9 +55,16 @@ def step_impl(context, pipeline_name: str, state: str):
     assert pipeline_run.status == state
 
 
-@then('the data from the SQL database have been copied into ADLS')
-def step_impl(context):
+@then('the {file_type} files {output_files} are present in ADLS')
+def step_impl(context, file_type, output_files):
     filesystem_client = adls_client.get_file_system_client(RAW_CONTAINER_NAME)
     paths = filesystem_client.get_paths(SQL_DB_INGEST_DIRECTORY_NAME)
+    expected_files_list = json.loads(output_files)
+
+    actual_output_files = []
     for path in paths:
-        print(path.name)
+        if path.name.endswith(file_type):
+            actual_output_files.append(path.name)
+
+    for expected_file in expected_files_list:
+        assert any(expected_file in actual_output_file for actual_output_file in actual_output_files)
