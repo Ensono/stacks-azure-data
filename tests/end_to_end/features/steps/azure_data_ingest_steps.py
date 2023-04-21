@@ -1,28 +1,32 @@
 import os
-import time
 from datetime import datetime
 from behave import *
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.datafactory import DataFactoryManagementClient
 from azure.storage.filedatalake import DataLakeServiceClient
 import polling2
+from constants import (
+    RAW_CONTAINER_NAME,
+    ADLS_URL,
+    SQL_DB_INGEST_DIRECTORY_NAME,
+    SUBSCRIPTION_ID,
+    DATA_FACTORY_NAME,
+    RESOURCE_GROUP_NAME
+)
 
-
-SUBSCRIPTION_ID = os.environ.get("AZURE_SUBSCRIPTION_ID")
-RESOURCE_GROUP_NAME = os.environ.get("AZURE_RESOURCE_GROUP_NAME")
-DATA_FACTORY_NAME = os.environ.get("AZURE_DATA_FACTORY_NAME")
-REGION_NAME = os.environ.get("AZURE_REGION_NAME")
-STORAGE_ACCOUNT_NAME = os.environ.get("AZURE_STORAGE_ACCOUNT_NAME")
 
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, SUBSCRIPTION_ID)
+adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
 
-account = DataLakeServiceClient(account_url=f"https://{STORAGE_ACCOUNT_NAME}.dfs.core.windows.net", credential=credential)
 
-# Create a DataLakeFileSystemClient object for the desired directory
-directory_name = "raw"
-file_system_client = account.get_file_system_client(file_system=directory_name)
-
+def check_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, resource_group_name: str,
+                                     data_factory_name: str, run_id: str) -> bool:
+    pipeline_run = adf_client.pipeline_runs.get(
+        resource_group_name=resource_group_name,
+        factory_name=data_factory_name,
+        run_id=run_id)
+    return pipeline_run.status in ["Succeeded", "Failed"]
 
 
 @given('the ADF pipeline {pipeline_name} has been triggered')
@@ -33,21 +37,8 @@ def step_impl(context, pipeline_name: str):
                                                    parameters={"run_id": run_id})
     context.run_id = run_response.run_id
 
-
-@step('the ADF pipeline has been executed')
-def step_impl(context):
-    assert True is not False
-
 @step('the ADF pipeline {pipeline_name} has finished with state {state}')
 def step_impl(context, pipeline_name: str, state: str):
-
-    def check_pipeline_in_complete_state(adf_client, resource_group_name, data_factory_name, run_id):
-
-        pipeline_run = adf_client.pipeline_runs.get(
-        resource_group_name=resource_group_name,
-        factory_name=data_factory_name,
-        run_id=run_id)
-        return pipeline_run.status in ["Succeeded", "Failed"]
 
     polling2.poll(
         lambda: check_pipeline_in_complete_state(adf_client, RESOURCE_GROUP_NAME, DATA_FACTORY_NAME, context.run_id),
@@ -63,8 +54,9 @@ def step_impl(context, pipeline_name: str, state: str):
     assert pipeline_run.status == state
 
 
-@then('the files are added to ADLS')
+@then('the data from the SQL database have been copied into ADLS')
 def step_impl(context):
-    files = file_system_client.get_paths()
-    for file in files:
-        print(file.name)
+    filesystem_client = adls_client.get_file_system_client(RAW_CONTAINER_NAME)
+    paths = filesystem_client.get_paths(SQL_DB_INGEST_DIRECTORY_NAME)
+    for path in paths:
+        print(path.name)
