@@ -9,5 +9,7 @@ provider "azurerm" {
 
 provider "databricks" {
   host = module.adb.databricks_hosturl
+  # ARM_USE_MSI environment variable is recommended
+  azure_use_msi = true
 
 }
