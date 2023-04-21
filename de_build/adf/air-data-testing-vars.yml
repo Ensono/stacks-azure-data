@@ -10,12 +10,10 @@ variables:
   - name: testPath
     value: ''
   - name: zipPackage
-    type: boolean
     value: false
   - name: testRequirementsPath
     value: 'null'
   - name: replaceVersionTag
-    type: boolean
     value: false
   - name: dagName
     value: ''
