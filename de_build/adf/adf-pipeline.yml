@@ -183,6 +183,7 @@ stages:
   - deployment: Test_NonPROD
     displayName: 'Testing  NonPROD'
     environment: ${{ variables.domain }}-nonprod
+    dependsOn: Deploy_NonPROD
     pool:
       vmImage: 'ubuntu-latest'
     strategy:
@@ -191,7 +192,10 @@ stages:
           steps:
            - task: AzureCLI@2
              inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)' 
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               ScriptType: 'bash'
+               scriptLocation: 'inlineScript'
+               inlineScript: az account show 
            
            - task: UsePythonVersion@0
              inputs:
