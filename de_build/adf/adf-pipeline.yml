@@ -290,7 +290,6 @@ stages:
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
  
-  - deployment: Deploy_PRDO
 - stage: Release
   dependsOn:
       - Build_Stage
