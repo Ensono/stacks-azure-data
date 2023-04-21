@@ -181,7 +181,7 @@ stages:
 
     # Start Testing 
   - deployment: Test_NonPROD
-    displayName: 'Deploy To NonPROD'
+    displayName: 'Testing  NonPROD'
     environment: ${{ variables.domain }}-nonprod
     pool:
       vmImage: 'ubuntu-latest'
