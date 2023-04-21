@@ -200,6 +200,9 @@ stages:
            - task: UsePythonVersion@0
              inputs:
                 versionSpec: $(pythonVersion)
+                githubToken: $(github_release_service_connection)
+                addToPath: true
+                
              displayName: Set Python Version
 
            - bash: |
