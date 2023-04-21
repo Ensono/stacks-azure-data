@@ -1,0 +1,38 @@
+parameters:
+  - name: jobName
+    type: string
+    default: 'Test_Python'
+  - name: dependsOn
+    type: object
+    default: []
+  - name: pythonVersion
+    type: string
+    default: '3.8'
+  - name: airflowBucket
+    type: string
+    default: ''
+  - name: servicePath
+    type: string
+    default: 'dags/'
+  - name: requirementsPath
+    type: string
+    default: dags/requirements.txt
+  - name: testPath
+    type: string
+    default: ''
+  - name: zipPackage
+    type: boolean
+    default: false
+  - name: testRequirementsPath
+    type: string
+    default: 'null'
+  - name: replaceVersionTag
+    type: boolean
+    default: false
+  - name: dagName
+    type: string
+    default: ''
+  - name: pipDownloadDir
+    default: $(Pipeline.Workspace)/.pip
+  - name: trivyTemplatePath
+    default: '@trivy-junit.tpl'

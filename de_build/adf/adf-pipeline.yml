@@ -178,6 +178,27 @@ stages:
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
 
+    # Start Testing 
+  - deployment: Test_NonPROD
+    displayName: 'Deploy To NonPROD'
+    environment: ${{ variables.domain }}-nonprod
+    pool:
+      vmImage: 'ubuntu-latest'
+    variables:
+    - template: air-data-testing-vars.yml
+    strategy:
+      runOnce:
+        deploy:  
+          steps:
+           - task: UsePythonVersion@0
+             inputs:
+                versionSpec: ${{ parameters.pythonVersion }}
+             displayName: Set Python Version
+
+           - bash: |
+              pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+             displayName: 'Install Pipeline Tools'
+  
 
 #############################################################
 # Deploy to Prod
@@ -265,7 +286,8 @@ stages:
                               -predeployment $false
                               -deleteDeployment $True
               azurePowerShellVersion: 'LatestVersion'
-
+ 
+  - deployment: Deploy_PRDO
 - stage: Release
   dependsOn:
       - Build_Stage
