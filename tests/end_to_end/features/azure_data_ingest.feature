@@ -5,3 +5,4 @@ Feature:Azure Data Ingest
   Scenario: Test Scenario
     Given the ADF pipeline Ingest_AzureSql_Example has been triggered
     And the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
+    Then the data from the SQL database have been copied into ADLS

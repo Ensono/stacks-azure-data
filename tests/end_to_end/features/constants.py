@@ -1,0 +1,11 @@
+import os
+
+SUBSCRIPTION_ID = os.environ.get("AZURE_SUBSCRIPTION_ID")
+RESOURCE_GROUP_NAME = os.environ.get("AZURE_RESOURCE_GROUP_NAME")
+DATA_FACTORY_NAME = os.environ.get("AZURE_DATA_FACTORY_NAME")
+REGION_NAME = os.environ.get("AZURE_REGION_NAME")
+STORAGE_ACCOUNT_NAME = os.environ.get("AZURE_STORAGE_ACCOUNT_NAME")
+
+RAW_CONTAINER_NAME = "raw"
+ADLS_URL = f"https://{STORAGE_ACCOUNT_NAME}.dfs.core.windows.net"
+SQL_DB_INGEST_DIRECTORY_NAME = "example_azuresql_1"
