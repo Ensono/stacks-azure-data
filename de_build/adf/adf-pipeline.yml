@@ -185,7 +185,7 @@ stages:
     environment: ${{ variables.domain }}-nonprod
     pool:
       vmImage: 'ubuntu-latest'
-    variables:
+    parameters:
     - template: air-data-testing-vars.yml
     strategy:
       runOnce:
