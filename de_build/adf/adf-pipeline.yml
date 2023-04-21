@@ -27,6 +27,7 @@ pool:
 
 variables:
   - template: adf-pipeline-vars.yml
+  - template: air-data-testing-vars.yml
 
 stages:
 - stage: Build_Stage
