@@ -27,8 +27,6 @@ pool:
 
 variables:
   - template: adf-pipeline-vars.yml
-extends:
-  - template: air-data-testing-vars.yml
 
 stages:
 - stage: Build_Stage
@@ -187,8 +185,6 @@ stages:
     environment: ${{ variables.domain }}-nonprod
     pool:
       vmImage: 'ubuntu-latest'
-    parameters:
-    - template: air-data-testing-vars.yml
     strategy:
       runOnce:
         deploy:  
@@ -199,7 +195,7 @@ stages:
            
            - task: UsePythonVersion@0
              inputs:
-                versionSpec: ${{ parameters.pythonVersion }}
+                versionSpec: $(pythonVersion)
              displayName: Set Python Version
 
            - bash: |
