@@ -27,7 +27,9 @@ pool:
 
 variables:
   - template: adf-pipeline-vars.yml
-  - template: air-data-testing-vars.yml
+extends:
+  template: air-data-testing-vars.yml
+
 stages:
 - stage: Build_Stage
   variables:
@@ -191,6 +193,10 @@ stages:
       runOnce:
         deploy:  
           steps:
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)' 
+           
            - task: UsePythonVersion@0
              inputs:
                 versionSpec: ${{ parameters.pythonVersion }}
