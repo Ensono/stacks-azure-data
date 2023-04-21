@@ -1,4 +1,3 @@
-# Created by georgecalvert at 19/04/2023
 Feature:Azure Data Ingest
   I want to ingest data
   so that it is available in Azure data lake storage
