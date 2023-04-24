@@ -29,7 +29,7 @@ tasks:
     context: powershell
     description: Initialise Terraform for Azure
     command:
-      - Remove-Item env:GOOGLE_CREDENTIALS
+      - Remove-EnvironmentVariable -Name 'GOOGLE_CREDENTIALS'
       - Invoke-Terraform -Init -backend "$env:TF_BACKEND_ARGS" -Path $env:TF_FILE_LOCATION -Debug
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
 
@@ -37,14 +37,14 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
-      - Remove-Item env:GOOGLE_CREDENTIALS
+      - Remove-EnvironmentVariable -Name 'GOOGLE_CREDENTIALS'
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
 
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
     command:
-      - Remove-Item env:GOOGLE_CREDENTIALS
+      - Remove-EnvironmentVariable -Name 'GOOGLE_CREDENTIALS'
       - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
 
   publish:github:
