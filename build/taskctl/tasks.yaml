@@ -37,12 +37,14 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
+      - Remove-Item env:GOOGLE_CREDENTIALS
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
 
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
     command:
+      - Remove-Item env:GOOGLE_CREDENTIALS
       - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
 
   publish:github:
