@@ -29,6 +29,7 @@ tasks:
     context: powershell
     description: Initialise Terraform for Azure
     command:
+      - Remove-Item env:GOOGLE_CREDENTIALS
       - Invoke-Terraform -Init -backend "$env:TF_BACKEND_ARGS" -Path $env:TF_FILE_LOCATION -Debug
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
 
