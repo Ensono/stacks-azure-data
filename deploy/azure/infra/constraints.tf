@@ -9,5 +9,8 @@ terraform {
     databricks = {
       source = "databricks/databricks"
     }
+    default_provider {
+    name = "azurerm"
+  }
   }
 }
