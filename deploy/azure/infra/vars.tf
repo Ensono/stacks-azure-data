@@ -262,9 +262,9 @@ variable "rbac_databricks_users" {
       user_name    = "mehdi.kimakhe@amido.com"
       active       = true
     }
-    RishikeshSingh = {
-      display_name = "Rishikesh Singh"
-      user_name    = "rishikesh.singh@amido.com"
+    LorraineSnaddon = {
+      display_name = "Lorraine Snaddon"
+      user_name    = "lorraine.snaddon@amido.com"
       active       = true
     }
   }
