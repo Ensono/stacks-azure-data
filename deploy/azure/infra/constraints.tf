@@ -9,6 +9,6 @@ terraform {
     databricks = {
       source = "databricks/databricks"
     }
-    
+
   }
 }
