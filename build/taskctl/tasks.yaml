@@ -70,7 +70,8 @@ tasks:
     context: powershell
     description: Debugging task to show the environment variables in the container
     command:
-      - Remove-Item "env:GOOGLE_CREDENTIALS"
+      - Get-Item "env:GOOGLE_CREDENTIALS"
+      - Remove-Item env:\GOOGLE_CREDENTIALS
       - dir env:/
 
   debug:location:
