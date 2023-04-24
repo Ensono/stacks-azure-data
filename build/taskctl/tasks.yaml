@@ -71,7 +71,7 @@ tasks:
     description: Debugging task to show the environment variables in the container
     command:
       - Get-Item "env:GOOGLE_CREDENTIALS"
-      - Remove-Item "env:GOOGLE_CREDENTIALS"
+      - Remove-Item "env:GOOGLE_CREDENTIALS" -force
       - Get-Item "env:GOOGLE_CREDENTIALS"
       - dir env:/
 
