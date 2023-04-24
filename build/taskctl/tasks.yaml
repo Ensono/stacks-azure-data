@@ -72,7 +72,6 @@ tasks:
     command:
       - Get-Item "env:GOOGLE_CREDENTIALS"
       - Remove-Item "env:GOOGLE_CREDENTIALS"
-      - Remove-Variable -Name "GOOGLE_CREDENTIALS"
       - Get-Item "env:GOOGLE_CREDENTIALS"
       - dir env:/
 
