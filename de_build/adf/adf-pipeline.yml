@@ -229,7 +229,7 @@ stages:
                   AZURE_RESOURCE_GROUP_NAME: $(resource_group)
                   AZURE_DATA_FACTORY_NAME: $(datafactoryname)
                   AZURE_REGION_NAME: $(region)
-                  AZURE_STORAGE_ACCOUNT_NAME: $(blob_configStorage)
+                  AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
                   AZURE_CLIENT_ID: $(azure-client-id)
                   AZURE_CLIENT_SECRET: $(azure-client-secret)
                   AZURE_TENANT_ID: $(azure-tenant-id)
