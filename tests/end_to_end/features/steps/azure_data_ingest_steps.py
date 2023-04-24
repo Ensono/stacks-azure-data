@@ -37,7 +37,7 @@ def step_impl(context, pipeline_name: str):
 def step_impl(context, pipeline_name: str, state: str):
     polling2.poll(
         lambda: check_pipeline_in_complete_state(adf_client, RESOURCE_GROUP_NAME, DATA_FACTORY_NAME, context.run_id),
-        step=10,  # Poll every 30 seconds
+        step=10,  # Poll every 10 seconds
         timeout=300
     )
 
@@ -67,6 +67,6 @@ def all_files_present_in_adls(context, file_type, output_files, container_name, 
 
 @step('the ADF pipeline completed in less than {seconds} seconds')
 def adf_pipeline_completion_time(context, seconds):
-    end_time = datetime.datetime.now()
+    end_time = datetime.now()
     time_diff = (end_time - context.start_time).total_seconds()
-    assert time_diff < seconds
+    assert time_diff < float(seconds)
