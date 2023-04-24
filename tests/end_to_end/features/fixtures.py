@@ -5,28 +5,29 @@ from azure.core.exceptions import ResourceNotFoundError
 from behave import fixture
 
 
-@fixture
-def azure_adls_clean_up(context):
-    credential = DefaultAzureCredential()
-    client = DataLakeDirectoryClient(account_url=ADLS_URL, credential=credential, file_system_name=RAW_CONTAINER_NAME,
-                                     directory_name=SQL_DB_INGEST_DIRECTORY_NAME)
-
-    directory_path = f"{ADLS_URL}/{RAW_CONTAINER_NAME}/{SQL_DB_INGEST_DIRECTORY_NAME}"
-    print(f"BEFORE SCENARIO. DELETING DIRECTORY: {directory_path}")
-
+def delete_directory_adls(client: DataLakeDirectoryClient, directory_path: str):
     try:
         client.delete_directory()
     except ResourceNotFoundError:
         print(f"The Following Directory Was Not Found: {directory_path}")
     except Exception:
         raise
+
+
+@fixture
+def azure_adls_clean_up(context):
+    credential = DefaultAzureCredential()
+    adls_client = DataLakeDirectoryClient(account_url=ADLS_URL, credential=credential, file_system_name=RAW_CONTAINER_NAME,
+                                     directory_name=SQL_DB_INGEST_DIRECTORY_NAME)
+
+    directory_path = f"{ADLS_URL}/{RAW_CONTAINER_NAME}/{SQL_DB_INGEST_DIRECTORY_NAME}"
+
+    print(f"BEFORE SCENARIO. DELETING DIRECTORY: {directory_path}")
+
+    delete_directory_adls(adls_client, directory_path)
 
     yield context
 
     print(f"AFTER SCENARIO. DELETING DIRECTORY: {directory_path}")
-    try:
-        client.delete_directory()
-    except ResourceNotFoundError:
-        print(f"The Following Directory Was Not Found: {directory_path}")
-    except Exception:
-        raise
+
+    delete_directory_adls(adls_client, directory_path)
