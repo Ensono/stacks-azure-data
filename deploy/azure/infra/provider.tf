@@ -3,6 +3,10 @@ terraform {
   }
 }
 
+default_provider {
+  name = "azurerm"
+}
+
 provider "azurerm" {
   features {}
 }

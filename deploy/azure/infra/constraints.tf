@@ -11,7 +11,4 @@ terraform {
     }
     
   }
-  default_provider {
-    name = "azurerm"
-  }
 }
