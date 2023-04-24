@@ -103,7 +103,6 @@ stages:
   variables:
       - group: amido-stacks-de-pipeline-nonprod
       - group: amido-stacks-infra-credentials-nonprod
-      - group: stacks-credentials-nonprod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   dependsOn: Build_Stage
