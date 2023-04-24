@@ -210,8 +210,10 @@ stages:
               pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
              displayName: 'Install Pipeline Tools'
            - bash: |
+              pwd 
               poetry install 
              displayName: 'Running poetry install'
+             workingDirectory:  '$(self_repo_dir)'
   
 
 #############################################################
