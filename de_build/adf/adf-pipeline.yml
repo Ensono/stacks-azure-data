@@ -209,6 +209,9 @@ stages:
            - bash: |
               pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
              displayName: 'Install Pipeline Tools'
+           - bash: |
+              poetry install 
+             displayName: 'Running poetry install'
   
 
 #############################################################
