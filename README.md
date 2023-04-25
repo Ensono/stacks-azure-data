@@ -69,6 +69,14 @@ to install a package for use only in the dev environment, use:
 poetry add packagename --group dev
 ```
 
+### Running unit tests
+
+In order to run unit tests run the following command:
+
+```bash
+make test
+```
+
 ### Running E2E Tests
 
 To run E2E tests locally you will need to login through the Azure CLI:
@@ -85,7 +93,7 @@ az account set --subscription <name or id>
 
 To run the E2E tests you need to set up the following environment variables.
 
-- `SUBSCRIPTION_ID `
+- `SUBSCRIPTION_ID`
 - `RESOURCE_GROUP_NAME`
 - `DATA_FACTORY_NAME`
 - `REGION_NAME`
@@ -94,8 +102,8 @@ To run the E2E tests you need to set up the following environment variables.
 The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
 whilst clearing up directories please check you have the necessary permissions to read, write and execute against ADLS.
 
-To run the E2E tests run
+To run the E2E tests run:
 
 ```bash
-`behave tests/end_to_end/features/`
+make test_e2e
 ```
