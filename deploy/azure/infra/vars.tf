@@ -149,6 +149,12 @@ variable "kv_role_adf" {
   default     = "Key Vault Secrets User"
 }
 
+variable "adb_role_adf" {
+  description = "Role assignment for Azure databricks."
+  type        = string
+  default     = "Contributor"
+}
+
 ############################################
 # Containers for Storage Accounts
 ############################################
