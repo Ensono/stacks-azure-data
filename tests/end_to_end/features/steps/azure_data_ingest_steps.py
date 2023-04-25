@@ -33,14 +33,18 @@ def step_impl(context, pipeline_name: str):
     context.run_id = run_response.run_id
 
 
-@step('the ADF pipeline {pipeline_name} has finished with state {state}')
-def step_impl(context, pipeline_name: str, state: str):
+@step('I poll the pipeline every {seconds} seconds until it has completed')
+def poll_adf_pipeline(context, seconds: str):
     polling2.poll(
-        lambda: check_pipeline_in_complete_state(adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, context.run_id),
-        step=10,  # Poll every 10 seconds
+        lambda: check_pipeline_in_complete_state(adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME,
+                                                 context.run_id),
+        step=int(seconds),
         timeout=300
     )
 
+
+@step('the ADF pipeline {pipeline_name} has finished with state {state}')
+def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
     pipeline_run = adf_client.pipeline_runs.get(
         resource_group_name=AZURE_RESOURCE_GROUP_NAME,
         factory_name=AZURE_DATA_FACTORY_NAME,
