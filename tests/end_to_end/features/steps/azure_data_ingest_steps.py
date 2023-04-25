@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.datafactory import DataFactoryManagementClient
@@ -7,7 +8,9 @@ from constants import (
     ADLS_URL,
     AZURE_SUBSCRIPTION_ID,
     AZURE_DATA_FACTORY_NAME,
-    AZURE_RESOURCE_GROUP_NAME
+    AZURE_RESOURCE_GROUP_NAME,
+    DEFAULT_WINDOW_START_DATE,
+    DEFAULT_WINDOW_END_DATE
 )
 import polling2
 import json
@@ -26,10 +29,17 @@ def check_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, re
     return pipeline_run.status in ["Succeeded", "Failed"]
 
 
-@given('the ADF pipeline {pipeline_name} has been triggered')
-def step_impl(context, pipeline_name: str):
+@given('the ADF pipeline {pipeline_name} has been triggered with {parameters}')
+def step_impl(context, pipeline_name: str, parameters: str):
     context.start_time = datetime.now()
-    run_response = adf_client.pipelines.create_run(AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, pipeline_name)
+    parameters = json.loads(parameters)
+    correlation_id = f'automated_test_{uuid.uuid4()}'
+    context.correlation_id = correlation_id
+    parameters.update({'correlation_id': f'automated_test_{uuid.uuid4()}'})
+    run_response = adf_client.pipelines.create_run(AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, pipeline_name,
+                                                   parameters={'correlation_id': context.correlation_id,
+                                                               'window_start': DEFAULT_WINDOW_START_DATE,
+                                                               'window_end': DEFAULT_WINDOW_END_DATE})
     context.run_id = run_response.run_id
 
 
