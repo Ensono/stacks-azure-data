@@ -5,15 +5,15 @@ from azure.storage.filedatalake import DataLakeServiceClient
 from behave import *
 from constants import (
     ADLS_URL,
-    SUBSCRIPTION_ID,
-    DATA_FACTORY_NAME,
-    RESOURCE_GROUP_NAME
+    AZURE_SUBSCRIPTION_ID,
+    AZURE_DATA_FACTORY_NAME,
+    AZURE_RESOURCE_GROUP_NAME
 )
 import polling2
 import json
 
 credential = DefaultAzureCredential()
-adf_client = DataFactoryManagementClient(credential, SUBSCRIPTION_ID)
+adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
 adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
 
 
@@ -29,21 +29,21 @@ def check_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, re
 @given('the ADF pipeline {pipeline_name} has been triggered')
 def step_impl(context, pipeline_name: str):
     context.start_time = datetime.now()
-    run_response = adf_client.pipelines.create_run(RESOURCE_GROUP_NAME, DATA_FACTORY_NAME, pipeline_name)
+    run_response = adf_client.pipelines.create_run(AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, pipeline_name)
     context.run_id = run_response.run_id
 
 
 @step('the ADF pipeline {pipeline_name} has finished with state {state}')
 def step_impl(context, pipeline_name: str, state: str):
     polling2.poll(
-        lambda: check_pipeline_in_complete_state(adf_client, RESOURCE_GROUP_NAME, DATA_FACTORY_NAME, context.run_id),
+        lambda: check_pipeline_in_complete_state(adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, context.run_id),
         step=10,  # Poll every 10 seconds
         timeout=300
     )
 
     pipeline_run = adf_client.pipeline_runs.get(
-        resource_group_name=RESOURCE_GROUP_NAME,
-        factory_name=DATA_FACTORY_NAME,
+        resource_group_name=AZURE_RESOURCE_GROUP_NAME,
+        factory_name=AZURE_DATA_FACTORY_NAME,
         run_id=context.run_id,
     )
     assert pipeline_run.status == state
