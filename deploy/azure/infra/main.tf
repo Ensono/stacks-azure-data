@@ -176,11 +176,14 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-
+  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
+  add_rbac_users                           = var.add_rbac_users
+  rbac_databricks_users                    = var.rbac_databricks_users
+  databricks_group_display_name            = var.databricks_group_display_name
 }
 
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
-  role_definition_name = "Contributor"
+  role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
