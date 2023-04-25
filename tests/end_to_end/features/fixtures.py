@@ -1,17 +1,14 @@
 from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeDirectoryClient
 from constants import ADLS_URL, SQL_DB_INGEST_DIRECTORY_NAME, RAW_CONTAINER_NAME
-from azure.core.exceptions import ResourceNotFoundError
 from behave import fixture
 
 
 def delete_directory_adls(client: DataLakeDirectoryClient, directory_path: str):
-    try:
+    if client.exists():
         client.delete_directory()
-    except ResourceNotFoundError:
+    else:
         print(f"The Following Directory Was Not Found: {directory_path}")
-    except Exception:
-        raise
 
 
 @fixture
@@ -22,12 +19,12 @@ def azure_adls_clean_up(context):
 
     directory_path = f"{ADLS_URL}/{RAW_CONTAINER_NAME}/{SQL_DB_INGEST_DIRECTORY_NAME}"
 
-    print(f"BEFORE SCENARIO. DELETING DIRECTORY: {directory_path}")
+    print(f"BEFORE SCENARIO. ATTEMPTING TO DELETE DIRECTORY: {directory_path}")
 
     delete_directory_adls(adls_client, directory_path)
 
     yield context
 
-    print(f"AFTER SCENARIO. DELETING DIRECTORY: {directory_path}")
+    print(f"AFTER SCENARIO. ATTEMPTING TO DELETE DIRECTORY: {directory_path}")
 
     delete_directory_adls(adls_client, directory_path)
