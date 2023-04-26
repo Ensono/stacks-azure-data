@@ -3,7 +3,7 @@ Feature:Azure Data Ingest
   so that it is available in Azure data lake storage
 
   Scenario Outline: Data Factory Ingest SQL Database into ADLS
-    Given the ADF pipeline Ingest_AzureSql_Example has been triggered with parameters <parameters>
+    Given the ADF pipeline Ingest_AzureSql_Example has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
     And the ADF pipeline completed in less than 120 seconds
