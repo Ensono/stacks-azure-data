@@ -1,8 +1,3 @@
-# Configure data to access the SPN that has been used to deploy the environment
-data "azurerm_client_config" "current" {
-}
-
-
 
 # Naming convention
 module "default_label" {
