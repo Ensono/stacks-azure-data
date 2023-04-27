@@ -68,6 +68,14 @@ resource "azurerm_log_analytics_workspace" "la" {
   tags                = module.default_label.tags
 }
 
+#Below role assingment is needed to run end to end Test in pipeline
+resource "azurerm_role_assignment" "e_2_test_role" {
+  scope                = module.adls_default.storage_account_ids[1]
+  role_definition_name = var.e_2_test_role
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+
 # Enable diagnostic settings for ADF
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
