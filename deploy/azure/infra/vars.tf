@@ -155,6 +155,12 @@ variable "adb_role_adf" {
   default     = "Contributor"
 }
 
+variable "e_2_test_role" {
+  description = "Role assignment for end to end Testing."
+  type        = string
+  default     = "Storage Blob Data Contributor"
+}
+
 ############################################
 # Containers for Storage Accounts
 ############################################
