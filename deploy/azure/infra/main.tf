@@ -56,7 +56,7 @@ resource "azurerm_role_assignment" "storage_role" {
 
 #Below role assingment is needed to run end to end Test in pipeline
 resource "azurerm_role_assignment" "e_2_test_role" {
-  scope                = module.adls_default.storage_account_ids[0]
+  scope                = module.adls_default.storage_account_ids[1]
   role_definition_name = var.e_2_test_role
   principal_id         = data.azurerm_client_config.current.object_id
 }
