@@ -1,9 +1,13 @@
+import json
 import uuid
 from datetime import datetime
+
+import polling2
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.datafactory import DataFactoryManagementClient
 from azure.storage.filedatalake import DataLakeServiceClient
 from behave import *
+
 from constants import (
     ADLS_URL,
     AZURE_SUBSCRIPTION_ID,
@@ -11,8 +15,6 @@ from constants import (
     AZURE_RESOURCE_GROUP_NAME,
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
 )
-import polling2
-import json
 
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
@@ -30,7 +32,6 @@ def check_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, re
 
 @given('the ADF pipeline {pipeline_name} has been triggered with {parameters}')
 def step_impl(context, pipeline_name: str, parameters: str):
-
     context.start_time = datetime.now()
     parameters = json.loads(parameters)
     correlation_id = f'automated_test_{uuid.uuid4()}'
