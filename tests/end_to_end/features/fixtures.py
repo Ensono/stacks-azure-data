@@ -1,7 +1,8 @@
 from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
-from constants import ADLS_URL, RAW_CONTAINER_NAME, AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
 from behave import fixture
+
+from constants import ADLS_URL, RAW_CONTAINER_NAME, AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
 
 
 def filter_directory_paths_adls(adls_client: DataLakeServiceClient, container_name: str, directory_path: str,
@@ -44,6 +45,7 @@ def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: 
 def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, directory_path: str):
     """
     Deletes an ADLS directory.
+
     :param adls_client:     DataLakeServiceClient
     :param container_name:  Container / File System
     :param directory_path:  A directory path
