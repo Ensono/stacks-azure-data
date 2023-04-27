@@ -9,11 +9,11 @@ from azure.storage.filedatalake import DataLakeServiceClient
 from behave import *
 
 from constants import (
-    ADLS_URL,
-    AZURE_SUBSCRIPTION_ID,
-    AZURE_DATA_FACTORY_NAME,
-    AZURE_RESOURCE_GROUP_NAME,
-    AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
+     ADLS_URL,
+     AZURE_SUBSCRIPTION_ID,
+     AZURE_DATA_FACTORY_NAME,
+     AZURE_RESOURCE_GROUP_NAME,
+     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
 )
 
 credential = DefaultAzureCredential()
@@ -31,7 +31,7 @@ def check_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, re
 
 
 @given('the ADF pipeline {pipeline_name} has been triggered with {parameters}')
-def step_impl(context, pipeline_name: str, parameters: str):
+def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
     context.start_time = datetime.now()
     parameters = json.loads(parameters)
     correlation_id = f'automated_test_{uuid.uuid4()}'
