@@ -1,3 +1,8 @@
+# Configure data to access the SPN that has been used to deploy the environment
+data "azurerm_client_config" "current" {
+}
+
+
 
 # Naming convention
 module "default_label" {
@@ -52,6 +57,13 @@ resource "azurerm_role_assignment" "storage_role" {
   scope                = module.adls_default.storage_account_ids[0]
   role_definition_name = var.adls_datalake_role_adf
   principal_id         = module.adf.adf_managed_identity
+}
+
+#Below role assingment is needed to run end to end Test in pipeline
+resource "azurerm_role_assignment" "e_2_test_role" {
+  scope                = module.adls_default.storage_account_ids[0]
+  role_definition_name = var.e_2_test_role
+  principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_role_assignment" "storage_role_config" {
