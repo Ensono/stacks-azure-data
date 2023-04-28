@@ -142,7 +142,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directory": {
-											"value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}",
+											"value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}/@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
 											"type": "Expression"
 										},
 										"filename": {
@@ -196,6 +196,10 @@
 			"window_end": {
 				"type": "string",
 				"defaultValue": "2020-01-31"
+			},
+			"correlation_id": {
+				"type": "string",
+				"defaultValue": ""
 			}
 		},
 		"folder": {
