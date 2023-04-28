@@ -68,6 +68,14 @@ resource "azurerm_log_analytics_workspace" "la" {
   tags                = module.default_label.tags
 }
 
+#Below role assingment is needed to run end to end Test in pipeline
+resource "azurerm_role_assignment" "e_2_test_role" {
+  scope                = module.adls_default.storage_account_ids[1]
+  role_definition_name = var.e_2_test_role
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+
 # Enable diagnostic settings for ADF
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
@@ -176,11 +184,14 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-
+  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
+  add_rbac_users                           = var.add_rbac_users
+  rbac_databricks_users                    = var.rbac_databricks_users
+  databricks_group_display_name            = var.databricks_group_display_name
 }
 
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
-  role_definition_name = "Contributor"
+  role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
