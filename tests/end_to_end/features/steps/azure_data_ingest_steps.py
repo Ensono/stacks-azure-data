@@ -16,6 +16,7 @@ from constants import (
      AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
 )
 from utils.azure.data_factory import check_adf_pipeline_in_complete_state, get_adf_pipeline_run, create_adf_pipeline_run
+from utils.azure.adls import all_files_present_in_adls
 
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
@@ -54,20 +55,11 @@ def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
     assert pipeline_run.status == state
 
 
-@then('the {file_type} files {output_files} are present in the ADLS container {container_name} in the directory '
+@then('the files {output_files} are present in the ADLS container {container_name} in the directory '
       '{directory_name}')
-def all_files_present_in_adls(context, file_type, output_files, container_name, directory_name):
-    filesystem_client = adls_client.get_file_system_client(container_name)
-    paths = filesystem_client.get_paths(directory_name)
+def check_all_files_present_in_adls(context, output_files, container_name, directory_name):
     expected_files_list = json.loads(output_files)
-
-    actual_output_files = []
-    for path in paths:
-        if path.name.endswith(file_type):
-            actual_output_files.append(path.name)
-
-    for expected_file in expected_files_list:
-        assert any(expected_file in actual_output_file for actual_output_file in actual_output_files)
+    assert all_files_present_in_adls(adls_client, container_name, directory_name, expected_files_list)
 
 
 @step('the ADF pipeline completed in less than {seconds} seconds')

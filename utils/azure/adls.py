@@ -53,3 +53,22 @@ def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, di
         adls_directory_client.delete_directory()
     else:
         print(f"The Following Directory Was Not Found: {directory_path}")
+
+
+def all_files_present_in_adls(adls_client: DataLakeServiceClient, container_name: str, directory_name: str,
+                              expected_files: list) -> bool:
+    """
+    Asserts all files in a given list are present in the specified container and directory.
+
+    :param adls_client:     DataLakeServiceClient
+    :param container_name:  Container / File System
+    :param directory_name:  Directory Name
+    :param expected_files:  List of Expected Files
+    :return:
+        bool
+    """
+    adls_fs_client = adls_client.get_file_system_client(container_name)
+    actual_paths = adls_fs_client.get_paths(directory_name)
+    for expected_file in expected_files:
+        assert any(expected_file in actual_output_file.name for actual_output_file in actual_paths)
+    return True
