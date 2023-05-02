@@ -21,3 +21,9 @@ variables:
     value: $(Pipeline.Workspace)/.pip
   - name: trivyTemplatePath
     value: '@trivy-junit.tpl'
+  - name: test_unit_path
+    value: 'tests/unit/'
+  - name: test_end_to_end_path
+    value: 'tests/end_to_end/features/'
+  - name: junit_path
+    value: 'junit/'

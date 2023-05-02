@@ -216,12 +216,12 @@ stages:
              displayName: 'Running poetry install'
              workingDirectory:  '$(self_repo_dir)'
            - bash: |
-               python -m pytest tests/unit/
+               python -m pytest $(test_unit_path)
              displayName: 'Running py test'
              workingDirectory:  '$(self_repo_dir)'
 
            - bash: |
-               poetry run behave tests/end_to_end/features/ --junit --junit-directory junit/
+               poetry run behave $(test_end_to_end_path)--junit --junit-directory $(junit_path)
              displayName: 'Running e2e Test'
              workingDirectory:  '$(self_repo_dir)'
              env:
@@ -238,7 +238,7 @@ stages:
              displayName: 'Publish Test Results'
              inputs:
                 testResultsFiles: '**/*.xml'
-                searchFolder: 'junit/'
+                searchFolder: $(junit_path)
              condition: succeededOrFailed()
   
 
