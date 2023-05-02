@@ -1,0 +1,19 @@
+variables:
+  - name: pythonVersion
+    value: '3.10.10'
+  - name: testPath
+    value: ''
+  - name: zipPackage
+    value: false
+  - name: testRequirementsPath
+    value: 'null'
+  - name: replaceVersionTag
+    value: false
+  - name: pipDownloadDir
+    value: $(Pipeline.Workspace)/.pip
+  - name: test_unit_path
+    value: 'tests/unit/'
+  - name: test_end_to_end_path
+    value: 'tests/end_to_end/features/'
+  - name: junit_path
+    value: 'junit/'

@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["Andy Durkan <andy.durkan@ensono.com>"]
 readme = "README.md"
-packages = [{include = "stacks_azure_data_platform"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
