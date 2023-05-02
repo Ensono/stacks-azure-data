@@ -221,7 +221,7 @@ stages:
              workingDirectory:  '$(self_repo_dir)'
 
            - bash: |
-               poetry run behave $(test_end_to_end_path)--junit --junit-directory $(junit_path)
+               poetry run behave $(test_end_to_end_path)  --junit --junit-directory $(junit_path)
              displayName: 'Running e2e Test'
              workingDirectory:  '$(self_repo_dir)'
              env:
