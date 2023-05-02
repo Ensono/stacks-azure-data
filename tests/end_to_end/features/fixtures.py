@@ -1,32 +1,30 @@
 from azure.identity import DefaultAzureCredential
-from azure.storage.filedatalake import DataLakeDirectoryClient
-from constants import ADLS_URL, SQL_DB_INGEST_DIRECTORY_NAME, RAW_CONTAINER_NAME
-from azure.core.exceptions import ResourceNotFoundError
+from azure.storage.filedatalake import DataLakeServiceClient
 from behave import fixture
-
+from constants import ADLS_URL, RAW_CONTAINER_NAME, AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX
+from utils.azure.adls import filter_directory_paths_adls, delete_directories_adls
 
 @fixture
-def azure_adls_clean_up(context):
+def azure_adls_clean_up(context, ingest_directory_name: str):
     credential = DefaultAzureCredential()
-    client = DataLakeDirectoryClient(account_url=ADLS_URL, credential=credential, file_system_name=RAW_CONTAINER_NAME,
-                                     directory_name=SQL_DB_INGEST_DIRECTORY_NAME)
+    adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
+    print('BEFORE SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA')
+    automated_test_output_directory_paths = filter_directory_paths_adls(adls_client,
+                                                                        RAW_CONTAINER_NAME,
+                                                                        ingest_directory_name,
+                                                                        AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX)
 
-    directory_path = f"{ADLS_URL}/{RAW_CONTAINER_NAME}/{SQL_DB_INGEST_DIRECTORY_NAME}"
-    print(f"BEFORE SCENARIO. DELETING DIRECTORY: {directory_path}")
-
-    try:
-        client.delete_directory()
-    except ResourceNotFoundError:
-        print(f"The Following Directory Was Not Found: {directory_path}")
-    except Exception:
-        raise
+    if automated_test_output_directory_paths:
+        delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
 
     yield context
 
-    print(f"AFTER SCENARIO. DELETING DIRECTORY: {directory_path}")
-    try:
-        client.delete_directory()
-    except ResourceNotFoundError:
-        print(f"The Following Directory Was Not Found: {directory_path}")
-    except Exception:
-        raise
+    print('AFTER SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA')
+
+    automated_test_output_directory_paths = filter_directory_paths_adls(adls_client,
+                                                                        RAW_CONTAINER_NAME,
+                                                                        ingest_directory_name,
+                                                                        AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX)
+
+    if automated_test_output_directory_paths:
+        delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
