@@ -13,7 +13,14 @@ trigger:
 #- main #collaboration branch
 - none
 
+
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 variables:
+  - template: de_build/adf/adf-pipeline-varsV1.yml
+#  - template: de_build/adf/air-data-testing-vars.yml
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
   - name: self_repo_adf_dir
@@ -22,13 +29,6 @@ variables:
     value: "$(self_repo_dir)/ingest/config"
   - name: blob_config_destination
     value: config
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  - template: de_build/adf/adf-pipeline-varsV1.yml
-#  - template: de_build/adf/air-data-testing-vars.yml
 
 stages:
 - stage: Build_Stage
