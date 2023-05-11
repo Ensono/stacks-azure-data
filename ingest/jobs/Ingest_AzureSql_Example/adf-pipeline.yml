@@ -22,7 +22,7 @@ variables:
   - template: ../../../de_build/adf/adf-pipeline-varsV1.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
   - name: job  #update job name
-    value: 'Generate_Ingest_Query'
+    value: 'Ingest_AzureSql_Example'
   - name: self_repo_adf_dir
     value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
   - name: self_repo_blob_config
