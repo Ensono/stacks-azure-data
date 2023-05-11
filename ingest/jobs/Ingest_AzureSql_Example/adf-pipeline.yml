@@ -19,7 +19,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: adf-pipeline-varsV1.yml
+  - template: ../../../de_build/adf/adf-pipeline-varsV1.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
