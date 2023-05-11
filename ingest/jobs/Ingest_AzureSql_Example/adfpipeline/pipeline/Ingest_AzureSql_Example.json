@@ -1,0 +1,212 @@
+{
+	"name": "Ingest_AzureSql_Example",
+	"properties": {
+		"description": "Ingest from demo Azure SQL database using ingest config file.",
+		"activities": [
+			{
+				"name": "Get_Ingest_Config",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Get_Ingest_Config",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"config_file": {
+							"value": "@{pipeline().parameters.data_source_name}.json",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "For_Each_Ingest_Entity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get_Ingest_Config",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get_Ingest_Config').output.pipelineReturnValue['config'][0]['ingest_entities']",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "SQL_to_ADLS",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Generate_Ingest_Query",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "1:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"additionalColumns": [
+										{
+											"name": "meta_ingestion_datetime",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "meta_ingestion_pipeline",
+											"value": {
+												"value": "@pipeline().Pipeline",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "meta_ingestion_run_id",
+											"value": {
+												"value": "@pipeline().RunId",
+												"type": "Expression"
+											}
+										}
+									],
+									"sqlReaderQuery": {
+										"value": "@activity('Generate_Ingest_Query').output.pipelineReturnValue['generated_query']",
+										"type": "Expression"
+									},
+									"queryTimeout": "00:10:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"validateDataConsistency": true,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "ls_Blob_ConfigStore",
+											"type": "LinkedServiceReference"
+										},
+										"path": {
+											"value": "adf-config/logs/@{pipeline().Pipeline}/@{item()['display_name']}",
+											"type": "Expression"
+										}
+									}
+								},
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_ex_AzureSql_ExampleSource",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_dp_DataLake_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"directory": {
+											"value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}/@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@{item()['display_name']}.parquet",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Generate_Ingest_Query",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Generate_Ingest_Query",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"ingest_entity_config": {
+										"value": "@item()",
+										"type": "Expression"
+									},
+									"window_start": {
+										"value": "@pipeline().parameters.window_start",
+										"type": "Expression"
+									},
+									"window_end": {
+										"value": "@pipeline().parameters.window_end",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"data_source_name": {
+				"type": "string",
+				"defaultValue": "example_azuresql_1"
+			},
+			"window_start": {
+				"type": "string",
+				"defaultValue": "2020-01-01"
+			},
+			"window_end": {
+				"type": "string",
+				"defaultValue": "2020-01-31"
+			},
+			"correlation_id": {
+				"type": "string",
+				"defaultValue": ""
+			}
+		},
+		"folder": {
+			"name": "Ingest"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-03-21T15:27:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
