@@ -1,11 +1,11 @@
 {
-	"name": "ls_ADLS_DataLake",
-	"properties": {
-		"annotations": [],
-		"type": "AzureBlobFS",
-		"typeProperties": {
-			"url": "https://amidostacksdeveuwdeadls.dfs.core.windows.net/"
-		}
-	},
-	"type": "Microsoft.DataFactory/factories/linkedservices"
+    "name": "ls_ADLS_DataLake",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "annotations": [],
+        "type": "AzureBlobFS",
+        "typeProperties": {
+            "url": "https://amidostacksdeveuwdeadls.dfs.core.windows.net/"
+        }
+    }
 }

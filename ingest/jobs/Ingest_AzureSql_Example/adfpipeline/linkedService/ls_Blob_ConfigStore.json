@@ -1,11 +1,11 @@
 {
-	"name": "ls_Blob_ConfigStore",
-	"properties": {
-		"annotations": [],
-		"type": "AzureBlobStorage",
-		"typeProperties": {
-			"serviceEndpoint": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
-		}
-	},
-	"type": "Microsoft.DataFactory/factories/linkedservices"
+    "name": "ls_Blob_ConfigStore",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "annotations": [],
+        "type": "AzureBlobStorage",
+        "typeProperties": {
+            "serviceEndpoint": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
+        }
+    }
 }

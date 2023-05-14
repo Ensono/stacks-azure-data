@@ -1,39 +1,39 @@
 {
-	"name": "ds_dp_DataLake_Parquet",
-	"properties": {
-		"linkedServiceName": {
-			"referenceName": "ls_ADLS_DataLake",
-			"type": "LinkedServiceReference"
-		},
-		"parameters": {
-			"directory": {
-				"type": "String"
-			},
-			"filename": {
-				"type": "String"
-			}
-		},
-		"folder": {
-			"name": "Data_Platform/Data_Lake"
-		},
-		"annotations": [],
-		"type": "Parquet",
-		"typeProperties": {
-			"location": {
-				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().filename",
-					"type": "Expression"
-				},
-				"folderPath": {
-					"value": "@dataset().directory",
-					"type": "Expression"
-				},
-				"container": "raw"
-			},
-			"compressionCodec": "snappy"
-		},
-		"schema": []
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+    "name": "ds_dp_DataLake_Parquet",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "ls_ADLS_DataLake",
+            "type": "LinkedServiceReference"
+        },
+        "parameters": {
+            "directory": {
+                "type": "String"
+            },
+            "filename": {
+                "type": "String"
+            }
+        },
+        "folder": {
+            "name": "Data_Platform/Data_Lake"
+        },
+        "annotations": [],
+        "type": "Parquet",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": {
+                    "value": "@dataset().filename",
+                    "type": "Expression"
+                },
+                "folderPath": {
+                    "value": "@dataset().directory",
+                    "type": "Expression"
+                },
+                "container": "raw"
+            },
+            "compressionCodec": "snappy"
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
 }
