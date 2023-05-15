@@ -181,6 +181,7 @@ stages:
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
                 overrideParameters: -factoryName $(datafactoryname)
+                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -325,6 +326,7 @@ stages:
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
                 overrideParameters: -factoryName $(datafactoryname)
+                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
