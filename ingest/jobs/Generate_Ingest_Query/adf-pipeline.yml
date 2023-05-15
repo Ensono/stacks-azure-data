@@ -52,7 +52,7 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy ARM Files '
       inputs:
-        SourceFolder: 'adfpipelines/$(service)/'
+        SourceFolder: '$(self_repo_adf_dir)/'
         Contents: '*.json'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
 
