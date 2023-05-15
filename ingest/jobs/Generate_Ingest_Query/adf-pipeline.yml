@@ -168,7 +168,7 @@ stages:
                scriptLocation: 'inlineScript'
                inlineScript: 'az deployment group what-if `
                               --resource-group $(resource_group) `
-                              --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
+                              --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
                               --parameters $(System.DefaultWorkingDirectory)/ARMTemplateParametersForFactory.json `
                               --parameters factoryName=amido-stacks-dev-euw-de  `
                               --exclude-change-types Ignore'        
