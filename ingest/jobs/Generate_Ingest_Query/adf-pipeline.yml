@@ -161,17 +161,6 @@ stages:
                               --account-name $(blob_configStorage) `
                               --overwrite'
             
-            - task: AzureCLI@2
-              inputs:
-                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-                scriptType: 'pscore'
-                scriptLocation: 'inlineScript'
-                inlineScript: 'az deployment group what-if `
-                               --resource-group $(resource_group) `
-                               --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
-                               --parameters $(System.DefaultWorkingDirectory)/ARMTemplateParametersForFactory.json `
-                               --parameters factoryName=amido-stacks-dev-euw-de  `
-                               --exclude-change-types Ignore'
 
     # Publish ADF
            - task: AzurePowerShell@5
