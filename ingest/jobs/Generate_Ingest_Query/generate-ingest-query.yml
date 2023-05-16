@@ -39,8 +39,8 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-   - template: ../../../de_build/build-ingest-job.yml
-    parameters:
+   - template: ../../../de_build/adf/build-ingest-job.yml
+     parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
 
