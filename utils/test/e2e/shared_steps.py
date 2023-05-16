@@ -10,6 +10,7 @@ from behave import *
 
 from constants import (
      ADLS_URL,
+     ADLS_CONFIG_URL,
      AZURE_SUBSCRIPTION_ID,
      AZURE_DATA_FACTORY_NAME,
      AZURE_RESOURCE_GROUP_NAME,
@@ -21,6 +22,7 @@ from utils.azure.adls import all_files_present_in_adls
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
 adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
+adls_config_client = DataLakeServiceClient(account_url=ADLS_CONFIG_URL, credential=credential)
 
 
 @given('the ADF pipeline {pipeline_name} has been triggered with {parameters}')
@@ -67,3 +69,10 @@ def check_adf_pipeline_completion_time(context, seconds):
     end_time = datetime.now()
     time_diff = (end_time - context.start_time).total_seconds()
     assert time_diff < float(seconds)
+
+
+@then('the config files {output_files} are present in the ADLS container {container_name} in the directory '
+      '{directory_name}')
+def check_config_files_present_in_adls(context, output_files, container_name, directory_name):
+    expected_files_list = json.loads(output_files)
+    assert all_files_present_in_adls(adls_config_client, container_name, directory_name, expected_files_list)
