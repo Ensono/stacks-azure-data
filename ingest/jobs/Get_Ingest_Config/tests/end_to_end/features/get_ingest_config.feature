@@ -1,8 +1,8 @@
-Feature:Azure Data Ingest
-  I want to ingest data
-  so that it is available in Azure data lake storage
+Feature:Data Factory Get Ingest Config
+  I want to get the dat ingest config
+  so that I can ingest data
 
-  Scenario Outline: Data Factory Ingest SQL Database into ADLS
+  Scenario Outline: Data Factory Ingest config
     Given the ADF pipeline Get_Ingest_Config has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline Get_Ingest_Config has finished with state Succeeded
