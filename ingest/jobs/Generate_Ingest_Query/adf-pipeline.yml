@@ -52,7 +52,7 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy ARM Files '
       inputs:
-        SourceFolder: 'adfpipelines/$(service)/'
+        SourceFolder: '$(self_repo_adf_dir)/'
         Contents: '*.json'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
 
@@ -86,7 +86,7 @@ stages:
         Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
         $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
         $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
-        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri")
+        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices")
         $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
         $testOutput = $testOutputParameters + $testOutputtemplate
         $testOutput
@@ -155,7 +155,23 @@ stages:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(System.DefaultWorkingDirectory)/ConfigFiles `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
+            
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az deployment group what-if `
+                              --resource-group $(resource_group) `
+                              --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
+                              --parameters $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
+                              --parameters factoryName=amido-stacks-dev-euw-de  `
+                              --exclude-change-types Ignore'        
 
     # Publish ADF
            - task: AzurePowerShell@5
