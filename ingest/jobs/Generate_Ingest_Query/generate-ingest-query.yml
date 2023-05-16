@@ -40,7 +40,7 @@ stages:
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
    - template: ../../../de_build/adf/build-ingest-job.yml
-    parameters:
+     parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
 
