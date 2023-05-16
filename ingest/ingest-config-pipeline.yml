@@ -35,8 +35,8 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_Adf_Configfiles_Build
-    displayName: 'ADF-CONFIGFILES-BUILD'
+  - job: Build_Ingest_Config
+    displayName: 'Build_Ingest_Config'
 
     steps:
 
