@@ -140,7 +140,11 @@ stages:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(System.DefaultWorkingDirectory)/ConfigFiles `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
 
   
  
