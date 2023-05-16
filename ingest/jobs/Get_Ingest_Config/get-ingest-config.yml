@@ -19,7 +19,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: ../../../de_build/adf-pipeline-vars.yml
+  - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
   - name: job  #update job name
     value: 'Get_Ingest_Config'
