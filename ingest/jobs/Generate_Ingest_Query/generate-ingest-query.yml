@@ -19,8 +19,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: ../../../de_build/adf/adf-pipeline-varsV1.yml
-  - template: ../../../de_build/adf/air-data-testing-varsV1.yml
+  - template: ../../../de_build/job-pipeline-vars.yml
+  - template: ../../../de_build/air-data-testing-vars.yml
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
   - name: self_repo_adf_dir
@@ -39,7 +39,7 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-   - template: ../../../de_build/adf/build-ingest-job.yml
+   - template: ../../../de_build/build-ingest-job.yml
     parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
