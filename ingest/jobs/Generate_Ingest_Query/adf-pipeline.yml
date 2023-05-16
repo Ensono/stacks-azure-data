@@ -29,7 +29,7 @@ variables:
   #   value: "$(self_repo_dir)/ingest/config"
   # - name: blob_config_destination
   #   value: config
-  # - name: test_unit_path
+  - name: test_unit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
   - name: test_end_to_end_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
