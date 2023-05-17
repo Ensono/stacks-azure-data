@@ -21,8 +21,6 @@ from utils.azure.adls import all_files_present_in_adls
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
 adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
-adls_config_client = DataLakeServiceClient(account_url=ADLS_CONFIG_URL, credential=credential)
-
 
 @given('the ADF pipeline {pipeline_name} has been triggered with {parameters}')
 def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
