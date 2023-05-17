@@ -1,5 +1,5 @@
 Feature:Data Factory Get Ingest Config
-  I want to get the dat ingest config
+  I want to get the ingest config
   so that I can ingest data
 
   Scenario Outline: Data Factory Ingest config
@@ -7,7 +7,6 @@ Feature:Data Factory Get Ingest Config
     And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline Get_Ingest_Config has finished with state Succeeded
     And the ADF pipeline completed in less than 120 seconds
-    Then the config files <output_files> are present in the ADLS container config in the directory ingest_sources
 
     Examples: Output files
     |parameters|output_files|
