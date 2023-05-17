@@ -85,17 +85,17 @@ stages:
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
             
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az deployment group what-if `
-                              --resource-group $(resource_group) `
-                              --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
-                              --parameters $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
-                              --parameters factoryName=amido-stacks-dev-euw-de  `
-                              --exclude-change-types Ignore'        
+          #  - task: AzureCLI@2
+          #    inputs:
+          #      azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+          #      scriptType: 'pscore'
+          #      scriptLocation: 'inlineScript'
+          #      inlineScript: 'az deployment group what-if `
+          #                     --resource-group $(resource_group) `
+          #                     --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
+          #                     --parameters $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
+          #                     --parameters factoryName=amido-stacks-dev-euw-de  `
+          #                     --exclude-change-types Ignore'        
 
     # Publish ADF
            - task: AzurePowerShell@5
