@@ -8,14 +8,14 @@ from utils.constants import INGEST_SOURCES_DIR, INGEST_SOURCES_SCHEMA_PATH
 
 
 def test_config_ingest_sources_schema_valid():
-    schema = load_config_as_dict(INGEST_SOURCES_SCHEMA_PATH)
-    all_configs = load_configs_as_list(INGEST_SOURCES_DIR)
+    schema = load_config_as_dict(INGEST_SOURCES_SCHEMA_PATH, "ingest")
+    all_configs = load_configs_as_list(INGEST_SOURCES_DIR, "ingest")
     for config in all_configs:
         validate(config, schema)
 
 
 def test_config_ingest_sources_uniqueness():
-    all_configs = load_configs_as_list(INGEST_SOURCES_DIR)
+    all_configs = load_configs_as_list(INGEST_SOURCES_DIR, "ingest")
     assert config_uniqueness_check(all_configs, "data_source_name")
     for config in all_configs:
         ingest_entities = config["ingest_entities"]
