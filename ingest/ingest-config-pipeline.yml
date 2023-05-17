@@ -19,7 +19,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: ../../../de_build/adf/adf-pipeline-varsV1.yml
+  - template: ../de_build/adf/adf-pipeline-varsV1.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
@@ -35,8 +35,8 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_Adf_Configfiles_Build
-    displayName: 'ADF-CONFIGFILES-BUILD'
+  - job: Build_Ingest_Config
+    displayName: 'Build_Ingest_Config'
 
     steps:
 
@@ -140,7 +140,11 @@ stages:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(System.DefaultWorkingDirectory)/ConfigFiles `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
 
   
  

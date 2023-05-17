@@ -19,16 +19,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: ../../../de_build/adf/adf-pipeline-varsV1.yml
-  - template: ../../../de_build/adf/air-data-testing-vars.yml
+  - template: ../../../de_build/job-pipeline-vars.yml
+  - template: ../../../de_build/air-data-testing-vars.yml
   - name: job  #update job name
-    value: 'Ingest_AzureSql_Example'
+    value: 'Get_Ingest_Config'
   - name: self_repo_adf_dir
     value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
-  - name: self_repo_blob_config
-    value: "$(self_repo_dir)/ingest/config"
-  - name: blob_config_destination
-    value: config
   - name: test_unit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
   - name: test_end_to_end_path
@@ -43,83 +39,10 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_Adf_Configfiles_Build
-    displayName: 'ADF-CONFIGFILES-BUILD'
-
-    steps:
-
-    - task: CopyFiles@2
-      displayName: 'Copy PreandPostDeploymnet File'
-      inputs:
-        SourceFolder: '$(self_repo_dir)/de_build/adf/'
-        Contents: '*.ps1'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
-
-    - task: CopyFiles@2
-      displayName: 'Copy ARM Files '
-      inputs:
-        SourceFolder: '$(self_repo_adf_dir)/'
-        Contents: '*.json'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
-
-    - task: CopyFiles@2
-      displayName: 'Copy Config Files '
-      inputs:
-        SourceFolder: '$(self_repo_blob_config)'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
-
-    # Validate ARM
-    - script: |
-        mkdir $(Pipeline.Workspace)/ARM_TTK_Download
-        curl -L -o $(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip https://aka.ms/arm-ttk-latest
-      displayName: 'Download ARM TTK'
-
-    - script: |
-        ls $(Pipeline.Workspace)/ARM_TTK_Download
-      displayName: 'Verify: Check downloaded files'
-    
-    - task: ExtractFiles@1
-      displayName: 'Extract ARM TTK'
-      inputs:
-        archiveFilePatterns: '$(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip'
-        destinationFolder: '$(Pipeline.Workspace)/ARM_TTK'
-
-    - script: |
-        ls $(Pipeline.Workspace)/ARM_TTK
-      displayName: 'List ARM TTK'
-
-    - pwsh: |
-        Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
-        $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-        $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
-        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices")
-        $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
-        $testOutput = $testOutputParameters + $testOutputtemplate
-        $testOutput
-        
-        if ($testOutput | ? {$_.Errors }) {
-            exit 1 
-        } else {
-            Write-Host "##vso[task.setvariable variable=result.best.practice]$true"
-            exit 0
-        } 
-      errorActionPreference: continue
-      failOnStderr: true
-      displayName: 'Run Best Practices Tests'
-      continueOnError: true
-
-        # Publish the artifact 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: ConfigFiles'
-      inputs:
-        ArtifactName: ConfigFiles
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: ArmTemplates'
-      inputs:
-        ArtifactName: ArmTemplates
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+   - template: ../../../de_build/build-ingest-job.yml
+     parameters:
+      self_repo_dir: '$(self_repo_dir)'
+      self_repo_adf_dir: '$(self_repo_adf_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -148,20 +71,10 @@ stages:
              displayName: Download Build Artifacts
              inputs:
               targetPath: '$(System.DefaultWorkingDirectory)'
-           - script: dir
-             displayName: List ConfigFiles Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-    # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -186,11 +99,8 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                overrideParameters: -factoryName $(datafactoryname)
                                     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -296,20 +206,10 @@ stages:
              displayName: Download Build Artifacts
              inputs:
               targetPath: '$(System.DefaultWorkingDirectory)'
-           - script: dir
-             displayName: List ConfigFiles Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-    # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -334,11 +234,8 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                overrideParameters: -factoryName $(datafactoryname)
                                     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
