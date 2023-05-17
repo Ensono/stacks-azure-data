@@ -8,10 +8,19 @@
 
 name: "$(Build.SourceBranchName)-init"
 
+pr:
+  - main
 
 trigger:
-#- main #collaboration branch
-- none
+  branches:
+   
+    include:
+      - 'main'
+  paths:
+    include:
+      - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
+      - ingest/jobs/Ingest_AzureSql_Example/tests/*
+      - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 
 
