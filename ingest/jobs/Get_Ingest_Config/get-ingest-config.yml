@@ -9,10 +9,19 @@
 name: "$(Build.SourceBranchName)-init"
 
 
-trigger:
-#- main #collaboration branch
-- none
+pr:
+  - main
 
+trigger:
+  branches:
+   
+    include:
+      - 'main'
+  paths:
+    include:
+      - ingest/jobs/Get_Ingest_Config/adfpipeline/*
+      - ingest/jobs/Get_Ingest_Config/tests/*
+      - ingest/jobs/Get_Ingest_Config/get-ingest-config.yml
 
 
 pool:

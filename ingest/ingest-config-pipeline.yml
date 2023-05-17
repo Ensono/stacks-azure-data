@@ -9,10 +9,18 @@
 name: "$(Build.SourceBranchName)-init"
 
 
-trigger:
-#- main #collaboration branch
-- none
+pr:
+  - main
 
+trigger:
+  branches:
+   
+    include:
+      - 'main'
+  paths:
+    include:
+      - ingest/jobs/Generate_Ingest_Query/config/*
+      - ingest/jobs/Generate_Ingest_Query/ingest-config-pipeline.yml
 
 
 pool:
