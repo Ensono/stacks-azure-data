@@ -14,8 +14,7 @@ def azure_adls_clean_up(context, ingest_directory_name: str):
                                                                         ingest_directory_name,
                                                                         AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX)
 
-    if automated_test_output_directory_paths:
-        delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
+    delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
 
     yield context
 
@@ -26,5 +25,4 @@ def azure_adls_clean_up(context, ingest_directory_name: str):
                                                                         ingest_directory_name,
                                                                         AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX)
 
-    if automated_test_output_directory_paths:
-        delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
+    delete_directories_adls(adls_client, RAW_CONTAINER_NAME, automated_test_output_directory_paths)
