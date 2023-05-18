@@ -1,5 +1,5 @@
 Feature:Data Factory Get Ingest Config
-  I want to get the dat ingest config
+  I want to get the data ingest config
   so that I can ingest data
 
   Scenario Outline: Data Factory Ingest config
