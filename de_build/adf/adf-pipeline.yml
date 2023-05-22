@@ -8,19 +8,22 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-pr:
-  - main
-
 trigger:
-  branches:
+#- main #collaboration branch
+- none
+# pr:
+#   - main
+
+# trigger:
+#   branches:
    
-    include:
-      - 'main'
-  paths:
-    include:
-      - de_build/*
-      - data_factory/*
-      - config/*
+#     include:
+#       - 'main'
+#   paths:
+#     include:
+#       - de_build/*
+#       - data_factory/*
+#       - config/*
 
 pool:
   vmImage: 'ubuntu-latest'
