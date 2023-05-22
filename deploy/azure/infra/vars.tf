@@ -287,3 +287,75 @@ variable "databricks_group_display_name" {
   description = "If 'add_rbac_users' set to true then specifies databricks group display name"
   default     = "project_users"
 }
+
+############################################
+# NETWORK INFORMATION
+############################################
+
+variable "network_details" {
+  type = map(object({
+    name                = string
+    address_space       = list(string)
+    dns_servers         = list(string)
+    is_hub              = bool
+    link_to_private_dns = bool
+    subnet_details = map(object({
+      sub_name                                      = string
+      sub_address_prefix                            = list(string)
+      private_endpoint_network_policies_enabled     = bool
+      private_link_service_network_policies_enabled = bool
+      service_endpoints                             = list(string)
+      })
+    )
+
+  }))
+
+  default = {
+    "amido-stacks-dev-euw-de-hub" = {
+      name                = "amido-stacks-dev-euw-de-hub"
+      address_space       = ["10.2.0.0/16"]
+      dns_servers         = []
+      is_hub              = true
+      link_to_private_dns = true
+      subnet_details = {
+        "primary" = {
+          sub_name                                      = "primary"
+          sub_address_prefix                            = ["10.2.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "build-agent" = {
+          sub_name                                      = "build-agent"
+          sub_address_prefix                            = ["10.2.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+
+    } },
+
+
+    "amido-stacks-dev-euw-de-spoke" = {
+      name                = "amido-stacks-dev-euw-de-spoke"
+      address_space       = ["10.3.0.0/16"]
+      dns_servers         = ["10.3.0.4", "10.3.0.5"]
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "spoke_vnet1" = {
+          sub_name                                      = "spoke_vnet1"
+          sub_address_prefix                            = ["10.3.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } }
+  }
+}
+
+variable "build_agent_ip" {
+  default     = ""
+  description = "IP address of the build agent"
+  type        = string
+}
