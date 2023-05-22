@@ -24,7 +24,7 @@ module "networking" {
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
   create_hub_fw           = var.create_hub_fw
-  create_fw_public_ip     = var.create_fw_public_ip
+  create_fw_public_ip     = var.create_fw_public_ip 
   create_private_dns_zone = var.create_private_dns_zone
   dns_zone_name           = module.default_label.id
 }
@@ -34,12 +34,12 @@ module "vmss" {
   vmss_name                    = module.default_label.id
   vmss_resource_group_name     = azurerm_resource_group.default.name
   vmss_resource_group_location = azurerm_resource_group.default.location
-  vnet_name                    = "amido-stacks-dev-euw-de-hub"
+  vnet_name                    = module.networking.hub_net_name
   vnet_resource_group          = azurerm_resource_group.default.name
-  subnet_name                  = "build-agent"
+  subnet_name                  = var.vmss_subnet_name
   vmss_instances               = var.vmss_instances
-  vmss_admin_username          = "adminuser"
-  vmss_disable_password_auth   = false
+  vmss_admin_username          = var.vmss_admin_username
+  vmss_disable_password_auth   = var.vmss_disable_password_auth
   depends_on                   = [module.networking]
 }
 
