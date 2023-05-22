@@ -29,6 +29,21 @@ module "networking" {
   dns_zone_name               = module.default_label.id
 }
 
+module "vmss" {
+  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss"
+  vmss_name                    = module.default_label.id
+  vmss_resource_group_name     = azurerm_resource_group.default.name
+  vmss_resource_group_location = azurerm_resource_group.default.location
+  vnet_name                    = "amido-stacks-dev-euw-de-hub"
+  vnet_resource_group          = azurerm_resource_group.default.name
+  subnet_name                  = "build-agent"
+  vmss_instances               = 0
+  vmss_admin_username          = "adminuser"
+  vmss_disable_password_auth   = false
+  depends_on                   = [module.networking]
+}
+
+
 
 # KV for ADF
 module "kv_default" {
