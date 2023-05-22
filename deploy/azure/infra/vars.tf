@@ -354,6 +354,53 @@ variable "network_details" {
   }
 }
 
+variable "create_hub_fw" {
+  default     = false
+  type        = bool
+  description = "Determines if the networking modules creates a firewall instance or not."
+}
+
+variable "create_fw_public_ip" {
+  default     = false
+  type        = bool
+  description = "Determines if the networking modules creates a firewall IP address or not."
+}
+
+variable "create_private_dns_zone" {
+  default     = true
+  type        = bool
+  description = "Determines if the networking modules creates a private dns zone."
+}
+
+
+############################################
+# VMSS INFORMATION
+############################################
+
+variable "vmss_instances" {
+  default     = 0
+  type        = number
+  description = "Sets the default number of VM instances running in the VMSS."
+}
+
+variable "vmss_admin_username" {
+  default     = "adminuser"
+  type        = string
+  description = "Sets the admin user name. This is used if remote access is required to a VM instance."
+}
+
+variable "vmss_disable_password_auth" {
+  default     = false
+  type        = bool
+  description = "Enables or Disables password authentication. If Password is disabled ssh keys must be provided."
+}
+
+variable "vmss_subnet_name" {
+  default     = "build-agent"
+  type        = string
+  description = "The subnet name which the VMSS will be provisioned."
+}
+
 variable "build_agent_ip" {
   default     = ""
   description = "IP address of the build agent"
