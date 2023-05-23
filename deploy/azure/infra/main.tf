@@ -19,17 +19,18 @@ resource "azurerm_resource_group" "default" {
 
 module "networking" {
   source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
-  enable_private_networks = true ## NOTE setting this value to false will cause no resources to be created !!
+  enable_private_networks = var.enable_private_networks ## NOTE setting this value to false will cause no resources to be created !!
   network_details         = var.network_details
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
   create_hub_fw           = var.create_hub_fw
-  create_fw_public_ip     = var.create_fw_public_ip 
+  create_fw_public_ip     = var.create_fw_public_ip
   create_private_dns_zone = var.create_private_dns_zone
   dns_zone_name           = module.default_label.id
 }
 
 module "vmss" {
+  count                        = var.enable_private_networks ? 1 : 0
   source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss"
   vmss_name                    = module.default_label.id
   vmss_resource_group_name     = azurerm_resource_group.default.name
