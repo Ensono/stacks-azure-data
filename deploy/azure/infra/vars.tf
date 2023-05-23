@@ -292,6 +292,12 @@ variable "databricks_group_display_name" {
 # NETWORK INFORMATION
 ############################################
 
+variable "enable_private_networks" {
+  default = false
+  type = bool
+  description = "Enable Private Networking for Secure Data Platform."
+}
+
 variable "network_details" {
   type = map(object({
     name                = string
