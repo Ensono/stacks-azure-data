@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "amido-stacks-dev-euw-de"
+        },
+        "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
+            "value": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
+        },
+        "ls_ADLS_DataLake_properties_typeProperties_url": {
+            "value": "https://amidostacksdeveuwdeadls.dfs.core.windows.net/"
+        },
+        "ls_KeyVault_properties_typeProperties_baseUrl": {
+            "value": "https://amidostacksdeveuwde.vault.azure.net/"
+        },
+        "ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName": {
+            "value": "AzureSqlExampleAdfConnectionString"
+        }
+    }
+}

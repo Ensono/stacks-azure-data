@@ -8,29 +8,38 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-trigger:
-#- main #collaboration branch
-- none
-# pr:
-#   - main
 
-# trigger:
-#   branches:
+pr:
+  - main
+
+trigger:
+  branches:
    
-#     include:
-#       - 'main'
-#   paths:
-#     include:
-#       - de_build/*
-#       - data_factory/*
-#       - config/*
+    include:
+      - 'main'
+  paths:
+    include:
+      - ingest/jobs/Get_Ingest_Config/adfpipeline/*
+      - ingest/jobs/Get_Ingest_Config/tests/*
+      - ingest/jobs/Get_Ingest_Config/get-ingest-config.yml
+
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - template: adf-pipeline-vars.yml
-  - template: air-data-testing-vars.yml
+  - template: ../../../de_build/job-pipeline-vars.yml
+  - template: ../../../de_build/air-data-testing-vars.yml
+  - name: job  #update job name
+    value: 'Get_Ingest_Config'
+  - name: self_repo_adf_dir
+    value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
+  - name: test_unit_path
+    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
+  - name: test_end_to_end_path
+    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
+  - name: junit_path
+    value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
 
 stages:
 - stage: Build_Stage
@@ -39,65 +48,10 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_Adf_Configfiles_Build
-    displayName: 'ADF-CONFIGFILES-BUILD'
-
-    steps:
-
-    # Installs Node and the npm packages saved in your package.json file in the build
-
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '14.x'
-      displayName: 'Install Node.js'
-
-    - task: Npm@1
-      inputs:
-        command: 'install'
-        workingDir: '$(self_repo_dir)/de_build/adf' #replace with the package.json folder
-        verbose: true
-      displayName: 'Install npm package'
-
-    # Validates all of the Data Factory resources in the repository. You'll get the same validation errors as when "Validate All" is selected.
-    # Enter the appropriate subscription and name for the source factory. Either of the "Validate" or "Validate and Generate ARM temmplate" options are required to perform validation. Running both is unnecessary.
-
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        workingDir: '$(self_repo_dir)/de_build/adf' #replace with the package.json folder
-        customCommand: 'run build validate $(self_repo_adf_dir) /subscriptions/$(azure_subscription_id)/resourceGroups/$(resource_group)/providers/Microsoft.DataFactory/factories/$(datafactoryname)'
-      displayName: 'Validate'
-
-    # Validate and then generate the ARM template into the destination folder, which is the same as selecting "Publish" from the UX.
-    # The ARM template generated isn't published to the live version of the factory. Deployment should be done by using a CI/CD pipeline. 
-
-    - task: Npm@1
-      inputs:
-        command: 'custom'
-        workingDir: '$(self_repo_dir)/de_build/adf' #replace with the package.json folder
-        customCommand: 'run build export $(self_repo_adf_dir) /subscriptions/$(azure_subscription_id)/resourceGroups/$(resource_group)/providers/Microsoft.DataFactory/factories/$(datafactoryname) "ArmTemplate"'
-    #For using preview that allows you to only stop/ start triggers that are modified, please comment out the above line and uncomment the below line. Make sure the package.json contains the build-preview command. 
-    #customCommand: 'run build-preview export $(Build.Repository.LocalPath) /subscriptions/222f1459-6ebd-4896-82ab-652d5f6883cf/resourceGroups/GartnerMQ2021/providers/Microsoft.DataFactory/factories/Dev-GartnerMQ2021-DataFactory "ArmTemplate"'
-      displayName: 'Validate and Generate ARM template'
-
-    # Publish the artifact to be used as a source for a release pipeline.
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Artifact: ArmTemplates'
-      inputs:
-        targetPath: '$(self_repo_dir)/de_build/adf/ArmTemplate' #replace with the package.json folder
-        artifact: 'ArmTemplates'
-        publishLocation: 'pipeline'
-
-    - task: CopyFiles@2
-      displayName: 'Copy Config Files '
-      inputs:
-        SourceFolder: '$(self_repo_blob_config)'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: ConfigFiles'
-      inputs:
-        ArtifactName: ConfigFiles
+   - template: ../../../de_build/build-ingest-job.yml
+     parameters:
+      self_repo_dir: '$(self_repo_dir)'
+      self_repo_adf_dir: '$(self_repo_adf_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -126,20 +80,10 @@ stages:
              displayName: Download Build Artifacts
              inputs:
               targetPath: '$(System.DefaultWorkingDirectory)'
-           - script: dir
-             displayName: List ConfigFiles Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-    # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -147,7 +91,7 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
@@ -164,11 +108,8 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                overrideParameters: -factoryName $(datafactoryname)
                                     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -176,15 +117,15 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $false
-                              -deleteDeployment $True
+                              -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-    # Start Testing 
+  #   # Start Testing 
   - deployment: Test_NonPROD
     displayName: 'Testing  NonPROD'
     environment: ${{ variables.domain }}-nonprod
@@ -274,20 +215,10 @@ stages:
              displayName: Download Build Artifacts
              inputs:
               targetPath: '$(System.DefaultWorkingDirectory)'
-           - script: dir
-             displayName: List ConfigFiles Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-    # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch --source $(System.DefaultWorkingDirectory)/ConfigFiles --destination $(blob_config_destination) --account-name $(blob_configStorage) --overwrite'
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -295,7 +226,7 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
@@ -312,11 +243,8 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+                overrideParameters: -factoryName $(datafactoryname)
                                     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -324,12 +252,12 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScript.ps1'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $false
-                              -deleteDeployment $True
+                              -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
  
 - stage: Release
