@@ -26,7 +26,7 @@ module "networking" {
   create_hub_fw           = var.create_hub_fw
   create_fw_public_ip     = var.create_fw_public_ip
   create_private_dns_zone = var.create_private_dns_zone
-  dns_zone_name           = var.create_private_dns_zone ? module.default_label.id : null
+  dns_zone_name           = module.default_label.id
 }
 
 module "vmss" {
