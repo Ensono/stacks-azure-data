@@ -293,8 +293,8 @@ variable "databricks_group_display_name" {
 ############################################
 
 variable "enable_private_networks" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
 
