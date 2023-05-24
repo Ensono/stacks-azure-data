@@ -106,5 +106,4 @@ stages:
                     TF_VAR_name_project: $(project)
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
-                    TF_VAR_git_integration: $(git_integration)
                     TF_VAR_enable_private_networks: true
