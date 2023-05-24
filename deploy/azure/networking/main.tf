@@ -11,7 +11,7 @@ module "default_label" {
 }
 
 module "networking" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke?ref=feature/changeresourcegourp"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
   enable_private_networks = var.enable_private_networks ## NOTE setting this value to false will cause no resources to be created !!
   network_details         = var.network_details
   resource_group_location = var.resource_group_location
