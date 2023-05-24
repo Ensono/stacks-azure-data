@@ -10,13 +10,6 @@ module "default_label" {
   tags       = var.tags
 }
 
-
-resource "azurerm_resource_group" "default" {
-  name     = module.default_label.id
-  location = var.resource_group_location
-  tags     = module.default_label.tags
-}
-
 module "networking" {
   source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
   enable_private_networks = var.enable_private_networks ## NOTE setting this value to false will cause no resources to be created !!
