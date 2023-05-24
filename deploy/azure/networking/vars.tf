@@ -39,7 +39,6 @@ variable "tags" {
 variable "resource_group_location" {
   type    = string
   default = "uksouth"
-
 }
 
 
@@ -113,16 +112,16 @@ variable "network_details" {
   }))
 
   default = {
-    "amido-stacks-dev-euw-de-hub" = {
-      name                = "amido-stacks-dev-euw-de-hub"
+    "amido-stacks-euw-de-hub" = {
+      name                = "amido-stacks-euw-de-hub"
       address_space       = ["10.2.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-dev-euw-de-hub-network"
+      resource_group_name = "amido-stacks-euw-de-hub-network"
       is_hub              = true
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-dev-euw-de-hub" = {
-          sub_name                                      = "amido-stacks-dev-euw-de-hub"
+        "amido-stacks-euw-de-hub" = {
+          sub_name                                      = "amido-stacks-euw-de-hub"
           sub_address_prefix                            = ["10.2.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -139,16 +138,16 @@ variable "network_details" {
     } },
 
 
-    "amido-stacks-dev-euw-de-nonprod" = {
-      name                = "amido-stacks-dev-euw-de-nonprod"
+    "amido-stacks-euw-de-nonprod" = {
+      name                = "amido-stacks-euw-de-nonprod"
       address_space       = ["10.3.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-dev-euw-de-nonprod-network"
+      resource_group_name = "amido-stacks-euw-de-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-dev-euw-de-nonprod" = {
-          sub_name                                      = "amido-stacks-dev-euw-de-nonprod"
+        "amido-stacks-euw-de-nonprod" = {
+          sub_name                                      = "amido-stacks-euw-de-nonprod"
           sub_address_prefix                            = ["10.3.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -156,16 +155,16 @@ variable "network_details" {
         }
     } },
 
-    "amido-stacks-dev-euw-de-prod" = {
-      name                = "amido-stacks-dev-euw-de-prod"
+    "amido-stacks-euw-de-prod" = {
+      name                = "amido-stacks-euw-de-prod"
       address_space       = ["10.4.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-dev-euw-de-prod-network"
+      resource_group_name = "amido-stacks-euw-de-prod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-dev-euw-de-prod" = {
-          sub_name                                      = "amido-stacks-dev-euw-de-prod"
+        "amido-stacks-euw-de-prod" = {
+          sub_name                                      = "amido-stacks-euw-de-prod"
           sub_address_prefix                            = ["10.4.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
