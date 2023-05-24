@@ -12,7 +12,7 @@ trigger:
       - build/azDevOps/azure/network/*
       - deploy/azure/networking/*
 variables:
-  - template: air-infrastructure-data-vars.yml
+  - template: air-infrastructure-data-network-vars.yml
 
 stages:
   - stage: Build
