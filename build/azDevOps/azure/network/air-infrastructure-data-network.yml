@@ -52,7 +52,7 @@ stages:
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
 
-  - stage: NonProd
+  - stage: Deployment
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
@@ -66,10 +66,10 @@ stages:
       - name: core_environment
         value: nonprod
     jobs:
-      - deployment: InfraNonProd
+      - deployment: Infra
         pool:
           vmImage: $(pool_vm_image)
-        environment: ${{ variables.domain }}-nonprod
+        environment: ${{ variables.domain }}
         strategy:
           runOnce:
             deploy:
