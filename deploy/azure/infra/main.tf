@@ -19,7 +19,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=v1.5.4"
+  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/pe-for-kv-adls"
   resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name       = azurerm_resource_group.default.name
   resource_group_location   = azurerm_resource_group.default.location
@@ -27,6 +27,10 @@ module "kv_default" {
   enable_rbac_authorization = false
   resource_tags             = module.default_label.tags
   contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  enable_private_network    = true
+  pe_subnet_id              = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
+  private_dns_zone_name     = "privatelink.amido-stacks-core-data-euw-de.com"
+  private_dns_zone_ids      = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
 }
 
 # module call for ADF
@@ -127,8 +131,10 @@ module "adls_default" {
   storage_account_details = var.storage_account_details
   container_access_type   = var.container_access_type
   resource_tags           = module.default_label.tags
-
-
+  enable_private_network  = true
+  pe_subnet_id            = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
+  private_dns_zone_name   = "privatelink.amido-stacks-core-data-euw-de.com"
+  private_dns_zone_ids    = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
 }
 
 
