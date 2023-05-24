@@ -108,7 +108,6 @@ stages:
                     TF_VAR_stage: $(Environment.ShortName)
                     TF_VAR_git_integration: $(git_integration)
                     TF_VAR_administrator_login: $(sql_admin_login)
-                    TF_VAR_enable_private_networks: true
 
   #   yamllint disable rule:comments-indentation
 
