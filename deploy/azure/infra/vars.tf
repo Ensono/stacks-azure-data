@@ -287,3 +287,13 @@ variable "databricks_group_display_name" {
   description = "If 'add_rbac_users' set to true then specifies databricks group display name"
   default     = "project_users"
 }
+
+############################################
+# NETWORK INFORMATION
+############################################
+
+variable "enable_private_networks" {
+  default     = false
+  type        = bool
+  description = "Enable Private Networking for Secure Data Platform."
+}
