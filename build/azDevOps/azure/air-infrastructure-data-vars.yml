@@ -13,7 +13,7 @@ variables:
     value: stacks-infrastructure
   - group: amido-stacks-webapp
   - name: git_integration
-    value: github
+    value: null #github removed github integration with ADF
   - name: git_integration_prod
     value: null
   - name: sql_admin_login

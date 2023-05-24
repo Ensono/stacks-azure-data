@@ -77,7 +77,11 @@ stages:
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
-
+                - bash: |
+                    ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
+                    echo "$ip"
+                    echo "##vso[task.setvariable variable=build_agent_ip;]$ip"
+                  displayName: "Get Build Agent IP"
                 - task: Bash@3
                   displayName: "Taskctl: Infrastructure"
                   inputs:
@@ -108,6 +112,7 @@ stages:
                     TF_VAR_stage: $(Environment.ShortName)
                     TF_VAR_git_integration: $(git_integration)
                     TF_VAR_administrator_login: $(sql_admin_login)
+                    TF_VAR_build_agent_ip: $(build_agent_ip)
 
   #   yamllint disable rule:comments-indentation
 
@@ -138,6 +143,11 @@ stages:
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
+                - bash: |
+                    ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
+                    echo "$ip"
+                    echo "##vso[task.setvariable variable=build_agent_ip;]$ip"
+                  displayName: "Get Build Agent IP"
 
                 - task: Bash@3
                   displayName: "Taskctl: Infrastructure"
@@ -171,6 +181,7 @@ stages:
                     TF_VAR_stage: $(Environment.ShortName)
                     TF_VAR_git_integration: $(git_integration_prod)
                     TF_VAR_administrator_login: $(sql_admin_login)
+                    TF_VAR_build_agent_ip: $(build_agent_ip)
 
   - stage: Release
     dependsOn:
