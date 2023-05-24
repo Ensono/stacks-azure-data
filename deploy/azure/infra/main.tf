@@ -31,16 +31,18 @@ module "kv_default" {
 
 # module call for ADF
 module "adf" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
-  resource_namer          = module.default_label.id
-  resource_group_name     = azurerm_resource_group.default.name
-  resource_group_location = azurerm_resource_group.default.location
-  git_integration         = var.git_integration
-  resource_tags           = module.default_label.tags
-  repository_name         = var.repository_name
-  root_folder             = var.root_folder
+  source                          = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
+  resource_namer                  = module.default_label.id
+  resource_group_name             = azurerm_resource_group.default.name
+  resource_group_location         = azurerm_resource_group.default.location
+  git_integration                 = var.git_integration
+  resource_tags                   = module.default_label.tags
+  repository_name                 = var.repository_name
+  root_folder                     = var.root_folder
+  managed_virtual_network_enabled = var.managed_virtual_network_enabled
 }
 
+###########  Private Endpoints for ADF to connect to Azure services ######################
 resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
   name               = var.name_pe_blob
   data_factory_id    = module.adf.adf_factory_id

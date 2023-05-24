@@ -70,6 +70,12 @@ variable "git_integration" {
   }
 }
 
+variable "adf_managed-vnet-runtime_name" {
+  type        = string
+  default     = "adf-managed-vnet-runtime"
+  description = "Specifies the name of the Managed Integration Runtime. Changing this forces a new resource to be created. Must be globally unique. See the Microsoft documentation for all restrictions."
+}
+
 variable "repository_name" {
   type        = string
   default     = "stacks-azure-data-ingest"
