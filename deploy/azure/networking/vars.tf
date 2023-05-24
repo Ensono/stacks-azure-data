@@ -59,29 +59,6 @@ variable "location_name_map" {
   }
 }
 
-variable "git_integration" {
-  type        = string
-  default     = "null"
-  description = "A repository integration block for ADF git integration. Can be null, github or vsts."
-  validation {
-    condition     = can(regex("^null$|^github$|^vsts$", var.git_integration))
-    error_message = "Err: git integration value is not valid. It can be null, github, vsts."
-  }
-}
-
-variable "repository_name" {
-  type        = string
-  default     = "stacks-azure-data-ingest"
-  description = "Specifies the name of the git repository."
-}
-
-variable "root_folder" {
-  type        = string
-  default     = "/data_factory/adf_managed"
-  description = "Specifies the root folder within the repository. Set to / for the top level."
-}
-
-
 ############################################
 # NETWORK INFORMATION
 ############################################
