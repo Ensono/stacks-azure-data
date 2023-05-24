@@ -70,6 +70,13 @@ variable "git_integration" {
   }
 }
 
+variable "managed_virtual_network_enabled" {
+  type        = bool
+  default     = true
+  description = "Is Managed Virtual Network enabled?"
+}
+
+
 variable "adf_managed-vnet-runtime_name" {
   type        = string
   default     = "adf-managed-vnet-runtime"
