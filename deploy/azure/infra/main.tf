@@ -31,7 +31,7 @@ module "kv_default" {
 
 # module call for ADF
 module "adf" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=v1.5.5"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
   resource_namer          = module.default_label.id
   resource_group_name     = azurerm_resource_group.default.name
   resource_group_location = azurerm_resource_group.default.location
@@ -41,6 +41,26 @@ module "adf" {
   root_folder             = var.root_folder
 }
 
+resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
+  name               = var.name_pe_blob
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.adls_default.storage_account_ids[0]
+  subresource_name   = "blob"
+}
+
+resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
+  name               = var.name_pe_dfs
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.adls_default.storage_account_ids[1]
+  subresource_name   = "dfs"
+}
+
+resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
+  name               = var.name_pe_kv
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.kv_default.id
+  subresource_name   = "vault"
+}
 
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id

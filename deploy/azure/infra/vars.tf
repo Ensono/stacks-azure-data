@@ -82,6 +82,23 @@ variable "root_folder" {
   description = "Specifies the root folder within the repository. Set to / for the top level."
 }
 
+variable "name_pe_blob" {
+  type        = string
+  default     = "private-config-blob"
+  description = "Specifies the name for Private endpoint for blob."
+}
+
+variable "name_pe_dfs" {
+  type        = string
+  default     = "private-config-blob"
+  description = "Specifies the name for Private endpoint for Adls container."
+}
+
+variable "name_pe_kv" {
+  type        = string
+  default     = "private-config-blob"
+  description = "Specifies the name for Private endpoint for Azure Key vault."
+}
 
 # Log Analytics workspace Details
 
