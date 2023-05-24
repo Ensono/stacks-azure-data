@@ -26,7 +26,7 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../templates/air-infrastructure-data-setup.yml
+          - template: ../../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -74,7 +74,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ../templates/air-infrastructure-data-setup.yml
+                - template: ../../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -136,7 +136,7 @@ stages:
             deploy:
               steps:
 
-                - template: ../templates/air-infrastructure-data-setup.yml
+                - template: ../../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
