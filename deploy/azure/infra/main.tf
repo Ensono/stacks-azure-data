@@ -62,6 +62,13 @@ resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
   subresource_name   = "vault"
 }
 
+resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
+  name               = var.name_pe_sql
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.sql.sql_server_id
+  subresource_name   = "sqlServer"
+}
+
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
   role_definition_name = var.kv_role_adf

@@ -90,14 +90,20 @@ variable "name_pe_blob" {
 
 variable "name_pe_dfs" {
   type        = string
-  default     = "private-config-blob"
+  default     = "private-dfs"
   description = "Specifies the name for Private endpoint for Adls container."
 }
 
 variable "name_pe_kv" {
   type        = string
-  default     = "private-config-blob"
+  default     = "private-kv"
   description = "Specifies the name for Private endpoint for Azure Key vault."
+}
+
+variable "name_pe_sql" {
+  type        = string
+  default     = "private-config-sql"
+  description = "Specifies the name for Private endpoint for Azure Sql Server."
 }
 
 # Log Analytics workspace Details
