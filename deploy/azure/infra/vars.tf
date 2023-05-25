@@ -346,6 +346,6 @@ variable "pe_resource_group_name" {
 
 variable "pe_resource_group_location" {
   type        = string
-  default     = "eu-west"
+  default     = "westeurope"
   description = "Location of the resource group to provision private endpoint in."
 }
