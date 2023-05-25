@@ -19,8 +19,8 @@ trigger:
       - 'main'
   paths:
     include:
-      - ingest/jobs/Generate_Ingest_Query/config/*
-      - ingest/jobs/Generate_Ingest_Query/ingest-config-pipeline.yml
+      - ingest/config/*
+      - ingest/ingest-config-pipeline.yml
 
 
 pool:
