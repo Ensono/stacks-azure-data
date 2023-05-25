@@ -297,3 +297,55 @@ variable "enable_private_networks" {
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
+
+variable "subnet_name" {
+  type        = string
+  default     = ""
+  description = "The name of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint"
+}
+
+variable "vnet_name" {
+  type        = string
+  default     = ""
+  description = "The VNET in which the Subnet resides."
+}
+
+variable "vnet_resource_group_name" {
+  type        = string
+  default     = ""
+  description = "The name of the resource group for the vnet which the subnet resides."
+}
+
+variable "dns_zone_name" {
+  type        = string
+  default     = "privatelink.amido-stacks-core-data-euw-de.com"
+  description = "The name of the Private DNS Zone"
+}
+
+variable "dns_zone_resource_group" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "The Resource Group for the Private DNS Zone."
+}
+
+############################################
+# PRIVATE ENDPOINT INFORMATION
+############################################
+
+variable "pe_subnet_id" {
+  type        = string
+  default     = ""
+  description = "ID for the Private Endpoint Subnet"
+}
+
+variable "pe_resource_group_name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource group to provision private endpoint in."
+}
+
+variable "pe_resource_group_location" {
+  type        = string
+  default     = ""
+  description = "Location of the resource group to provision private endpoint in."
+}

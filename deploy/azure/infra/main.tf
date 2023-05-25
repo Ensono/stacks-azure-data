@@ -19,19 +19,20 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/pe-for-kv-adls"
-  resource_namer            = substr(replace(module.default_label.id, "-", ""), 0, 24)
-  resource_group_name       = azurerm_resource_group.default.name
-  resource_group_location   = azurerm_resource_group.default.location
-  create_kv_networkacl      = false
-  enable_rbac_authorization = false
-  resource_tags             = module.default_label.tags
-  contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network    = true
-  # Update these to use data sources
-  pe_subnet_id          = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
-  private_dns_zone_name = "privatelink.amido-stacks-core-data-euw-de.com"
-  private_dns_zone_ids  = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
+  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/pe-for-kv-adls"
+  resource_namer             = substr(replace(module.default_label.id, "-", ""), 0, 24)
+  resource_group_name        = azurerm_resource_group.default.name
+  resource_group_location    = azurerm_resource_group.default.location
+  create_kv_networkacl       = false
+  enable_rbac_authorization  = false
+  resource_tags              = module.default_label.tags
+  contributor_object_ids     = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  enable_private_network     = true
+  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location = data.azurerm_subnet.pe_subnet.resource_group_location
+  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
+  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
 }
 
 # module call for ADF
@@ -125,18 +126,19 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls?ref=feature/pe-for-kv-adls"
-  resource_namer          = module.default_label.id
-  resource_group_name     = azurerm_resource_group.default.name
-  resource_group_location = azurerm_resource_group.default.location
-  storage_account_details = var.storage_account_details
-  container_access_type   = var.container_access_type
-  resource_tags           = module.default_label.tags
-  enable_private_network  = true
-  # Update these to use data sources
-  pe_subnet_id          = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
-  private_dns_zone_name = "privatelink.amido-stacks-core-data-euw-de.com"
-  private_dns_zone_ids  = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
+  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls?ref=feature/pe-for-kv-adls"
+  resource_namer             = module.default_label.id
+  resource_group_name        = azurerm_resource_group.default.name
+  resource_group_location    = azurerm_resource_group.default.location
+  storage_account_details    = var.storage_account_details
+  container_access_type      = var.container_access_type
+  resource_tags              = module.default_label.tags
+  enable_private_network     = true
+  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location = data.azurerm_subnet.pe_subnet.resource_group_location
+  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
+  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
 }
 
 
