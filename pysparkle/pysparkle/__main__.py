@@ -10,7 +10,7 @@ def cli():
 
 
 @click.command()
-@click.argument('partitions', type=int)
+@click.option('--partitions', '-p', default=2)
 def silver(partitions):
     silver_main(partitions)
 
