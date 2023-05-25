@@ -69,7 +69,7 @@ stages:
     displayName: 'Deploy To NonPROD'
     environment: ${{ variables.domain }}-nonprod
     pool:
-      name: $(agent_pool)
+      name: 'amido-stacks-core-data-agent-pool'
 
     strategy:
       runOnce:
@@ -142,7 +142,7 @@ stages:
     environment: ${{ variables.domain }}-nonprod
     dependsOn: Deploy_NonPROD
     pool:
-      name: $(agent_pool)
+      name: 'amido-stacks-core-data-agent-pool'
     strategy:
       runOnce:
         deploy:  
@@ -214,7 +214,7 @@ stages:
     displayName: 'Deploy To PROD'
     environment: ${{ variables.domain }}-prod
     pool:
-      name: $(agent_pool)
+      name: 'amido-stacks-core-data-agent-pool'
 
     strategy:
       runOnce:
@@ -282,7 +282,7 @@ stages:
   jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: $(pool_vm_image)
+          vmImage: 'amido-stacks-core-data-agent-pool'
         steps:
           # Check out the repo so that it can be tagged
           - checkout: self
