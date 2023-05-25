@@ -13,6 +13,8 @@ variables:
   #   value: src/api
   - name: self_repo_dir
     value: "$(Agent.BuildDirectory)/s"
+  - name: agent_pool
+    values: "amido-stacks-core-data-agent-pool"
 
 
 # Versioning
