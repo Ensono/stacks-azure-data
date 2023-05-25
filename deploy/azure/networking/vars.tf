@@ -123,9 +123,16 @@ variable "network_details" {
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
+        "amido-stacks-euw-de-nonprod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-nonprod-pe"
+          sub_address_prefix                            = ["10.3.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
         "amido-stacks-euw-de-nonprod" = {
           sub_name                                      = "amido-stacks-euw-de-nonprod"
-          sub_address_prefix                            = ["10.3.1.0/24"]
+          sub_address_prefix                            = ["10.3.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
@@ -140,9 +147,16 @@ variable "network_details" {
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
+        "amido-stacks-euw-de-prod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-prod-pe"
+          sub_address_prefix                            = ["10.4.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
         "amido-stacks-euw-de-prod" = {
           sub_name                                      = "amido-stacks-euw-de-prod"
-          sub_address_prefix                            = ["10.4.1.0/24"]
+          sub_address_prefix                            = ["10.4.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]

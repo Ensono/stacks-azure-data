@@ -28,9 +28,10 @@ module "kv_default" {
   resource_tags             = module.default_label.tags
   contributor_object_ids    = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network    = true
-  pe_subnet_id              = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
-  private_dns_zone_name     = "privatelink.amido-stacks-core-data-euw-de.com"
-  private_dns_zone_ids      = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
+  # Update these to use data sources
+  pe_subnet_id          = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
+  private_dns_zone_name = "privatelink.amido-stacks-core-data-euw-de.com"
+  private_dns_zone_ids  = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
 }
 
 # module call for ADF
@@ -132,9 +133,10 @@ module "adls_default" {
   container_access_type   = var.container_access_type
   resource_tags           = module.default_label.tags
   enable_private_network  = true
-  pe_subnet_id            = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
-  private_dns_zone_name   = "privatelink.amido-stacks-core-data-euw-de.com"
-  private_dns_zone_ids    = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
+  # Update these to use data sources
+  pe_subnet_id          = "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/virtualNetworks/amido-stacks-euw-de-hub/subnets/build-agent"
+  private_dns_zone_name = "privatelink.amido-stacks-core-data-euw-de.com"
+  private_dns_zone_ids  = ["/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-euw-de-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.amido-stacks-core-data-euw-de.com"]
 }
 
 
