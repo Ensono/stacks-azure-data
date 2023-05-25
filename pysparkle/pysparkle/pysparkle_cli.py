@@ -1,7 +1,7 @@
 import click
 
-from .gold import gold_main
-from .silver import silver_main
+from pysparkle.gold import gold_main
+from pysparkle.silver import silver_main
 
 
 @click.group()
@@ -25,4 +25,4 @@ cli.add_command(gold)
 
 
 if __name__ == "__main__":
-    cli()
+    cli(standalone_mode=False)
