@@ -2,7 +2,7 @@
 name = "pysparkle"
 version = "0.1.0"
 description = "PySpark data transformer"
-authors = ["Paulina Motyl <paulina.motyl@ensono.com>"]
+authors = ["ensono.com"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
