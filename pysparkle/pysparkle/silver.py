@@ -20,5 +20,3 @@ def silver_main(partitions: int = 2):
 
     count = spark.sparkContext.parallelize(range(1, n + 1), partitions).map(f).reduce(add)
     print("Pi is roughly %f" % (4.0 * count / n))
-
-    spark.stop()
