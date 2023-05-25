@@ -13,3 +13,6 @@ provider "databricks" {
   auth_type                   = "azure-client-secret"
 
 }
+
+provider "azapi" {
+}
