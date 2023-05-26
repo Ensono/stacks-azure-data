@@ -113,6 +113,9 @@ stages:
                     TF_VAR_git_integration: $(git_integration)
                     TF_VAR_administrator_login: $(sql_admin_login)
                     TF_VAR_build_agent_ip: $(build_agent_ip)
+                    TF_VAR_subnet_name: 'amido-stacks-euw-de-nonprod-pe'
+                    TF_VAR_vnet_name: 'amido-stacks-euw-de-nonprod'
+                    TF_VAR_vnet_resource_group_name: 'amido-stacks-euw-de-nonprod-network'
 
   #   yamllint disable rule:comments-indentation
 
