@@ -4,7 +4,7 @@ variables:
   - name: domain
     value: core-data
   - name: self_repo
-    value: stacks-azure-data-ingest
+    value: stacks-azure-data
 
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
@@ -13,6 +13,9 @@ variables:
   #   value: src/api
   - name: self_repo_dir
     value: "$(Agent.BuildDirectory)/s"
+  - name: agentpool_name
+    value: "amido-stacks-core-data-agent-pool"
+  
 
 
 # Versioning

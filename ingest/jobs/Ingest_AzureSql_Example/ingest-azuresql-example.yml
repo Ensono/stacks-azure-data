@@ -23,10 +23,6 @@ trigger:
       - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 
-
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
@@ -40,6 +36,10 @@ variables:
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
   - name: junit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
+
+pool:
+  name: $(agentpool_name)
+
 
 stages:
 - stage: Build_Stage
@@ -68,7 +68,7 @@ stages:
     displayName: 'Deploy To NonPROD'
     environment: ${{ variables.domain }}-nonprod
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(agentpool_name)
 
     strategy:
       runOnce:
@@ -134,7 +134,7 @@ stages:
     environment: ${{ variables.domain }}-nonprod
     dependsOn: Deploy_NonPROD
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(agentpool_name)
     strategy:
       runOnce:
         deploy:  
@@ -206,7 +206,7 @@ stages:
     displayName: 'Deploy To PROD'
     environment: ${{ variables.domain }}-prod
     pool:
-      vmImage: 'ubuntu-latest'
+      name: $(agentpool_name)
 
     strategy:
       runOnce:
@@ -279,7 +279,7 @@ stages:
   jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         steps:
           # Check out the repo so that it can be tagged
           - checkout: self
