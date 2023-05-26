@@ -185,14 +185,16 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
-  resource_namer          = module.default_label.id
-  resource_group_name     = azurerm_resource_group.default.name
-  resource_group_location = azurerm_resource_group.default.location
-  sql_version             = var.sql_version
-  administrator_login     = var.administrator_login
-  sql_db_names            = var.sql_db_names
-  resource_tags           = module.default_label.tags
+  source                          = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=feat-add-pe-sql"
+  resource_namer                  = module.default_label.id
+  resource_group_name             = azurerm_resource_group.default.name
+  resource_group_location         = azurerm_resource_group.default.location
+  sql_version                     = var.sql_version
+  administrator_login             = var.administrator_login
+  sql_db_names                    = var.sql_db_names
+  resource_tags                   = module.default_label.tags
+  managed_virtual_network_enabled = var.managed_virtual_network_enabled
+
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
