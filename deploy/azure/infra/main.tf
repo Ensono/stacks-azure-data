@@ -193,7 +193,7 @@ module "sql" {
   administrator_login        = var.administrator_login
   sql_db_names               = var.sql_db_names
   resource_tags              = module.default_label.tags
-  enable_private_network     = var.enable_private_network
+  enable_private_network     = true
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location

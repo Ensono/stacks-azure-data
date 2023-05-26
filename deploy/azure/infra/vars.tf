@@ -324,6 +324,7 @@ variable "databricks_group_display_name" {
   default     = "project_users"
 }
 
+
 ############################################
 # NETWORK INFORMATION
 ############################################
@@ -332,6 +333,36 @@ variable "enable_private_networks" {
   default     = false
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
+}
+
+variable "subnet_name" {
+  type        = string
+  default     = ""
+  description = "The name of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint"
+}
+
+variable "vnet_name" {
+  type        = string
+  default     = ""
+  description = "The VNET in which the Subnet resides."
+}
+
+variable "vnet_resource_group_name" {
+  type        = string
+  default     = ""
+  description = "The name of the resource group for the vnet which the subnet resides."
+}
+
+variable "dns_zone_name" {
+  type        = string
+  default     = "privatelink.amido-stacks-core-data-euw-de.com"
+  description = "The name of the Private DNS Zone"
+}
+
+variable "dns_zone_resource_group" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "The Resource Group for the Private DNS Zone."
 }
 
 ############################################
