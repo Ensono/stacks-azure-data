@@ -13,6 +13,9 @@ variables:
   #   value: src/api
   - name: self_repo_dir
     value: "$(Agent.BuildDirectory)/s"
+  - name: agentpool_name
+    value: "amido-stacks-infra-credentials-nonprod"
+  
 
 
 # Versioning
