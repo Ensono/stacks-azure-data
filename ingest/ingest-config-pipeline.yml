@@ -68,7 +68,6 @@ stages:
 #############################################################
 - stage: Deploy_NonPROD_Stage
   variables:
-      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-de-pipeline-nonprod
       - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
@@ -118,7 +117,6 @@ stages:
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
-      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-de-pipeline-prod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
@@ -164,7 +162,6 @@ stages:
       - Deploy_Prod_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
   variables:
-      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
