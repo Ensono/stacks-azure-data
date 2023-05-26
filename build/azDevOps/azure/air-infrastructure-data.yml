@@ -185,6 +185,10 @@ stages:
                     TF_VAR_git_integration: $(git_integration_prod)
                     TF_VAR_administrator_login: $(sql_admin_login)
                     TF_VAR_build_agent_ip: $(build_agent_ip)
+                    TF_VAR_subnet_name: 'amido-stacks-euw-de-prod-pe'
+                    TF_VAR_vnet_name: 'amido-stacks-euw-de-prod'
+                    TF_VAR_vnet_resource_group_name: 'amido-stacks-euw-de-prod-network'
+
 
   - stage: Release
     dependsOn:
