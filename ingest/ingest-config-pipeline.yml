@@ -23,9 +23,6 @@ trigger:
       - ingest/ingest-config-pipeline.yml
 
 
-pool:
-  name: 'amido-stacks-core-data-agent-pool'
-
 variables:
   - template: ../de_build/job-pipeline-vars.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
@@ -35,6 +32,9 @@ variables:
     value: "$(self_repo_dir)/ingest/config"
   - name: blob_config_destination
     value: config
+
+pool:
+  name: $(agentpool_name)
 
 stages:
 - stage: Build_Stage
@@ -68,6 +68,7 @@ stages:
 #############################################################
 - stage: Deploy_NonPROD_Stage
   variables:
+      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-de-pipeline-nonprod
       - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
@@ -78,7 +79,7 @@ stages:
     displayName: 'Deploy To NonPROD'
     environment: ${{ variables.domain }}-nonprod
     pool:
-      name: 'amido-stacks-core-data-agent-pool'
+      name: $(agentpool_name)
 
     strategy:
       runOnce:
@@ -117,6 +118,7 @@ stages:
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
+      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-de-pipeline-prod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
@@ -125,7 +127,7 @@ stages:
     displayName: 'Deploy To PROD'
     environment: ${{ variables.domain }}-prod
     pool:
-      name: 'amido-stacks-core-data-agent-pool'
+      name: $(agentpool_name)
 
     strategy:
       runOnce:
@@ -162,13 +164,14 @@ stages:
       - Deploy_Prod_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
   variables:
+      - template: ../de_build/job-pipeline-vars.yml
       - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
       - job: CreateGitHubRelease
         pool:
-          name: 'amido-stacks-core-data-agent-pool'
+          name: $(agentpool_name)
         steps:
           # Check out the repo so that it can be tagged
           - checkout: self
