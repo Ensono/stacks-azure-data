@@ -194,6 +194,11 @@ module "sql" {
   sql_db_names                    = var.sql_db_names
   resource_tags                   = module.default_label.tags
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
+  pe_subnet_id                    = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name          = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location      = var.pe_resource_group_location
+  private_dns_zone_name           = data.azurerm_private_dns_zone.private_dns.name
+  private_dns_zone_ids            = ["${data.azurerm_private_dns_zone.private_dns.id}"]
 
 }
 

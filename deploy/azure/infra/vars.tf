@@ -333,3 +333,25 @@ variable "enable_private_networks" {
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
+
+############################################
+# PRIVATE ENDPOINT INFORMATION
+############################################
+
+variable "pe_subnet_id" {
+  type        = string
+  default     = ""
+  description = "ID for the Private Endpoint Subnet"
+}
+
+variable "pe_resource_group_name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource group to provision private endpoint in."
+}
+
+variable "pe_resource_group_location" {
+  type        = string
+  default     = "westeurope"
+  description = "Location of the resource group to provision private endpoint in."
+}
