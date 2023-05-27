@@ -60,11 +60,11 @@ stages:
             displayName: Build the project
             workingDirectory: '$(self_repo_pysparkle_dir)/pysparkle'
           - task: CopyFiles@2
-            displayName: Copy PreandPostDeploymnet File
-            inputs: null
-            SourceFolder: '$(self_repo_pysparkle_dir)/dist/'
-            Contents: '*.whl'
-            TargetFolder: '$(Build.ArtifactStagingDirectory)/pysparklewheel'
+            displayName: Copy Whl
+            inputs:
+              SourceFolder: '$(self_repo_pysparkle_dir)/dist/'
+              Contents: '*.whl'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/pysparklewheel'
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifact: pysparklewheel'
             inputs:
