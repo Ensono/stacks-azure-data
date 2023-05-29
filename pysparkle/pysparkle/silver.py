@@ -1,22 +1,51 @@
-from random import random
-from operator import add
+# Bronze to Silver transformations.
+from pathlib import Path
 
 from pyspark.sql import SparkSession
+from pysparkle.adls_utils import get_directory_contents, set_env, set_spark_properties
+from pysparkle.const import ADLS_ACCOUNT, BRONZE_CONTAINER, DATASET_NAME, SILVER_CONTAINER
 
 
-def silver_main(partitions: int = 2):
-    print("Running the Silver command")
+def filter_csv_files(paths: list[str]) -> list[str]:
+    """Returns paths with the `.csv` extension.
+
+    Args:
+        paths: List of file paths.
+
+    Returns:
+        A list of file paths that end with the `.csv` extension.
+    """
+    return [path for path in paths if path.endswith('.csv')]
+
+
+def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> None:
+    def to_delta(csv_file: str) -> None:
+        filepath = f'abfss://{BRONZE_CONTAINER}@{ADLS_ACCOUNT}.dfs.core.windows.net/{csv_file}'
+        filename_with_no_extension = Path(filepath).stem
+        df = spark.read.option("header", "true")\
+            .option("inferSchema", "true")\
+            .option("delimiter", ",")\
+            .csv(filepath)
+        table_name = f'{SILVER_CONTAINER}.{filename_with_no_extension}'
+        df.write.format("delta").mode("overwrite").saveAsTable(table_name)
+        print(f'Table {table_name} saved.')
+
+    print('Saving CSV files as delta tables...')
+    for file in csv_files:
+        to_delta(file)
+
+
+def silver_main(service_principal_secret: str):
+    print('Running Silver processing...')
     spark = SparkSession \
         .builder \
-        .appName("PythonPi") \
+        .appName('Silver') \
         .getOrCreate()
 
-    n = 100000 * partitions
+    set_env(service_principal_secret)
+    set_spark_properties(spark)
+    input_paths = get_directory_contents(BRONZE_CONTAINER, DATASET_NAME)
+    csv_files = filter_csv_files(input_paths)
+    save_files_as_delta_tables(spark, csv_files)
 
-    def f(_: int) -> float:
-        x = random() * 2 - 1
-        y = random() * 2 - 1
-        return 1 if x ** 2 + y ** 2 <= 1 else 0
-
-    count = spark.sparkContext.parallelize(range(1, n + 1), partitions).map(f).reduce(add)
-    print("Pi is roughly %f" % (4.0 * count / n))
+    print('Finished: Silver processing.')
