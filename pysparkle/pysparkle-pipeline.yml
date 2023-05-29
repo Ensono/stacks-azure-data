@@ -104,25 +104,25 @@ stages:
               displayName: List Artifact in Workspace
               workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
 
-           - script: pip install databricks-cli
-             displayName: Install Databricks CLI
-             
-           - script: |
-                      echo "$(DatabricksHost)
-                      $(DatabricksToken)" | databricks configure --token
-             displayName: Configure databricks-cli
+            - script: pip install databricks-cli
+              displayName: Install Databricks CLI
+              
+            - script: |
+                        echo "$(DatabricksHost)
+                        $(DatabricksToken)" | databricks configure --token
+              displayName: Configure databricks-cli
 
-           - script: |
-                      databricks workspace ls
-                      databricks fs ls
-             displayName: test databricks-cli
+            - script: |
+                        databricks workspace ls
+                        databricks fs ls
+              displayName: test databricks-cli
 
-           - script: |
-                     echo Destination is /FileStore
-                     echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
+            - script: |
+                      echo Destination is /FileStore
+                      echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
 
-             displayName: Upload whl
+              displayName: Upload whl
               
         
 
@@ -224,45 +224,26 @@ stages:
               displayName: List ArmTemplates Artifact in Workspace
               workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
 
-           - script: pip install databricks-cli
-             displayName: Install Databricks CLI
-             
-           - script: |
-                      echo "$(DatabricksHost)
-                      $(DatabricksToken)" | databricks configure --token
-             displayName: Configure databricks-cli
+            - script: pip install databricks-cli
+              displayName: Install Databricks CLI
+              
+            - script: |
+                        echo "$(DatabricksHost)
+                        $(DatabricksToken)" | databricks configure --token
+              displayName: Configure databricks-cli
 
-           - script: |
-                      databricks workspace ls
-                      databricks fs ls
-             displayName: test databricks-cli
+            - script: |
+                        databricks workspace ls
+                        databricks fs ls
+              displayName: test databricks-cli
 
-           - script: |
-                     echo Destination is /FileStore
-                     echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
+            - script: |
+                      echo Destination is /FileStore
+                      echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
 
-             displayName: Upload whl
+              displayName: Upload whl
 
-           - script: pip install databricks-cli
-             displayName: Install Databricks CLI
-             
-           - script: |
-                      echo "$(DatabricksHost)
-                      $(DatabricksToken)" | databricks configure --token
-             displayName: Configure databricks-cli
-
-           - script: |
-                      databricks workspace ls
-                      databricks fs ls
-             displayName: test databricks-cli
-
-           - script: |
-                     echo Destination is /FileStore
-                     echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
-
-             displayName: Upload whl
 
 
   
