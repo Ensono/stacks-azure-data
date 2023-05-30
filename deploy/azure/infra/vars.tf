@@ -324,6 +324,7 @@ variable "databricks_group_display_name" {
   default     = "project_users"
 }
 
+
 ############################################
 # NETWORK INFORMATION
 ############################################
