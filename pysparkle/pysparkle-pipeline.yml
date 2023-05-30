@@ -120,7 +120,7 @@ stages:
             - script: |
                       echo Destination is /FileStore
                       echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparkl_latest.whl
 
               displayName: Upload whl
               
@@ -240,7 +240,7 @@ stages:
             - script: |
                       echo Destination is /FileStore
                       echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparklewheel.whl
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/pysparkl_latest.whl
 
               displayName: Upload whl
 
