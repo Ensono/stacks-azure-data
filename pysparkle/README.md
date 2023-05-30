@@ -36,6 +36,12 @@ pip install dist/pysparkle-0.1.1-py3-none-any.whl
 Spark runs on Java 8/11/17, Java 8 prior to version 8u362 support is deprecated
 as of Spark 3.4.0. For details see: https://spark.apache.org/docs/latest/.
 
+# Local testing
+The current setup of PySparkle doesn't include the required libraries to connect
+to Azure Data Lake Storage (they are pre-installed and configured in Azure Databricks
+environment. To run the application locally, appropriate jar files would have to be
+included in the classpath.
+
 # Azure Data Factory setup
 Example setup for running PySparkle from ADF. The pipeline below consists of two steps:
 1. Get Service Principal Secret from Key Vault

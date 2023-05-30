@@ -35,7 +35,7 @@ def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> Non
         to_delta(file)
 
 
-def silver_main(service_principal_secret: str):
+def silver_main(service_principal_secret: str = None):
     print('Running Silver processing...')
     spark = SparkSession \
         .builder \
