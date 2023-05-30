@@ -189,7 +189,7 @@ variable "create_private_dns_zone" {
 ############################################
 
 variable "vmss_instances" {
-  default     = 0
+  default     = 1
   type        = number
   description = "Sets the default number of VM instances running in the VMSS."
 }
