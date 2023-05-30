@@ -116,7 +116,7 @@ stages:
                     TF_VAR_build_agent_ip: $(build_agent_ip)
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
-                    TF_VAR_vnet_resource_group_name: $(pe_resource_group_name
+                    TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
 
   #   yamllint disable rule:comments-indentation
 
