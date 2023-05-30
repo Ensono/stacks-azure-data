@@ -288,7 +288,7 @@ variable "databricksws_diagnostic_setting_name" {
 variable "enable_enableDbfsFileBrowser" {
   type        = bool
   description = "Whether to enable Dbfs File browser for the Azure Databricks workspace"
-  default     = false
+  default     = true
 }
 
 variable "add_rbac_users" {
