@@ -9,6 +9,10 @@ pysparkle silver
 pysparkle gold --partitions 4
 ```
 
+> ℹ️ PySparkle requires environment variable AZURE_CLIENT_SECRET (Service Principal Secret)
+> to be set.
+
+
 ## Using an entrypoint script
 
 ```bash
