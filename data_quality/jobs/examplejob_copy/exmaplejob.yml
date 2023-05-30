@@ -98,8 +98,8 @@ stages:
              displayName: Install Databricks CLI
              
            - script: |
-                      echo "$(DatabricksHost)
-                      $(DatabricksToken)" | databricks configure --token
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
              displayName: Configure databricks-cli
 
            - script: |
@@ -267,8 +267,8 @@ stages:
              displayName: Install Databricks CLI
              
            - script: |
-                      echo "$(DatabricksHost)
-                      $(DatabricksToken)" | databricks configure --token
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
              displayName: Configure databricks-cli
 
            - script: |
