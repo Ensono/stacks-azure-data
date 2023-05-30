@@ -5,7 +5,7 @@
 ```bash
 pysparkle --help
 pysparkle silver --help
-pysparkle silver <service-principal-secret>
+pysparkle silver
 pysparkle gold --partitions 4
 ```
 
@@ -14,7 +14,7 @@ pysparkle gold --partitions 4
 ```bash
 python pysparkle_cli.py --help
 python pysparkle_cli.py silver --help
-python pysparkle_cli.py silver <service-principal-secret>
+python pysparkle_cli.py silver
 python pysparkle_cli.py gold --partitions 4
 ```
 
@@ -43,9 +43,7 @@ environment. To run the application locally, appropriate jar files would have to
 included in the classpath.
 
 # Azure Data Factory setup
-Example setup for running PySparkle from ADF. The pipeline below consists of two steps:
-1. Get Service Principal Secret from Key Vault
-2. Run Databricks Python activity with Service Principal Secret passed as a parameter.
+Example setup for running PySparkle from ADF.
 
 ```json
 {
@@ -55,14 +53,7 @@ Example setup for running PySparkle from ADF. The pipeline below consists of two
             {
                 "name": "Silver",
                 "type": "DatabricksSparkPython",
-                "dependsOn": [
-                    {
-                        "activity": "ServicePrincipal",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
+                "dependsOn": [],
                 "policy": {
                     "timeout": "0.12:00:00",
                     "retry": 0,
@@ -74,12 +65,11 @@ Example setup for running PySparkle from ADF. The pipeline below consists of two
                 "typeProperties": {
                     "pythonFile": "dbfs:/FileStore/scripts/pysparkle_cli.py",
                     "parameters": [
-                        "silver",
-                        "@activity('ServicePrincipal').output.value"
+                        "silver"
                     ],
                     "libraries": [
                         {
-                            "whl": "dbfs:/FileStore/jars/9976ba75_967d_41c5_a634_e0d86d7ef4ce/pysparkle-0.1.1-py3-none-any.whl"
+                            "whl": "dbfs:/FileStore/jars/c64a5713_8fa5_4e3a_beda_218f9ab5730e/pysparkle-0.1.1-py3-none-any.whl"
                         }
                     ]
                 },
@@ -87,33 +77,14 @@ Example setup for running PySparkle from ADF. The pipeline below consists of two
                     "referenceName": "AzureDatabricks",
                     "type": "LinkedServiceReference"
                 }
-            },
-            {
-                "name": "ServicePrincipal",
-                "type": "WebActivity",
-                "dependsOn": [],
-                "policy": {
-                    "timeout": "0.12:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": true,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "url": "https://amidostacksdeveuwde.vault.azure.net/secrets/service-principal-secret?api-version=7.0",
-                    "method": "GET",
-                    "authentication": {
-                        "type": "MSI",
-                        "resource": "https://vault.azure.net"
-                    }
-                }
             }
         ],
         "folder": {
             "name": "Process"
         },
-        "annotations": []
-    }
+        "annotations": [],
+        "lastPublishTime": "2023-05-29T17:16:07Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
 }
 ```

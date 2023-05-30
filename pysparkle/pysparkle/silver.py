@@ -35,14 +35,14 @@ def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> Non
         to_delta(file)
 
 
-def silver_main(service_principal_secret: str = None):
+def silver_main():
     print('Running Silver processing...')
     spark = SparkSession \
         .builder \
         .appName('Silver') \
         .getOrCreate()
 
-    set_env(service_principal_secret)
+    set_env()
     set_spark_properties(spark)
     input_paths = get_directory_contents(BRONZE_CONTAINER, DATASET_NAME)
     csv_files = filter_csv_files(input_paths)

@@ -11,14 +11,12 @@ def cli():
 
 
 @click.command()
-@click.argument('service-principal-secret', type=str, default=None)
-def silver(service_principal_secret):
+def silver():
     """Bronze to Silver processing.
 
-    Environment variable AZURE_CLIENT_SECRET takes precedence over SERVICE_PRINCIPAL_SECRET.
-    SERVICE_PRINCIPAL_SECRET is optional.
+    Requires environment variable AZURE_CLIENT_SECRET (Service Principal Secret).
     """
-    silver_main(service_principal_secret)
+    silver_main()
 
 
 @click.command()

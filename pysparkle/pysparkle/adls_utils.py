@@ -12,26 +12,26 @@ ENV_NAME_DIRECTORY_ID = 'AZURE_TENANT_ID'
 ENV_NAME_APPLICATION_ID = 'AZURE_CLIENT_ID'
 
 
-def set_env_var_if_not_exists(var_name: str, value: str) -> None:
-    """Sets an environment variable to a given value, only if it is not already set.
+def check_env_variable(var_name: str) -> None:
+    """Checks if a given environment variable is set. If not, raises an EnvironmentError.
 
     Args:
-        var_name: The name of the environment variable.
-        value: The value to set the variable to.
+        var_name: The name of the environment variable to check.
+
+    Raises:
+        EnvironmentError: If the environment variable is not set.
     """
-    if var_name not in os.environ:
-        os.environ[var_name] = value
+    try:
+        secret = os.environ[var_name]
+    except KeyError:
+        raise EnvironmentError(f"Environment variable '{var_name}' not set.")
 
 
-def set_env(service_principal_secret: str = None) -> None:
-    """Sets environment variables to enable ADLS access.
-
-    Args:
-        service_principal_secret: Service Principal secret.
-    """
-    set_env_var_if_not_exists(ENV_NAME_SERVICE_PRINCIPAL_SECRET, service_principal_secret)
-    set_env_var_if_not_exists(ENV_NAME_DIRECTORY_ID, DIRECTORY_ID)
-    set_env_var_if_not_exists(ENV_NAME_APPLICATION_ID, APPLICATION_ID)
+def set_env() -> None:
+    """Sets environment variables to enable ADLS access."""
+    check_env_variable(ENV_NAME_SERVICE_PRINCIPAL_SECRET)
+    os.environ[ENV_NAME_DIRECTORY_ID] = DIRECTORY_ID
+    os.environ[ENV_NAME_APPLICATION_ID] = APPLICATION_ID
 
 
 def set_spark_properties(spark: SparkSession) -> None:
