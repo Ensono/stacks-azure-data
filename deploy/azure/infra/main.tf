@@ -241,3 +241,30 @@ resource "azurerm_role_assignment" "adb_role" {
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
+
+resource "databricks_token" "pat" {
+  comment  = "Terraform Provisioning"
+  // 120 day token
+  lifetime_seconds = 120 * 24 * 60 * 60
+}
+
+resource "azurerm_key_vault_secret" "databricks_token" {
+  name         = "databricks-token"
+  value        = databricks_token.pat.token_value
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "databricks-host" {
+  name         = "databricks-host"
+  value        = module.adb.databricks_hosturl
+  key_vault_id = module.kv_default.id
+}
+
+resource "databricks_secret_scope" "kv" {
+  name = "keyvault-managed"
+
+  keyvault_metadata {
+    resource_id = module.kv_default.id
+    dns_name    = module.kv_default.vault_uri
+  }
+}
