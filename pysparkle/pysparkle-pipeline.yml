@@ -1,22 +1,19 @@
 name: "$(Build.SourceBranchName)-init"
 
-trigger:
+#trigger:
 #- main #collaboration branch
-- none
+#- none
 
-# pr:
-#   - main
-
-# trigger:
-#   branches:
-   
-#     include:
-#       - 'main'
-#   paths:
-#     include:
-#       - pysparkle/*
-#       - pysparkle/pysparkle-pipeline.yml
-
+pr:
+  - main
+trigger:
+  branches:
+    include:
+      - 'main'
+  paths:
+    include:
+      - pysparkle/*
+      - pysparkle/pysparkle-pipeline.yml
 variables:
   - template: ../de_build/job-pipeline-vars.yml
   - template: ../de_build/air-data-testing-vars.yml
@@ -71,8 +68,6 @@ stages:
               ArtifactName: pysparklewheel
               PathtoPublish: '$(Build.ArtifactStagingDirectory)/pysparklewheel'
 
-
-
 #############################################################
 # Deploy to non Prod
 #############################################################
@@ -84,53 +79,40 @@ stages:
           value: "$(version_major).$(version_minor).$(version_revision)"
     dependsOn: Build_Stage
     jobs:
-    - deployment: Deploy_NonPROD
-      displayName: 'Deploy To NonPROD'
-      environment: ${{ variables.domain }}-nonprod
-      pool:
-        name: $(agentpool_name)
-
-      strategy:
-        runOnce:
-          deploy:  
-            steps:
-
-            - task: DownloadPipelineArtifact@2
-              displayName: Download Build Artifacts
-              inputs:
-                targetPath: '$(System.DefaultWorkingDirectory)'
-
-            - script: dir
-              displayName: List Artifact in Workspace
-              workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
-
-            - script: pip install databricks-cli
-              displayName: Install Databricks CLI
-
-            - task: AzureKeyVault@2
-              inputs:
-                  azureSubscription: 'Stacks.Pipeline.Builds'
-                  KeyVaultName: $(keyvault_name)
-                  SecretsFilter: '*'
-                  RunAsPreJob: false
-              displayName: 'Get secrets from the keyvault' 
-
-            - script: |
-                        echo "$(databricks-host)
-                        $(databricks-token)" | databricks configure --token
-              displayName: Configure databricks-cli
-
-            - script: |
-                        databricks workspace ls
-                        databricks fs ls
-              displayName: test databricks-cli
-
-            - script: |
-                      echo Destination is /FileStore/jars
-                      echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
-
-              displayName: Upload whl
+      - deployment: Deploy_NonPROD
+        displayName: 'Deploy To NonPROD'
+        environment: ${{ variables.domain }}-nonprod
+        pool:
+          name: $(agentpool_name)
+        strategy:
+          runOnce:
+            deploy:  
+              steps:
+              - task: DownloadPipelineArtifact@2
+                displayName: Download Build Artifacts
+                inputs:
+                  targetPath: '$(System.DefaultWorkingDirectory)'
+              - script: dir
+                displayName: List Artifact in Workspace
+                workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
+              - script: pip install databricks-cli
+                displayName: Install Databricks CLI
+              - task: AzureKeyVault@2
+                inputs:
+                    azureSubscription: 'Stacks.Pipeline.Builds'
+                    KeyVaultName: $(keyvault_name)
+                    SecretsFilter: '*'
+                    RunAsPreJob: false
+                displayName: 'Get secrets from the keyvault' 
+              - script: |
+                          echo "$(databricks-host)
+                          $(databricks-token)" | databricks configure --token
+                displayName: Configure databricks-cli
+              - script: |
+                        echo Destination is /FileStore/jars
+                        echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
+                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
+                displayName: Upload whl
               
         
 
@@ -211,58 +193,41 @@ stages:
         - name: version_number
           value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
-    - deployment: Deploy_PRDO
-      displayName: 'Deploy To PROD'
-      environment: ${{ variables.domain }}-prod
-      pool:
-        name: $(agentpool_name)
+      - deployment: Deploy_PRDO
+        displayName: 'Deploy To PROD'
+        environment: ${{ variables.domain }}-prod
+        pool:
+          name: $(agentpool_name)
+        strategy:
+          runOnce:
+            deploy:  
+              steps:
+              - task: DownloadPipelineArtifact@2
+                displayName: Download Build Artifacts
+                inputs:
+                  targetPath: '$(System.DefaultWorkingDirectory)'
+              - script: dir
+                displayName: List ArmTemplates Artifact in Workspace
+                workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
+              - script: pip install databricks-cli
+                displayName: Install Databricks CLI
+              - task: AzureKeyVault@2
+                inputs:
+                    azureSubscription: 'Stacks.Pipeline.Builds'
+                    KeyVaultName: $(keyvault_name)
+                    SecretsFilter: '*'
+                    RunAsPreJob: false
+                displayName: 'Get secrets from the keyvault'            
+              - script: |
+                          echo "$(databricks-host)
+                          $(databricks-token)" | databricks configure --token
+                displayName: Configure databricks-cli
+              - script: |
+                        echo Destination is /FileStore/jars
+                        echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
+                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
+                displayName: Upload whl
 
-      strategy:
-        runOnce:
-          deploy:  
-            steps:
-
-
-            - task: DownloadPipelineArtifact@2
-              displayName: Download Build Artifacts
-              inputs:
-                targetPath: '$(System.DefaultWorkingDirectory)'
-
-            - script: dir
-              displayName: List ArmTemplates Artifact in Workspace
-              workingDirectory: '$(System.DefaultWorkingDirectory)/pysparklewheel'
-
-            - script: pip install databricks-cli
-              displayName: Install Databricks CLI
-
-            - task: AzureKeyVault@2
-              inputs:
-                  azureSubscription: 'Stacks.Pipeline.Builds'
-                  KeyVaultName: $(keyvault_name)
-                  SecretsFilter: '*'
-                  RunAsPreJob: false
-              displayName: 'Get secrets from the keyvault'            
-              
-            - script: |
-                        echo "$(databricks-host)
-                        $(databricks-token)" | databricks configure --token
-              displayName: Configure databricks-cli
-
-            - script: |
-                        databricks workspace ls
-                        databricks fs ls
-              displayName: test databricks-cli
-
-            - script: |
-                      echo Destination is /FileStore/jars
-                      echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
-
-              displayName: Upload whl
-
-
-
-  
   - stage: Release
     dependsOn:
         - Build_Stage
