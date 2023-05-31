@@ -111,7 +111,7 @@ stages:
               - script: |
                         echo Destination is /FileStore/jars
                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/
+                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
                 displayName: Upload whl
               
         
@@ -225,7 +225,7 @@ stages:
               - script: |
                         echo Destination is /FileStore/jars
                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
+                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
                 displayName: Upload whl
 
   - stage: Release
