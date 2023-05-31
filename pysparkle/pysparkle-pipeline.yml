@@ -126,9 +126,9 @@ stages:
               displayName: test databricks-cli
 
             - script: |
-                      echo Destination is /FileStore
-                      echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkl_latest.whl
+                      echo Destination is /FileStore/jars
+                      echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
 
               displayName: Upload whl
               
@@ -254,9 +254,9 @@ stages:
               displayName: test databricks-cli
 
             - script: |
-                      echo Destination is /FileStore
-                      echo Source is $(System.DefaultWorkingDirectory)/Databricks/DBFS-Files
-                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkl_latest.whl
+                      echo Destination is /FileStore/jars
+                      echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
+                      databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle_latest.whl
 
               displayName: Upload whl
 
