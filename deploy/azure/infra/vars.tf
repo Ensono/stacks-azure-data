@@ -324,6 +324,29 @@ variable "databricks_group_display_name" {
   default     = "project_users"
 }
 
+variable "databricks-host" {
+  type        = string
+  default     = "databricks-host"
+  description = "Name of the Key for databricks host, its not the actual value/password but the by the name its referred to."
+}
+
+variable "databricks-token" {
+  type        = string
+  default     = "databricks-token"
+  description = "Name of the Key for databricks token, its not the actual value/password but the by the name its referred to."
+}
+
+variable "databricks_secret_scope_kv" {
+  type        = string
+  default     = "key-vault-backed"
+  description = "Name of the databricks secret scope for Key vault."
+}
+
+variable "databricks_pat_comment" {
+  type        = string
+  default     = "Terraform Provisioning"
+  description = "Comment for databricks PAT"
+}
 
 ############################################
 # NETWORK INFORMATION
