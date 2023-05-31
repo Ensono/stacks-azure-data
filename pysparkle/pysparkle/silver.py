@@ -19,15 +19,24 @@ def filter_csv_files(paths: list[str]) -> list[str]:
 
 
 def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> None:
+    """Saves multiple CSV files as Delta tables in a specified schema.
+
+    The function reads CSV files from a bronze container and writes them as Delta tables
+    into a silver container.
+
+    Args:
+        spark: Spark session.
+        csv_files: List of CSV files to be converted into Delta tables.
+    """
     def to_delta(csv_file: str) -> None:
         filepath = f'abfss://{BRONZE_CONTAINER}@{ADLS_ACCOUNT}.dfs.core.windows.net/{csv_file}'
         filename_with_no_extension = Path(filepath).stem
-        df = spark.read.option("header", "true")\
-            .option("inferSchema", "true")\
-            .option("delimiter", ",")\
+        df = spark.read.option('header', 'true')\
+            .option('inferSchema', 'true')\
+            .option('delimiter', ',')\
             .csv(filepath)
         table_name = f'{SILVER_CONTAINER}.{filename_with_no_extension}'
-        df.write.format("delta").mode("overwrite").saveAsTable(table_name)
+        df.write.format('delta').mode('overwrite').saveAsTable(table_name)
         print(f'Table {table_name} saved.')
 
     print('Saving CSV files as delta tables...')
