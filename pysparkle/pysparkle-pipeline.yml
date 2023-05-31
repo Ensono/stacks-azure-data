@@ -106,7 +106,15 @@ stages:
 
             - script: pip install databricks-cli
               displayName: Install Databricks CLI
-              
+
+            - task: AzureKeyVault@2
+              inputs:
+                  azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+              displayName: 'Get secrets from the keyvault' 
+
             - script: |
                         echo "$(databricks-host)
                         $(databricks-token)" | databricks configure --token
@@ -226,6 +234,14 @@ stages:
 
             - script: pip install databricks-cli
               displayName: Install Databricks CLI
+
+            - task: AzureKeyVault@2
+              inputs:
+                  azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+              displayName: 'Get secrets from the keyvault'            
               
             - script: |
                         echo "$(databricks-host)
