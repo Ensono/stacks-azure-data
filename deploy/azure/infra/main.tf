@@ -261,7 +261,7 @@ resource "azurerm_key_vault_secret" "databricks-host" {
 }
 
 resource "databricks_secret_scope" "kv" {
-  name = "keyvault-managed"
+  name = "key-vault-managed"
 
   keyvault_metadata {
     resource_id = module.kv_default.id
