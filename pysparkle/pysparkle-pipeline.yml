@@ -109,13 +109,9 @@ stages:
 
             - task: AzureKeyVault@2
               inputs:
-                  azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+                  azureSubscription: 'Stacks.Pipeline.Builds'
                   KeyVaultName: $(keyvault_name)
                   SecretsFilter: '*'
-                  UseAzureADServicePrincipal: true
-                  AzureADServicePrincipalAppId: $(azure-client-id)
-                  AzureADServicePrincipalPassword: $(azure-client-secret)
-                  AzureADServicePrincipalTenantId: $(azure-tenant-id)
                   RunAsPreJob: false
               displayName: 'Get secrets from the keyvault' 
 
@@ -241,7 +237,7 @@ stages:
 
             - task: AzureKeyVault@2
               inputs:
-                  azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+                  azureSubscription: 'Stacks.Pipeline.Builds'
                   KeyVaultName: $(keyvault_name)
                   SecretsFilter: '*'
                   RunAsPreJob: false
