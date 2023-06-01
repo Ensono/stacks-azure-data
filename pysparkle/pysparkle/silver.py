@@ -1,10 +1,12 @@
 # Bronze to Silver transformations.
+import logging
 from pathlib import Path
 
 from pyspark.sql import SparkSession
-
 from pysparkle.adls_utils import get_directory_contents, set_env, set_spark_properties
 from pysparkle.const import ADLS_ACCOUNT, BRONZE_CONTAINER, DATASET_NAME, SILVER_CONTAINER
+
+logger = logging.getLogger(__name__)
 
 
 def filter_csv_files(paths: list[str]) -> list[str]:
@@ -42,7 +44,7 @@ def ensure_database_exists(spark: SparkSession, schema: str) -> None:
     """
     if not spark.catalog.databaseExists(schema):
         spark.sql(f'CREATE DATABASE IF NOT EXISTS {schema}')
-        print(f'Database {schema} has been created.')
+        logger.info(f'Database {schema} has been created.')
 
 
 def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> None:
@@ -64,16 +66,16 @@ def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> Non
             .csv(filepath)
         table_name = f'{SILVER_CONTAINER}.{filename_with_no_extension}'
         df.write.format('delta').mode('overwrite').saveAsTable(table_name)
-        print(f'Table {table_name} saved.')
+        logger.info(f'Table {table_name} saved.')
 
-    print('Saving CSV files as delta tables...')
+    logger.info('Saving CSV files as delta tables...')
     ensure_database_exists(spark, SILVER_CONTAINER)
     for file in csv_files:
         to_delta(file)
 
 
 def silver_main():
-    print('Running Silver processing...')
+    logger.info('Running Silver processing...')
     spark = SparkSession \
         .builder \
         .appName('Silver') \
@@ -85,4 +87,4 @@ def silver_main():
     csv_files = filter_csv_files(input_paths)
     save_files_as_delta_tables(spark, csv_files)
 
-    print('Finished: Silver processing.')
+    logger.info('Finished: Silver processing.')
