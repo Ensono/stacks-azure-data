@@ -43,7 +43,7 @@ as of Spark 3.4.0. For details see: https://spark.apache.org/docs/latest/.
 The current setup of PySparkle doesn't include the required libraries to connect
 to Azure Data Lake Storage (they are pre-installed and configured in Azure Databricks
 environment. To run the application locally, appropriate jar files would have to be
-included and used with the Spark session (`spark.jars.packages` configuration parameter).
+included in the Spark session (`spark.jars.packages` configuration parameter).
 
 # Azure Data Factory setup
 Example setup for running PySparkle from ADF.
