@@ -54,15 +54,15 @@ stages:
             displayName: Install Pipeline Tools
           - bash: |
               poetry install 
-            displayName: Install dependencies
+            displayName: Install Dependencies
             workingDirectory: $(self_repo_pysparkle_dir)
           - bash: |
               poetry run pytest -rf -v tests -k unit
-            displayName: 'Running Unit test'
+            displayName: 'Running Unit Tests'
             workingDirectory:  '$(self_repo_pysparkle_dir)'          
           - bash: |
               poetry build
-            displayName: Build the project
+            displayName: Build Project
             workingDirectory: '$(self_repo_pysparkle_dir)/pysparkle'
           - task: CopyFiles@2
             displayName: Copy Whl
@@ -111,11 +111,11 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get secrets from the keyvault' 
+                displayName: 'Get Keyvault Secrets' 
               - script: |
                           echo "$(databricks-host)
                           $(databricks-token)" | databricks configure --token
-                displayName: Configure databricks-cli
+                displayName: Configure Databricks-cli
               - script: |
                         echo Destination is /FileStore/jars
                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
@@ -222,11 +222,11 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get secrets from the keyvault'            
+                displayName: 'Get Keyvault Secrets'            
               - script: |
                           echo "$(databricks-host)
                           $(databricks-token)" | databricks configure --token
-                displayName: Configure databricks-cli
+                displayName: Configure Databricks-cli
               - script: |
                         echo Destination is /FileStore/jars
                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
