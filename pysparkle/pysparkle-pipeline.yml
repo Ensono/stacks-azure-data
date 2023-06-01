@@ -53,6 +53,10 @@ stages:
             displayName: Install dependencies
             workingDirectory: $(self_repo_pysparkle_dir)
           - bash: |
+              poetry install 
+            displayName: 'Running poetry install'
+            workingDirectory:  '$(self_repo_pysparkle_dir)'          
+          - bash: |
               poetry build
             displayName: Build the project
             workingDirectory: '$(self_repo_pysparkle_dir)/pysparkle'
