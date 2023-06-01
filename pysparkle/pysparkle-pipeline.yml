@@ -58,7 +58,7 @@ stages:
             workingDirectory: $(self_repo_pysparkle_dir)
           - bash: |
               poetry run pytest -rf -v tests -k unit
-            displayName: 'Running Unit Tests'
+            displayName: 'Run Unit Tests'
             workingDirectory:  '$(self_repo_pysparkle_dir)'          
           - bash: |
               poetry build
