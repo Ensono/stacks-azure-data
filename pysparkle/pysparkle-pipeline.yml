@@ -133,6 +133,11 @@ stages:
                   scriptLocation: 'inlineScript'
                   inlineScript: az account show 
               
+              - bash: |
+                  sudo apt update
+                  sudo apt install -y openjdk-11-jdk
+                displayName: 'Install Java'
+
               - task: UsePythonVersion@0
                 inputs:
                     versionSpec: '$(pythonVersion)'
@@ -164,12 +169,12 @@ stages:
               #         AZURE_CLIENT_ID: $(azure-client-id)
               #         AZURE_CLIENT_SECRET: $(azure-client-secret)
               #         AZURE_TENANT_ID: $(azure-tenant-id)   
-              - task: PublishTestResults@2
-                displayName: 'Publish Test Results'
-                inputs:
-                    testResultsFiles: '**/*.xml'
-                    searchFolder: $(junit_path)
-                condition: succeededOrFailed()
+              # - task: PublishTestResults@2
+              #   displayName: 'Publish Test Results'
+              #   inputs:
+              #       testResultsFiles: '**/*.xml'
+              #       searchFolder: $(junit_path)
+              #   condition: succeededOrFailed()
     
 
   #############################################################
