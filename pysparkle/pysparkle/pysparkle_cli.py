@@ -1,13 +1,18 @@
 # Entrypoint for PySparkle application.
+import logging
+
 import click
+from click_loglevel import LogLevel
 
 from pysparkle.gold import gold_main
+from pysparkle.logger import setup_logger
 from pysparkle.silver import silver_main
 
 
 @click.group()
-def cli():
-    pass
+@click.option('--log-level', '-l', type=LogLevel(), default=logging.INFO)
+def cli(log_level):
+    setup_logger('pysparkle', log_level)
 
 
 @click.command()
