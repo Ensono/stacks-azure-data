@@ -8,20 +8,21 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-
-pr:
-  - main
-
 trigger:
-  branches:
+- none
+# pr:
+#   - main
+
+# trigger:
+#   branches:
    
-    include:
-      - 'main'
-  paths:
-    include:
-      - data_quality/jobs/examplejob_copy/adfpipeline/*
-      - data_quality/jobs/examplejob_copy/tests/*
-      - data_quality/jobs/examplejob_copy/generate-ingest-query.yml
+#     include:
+#       - 'main'
+#   paths:
+#     include:
+#       - data_quality/jobs/examplejob_copy/adfpipeline/*
+#       - data_quality/jobs/examplejob_copy/tests/*
+#       - data_quality/jobs/examplejob_copy/generate-ingest-query.yml
 
 
 variables:
