@@ -140,14 +140,15 @@ stages:
                     addToPath: true
                 displayName: Set Python Version
               - bash: |
-                  pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+                  pip install pylint pylint-exit pytest-azurepipelines pytest-cov poetry 
                 displayName: 'Install Pipeline Tools'
+                #pytest
               - bash: |
                   poetry install 
                 displayName: 'Running poetry install'
                 workingDirectory:  '$(self_repo_pysparkle_dir)'
               - bash: |
-                  python -m pytest $(test_unit_path)
+                  poetry run pytest -rf -v tests -k unit
                 displayName: 'Running py test'
                 workingDirectory:  '$(self_repo_pysparkle_dir)'
               #  - bash: |
