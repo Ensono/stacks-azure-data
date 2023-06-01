@@ -1,10 +1,13 @@
 # Helper functions for interacting with Azure Data Lake Storage
+import logging
 import os
 
 from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 from pyspark.sql import SparkSession
 from pysparkle.const import ADLS_ACCOUNT, APPLICATION_ID, DIRECTORY_ID
+
+logger = logging.getLogger(__name__)
 
 ADLS_URL = f'https://{ADLS_ACCOUNT}.dfs.core.windows.net'
 ENV_NAME_SERVICE_PRINCIPAL_SECRET = 'AZURE_CLIENT_SECRET'
@@ -67,5 +70,5 @@ def get_directory_contents(container: str, path: str) -> list[str]:
     file_system_client = adls_client.get_file_system_client(file_system=container)
     paths = file_system_client.get_paths(path=path)
     paths = [path.name for path in paths]
-    print(f'Directory contents: {paths}')
+    logger.info(f'Directory contents: {paths}')
     return paths
