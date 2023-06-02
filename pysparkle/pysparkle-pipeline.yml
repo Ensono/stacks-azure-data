@@ -19,8 +19,8 @@ variables:
   - template: ../de_build/air-data-testing-vars.yml
   - name: self_repo_pysparkle_dir
     value: $(self_repo_dir)/pysparkle
-  # - name: pythonVersion
-  #   value: 3.10.10
+  - name: pythonVersion
+    value: 3.10.10
   - name: test_unit_path
     value: '$(self_repo_dir)/pysparkle/tests/unit/'
   # - name: test_end_to_end_path
@@ -43,12 +43,12 @@ stages:
           #     sudo apt update
           #     sudo apt install -y openjdk-11-jdk
           #   displayName: 'Install Java'
-          # - task: UsePythonVersion@0
-          #   inputs:
-          #     versionSpec: $(pythonVersion)
-          #     githubToken: $(github_token)
-          #     addToPath: true
-          #   displayName: Set Python Version
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+              githubToken: $(github_token)
+              addToPath: true
+            displayName: Set Python Version
           - bash: |
               pip install poetry
             displayName: Install Pipeline Tools
