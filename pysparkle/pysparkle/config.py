@@ -1,0 +1,3 @@
+BRONZE_CONTAINER = 'raw'
+SILVER_CONTAINER = 'staging'
+GOLD_CONTAINER = 'curated'
