@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysparkle"
-version = "0.1.1"
+version = "0.1.2"
 description = "PySpark data transformer"
 authors = ["ensono.com"]
 readme = "README.md"
@@ -11,6 +11,8 @@ click = "^8.1.3"
 pyspark = "^3.4.0"
 azure-identity = "^1.13.0"
 azure-storage-file-datalake = "^12.11.0"
+click-loglevel = "^0.4.0.post1"
+colorlog = "^6.7.0"
 
 [tool.poetry.scripts]
 pysparkle = "pysparkle.pysparkle_cli:cli"
@@ -21,3 +23,7 @@ pytest = "^7.3.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"

@@ -12,16 +12,6 @@ def test_filter_csv_files():
     assert filter_csv_files(paths) == expected
 
 
-def test_get_adls_url():
-    container = 'mycontainer'
-    adls_account = 'myadlsaccount'
-    file_name = 'myfolder/myfile.txt'
-
-    expected_url = 'abfss://mycontainer@myadlsaccount.dfs.core.windows.net/myfolder/myfile.txt'
-
-    assert get_adls_url(container, adls_account, file_name) == expected_url
-
-
 def test_ensure_database_exists(spark, db_schema):
     # Ensure an existing database remains accessible
     assert spark.catalog.databaseExists(db_schema)
@@ -43,12 +33,12 @@ def test_ensure_database_exists(spark, db_schema):
          ['userId', 'movieId', 'rating', 'timestamp']],
      ),
 ])
-@patch('pysparkle.silver.get_adls_url')
-def test_save_files_as_delta_tables(mock_get_adls_url, spark, csv_files, expected_columns):
-    def side_effect(container, adls_account, file_name):
+@patch('pysparkle.silver.get_adls_file_url')
+def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns):
+    def side_effect(container, file_name):
         return f'{TEST_DATA_DIR}/{file_name}'
 
-    mock_get_adls_url.side_effect = side_effect
+    mock_get_adls_file_url.side_effect = side_effect
 
     save_files_as_delta_tables(spark, csv_files)
 
