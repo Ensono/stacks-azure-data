@@ -28,7 +28,7 @@ variables:
   - name: junit_path
     value: '$(self_repo_dir)/pysparkle/junit/'
 pool:
-  vmImage: 'ubuntu-latest'
+  name: $(agentpool_name)
 stages:
   - stage: Build_Stage
     variables:
