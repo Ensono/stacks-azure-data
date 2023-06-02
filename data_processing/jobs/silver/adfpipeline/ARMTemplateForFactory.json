@@ -63,7 +63,7 @@
                 "lastPublishTime": "2023-06-01T15:53:15Z"
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/AzureDatabricks')]"
+                "[concat(variables('factoryId'), '/linkedServices/ls_Databricks_Small')]"
             ]
         },
         {
