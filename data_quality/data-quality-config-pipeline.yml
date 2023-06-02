@@ -1,0 +1,201 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+# Sample YAML file to validate and export an ARM template into a build artifact
+# Requires a package.json file located in the target repository
+
+name: "$(Build.SourceBranchName)-init"
+
+
+pr:
+  - main
+
+trigger:
+  branches:
+   
+    include:
+      - 'main'
+  paths:
+    include:
+      - data_quality/config/*
+      - data_quality/data-quality-config-pipeline.yml
+
+
+variables:
+  - template: ../de_build/job-pipeline-vars.yml
+#  - template: de_build/adf/air-data-testing-vars.yml
+  # - name: job  #update job name
+  #   value: 'Generate_Ingest_Query'
+  - name: self_repo_blob_config
+    value: "$(self_repo_dir)/data_quality/config"
+  - name: blob_config_destination
+    value: config
+
+pool:
+  name: $(agentpool_name)
+
+stages:
+- stage: Build_Stage
+  variables:
+      - group: amido-stacks-de-pipeline-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  jobs:
+  - job: Build_data_quality_Config
+    displayName: 'Build_data_quality_Config'
+
+    steps:
+
+    - task: CopyFiles@2
+      displayName: 'Copy Config Files '
+      inputs:
+        SourceFolder: '$(self_repo_blob_config)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
+
+        # Publish the artifact 
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: ConfigFiles'
+      inputs:
+        ArtifactName: ConfigFiles
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
+
+
+
+#############################################################
+# Deploy to non Prod
+#############################################################
+- stage: Deploy_NonPROD_Stage
+  variables:
+      - group: amido-stacks-de-pipeline-nonprod
+      - group: amido-stacks-infra-credentials-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  dependsOn: Build_Stage
+  jobs:
+  - deployment: Deploy_NonPROD
+    displayName: 'Deploy To NonPROD'
+    environment: ${{ variables.domain }}-nonprod
+    pool:
+      name: $(agentpool_name)
+
+    strategy:
+      runOnce:
+        deploy:  
+          steps:
+
+
+           - task: DownloadPipelineArtifact@2
+             displayName: Download Build Artifacts
+             inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)'
+           - script: dir
+             displayName: List ConfigFiles Artifact in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
+    # Publish Config files
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(System.DefaultWorkingDirectory)/ConfigFiles `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
+
+
+
+#############################################################
+# Deploy to Prod
+#############################################################
+- stage: Deploy_Prod_Stage
+  dependsOn: 
+    - Build_Stage
+    - Deploy_NonPROD_Stage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  variables:
+      - group: amido-stacks-de-pipeline-prod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  jobs:
+  - deployment: Deploy_PRDO
+    displayName: 'Deploy To PROD'
+    environment: ${{ variables.domain }}-prod
+    pool:
+      name: $(agentpool_name)
+
+    strategy:
+      runOnce:
+        deploy:  
+          steps:
+
+
+           - task: DownloadPipelineArtifact@2
+             displayName: Download Build Artifacts
+             inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)'
+           - script: dir
+             displayName: List ConfigFiles Artifact in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ConfigFiles'
+
+
+    # Publish Config files
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(System.DefaultWorkingDirectory)/ConfigFiles `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
+
+  
+ 
+- stage: Release
+  dependsOn:
+      - Build_Stage
+      - Deploy_Prod_Stage
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
+  variables:
+      - group: amido-stacks-infra-credentials-nonprod
+      - name: version_number
+        value: "$(version_major).$(version_minor).$(version_revision)"
+  jobs:
+      - job: CreateGitHubRelease
+        pool:
+          name: $(agentpool_name)
+        steps:
+          # Check out the repo so that it can be tagged
+          - checkout: self
+            persistCredentials: true
+
+          # Create a tag in the code for this release
+          - task: Bash@3
+            displayName: Tag Code
+            inputs:
+              targetType: "inline"
+              script: |
+                git config user.name "BuildService"
+                git config user.email "builder@${COMPANY}.com"
+                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
+                git push origin v${VERSION_NUMBER}
+            env:
+              COMPANY: $(company)
+
+          # Create a GitHub release with these packages
+          - task: GitHubRelease@1
+            displayName: Create GitHub Release
+            inputs:
+              gitHubConnection: $(github_release_service_connection)
+              repositoryName: $(github_org)/$(self_repo)
+              tag: v${VERSION_NUMBER}
+              releaseNotesSource: 'inline'
+              releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
+              tagSource: 'gitTag'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
