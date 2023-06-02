@@ -54,7 +54,7 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-   - template: ../../../de_build/build-dataquality-job.yml
+   - template: ../../../de_build/build-adf-spark-job.yml
      parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
