@@ -22,7 +22,7 @@ def check_env_variable(var_name: str) -> None:
         EnvironmentError: If the environment variable is not set.
     """
     try:
-        secret = os.environ[var_name]
+        os.environ[var_name]
     except KeyError:
         raise EnvironmentError(f"Environment variable '{var_name}' not set.")
 
@@ -44,12 +44,12 @@ def set_spark_properties(spark: SparkSession) -> None:
     spark.conf.set(f'fs.azure.account.oauth.provider.type.{ADLS_ACCOUNT}.dfs.core.windows.net',
                    'org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider')
     spark.conf.set(f'fs.azure.account.oauth2.client.id.{ADLS_ACCOUNT}.dfs.core.windows.net',
-                   os.getenv(ENV_NAME_APPLICATION_ID))
+                   APPLICATION_ID)
     spark.conf.set(f'fs.azure.account.oauth2.client.secret.{ADLS_ACCOUNT}.dfs.core.windows.net',
                    os.getenv(ENV_NAME_SERVICE_PRINCIPAL_SECRET))
     spark.conf.set(
         f'fs.azure.account.oauth2.client.endpoint.{ADLS_ACCOUNT}.dfs.core.windows.net',
-        f'https://login.microsoftonline.com/{os.getenv(ENV_NAME_DIRECTORY_ID)}/oauth2/token')
+        f'https://login.microsoftonline.com/{DIRECTORY_ID}/oauth2/token')
 
 
 def get_directory_contents(container: str, path: str) -> list[str]:
