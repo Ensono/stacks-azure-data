@@ -19,7 +19,7 @@ def create_datasource_config(datasource_name: str) -> BaseDataContext:
     Given a string containing the datasource name, this function generates a data context instance
 
     Args:
-        datasource_name (str): Name of the datasource to be validated
+        datasource_name: Name of the datasource to be validated
 
     Returns:
         Populated data context instance to which expectations can be added
@@ -67,8 +67,8 @@ def add_expectations_for_columns(
     Add expectations for columns as defined in the config file.
     
     Args:
-        expectation_suite (ExpectationSuite): Existing expectation suite to be added to
-        validation_conf (dict): dict containing details of validators to be added to columns
+        expectation_suite: Existing expectation suite to be added to
+        validation_conf: dict containing details of validators to be added to columns
 
     Returns:
         Expectation suite with new expectations saved
@@ -95,8 +95,8 @@ def create_expectation_suite(
     Creates an expectation suite, and adds expectations to it
 
     Args:
-        context (BaseDataContext): Existing expectation suite to be added to
-        dq_conf (dict): dict containing details of validators to be added to column
+        context: Existing expectation suite to be added to
+        dq_conf: dict containing details of validators to be added to column
 
     Returns:
         Data context with expectations suite added
