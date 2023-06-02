@@ -218,9 +218,7 @@
                     "referenceName": "default"
                 }
             },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/managedVirtualNetworks/default')]"
-            ]
+            "dependsOn": []
         },
         {
             "name": "[concat(parameters('factoryName'), '/ls_Blob_ConfigStore')]",
