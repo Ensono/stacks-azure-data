@@ -22,7 +22,7 @@ def create_datasource_config(datasource_name: str) -> BaseDataContext:
         datasource_name (str): Name of the datasource to be validated
 
     Returns:
-        BaseDataContext: populated data context instance to which expectations can be added
+        Populated data context instance to which expectations can be added
     """
 
     datasource_config = {
@@ -63,14 +63,15 @@ def add_expectations_for_columns(
     expectation_suite: ExpectationSuite,
     validation_conf: Dict,
 ) -> ExpectationSuite:
-    """Add expectations for columns as defined in the config file.
+    """
+    Add expectations for columns as defined in the config file.
     
-        Args:
+    Args:
         expectation_suite (ExpectationSuite): Existing expectation suite to be added to
         validation_conf (dict): dict containing details of validators to be added to columns
 
     Returns:
-        ExpectationSuite: Expectation suite with new expectations saved
+        Expectation suite with new expectations saved
     """
 
     for column in validation_conf:
@@ -88,21 +89,24 @@ def add_expectations_for_columns(
 
 def create_expectation_suite(
     context: BaseDataContext,
-    DQ_conf: Dict,
+    dq_conf: Dict,
 ) -> BaseDataContext:
-    """Creates an expectation suite, and adds expectations to it
+    """
+    Creates an expectation suite, and adds expectations to it
 
-        Args:
+    Args:
         context (BaseDataContext): Existing expectation suite to be added to
-        DQ_conf (dict): dict containing details of validators to be added to column
+        dq_conf (dict): dict containing details of validators to be added to column
 
+    Returns:
+        Data context with expectations suite added
     """
     expectation_suite = context.create_expectation_suite(
-        expectation_suite_name=DQ_conf["expectation_suite_name"], overwrite_existing=True
+        expectation_suite_name=dq_conf["expectation_suite_name"], overwrite_existing=True
     )
     expectation_suite = add_expectations_for_columns(
         expectation_suite,
-        DQ_conf["validation_config"]
+        dq_conf["validation_config"]
     )
     context.save_expectation_suite(expectation_suite)
 
@@ -110,30 +114,30 @@ def create_expectation_suite(
 
 def execute_validations(
         context: BaseDataContext, 
-        DQ_conf: Dict, 
+        dq_conf: Dict, 
         df: DataFrame,
     ) -> ExpectationSuiteValidationResult:
     """
-    Given a great expectations data context, the relevant config, and a dataframe containing the
+    Given a Great Expectations data context, the relevant config, and a dataframe containing the
     data to be validated. This function runs the validations and returns the result
 
     Args:
-        validator (Validator): great expectations validator object for the given datamart
+        validator (Validator): Great Expectations validator object for the given datamart
 
-    Return:
-        ExpectationSuiteValidationResult: Validation Result for the applied expectation suite
+    Returns:
+        Validation Result for the applied expectation suite
     """
     batch_request = RuntimeBatchRequest(
-        datasource_name=f"{DQ_conf['dataset_name']}",
-        data_connector_name=f"{DQ_conf['dataset_name']}_data_connector",
-        data_asset_name=f"{DQ_conf['dataset_name']}",
+        datasource_name=f"{dq_conf['dataset_name']}",
+        data_connector_name=f"{dq_conf['dataset_name']}_data_connector",
+        data_asset_name=f"{dq_conf['dataset_name']}",
         batch_identifiers={
             "batch_name": "latest_batch",
         },
         runtime_parameters={"batch_data": df},
     )
     validator = context.get_validator(batch_request=batch_request,
-                                    expectation_suite_name=DQ_conf['expectation_suite_name'])
+                                    expectation_suite_name=dq_conf['expectation_suite_name'])
     gx_validation_results = validator.validate()
 
     return gx_validation_results
