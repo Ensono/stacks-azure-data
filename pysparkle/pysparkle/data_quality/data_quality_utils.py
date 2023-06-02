@@ -2,26 +2,27 @@
 Data_quality utility functions to set up validations
 """
 from typing import List, Dict
+from pyspark.sql import DataFrame
 
 from great_expectations.core.batch import RuntimeBatchRequest
 from great_expectations.core.expectation_configuration import (
     ExpectationConfiguration)
+from great_expectations.core.expectation_validation_result import ExpectationSuiteValidationResult
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.data_context import BaseDataContext
 from great_expectations.data_context.types.base import DataContextConfig, \
     FilesystemStoreBackendDefaults
 
 
-def create_datasource_config(datasource_name: str, suite_name: str) -> Dict:
+def create_datasource_config(datasource_name: str) -> BaseDataContext:
     """
-    Given a string containing the datasource name, this function generates a dict
-    containing the datasource config
+    Given a string containing the datasource name, this function generates a data context instance
 
     Args:
         datasource_name (str): Name of the datasource to be validated
 
     Returns:
-        Dict: populated datasource config dictionary to be used to initialise great expectations
+        BaseDataContext: populated data context instance to which expectations can be added
     """
 
     datasource_config = {
@@ -57,20 +58,19 @@ def create_datasource_config(datasource_name: str, suite_name: str) -> Dict:
 
     return context
 
-def add_expectations_for_column(
+
+def add_expectations_for_columns(
     expectation_suite: ExpectationSuite,
     validation_conf: Dict,
 ) -> ExpectationSuite:
-    """Add expectations for a list of columns.
+    """Add expectations for columns as defined in the config file.
     
         Args:
         expectation_suite (ExpectationSuite): Existing expectation suite to be added to
-        columns (List[str]): List of column names to add expectations to
-        expectation_type (str): expectation name
-        expectation_kwargs (dict): additional kwargs to be passed to the expectation 
+        validation_conf (dict): dict containing details of validators to be added to columns
 
     Returns:
-        validator: great_expectations validator instance ready for expectations to be added
+        ExpectationSuite: Expectation suite with new expectations saved
     """
 
     for column in validation_conf:
@@ -85,14 +85,22 @@ def add_expectations_for_column(
     
     return expectation_suite
 
+
 def create_expectation_suite(
-    context,
-    DQ_conf,
-):
+    context: BaseDataContext,
+    DQ_conf: Dict,
+) -> BaseDataContext:
+    """Creates an expectation suite, and adds expectations to it
+
+        Args:
+        context (BaseDataContext): Existing expectation suite to be added to
+        DQ_conf (dict): dict containing details of validators to be added to column
+
+    """
     expectation_suite = context.create_expectation_suite(
         expectation_suite_name=DQ_conf["expectation_suite_name"], overwrite_existing=True
     )
-    expectation_suite = add_expectations_for_column(
+    expectation_suite = add_expectations_for_columns(
         expectation_suite,
         DQ_conf["validation_config"]
     )
@@ -100,7 +108,21 @@ def create_expectation_suite(
 
     return context
 
-def execute_validations(context, DQ_conf, df):
+def execute_validations(
+        context: BaseDataContext, 
+        DQ_conf: Dict, 
+        df: DataFrame,
+    ) -> ExpectationSuiteValidationResult:
+    """
+    Given a great expectations data context, the relevant config, and a dataframe containing the
+    data to be validated. This function runs the validations and returns the result
+
+    Args:
+        validator (Validator): great expectations validator object for the given datamart
+
+    Return:
+        ExpectationSuiteValidationResult: Validation Result for the applied expectation suite
+    """
     batch_request = RuntimeBatchRequest(
         datasource_name=f"{DQ_conf['dataset_name']}",
         data_connector_name=f"{DQ_conf['dataset_name']}_data_connector",
