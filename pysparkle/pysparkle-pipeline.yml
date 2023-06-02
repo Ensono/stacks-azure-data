@@ -50,7 +50,7 @@ stages:
               addToPath: true
             displayName: Set Python Version
           - bash: |
-              pip install poetry
+              pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
           - bash: |
               poetry install 
