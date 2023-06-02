@@ -13,6 +13,7 @@ azure-identity = "^1.13.0"
 azure-storage-file-datalake = "^12.11.0"
 click-loglevel = "^0.4.0.post1"
 colorlog = "^6.7.0"
+great-expectations = "^0.16.15"
 
 [tool.poetry.scripts]
 pysparkle = "pysparkle.pysparkle_cli:cli"
