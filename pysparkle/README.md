@@ -1,14 +1,19 @@
 # PySparkle Usage
 
-> ℹ️ PySparkle Silver processing requires environment variable AZURE_CLIENT_SECRET
-> (Service Principal Secret) to be set.
+> ℹ️ PySparkle Silver processing requires the following environment variables to be set
+> to access Azure Data Lake Storage (ADLS):
+> - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
+> - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,
+> - AZURE_CLIENT_SECRET - Service Principal Secret,
+> - ADLS_ACCOUNT - ADLS account name.
 
 ## Using CLI
 
 ```bash
 pysparkle --help
 pysparkle silver --help
-pysparkle silver
+pysparkle silver --dataset-name=movies_dataset
+pysparkle --log-level=warning silver --dataset-name=movies_dataset
 pysparkle gold --partitions 4
 ```
 
@@ -17,7 +22,8 @@ pysparkle gold --partitions 4
 ```bash
 python pysparkle_cli.py --help
 python pysparkle_cli.py silver --help
-python pysparkle_cli.py silver
+python pysparkle_cli.py silver --dataset-name=movies_dataset
+python pysparkle_cli.py --log-level=warning silver --dataset-name=movies_dataset
 python pysparkle_cli.py gold --partitions 4
 ```
 
