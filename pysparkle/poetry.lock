@@ -271,6 +271,21 @@ files = [
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
+name = "click-loglevel"
+version = "0.4.0.post1"
+description = "Log level parameter type for Click"
+category = "main"
+optional = false
+python-versions = "~=3.6"
+files = [
+    {file = "click-loglevel-0.4.0.post1.tar.gz", hash = "sha256:470bf1e208fe650cedacb23061e4e18d36df601ca9d8b79e6d8e8cdf1792ece1"},
+    {file = "click_loglevel-0.4.0.post1-py3-none-any.whl", hash = "sha256:f3449b5d28d6cba5bfbeed371ad59950aba035730d5cc28a32b4e7632e17ed6c"},
+]
+
+[package.dependencies]
+click = ">=6.0"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -281,6 +296,24 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
+
+[[package]]
+name = "colorlog"
+version = "6.7.0"
+description = "Add colours to the output of Python's logging module."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "colorlog-6.7.0-py2.py3-none-any.whl", hash = "sha256:0d33ca236784a1ba3ff9c532d4964126d8a2c44f1f0cb1d2b0728196f512f662"},
+    {file = "colorlog-6.7.0.tar.gz", hash = "sha256:bd94bd21c1e13fac7bd3153f4bc3a7dc0eb0974b8bc2fdf1a989e474f6e582e5"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+development = ["black", "flake8", "mypy", "pytest", "types-colorama"]
 
 [[package]]
 name = "cryptography"
@@ -657,4 +690,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "00d568bb14915d3f99a05a8f52a015aaaa15aa6ec7f08d2946464134f611fe0d"
+content-hash = "27298f2c0bb1f776db80c37c740c4f3ff134131187cfc73fe335f0fce7914ab3"
