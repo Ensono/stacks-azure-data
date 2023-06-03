@@ -5,8 +5,14 @@
         "factoryName": {
             "value": "amido-stacks-dev-euw-de"
         },
-        "storageAccountName": {
+        "ADLSstorageAccountName": {
             "value": "amidostacksdeveuwdeadls"
+        },
+        "databricksHost": {
+            "value": "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "value": "/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
         }
     }
 }
