@@ -77,7 +77,7 @@ stages:
         value: "$(version_major).$(version_minor).$(version_revision)"
       - name: overrideParameters
         value: |
-          ["-factoryName $(datafactoryname)", "-ADLSstorageAccountName $(blob_adls_storage)", "-databricksHost $(databricksHost)", "-databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"]
+          [-factoryName "$(datafactoryname)", -ADLSstorageAccountName "$(blob_adls_storage)", -databricksHost "$(databricksHost)", -databricksWorkspaceResourceId "$(databricksWorkspaceResourceId)"]
 
       # - name: overrideParameters
       #   value: |
