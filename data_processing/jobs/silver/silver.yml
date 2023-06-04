@@ -76,7 +76,7 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
       - name: overrideParameters
-        value: "-factoryName "$(datafactoryname)" -ADLSstorageAccountName "$(blob_adls_storage)" -databricksHost "$(databricksHost)" -databricksWorkspaceResourceId "$(databricksWorkspaceResourceId)""
+        value: "-factoryName $(datafactoryname) -ADLSstorageAccountName $(blob_adls_storage) -databricksHost $(databricksHost) -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 
 
       # - name: overrideParameters
@@ -170,7 +170,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: $(variables.overrideParameters)                       
+                overrideParameters: $(overrideParameters)                       
                 deploymentMode: 'Incremental'
                 # overrideParameters: -factoryName $(datafactoryname)
                 #                     -ADLSstorageAccountName $(blob_adls_storage)
