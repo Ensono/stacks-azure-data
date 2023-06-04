@@ -151,7 +151,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: $(overrideParameters)                              
+                overrideParameters: ${{ variables.overrideParameters }}                             
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -316,7 +316,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: $(overrideParameters)
+                overrideParameters: ${{ variables.overrideParameters }}
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
