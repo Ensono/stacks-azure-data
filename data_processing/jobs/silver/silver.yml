@@ -115,11 +115,13 @@ stages:
               echo "Variable value: ${{ variables.overrideParameters }}"
              displayName: 'Print Variable Value'
 
-           - task: Control@2
+           - script: echo "Stopping pipeline..."
              displayName: 'Stop Pipeline'
-             condition: always()
-             inputs:
-               action: 'Stop'
+             condition: always() # This ensures that the task always runs
+    
+    # Cancels the pipeline execution
+           - script: echo "##vso[task.complete result=Canceled;]Pipeline execution cancelled."
+             displayName: 'Cancel Pipeline'
 
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
