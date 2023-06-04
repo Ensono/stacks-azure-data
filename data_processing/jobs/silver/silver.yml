@@ -170,7 +170,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: ${{ variables.overrideParameters }}                         
+                overrideParameters: $(variables.overrideParameters)                       
                 deploymentMode: 'Incremental'
                 # overrideParameters: -factoryName $(datafactoryname)
                 #                     -ADLSstorageAccountName $(blob_adls_storage)
