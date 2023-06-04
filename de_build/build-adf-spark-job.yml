@@ -72,7 +72,7 @@ jobs:
       displayName: 'Run Best Practices Tests'
       continueOnError: true
 
-        Publish the artifact 
+      #  Publish the artifact 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: SparkJob'
       inputs:
