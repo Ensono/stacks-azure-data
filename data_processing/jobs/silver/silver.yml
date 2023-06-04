@@ -42,6 +42,8 @@ variables:
     value: '$(self_repo_dir)/$(jobtype)/jobs/$(job)/junit/'
   - name: self_repo_sparkjob_dir
     value: "$(self_repo_dir)/$(jobtype)/jobs/$(job)/spark-jobs"
+  - name: overrideParameters
+    value: "-factoryName $(datafactoryname) -ADLSstorageAccountName $(blob_adls_storage) -databricksHost $(databricksHost) -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 
 pool:
   name: $(agentpool_name)
@@ -53,12 +55,6 @@ stages:
       - group: amido-stacks-de-pipeline-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
-      - name: overrideParameters
-        value: |
-          -factoryName $(datafactoryname)
-          -ADLSstorageAccountName $(blob_adls_storage)
-          -databricksHost $(databricksHost)
-          -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
   jobs:
    - template: ../../../de_build/build-adf-spark-job.yml
      parameters:
@@ -75,9 +71,6 @@ stages:
       - group: amido-stacks-infra-credentials-nonprod
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
-      - name: overrideParameters
-        value: "-factoryName $(datafactoryname) -ADLSstorageAccountName $(blob_adls_storage) -databricksHost $(databricksHost) -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
-
 
       # - name: overrideParameters
       #   value: |
@@ -85,7 +78,7 @@ stages:
       #     -ADLSstorageAccountName $(blob_adls_storage)
       #     -databricksHost $(databricksHost)
       #     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)     
-      #       [-factoryName "$(datafactoryname)", -ADLSstorageAccountName "$(blob_adls_storage)", -databricksHost "$(databricksHost)", -databricksWorkspaceResourceId "$(databricksWorkspaceResourceId)"]
+
   dependsOn: Build_Stage
   jobs:
   - deployment: Deploy_NonPROD
@@ -338,7 +331,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: ${{ variables.overrideParameters }}
+                overrideParameters: $(overrideParameters)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
