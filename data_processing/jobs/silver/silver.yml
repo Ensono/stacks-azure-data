@@ -115,14 +115,6 @@ stages:
               echo "Variable value: ${{ variables.overrideParameters }}"
              displayName: 'Print Variable Value'
 
-           - script: echo "Stopping pipeline..."
-             displayName: 'Stop Pipeline'
-             condition: always() # This ensures that the task always runs
-    
-    # Cancels the pipeline execution
-           - script: echo "##vso[task.complete result=Canceled;]Pipeline execution cancelled."
-             displayName: 'Cancel Pipeline'
-
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
 
@@ -173,7 +165,10 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: ${{ variables.overrideParameters }}                             
+                overrideParameters: -factoryName $(datafactoryname)
+                                    -ADLSstorageAccountName $(blob_adls_storage)
+                                    -databricksHost $(databricksHost)
+                                    -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)                           
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
