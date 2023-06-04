@@ -165,12 +165,12 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname)
-                                    -ADLSstorageAccountName $(blob_adls_storage)
-                                    -databricksHost $(databricksHost)
-                                    -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)                           
+                overrideParameters: ${{ variables.overrideParameters }}                         
                 deploymentMode: 'Incremental'
-
+                # overrideParameters: -factoryName $(datafactoryname)
+                #                     -ADLSstorageAccountName $(blob_adls_storage)
+                #                     -databricksHost $(databricksHost)
+                #                     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId) 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
              inputs:
