@@ -107,6 +107,20 @@ stages:
              displayName: List ArmTemplates SparkJob in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
 
+          - script: |
+              echo "Variable value: $(overrideParameters)"
+            displayName: 'Print Variable Value'
+
+          - script: |
+              echo "Variable value: ${{ variables.overrideParameters }}"
+            displayName: 'Print Variable Value'
+
+          - task: Control@2
+            displayName: 'Stop Pipeline'
+            condition: always()
+            inputs:
+              action: 'Stop'
+
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
 
