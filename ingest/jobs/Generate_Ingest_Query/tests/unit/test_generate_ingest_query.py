@@ -28,7 +28,7 @@ def test_config_ingest_sources_uniqueness():
     try:
         assert config_uniqueness_check(all_configs, "data_source_name")
     except Exception as e:
-        errors.append(e)    
+        errors.append(e)
     for config in all_configs:
         try:
             ingest_entities = config["ingest_entities"]
@@ -38,4 +38,3 @@ def test_config_ingest_sources_uniqueness():
 
     if errors:
         raise Exception(errors)
-

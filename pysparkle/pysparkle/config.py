@@ -1,3 +1,3 @@
-BRONZE_CONTAINER = 'raw'
-SILVER_CONTAINER = 'staging'
-GOLD_CONTAINER = 'curated'
+BRONZE_CONTAINER = "raw"
+SILVER_CONTAINER = "staging"
+GOLD_CONTAINER = "curated"
