@@ -1,8 +1,12 @@
 from azure.storage.filedatalake import DataLakeServiceClient
 
 
-def filter_directory_paths_adls(adls_client: DataLakeServiceClient, container_name: str, directory_path: str,
-                                directory_substring: str) -> list:
+def filter_directory_paths_adls(
+    adls_client: DataLakeServiceClient,
+    container_name: str,
+    directory_path: str,
+    directory_substring: str,
+) -> list:
     """
     Filters an ADLS container directory for directories containing a given substring.
 
@@ -23,7 +27,9 @@ def filter_directory_paths_adls(adls_client: DataLakeServiceClient, container_na
     return output_directory_paths
 
 
-def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: str, directory_paths: list):
+def delete_directories_adls(
+    adls_client: DataLakeServiceClient, container_name: str, directory_paths: list
+):
     """
     Deletes a list of directories from ADLS.
 
@@ -55,8 +61,12 @@ def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, di
         print(f"The Following Directory Was Not Found: {directory_path}")
 
 
-def all_files_present_in_adls(adls_client: DataLakeServiceClient, container_name: str, directory_name: str,
-                              expected_files: list) -> bool:
+def all_files_present_in_adls(
+    adls_client: DataLakeServiceClient,
+    container_name: str,
+    directory_name: str,
+    expected_files: list,
+) -> bool:
     """
     Asserts all files in a given list are present in the specified container and directory.
 

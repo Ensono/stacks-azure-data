@@ -10,13 +10,13 @@ from pysparkle.silver import silver_main
 
 
 @click.group()
-@click.option('--log-level', '-l', type=LogLevel(), default=logging.INFO)
+@click.option("--log-level", "-l", type=LogLevel(), default=logging.INFO)
 def cli(log_level):
-    setup_logger('pysparkle', log_level)
+    setup_logger("pysparkle", log_level)
 
 
 @click.command()
-@click.option('--dataset-name', '-d', type=str, help='Name of a dataset to process.')
+@click.option("--dataset-name", "-d", type=str, help="Name of a dataset to process.")
 def silver(dataset_name):
     """Bronze to Silver processing.
 
@@ -31,7 +31,7 @@ def silver(dataset_name):
 
 
 @click.command()
-@click.option('--partitions', '-p', default=2)
+@click.option("--partitions", "-p", default=2)
 def gold(partitions):
     """Silver to Gold processing."""
     gold_main(partitions)
@@ -41,5 +41,5 @@ cli.add_command(silver)
 cli.add_command(gold)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli(standalone_mode=False)
