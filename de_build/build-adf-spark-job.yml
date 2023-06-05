@@ -56,7 +56,7 @@ jobs:
         Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
         $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
         $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
-        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices")
+        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices","IDs-Should-Be-Derived-From-ResourceIDs")
         $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
         $testOutput = $testOutputParameters + $testOutputtemplate
         $testOutput
@@ -72,7 +72,7 @@ jobs:
       displayName: 'Run Best Practices Tests'
       continueOnError: true
 
-        Publish the artifact 
+      #  Publish the artifact 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: SparkJob'
       inputs:

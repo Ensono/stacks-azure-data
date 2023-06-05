@@ -7,9 +7,17 @@
             "metadata": "Data Factory name",
             "defaultValue": "amido-stacks-dev-euw-de"
         },
-        "storageAccountName": {
+        "ADLSstorageAccountName": {
             "type": "string",
             "defaultValue": "amidostacksdeveuwdeadls"
+        },
+        "databricksHost": {
+            "type": "string",
+            "defaultValue": "https://xxxxxxxxx.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
         }
     },
     "variables": {
@@ -71,16 +79,16 @@
                 "annotations": [],
                 "type": "AzureDatabricks",
                 "typeProperties": {
-                    "domain": "https://adb-5248374583295936.16.azuredatabricks.net",
+                    "domain": "[parameters('databricksHost')]",
                     "authentication": "MSI",
-                    "workspaceResourceId": "/subscriptions/719637e5-aedd-4fb1-b231-5101b45f8bb5/resourceGroups/amido-stacks-dev-euw-de/providers/Microsoft.Databricks/workspaces/amido-stacks-dev-euw-de",
+                    "workspaceResourceId": "[parameters('databricksWorkspaceResourceId')]",
                     "newClusterNodeType": "Standard_DS3_v2",
                     "newClusterNumOfWorker": "2",
                     "newClusterSparkEnvVars": {
                         "AZURE_CLIENT_SECRET": "{{secrets/key-vault-secret/service-principal-secret}}",
                         "AZURE_CLIENT_ID": "{{secrets/key-vault-secret/azure-client-id}}",
                         "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
-                        "ADLS_ACCOUNT": "[parameters('storageAccountName')]",
+                        "ADLS_ACCOUNT": "[parameters('ADLSstorageAccountName')]",
                         "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",
