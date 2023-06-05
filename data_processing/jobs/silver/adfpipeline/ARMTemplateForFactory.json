@@ -31,15 +31,12 @@
                             "retry": 0,
                             "retryIntervalInSeconds": 30,
                             "secureOutput": false,
-                            "secureInput": true
+                            "secureInput": false
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/pysparkle_cli.py",
-                            "parameters": [
-                                "silver",
-                                "--dataset-name=movies_dataset"
-                            ],
+                            "pythonFile": "dbfs:/FileStore/scripts/silver.py",
+                            "parameters": [],
                             "libraries": [
                                 {
                                     "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
@@ -47,7 +44,7 @@
                             ]
                         },
                         "linkedServiceName": {
-                            "referenceName": "AzureDatabricks",
+                            "referenceName": "ls_Databricks_Small",
                             "type": "LinkedServiceReference"
                         }
                     }

@@ -68,22 +68,23 @@ Example setup for running PySparkle from ADF.
                     "retry": 0,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
-                    "secureInput": true
+                    "secureInput": false
                 },
                 "userProperties": [],
                 "typeProperties": {
                     "pythonFile": "dbfs:/FileStore/scripts/pysparkle_cli.py",
                     "parameters": [
-                        "silver"
+                        "silver",
+                        "--dataset-name=movies_dataset"
                     ],
                     "libraries": [
                         {
-                            "whl": "dbfs:/FileStore/jars/c64a5713_8fa5_4e3a_beda_218f9ab5730e/pysparkle-0.1.1-py3-none-any.whl"
+                            "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
                         }
                     ]
                 },
                 "linkedServiceName": {
-                    "referenceName": "AzureDatabricks",
+                    "referenceName": "ls_Databricks_Small",
                     "type": "LinkedServiceReference"
                 }
             }
