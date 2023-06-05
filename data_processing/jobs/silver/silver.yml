@@ -47,7 +47,6 @@ variables:
      -ADLSstorageAccountName $(blob_adls_storage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
-    #value: "-factoryName $(datafactoryname) -ADLSstorageAccountName $(blob_adls_storage) -databricksHost $(databricksHost) -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 
 pool:
   name: $(agentpool_name)
@@ -76,13 +75,6 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
 
-      # - name: overrideParameters
-      #   value: |
-      #     -factoryName $(datafactoryname)
-      #     -ADLSstorageAccountName $(blob_adls_storage)
-      #     -databricksHost $(databricksHost)
-      #     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)     
-
   dependsOn: Build_Stage
   jobs:
   - deployment: Deploy_NonPROD
@@ -109,14 +101,6 @@ stages:
              displayName: List ArmTemplates SparkJob in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
 
-           - script: |
-              echo "Variable value: $(overrideParameters)"
-             displayName: 'Print Variable Value'
-
-           - script: |
-              echo "Variable value: ${{ variables.overrideParameters }}"
-             displayName: 'Print Variable Value'
-
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
 
@@ -132,11 +116,6 @@ stages:
                       echo "$(databricks-host)
                       $(databricks-token)" | databricks configure --token
              displayName: Configure databricks-cli
-
-           - script: |
-                      databricks workspace ls
-                      databricks fs ls
-             displayName: test databricks-cli
 
            - script: |
                      echo Destination is /FileStore/scripts/
@@ -169,10 +148,7 @@ stages:
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
                 overrideParameters: $(overrideParameters)                       
                 deploymentMode: 'Incremental'
-                # overrideParameters: -factoryName $(datafactoryname)
-                #                     -ADLSstorageAccountName $(blob_adls_storage)
-                #                     -databricksHost $(databricksHost)
-                #                     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId) 
+
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
              inputs:
