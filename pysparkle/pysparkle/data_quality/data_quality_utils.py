@@ -5,16 +5,19 @@ from typing import List, Dict
 from pyspark.sql import DataFrame
 
 from great_expectations.core.batch import RuntimeBatchRequest
-from great_expectations.core.expectation_configuration import (
-    ExpectationConfiguration)
-from great_expectations.core.expectation_validation_result import ExpectationSuiteValidationResult
+from great_expectations.core.expectation_configuration import ExpectationConfiguration
+from great_expectations.core.expectation_validation_result import (
+    ExpectationSuiteValidationResult,
+)
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.data_context import BaseDataContext
-from great_expectations.data_context.types.base import DataContextConfig, \
-    FilesystemStoreBackendDefaults
+from great_expectations.data_context.types.base import (
+    DataContextConfig,
+    FilesystemStoreBackendDefaults,
+)
 
 
-def create_datasource_config(datasource_name: str) -> BaseDataContext:
+def create_datasource_context(datasource_name: str) -> BaseDataContext:
     """
     Given a string containing the datasource name, this function generates a data context instance
 
@@ -39,7 +42,7 @@ def create_datasource_config(datasource_name: str) -> BaseDataContext:
                 "class_name": "RuntimeDataConnector",
                 "batch_identifiers": [
                     "batch_name",
-                ]
+                ],
             },
         },
     }
@@ -65,7 +68,7 @@ def add_expectations_for_columns(
 ) -> ExpectationSuite:
     """
     Add expectations for columns as defined in the config file.
-    
+
     Args:
         expectation_suite: Existing expectation suite to be added to
         validation_conf: dict containing details of validators to be added to columns
@@ -80,10 +83,13 @@ def add_expectations_for_columns(
             expectation_suite.add_expectation(
                 ExpectationConfiguration(
                     expectation_type=expectation["expectation_type"],
-                    kwargs={**{"column": column_name}, **expectation["expectation_kwargs"]}
+                    kwargs={
+                        **{"column": column_name},
+                        **expectation["expectation_kwargs"],
+                    },
                 )
-            )            
-    
+            )
+
     return expectation_suite
 
 
@@ -102,21 +108,22 @@ def create_expectation_suite(
         Data context with expectations suite added
     """
     expectation_suite = context.create_expectation_suite(
-        expectation_suite_name=dq_conf["expectation_suite_name"], overwrite_existing=True
+        expectation_suite_name=dq_conf["expectation_suite_name"],
+        overwrite_existing=True,
     )
     expectation_suite = add_expectations_for_columns(
-        expectation_suite,
-        dq_conf["validation_config"]
+        expectation_suite, dq_conf["validation_config"]
     )
     context.save_expectation_suite(expectation_suite)
 
     return context
 
+
 def execute_validations(
-        context: BaseDataContext, 
-        dq_conf: Dict, 
-        df: DataFrame,
-    ) -> ExpectationSuiteValidationResult:
+    context: BaseDataContext,
+    dq_conf: Dict,
+    df: DataFrame,
+) -> ExpectationSuiteValidationResult:
     """
     Given a Great Expectations data context, the relevant config, and a dataframe containing the
     data to be validate, this function runs the validations and returns the result
@@ -138,8 +145,10 @@ def execute_validations(
         },
         runtime_parameters={"batch_data": df},
     )
-    validator = context.get_validator(batch_request=batch_request,
-                                    expectation_suite_name=dq_conf['expectation_suite_name'])
+    validator = context.get_validator(
+        batch_request=batch_request,
+        expectation_suite_name=dq_conf["expectation_suite_name"],
+    )
     gx_validation_results = validator.validate()
 
     return gx_validation_results
