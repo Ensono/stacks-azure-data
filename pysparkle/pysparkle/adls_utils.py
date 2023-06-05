@@ -8,10 +8,10 @@ from pyspark.sql import SparkSession
 
 logger = logging.getLogger(__name__)
 
-ENV_NAME_SERVICE_PRINCIPAL_SECRET = 'AZURE_CLIENT_SECRET'
-ENV_NAME_DIRECTORY_ID = 'AZURE_TENANT_ID'
-ENV_NAME_APPLICATION_ID = 'AZURE_CLIENT_ID'
-ENV_NAME_ADLS_ACCOUNT = 'ADLS_ACCOUNT'
+ENV_NAME_SERVICE_PRINCIPAL_SECRET = "AZURE_CLIENT_SECRET"
+ENV_NAME_DIRECTORY_ID = "AZURE_TENANT_ID"
+ENV_NAME_APPLICATION_ID = "AZURE_CLIENT_ID"
+ENV_NAME_ADLS_ACCOUNT = "ADLS_ACCOUNT"
 
 
 def check_env_variable(var_name: str) -> None:
@@ -48,16 +48,23 @@ def set_spark_properties(spark: SparkSession) -> None:
         spark: Spark session.
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
-    spark.conf.set(f'fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net', 'OAuth')
-    spark.conf.set(f'fs.azure.account.oauth.provider.type.{adls_account}.dfs.core.windows.net',
-                   'org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider')
-    spark.conf.set(f'fs.azure.account.oauth2.client.id.{adls_account}.dfs.core.windows.net',
-                   os.getenv(ENV_NAME_APPLICATION_ID))
-    spark.conf.set(f'fs.azure.account.oauth2.client.secret.{adls_account}.dfs.core.windows.net',
-                   os.getenv(ENV_NAME_SERVICE_PRINCIPAL_SECRET))
+    spark.conf.set(f"fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net", "OAuth")
     spark.conf.set(
-        f'fs.azure.account.oauth2.client.endpoint.{adls_account}.dfs.core.windows.net',
-        f'https://login.microsoftonline.com/{os.getenv(ENV_NAME_DIRECTORY_ID)}/oauth2/token')
+        f"fs.azure.account.oauth.provider.type.{adls_account}.dfs.core.windows.net",
+        "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
+    )
+    spark.conf.set(
+        f"fs.azure.account.oauth2.client.id.{adls_account}.dfs.core.windows.net",
+        os.getenv(ENV_NAME_APPLICATION_ID),
+    )
+    spark.conf.set(
+        f"fs.azure.account.oauth2.client.secret.{adls_account}.dfs.core.windows.net",
+        os.getenv(ENV_NAME_SERVICE_PRINCIPAL_SECRET),
+    )
+    spark.conf.set(
+        f"fs.azure.account.oauth2.client.endpoint.{adls_account}.dfs.core.windows.net",
+        f"https://login.microsoftonline.com/{os.getenv(ENV_NAME_DIRECTORY_ID)}/oauth2/token",
+    )
 
 
 def get_directory_contents(container: str, path: str) -> list[str]:
@@ -71,13 +78,13 @@ def get_directory_contents(container: str, path: str) -> list[str]:
         A list of paths for the files and subdirectories within the specified container.
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
-    adls_url = f'https://{adls_account}.dfs.core.windows.net'
+    adls_url = f"https://{adls_account}.dfs.core.windows.net"
     credential = DefaultAzureCredential()
     adls_client = DataLakeServiceClient(account_url=adls_url, credential=credential)
     file_system_client = adls_client.get_file_system_client(file_system=container)
     paths = file_system_client.get_paths(path=path)
     paths = [path.name for path in paths]
-    logger.info(f'Directory contents: {paths}')
+    logger.info(f"Directory contents: {paths}")
     return paths
 
 
@@ -92,4 +99,4 @@ def get_adls_file_url(container: str, file_name: str) -> str:
         Full ADLS URL for the specified file.
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
-    return f'abfss://{container}@{adls_account}.dfs.core.windows.net/{file_name}'
+    return f"abfss://{container}@{adls_account}.dfs.core.windows.net/{file_name}"
