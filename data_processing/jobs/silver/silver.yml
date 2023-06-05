@@ -23,7 +23,6 @@ pr:
 
 trigger:
   branches:
-   
     include:
       - 'main'
   paths:
