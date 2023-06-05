@@ -119,10 +119,12 @@ def execute_validations(
     ) -> ExpectationSuiteValidationResult:
     """
     Given a Great Expectations data context, the relevant config, and a dataframe containing the
-    data to be validated. This function runs the validations and returns the result
+    data to be validate, this function runs the validations and returns the result
 
     Args:
-        validator (Validator): Great Expectations validator object for the given datamart
+        context: Great Expectations data context object
+        dq_conf: Dict containing the required config for validation
+        df: Dataframe to be validated
 
     Returns:
         Validation Result for the applied expectation suite
