@@ -1,5 +1,5 @@
 container_name: staging
-dataset_name: movies_metadata
+datasource_name: movies_metadata
 validation_config:
   - column_name: adult
     expectations:
