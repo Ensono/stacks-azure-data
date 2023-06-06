@@ -2,8 +2,13 @@ from azure.mgmt.datafactory import DataFactoryManagementClient
 from azure.mgmt.datafactory.models import PipelineRun, CreateRunResponse
 
 
-def create_adf_pipeline_run(adf_client: DataFactoryManagementClient, resource_group_name: str,
-                            data_factory_name: str, pipeline_name: str, parameters: dict) -> CreateRunResponse:
+def create_adf_pipeline_run(
+    adf_client: DataFactoryManagementClient,
+    resource_group_name: str,
+    data_factory_name: str,
+    pipeline_name: str,
+    parameters: dict,
+) -> CreateRunResponse:
     """
     Triggers an ADF pipeline.
 
@@ -15,13 +20,18 @@ def create_adf_pipeline_run(adf_client: DataFactoryManagementClient, resource_gr
     :return:
         CreateRunResponse
     """
-    response = adf_client.pipelines.create_run(resource_group_name, data_factory_name, pipeline_name,
-                                               parameters=parameters)
+    response = adf_client.pipelines.create_run(
+        resource_group_name, data_factory_name, pipeline_name, parameters=parameters
+    )
     return response
 
 
-def get_adf_pipeline_run(adf_client: DataFactoryManagementClient, resource_group_name: str,
-                         data_factory_name: str, run_id: str) -> PipelineRun:
+def get_adf_pipeline_run(
+    adf_client: DataFactoryManagementClient,
+    resource_group_name: str,
+    data_factory_name: str,
+    run_id: str,
+) -> PipelineRun:
     """
     Gets a data factory pipeline
     :param adf_client:
@@ -38,8 +48,12 @@ def get_adf_pipeline_run(adf_client: DataFactoryManagementClient, resource_group
     )
 
 
-def check_adf_pipeline_in_complete_state(adf_client: DataFactoryManagementClient, resource_group_name: str,
-                                         data_factory_name: str, run_id: str) -> bool:
+def check_adf_pipeline_in_complete_state(
+    adf_client: DataFactoryManagementClient,
+    resource_group_name: str,
+    data_factory_name: str,
+    run_id: str,
+) -> bool:
     """
     Gets the pipeline run. Returns True if pipeline in completed state or False if pipeline not in complete state.
 
@@ -51,7 +65,6 @@ def check_adf_pipeline_in_complete_state(adf_client: DataFactoryManagementClient
         bool
     """
     pipeline_run = adf_client.pipeline_runs.get(
-        resource_group_name=resource_group_name,
-        factory_name=data_factory_name,
-        run_id=run_id)
+        resource_group_name=resource_group_name, factory_name=data_factory_name, run_id=run_id
+    )
     return pipeline_run.status in ["Succeeded", "Failed"]
