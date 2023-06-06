@@ -91,7 +91,7 @@ def add_expectations_for_columns(
 
     return expectation_suite
 
-
+# TODO: add dataclass object describing required dq_conf dict
 def create_expectation_suite(
     context: BaseDataContext,
     dq_conf: Dict,
