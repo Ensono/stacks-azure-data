@@ -1,14 +1,19 @@
 # PySparkle Usage
 
-> ℹ️ PySparkle Silver processing requires environment variable AZURE_CLIENT_SECRET
-> (Service Principal Secret) to be set.
+> ℹ️ PySparkle Silver processing requires the following environment variables to be set
+> to access Azure Data Lake Storage (ADLS):
+> - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
+> - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,
+> - AZURE_CLIENT_SECRET - Service Principal Secret,
+> - ADLS_ACCOUNT - ADLS account name.
 
 ## Using CLI
 
 ```bash
 pysparkle --help
 pysparkle silver --help
-pysparkle silver
+pysparkle silver --dataset-name=movies_dataset
+pysparkle --log-level=warning silver --dataset-name=movies_dataset
 pysparkle gold --partitions 4
 ```
 
@@ -17,7 +22,8 @@ pysparkle gold --partitions 4
 ```bash
 python pysparkle_cli.py --help
 python pysparkle_cli.py silver --help
-python pysparkle_cli.py silver
+python pysparkle_cli.py silver --dataset-name=movies_dataset
+python pysparkle_cli.py --log-level=warning silver --dataset-name=movies_dataset
 python pysparkle_cli.py gold --partitions 4
 ```
 
@@ -62,22 +68,23 @@ Example setup for running PySparkle from ADF.
                     "retry": 0,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
-                    "secureInput": true
+                    "secureInput": false
                 },
                 "userProperties": [],
                 "typeProperties": {
                     "pythonFile": "dbfs:/FileStore/scripts/pysparkle_cli.py",
                     "parameters": [
-                        "silver"
+                        "silver",
+                        "--dataset-name=movies_dataset"
                     ],
                     "libraries": [
                         {
-                            "whl": "dbfs:/FileStore/jars/c64a5713_8fa5_4e3a_beda_218f9ab5730e/pysparkle-0.1.1-py3-none-any.whl"
+                            "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
                         }
                     ]
                 },
                 "linkedServiceName": {
-                    "referenceName": "AzureDatabricks",
+                    "referenceName": "ls_Databricks_Small",
                     "type": "LinkedServiceReference"
                 }
             }
