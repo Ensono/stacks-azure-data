@@ -26,7 +26,7 @@ def data_quality_main(dq_conf):
 
     table_name = f'{dq_conf["container_name"]}.{dataset_name}'
     df = spark.read.table(table_name)
-    gx_context = create_datasource_context(dq_conf["dataset_name"])
+    gx_context = create_datasource_context(dq_conf["dataset_name"], dq_conf['gx_directory_path'])
 
     gx_context = create_expectation_suite(gx_context, dq_conf)
 
