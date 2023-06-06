@@ -295,6 +295,32 @@
             ]
         },
         {
+            "name": "[concat(parameters('factoryName'), '/adf-managed-vnet-runtime')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "West Europe",
+                        "dataFlowProperties": {
+                            "computeType": "General",
+                            "coreCount": 8,
+                            "timeToLive": 0,
+                            "cleanup": true
+                        }
+                    }
+                },
+                "managedVirtualNetwork": {
+                    "type": "ManagedVirtualNetworkReference",
+                    "referenceName": "default"
+                }
+            },
+            "dependsOn": [
+
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/ds_ex_AzureSql_ExampleSource')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -337,9 +363,15 @@
                 "type": "AzureBlobFS",
                 "typeProperties": {
                     "url": "[parameters('ls_ADLS_DataLake_properties_typeProperties_url')]"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+            ]
         },
         {
             "name": "[concat(parameters('factoryName'), '/ls_KeyVault')]",
