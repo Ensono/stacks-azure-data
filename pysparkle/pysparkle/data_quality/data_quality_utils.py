@@ -136,9 +136,9 @@ def execute_validations(
         Validation Result for the applied expectation suite
     """
     batch_request = RuntimeBatchRequest(
-        datasource_name=f"{dq_conf['dataset_name']}",
-        data_connector_name=f"{dq_conf['dataset_name']}_data_connector",
-        data_asset_name=f"{dq_conf['dataset_name']}",
+        datasource_name=f"{dq_conf['datasource_name']}",
+        data_connector_name=f"{dq_conf['datasource_name']}_data_connector",
+        data_asset_name=f"{dq_conf['datasource_name']}",
         batch_identifiers={
             "batch_name": "latest_batch",
         },

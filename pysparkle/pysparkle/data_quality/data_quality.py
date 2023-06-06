@@ -13,20 +13,20 @@ logger = logging.getLogger(__name__)
 
 
 def data_quality_main(dq_conf):
-    dataset_name = dq_conf["dataset_name"]
+    datasource_name = dq_conf["datasource_name"]
 
     logger.info("Running Data Quality processing...")
 
     spark = SparkSession.builder.appName(
-        f'DataQuality-{dq_conf["container_name"]}-{dataset_name}'
+        f'DataQuality-{dq_conf["container_name"]}-{datasource_name}'
     ).getOrCreate()
 
     set_env()
     set_spark_properties(spark)
 
-    table_name = f'{dq_conf["container_name"]}.{dataset_name}'
+    table_name = f'{dq_conf["container_name"]}.{datasource_name}'
     df = spark.read.table(table_name)
-    gx_context = create_datasource_context(dq_conf["dataset_name"], dq_conf['gx_directory_path'])
+    gx_context = create_datasource_context(dq_conf["datasource_name"], dq_conf['gx_directory_path'])
 
     gx_context = create_expectation_suite(gx_context, dq_conf)
 
