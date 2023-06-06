@@ -125,7 +125,7 @@ def execute_validations(
 ) -> ExpectationSuiteValidationResult:
     """
     Given a Great Expectations data context, the relevant config, and a dataframe containing the
-    data to be validate, this function runs the validations and returns the result
+    data to be validated, this function runs the validations and returns the result
 
     Args:
         context: Great Expectations data context object
