@@ -42,6 +42,7 @@ dq_config = {
     "container_name": "staging",
     "dataset_name": "movies_metadata",
     "expectation_suite_name": "movies_metadata_suite",
+    "gx_directory_path": "/dbfs/great_expectations/",
     "validation_config": [
         {
             "column_name": "adult",

@@ -17,12 +17,13 @@ from great_expectations.data_context.types.base import (
 )
 
 
-def create_datasource_context(datasource_name: str) -> BaseDataContext:
+def create_datasource_context(datasource_name: str, gx_directory_path: str) -> BaseDataContext:
     """
     Given a string containing the datasource name, this function generates a data context instance
 
     Args:
         datasource_name: Name of the datasource to be validated
+        gx_directory_path: directory to store details of the gx context 
 
     Returns:
         Populated data context instance to which expectations can be added
@@ -47,12 +48,10 @@ def create_datasource_context(datasource_name: str) -> BaseDataContext:
         },
     }
 
-    root_directory = f"/dbfs/great_expectations/{datasource_name}/"
+    root_directory = f"{gx_directory_path}/{datasource_name}/"
 
     data_context_config = DataContextConfig(
-        store_backend_defaults=FilesystemStoreBackendDefaults(
-            root_directory=root_directory
-        ),
+        store_backend_defaults=FilesystemStoreBackendDefaults(root_directory=root_directory),
     )
 
     context = BaseDataContext(project_config=data_context_config)
