@@ -15,9 +15,6 @@ logger = logging.getLogger(__name__)
 
 def data_quality_main(config_path):
     dq_conf = load_config_as_dict(config_path)
-
-    dataset_name = dq_conf["dataset_name"]
-
     logger.info(f"Running Data Quality processing for {dq_conf['dataset_name']}...")
 
     spark = SparkSession.builder.appName(
