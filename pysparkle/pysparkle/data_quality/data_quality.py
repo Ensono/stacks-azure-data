@@ -2,7 +2,7 @@ import logging
 
 from pyspark.sql import SparkSession
 
-from pysparkle.adls_utils import set_env, set_spark_properties
+from pysparkle.adls_utils import check_env, set_spark_properties
 from pysparkle.data_quality.data_quality_utils import (
     create_datasource_context,
     create_expectation_suite,
@@ -21,7 +21,7 @@ def data_quality_main(dq_conf):
         f'DataQuality-{dq_conf["container_name"]}-{datasource_name}'
     ).getOrCreate()
 
-    set_env()
+    check_env()
     set_spark_properties(spark)
 
     table_name = f'{dq_conf["container_name"]}.{datasource_name}'
