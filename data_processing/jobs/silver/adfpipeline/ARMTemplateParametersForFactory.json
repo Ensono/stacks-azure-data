@@ -13,6 +13,9 @@
         },
         "databricksWorkspaceResourceId": {
             "value": "/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
+        },
+        "enableDataQualitySilver": {
+            "value": "true"
         }
     }
 }
