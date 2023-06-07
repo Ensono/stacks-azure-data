@@ -126,9 +126,16 @@ stages:
              displayName: Configure databricks-cli
 
            - script: |
+                     folder_exists=$(databricks fs ls dbfs:/FileStore/script 2>&1)
+                     if [[ $folder_exists == *"No such file or directory"* ]]; then
+                         databricks fs mkdirs dbfs:/FileStore/script
+                     fi
+            displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
+                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/script
              displayName: Upload Spark Job      
 
     # Publish ADF
