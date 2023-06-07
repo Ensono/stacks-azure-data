@@ -1,5 +1,4 @@
 import logging
-import json
 
 from pyspark.sql import SparkSession
 
@@ -17,25 +16,30 @@ logger = logging.getLogger(__name__)
 def data_quality_main(config_path):
     dq_conf = load_config_as_dict(config_path)
 
-    datasource_name = dq_conf["datasource_name"]
+    dataset_name = dq_conf["dataset_name"]
 
-    logger.info("Running Data Quality processing...")
+    logger.info(f"Running Data Quality processing for {dq_conf['dataset_name']}...")
 
     spark = SparkSession.builder.appName(
-        f'DataQuality-{dq_conf["container_name"]}-{datasource_name}'
+        f'DataQuality-{dq_conf["container_name"]}-{dq_conf["dataset_name"]}'
     ).getOrCreate()
 
     check_env()
     set_spark_properties(spark)
 
-    table_name = f'{dq_conf["container_name"]}.{datasource_name}'
-    df = spark.read.table(table_name)
-    gx_context = create_datasource_context(dq_conf["datasource_name"], dq_conf['gx_directory_path'])
+    for datasource in dq_conf["datasource_config"]:
+        logger.info(f"Running data quality processing for {datasource['datasource_name']}")
 
-    gx_context = create_expectation_suite(gx_context, dq_conf)
+        source_type = getattr(spark.read, datasource["datasource_type"])
+        df = source_type(datasource["data_location"])
 
-    results = execute_validations(gx_context, dq_conf, df)
+        gx_context = create_datasource_context(datasource["datasource_name"], dq_conf['gx_directory_path'])
 
-    logger.info(results)
+        gx_context = create_expectation_suite(gx_context, datasource)
+
+        results = execute_validations(gx_context, datasource, df)
+
+        logger.info(f"Finished data quality for {datasource['datasource_name']}")
+        logger.info(results)
 
     logger.info("Finished: Data Quality processing.")
