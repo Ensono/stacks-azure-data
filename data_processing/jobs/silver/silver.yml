@@ -130,7 +130,7 @@ stages:
                      if [[ $folder_exists == *"No such file or directory"* ]]; then
                          databricks fs mkdirs dbfs:/FileStore/script
                      fi
-            displayName: 'Create Scripts Folder If Not Exists'
+             displayName: 'Create Scripts Folder If Not Exists'
 
            - script: |
                      echo Destination is /FileStore/scripts/
