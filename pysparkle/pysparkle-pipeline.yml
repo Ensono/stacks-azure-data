@@ -5,7 +5,13 @@ name: "$(Build.SourceBranchName)-init"
 #- none
 
 pr:
-  - main
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - pysparkle/*
+      - pysparkle/pysparkle-pipeline.yml
 trigger:
   branches:
     include:

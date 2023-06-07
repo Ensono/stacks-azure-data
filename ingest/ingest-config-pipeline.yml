@@ -10,7 +10,13 @@ name: "$(Build.SourceBranchName)-init"
 
 
 pr:
-  - main
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - ingest/config/*
+      - ingest/ingest-config-pipeline.yml
 
 trigger:
   branches:
