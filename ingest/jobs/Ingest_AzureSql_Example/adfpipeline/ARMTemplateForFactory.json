@@ -21,8 +21,8 @@
         },
         "ls_AzureSql_ExampleSource_connectionString": {
             "type": "secureString",
-            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'",
-            "defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest"
+            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'"
+           
         }
      
     },
