@@ -127,7 +127,7 @@ stages:
 
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/script12 2>&1)
-                      if [[ $folder_exists == *"No such file or directory"* ]]; then
+                      if [[ $folder_exists =~ "No such file or directory" ]]; then
                           databricks fs mkdirs dbfs:/FileStore/script12
                       fi
                       echo "folder_exists: $folder_exists"
