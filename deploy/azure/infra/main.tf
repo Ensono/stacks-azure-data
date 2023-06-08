@@ -260,6 +260,7 @@ module "adb1" {
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
+  vnet_address_prefix                      = "10.3"
 }
 
 resource "azurerm_role_assignment" "adb_role" {
