@@ -1,7 +1,13 @@
 name: "$(Build.SourceBranchName)-init"
 
 pr:
-  - main
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - build/*
+      - deploy/azure/infra/*
 
 trigger:
   branches:
@@ -10,7 +16,7 @@ trigger:
   paths:
     include:
       - build/*
-      - deploy/*
+      - deploy/azure/infra/*
 variables:
   - template: air-infrastructure-data-vars.yml
 

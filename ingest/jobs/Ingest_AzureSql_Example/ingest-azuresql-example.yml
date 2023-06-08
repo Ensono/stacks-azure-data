@@ -9,7 +9,14 @@
 name: "$(Build.SourceBranchName)-init"
 
 pr:
-  - main
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
+      - ingest/jobs/Ingest_AzureSql_Example/tests/*
+      - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 trigger:
   branches:
