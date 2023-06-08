@@ -236,6 +236,31 @@ module "adb" {
   databricks_group_display_name            = var.databricks_group_display_name
 }
 
+# databricks workspace
+module "adb1" {
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
+  resource_namer                           = module.default_label.id
+  resource_group_name                      = azurerm_resource_group.default.name
+  resource_group_location                  = azurerm_resource_group.default.location
+  databricks_sku                           = var.databricks_sku
+  resource_tags                            = module.default_label.tags
+  enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
+  data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
+  databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
+  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
+  add_rbac_users                           = var.add_rbac_users
+  rbac_databricks_users                    = var.rbac_databricks_users
+  databricks_group_display_name            = var.databricks_group_display_name
+  enable_private_network                   = true
+  vnet_name                                = "amido-stacks-euw-de-nonprod"
+  vnet_name_resource_group                 = "amido-stacks-euw-de-nonprod-network"
+  public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
+  private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
+  pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
+  public_subnet_prefix                     = "10.3.3.0/24"
+  private_subnet_prefix                    = "10.3.4.0/24"
+}
+
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
@@ -243,7 +268,7 @@ resource "azurerm_role_assignment" "adb_role" {
 }
 
 resource "databricks_token" "pat" {
-  comment  = var.databricks_pat_comment
+  comment = var.databricks_pat_comment
   // 120 day token
   lifetime_seconds = 120 * 24 * 60 * 60
 }
