@@ -252,6 +252,7 @@ module "adb1" {
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
+  create_subnets                           = true
   vnet_name                                = "amido-stacks-euw-de-nonprod"
   vnet_name_resource_group                 = "amido-stacks-euw-de-nonprod-network"
   public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
