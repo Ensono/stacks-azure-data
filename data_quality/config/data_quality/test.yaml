@@ -1,0 +1,7 @@
+container_name: staging
+datasource_name: movies_metadata
+validation_config:
+  - column_name: adult
+    expectations:
+      - expectation_name: expect_column_values_to_not_be_null
+        expectation_kwargs: {}
