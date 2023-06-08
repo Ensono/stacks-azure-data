@@ -225,6 +225,13 @@ resource "azurerm_key_vault_secret" "sql_connect_string" {
   key_vault_id = module.kv_default.id
 }
 
+resource "azurerm_key_vault_secret" "sql_connect_string" {
+  for_each     = toset(var.sql_db_names)
+  name         = "connect-string-${each.key}"
+  value        = module.sql.sql_sa_password
+  key_vault_id = module.kv_default.id
+}
+
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
