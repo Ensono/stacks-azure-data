@@ -126,10 +126,33 @@ stages:
              displayName: Configure databricks-cli
 
            - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
-             displayName: Upload Spark Job      
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs  
+
+          #  - script: |
+          #            echo Destination is /FileStore/scripts/
+          #            echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+          #            databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
+          #    displayName: Upload Spark Job      
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -291,10 +314,27 @@ stages:
              displayName: test databricks-cli
 
            - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
-             displayName: Upload Spark Job   
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs  
 
     # Publish ADF
            - task: AzurePowerShell@5

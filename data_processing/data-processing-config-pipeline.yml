@@ -8,21 +8,25 @@
 
 name: "$(Build.SourceBranchName)-init"
 
+
+pr:
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - data_processing/config/*
+      - data_processing/data-processing-config-pipeline.yml
+
 trigger:
-- none
-
-# pr:
-#   - main
-
-# trigger:
-#   branches:
+  branches:
    
-#     include:
-#       - 'main'
-#   paths:
-#     include:
-#       - data_quality/config/*
-#       - data_quality/data-quality-config-pipeline.yml
+    include:
+      - 'main'
+  paths:
+    include:
+      - data_processing/config/*
+      - data_processing/data-processing-config-pipeline.yml
 
 
 variables:
@@ -31,7 +35,7 @@ variables:
   # - name: job  #update job name
   #   value: 'Generate_Ingest_Query'
   - name: self_repo_blob_config
-    value: "$(self_repo_dir)/data_quality/config"
+    value: "$(self_repo_dir)/data_processing/config"
   - name: blob_config_destination
     value: config
 
@@ -45,8 +49,8 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_data_quality_Config
-    displayName: 'Build_data_quality_Config'
+  - job: Build_Config
+    displayName: 'Build_Config'
 
     steps:
 
