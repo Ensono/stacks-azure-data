@@ -132,7 +132,7 @@ stages:
            - script: |
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/script
+                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/script/
              displayName: Upload Spark Job      
 
     # Publish ADF
