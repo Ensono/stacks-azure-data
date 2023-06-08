@@ -404,7 +404,15 @@
                 "annotations": [],
                 "type": "AzureSqlDatabase",
                 "typeProperties": {
-                    "connectionString": "[parameters('ls_AzureSql_ExampleSource_connectionString')]"
+                    "connectionString": "[parameters('ls_AzureSql_ExampleSource_connectionString')]",
+                    "password": {
+                        "type": "AzureKeyVaultSecret",
+                        "store": {
+                            "referenceName": "ls_KeyVault",
+                            "type": "LinkedServiceReference"
+                        },
+                        "secretName": "sql-password"
+                    }
                 },
                 "connectVia": {
                     "referenceName": "adf-managed-vnet-runtime",
@@ -412,7 +420,8 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]",
+                "[concat(variables('factoryId'), '/linkedServices/ls_KeyVault')]"
             ]
         }
     ]
