@@ -248,8 +248,8 @@ module "adb1" {
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
   enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  # add_rbac_users                           = var.add_rbac_users
-  # rbac_databricks_users                    = var.rbac_databricks_users
+  add_rbac_users                           = var.add_rbac_users
+  rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
   create_subnets                           = true
