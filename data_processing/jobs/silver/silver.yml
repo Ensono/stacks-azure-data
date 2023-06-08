@@ -126,10 +126,7 @@ stages:
              displayName: Configure databricks-cli
 
            - script: |
-                     folder_exists=$(databricks fs ls dbfs:/FileStore/script 2>&1)
-                     if [[ $folder_exists == *"No such file or directory"* ]]; then
                          databricks fs mkdirs dbfs:/FileStore/script
-                     fi
              displayName: 'Create Scripts Folder If Not Exists'
 
            - script: |
