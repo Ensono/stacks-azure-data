@@ -127,23 +127,14 @@ stages:
 
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/abc 2>&1)
-                      if [[ $folder_exists =~ "No such file or directory" ]]; then
-                          databricks fs mkdirs dbfs:/FileStore/abc
-                      fi
                       echo "folder_exists: $folder_exists"
-             displayName: 'Create Scripts Folder If Not Exists'
-
-           - script: |
-                      folder_exists=$(databricks fs ls dbfs:/FileStore/abc 2>&1)
-                      echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No such file or directory"* ]]; 
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
                       then
                           echo "Creating Folder"
                           databricks fs mkdirs dbfs:/FileStore/abc
                       else
                           echo "Folder Exist"
                       fi
-                      echo "folder_exists: $folder_exists"
              displayName: 'Create Scripts Folder If Not Exists'
 
            - script: |
