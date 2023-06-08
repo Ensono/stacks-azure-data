@@ -83,6 +83,12 @@ resource "azurerm_role_assignment" "kv_role" {
   principal_id         = module.adf.adf_managed_identity
 }
 
+resource "azurerm_role_assignment" "sql_role" {
+  scope                = module.sql_server_id.id
+  role_definition_name = var.kv_role_adf
+  principal_id         = module.adf.adf_managed_identity
+}
+
 resource "azurerm_role_assignment" "storage_role" {
   scope                = module.adls_default.storage_account_ids[0]
   role_definition_name = var.adls_datalake_role_adf
