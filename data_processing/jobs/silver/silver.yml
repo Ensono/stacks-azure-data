@@ -126,7 +126,8 @@ stages:
              displayName: Configure databricks-cli
 
            - script: |
-                         databricks fs ls dbfs:/FileStore/scripts12
+                      databricks workspace ls
+                      databricks fs ls dbfs:/FileStore/scripts12
              displayName: 'Create Scripts Folder If Not Exists'
 
            - script: |
