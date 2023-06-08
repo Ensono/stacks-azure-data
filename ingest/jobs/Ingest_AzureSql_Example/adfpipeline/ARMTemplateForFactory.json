@@ -19,10 +19,12 @@
             "type": "string",
             "defaultValue": "https://amidostacksdeveuwde.vault.azure.net/"
         },
-        "ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName": {
-            "type": "string",
-            "defaultValue": "AzureSqlExampleAdfConnectionString"
+        "ls_AzureSql_ExampleSource_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'",
+            "defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest"
         }
+     
     },
     "variables": {
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
@@ -402,18 +404,15 @@
                 "annotations": [],
                 "type": "AzureSqlDatabase",
                 "typeProperties": {
-                    "connectionString": {
-                        "type": "AzureKeyVaultSecret",
-                        "store": {
-                            "referenceName": "ls_KeyVault",
-                            "type": "LinkedServiceReference"
-                        },
-                        "secretName": "[parameters('ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName')]"
-                    }
+                    "connectionString": "[parameters('ls_AzureSql_ExampleSource_connectionString')]"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/ls_KeyVault')]"
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
             ]
         }
     ]
