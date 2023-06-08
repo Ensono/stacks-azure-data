@@ -141,11 +141,11 @@ stages:
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
                      for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
-                      if [[ -f $file ]]; then
-                        destination="dbfs:/FileStore/scripts/$(basename $file)"
-                        databricks fs cp --overwrite "$file" "$destination"
-                      fi
-                    done
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
              displayName: Upload Spark Jobs  
 
           #  - script: |
