@@ -84,7 +84,7 @@ resource "azurerm_role_assignment" "kv_role" {
 }
 
 resource "azurerm_role_assignment" "sql_role" {
-  scope                = module.sql_server_id.id
+  scope                = module.sql.sql_server_id
   role_definition_name = var.kv_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
