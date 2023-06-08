@@ -38,29 +38,11 @@ def gold(partitions):
     gold_main(partitions)
 
 
-dq_config = {
-    "container_name": "staging",
-    "datasource_name": "movies_metadata",
-    "expectation_suite_name": "movies_metadata_suite",
-    "gx_directory_path": "/dbfs/great_expectations/",
-    "validation_config": [
-        {
-            "column_name": "adult",
-            "expectations": [
-                {
-                    "expectation_type": "expect_column_values_to_not_be_null",
-                    "expectation_kwargs": {},
-                }
-            ],
-        }
-    ],
-}
-
-
 @click.command()
-def data_quality():
+@click.option("--config_path")
+def data_quality(config_path):
     """Data Quality Checking."""
-    data_quality_main(dq_config)
+    data_quality_main(config_path)
 
 
 cli.add_command(silver)
