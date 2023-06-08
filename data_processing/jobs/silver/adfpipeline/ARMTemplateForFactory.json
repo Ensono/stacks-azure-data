@@ -20,7 +20,7 @@
             "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
         },
         "enableDataQualitySilver": {
-            "type": "bool",
+            "type": "string",
             "defaultValue": "true"
         }
     },
