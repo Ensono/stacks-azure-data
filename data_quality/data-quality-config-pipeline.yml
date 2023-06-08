@@ -8,19 +8,21 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-
-pr:
-  - main
-
 trigger:
-  branches:
+- none
+
+# pr:
+#   - main
+
+# trigger:
+#   branches:
    
-    include:
-      - 'main'
-  paths:
-    include:
-      - data_quality/config/*
-      - data_quality/data-quality-config-pipeline.yml
+#     include:
+#       - 'main'
+#   paths:
+#     include:
+#       - data_quality/config/*
+#       - data_quality/data-quality-config-pipeline.yml
 
 
 variables:
