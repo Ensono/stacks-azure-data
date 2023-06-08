@@ -10,7 +10,14 @@ name: "$(Build.SourceBranchName)-init"
 
 
 pr:
-  - main
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - ingest/jobs/Get_Ingest_Config/adfpipeline/*
+      - ingest/jobs/Get_Ingest_Config/tests/*
+      - ingest/jobs/Get_Ingest_Config/get-ingest-config.yml
 
 trigger:
   branches:
