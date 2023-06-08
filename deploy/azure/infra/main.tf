@@ -254,12 +254,12 @@ module "adb1" {
   enable_private_network                   = true
   create_subnets                           = true
   vnet_name                                = "amido-stacks-euw-de-nonprod"
-  vnet_name_resource_group                 = "amido-stacks-euw-de-nonprod-network"
+  vnet_resource_group                      = "amido-stacks-euw-de-nonprod-network"
   public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
   private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
-  public_subnet_prefix                     = "10.3.3.0/24"
-  private_subnet_prefix                    = "10.3.4.0/24"
+  public_subnet_prefix                     = ["10.3.3.0/24"]
+  private_subnet_prefix                    = ["10.3.4.0/24"]
 }
 
 resource "azurerm_role_assignment" "adb_role" {
