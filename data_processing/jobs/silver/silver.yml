@@ -140,8 +140,19 @@ stages:
            - script: |
                      echo Destination is /FileStore/scripts/
                      echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
-             displayName: Upload Spark Job      
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                      if [[ -f $file ]]; then
+                        destination="dbfs:/FileStore/scripts/$(basename $file)"
+                        databricks fs cp --overwrite "$file" "$destination"
+                      fi
+                    done
+             displayName: Upload Spark Jobs  
+
+          #  - script: |
+          #            echo Destination is /FileStore/scripts/
+          #            echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+          #            databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
+          #    displayName: Upload Spark Job      
 
     # Publish ADF
            - task: AzurePowerShell@5
