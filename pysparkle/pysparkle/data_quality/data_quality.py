@@ -8,7 +8,7 @@ from pysparkle.data_quality.data_quality_utils import (
     create_expectation_suite,
     execute_validations,
 )
-from utils.config_utils import load_config_as_dict
+from pysparkle.config_utils import load_config_as_dict
 
 logger = logging.getLogger(__name__)
 
