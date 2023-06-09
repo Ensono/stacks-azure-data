@@ -246,8 +246,8 @@ module "adb" {
 module "adb1" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
   resource_namer                           = "${module.default_label.id}secure"
-  resource_group_name                      = azurerm_resource_group.default.name
-  resource_group_location                  = azurerm_resource_group.default.location
+  resource_group_name                      = azurerm_resource_group.secure.name
+  resource_group_location                  = azurerm_resource_group.secure.location
   databricks_sku                           = var.databricks_sku
   resource_tags                            = module.default_label.tags
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
