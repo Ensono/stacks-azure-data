@@ -196,7 +196,30 @@
                 "[concat(variables('factoryId'), '/linkedServices/ls_Blob_ConfigStore')]"
             ]
         },
-        
+        {
+            "name": "[concat(parameters('factoryName'), '/adf-managed-vnet-runtime')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "West Europe",
+                        "dataFlowProperties": {
+                            "computeType": "General",
+                            "coreCount": 8,
+                            "timeToLive": 0,
+                            "cleanup": true
+                        }
+                    }
+                },
+                "managedVirtualNetwork": {
+                    "type": "ManagedVirtualNetworkReference",
+                    "referenceName": "default"
+                }
+            },
+            "dependsOn": []
+        },
         {
             "name": "[concat(parameters('factoryName'), '/ls_Blob_ConfigStore')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -205,10 +228,17 @@
                 "annotations": [],
                 "type": "AzureBlobStorage",
                 "typeProperties": {
-                    "serviceEndpoint": "[parameters('ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint')]"
+                    "serviceEndpoint": "[parameters('ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint')]",
+                    "accountKind": "BlobStorage"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+            ]
         }
        
     ]
