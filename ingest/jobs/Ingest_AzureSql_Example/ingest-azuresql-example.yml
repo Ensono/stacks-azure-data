@@ -72,6 +72,10 @@ stages:
      parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
+   - template: ../../../de_build/build-adf-spark-job.yml
+     parameters:
+      self_repo_dir: '$(self_repo_dir)'
+      self_repo_adf_dir: '$(self_repo_adf_dir)'
       self_repo_sparkjob_dir: '$(self_repo_sparkjob_dir)'
 
 #############################################################
