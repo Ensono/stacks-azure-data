@@ -16,6 +16,7 @@ pr:
     include:
       - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
       - ingest/jobs/Ingest_AzureSql_Example/tests/*
+      - ingest/jobs/Ingest_AzureSql_Example/spark-jobs/*
       - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 trigger:
@@ -27,6 +28,7 @@ trigger:
     include:
       - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
       - ingest/jobs/Ingest_AzureSql_Example/tests/*
+      - ingest/jobs/Ingest_AzureSql_Example/spark-jobs/*
       - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 
@@ -36,13 +38,24 @@ variables:
   - name: job  #update job name
     value: 'Ingest_AzureSql_Example'
   - name: self_repo_adf_dir
-    value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
+    value: '$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline'
   - name: test_unit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
   - name: test_end_to_end_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
   - name: junit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
+  - name: self_repo_sparkjob_dir
+    value: '$(self_repo_dir)/ingest/jobs/$(job)/spark-jobs'
+  - name: overrideParameters
+    value: '-factoryName $(datafactoryname)
+     -ADLSstorageAccountName $(blob_adls_storage)
+     -databricksHost $(databricksHost)
+     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
+     -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
+     -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
+     -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)'
 
 pool:
   name: $(agentpool_name)
@@ -59,6 +72,7 @@ stages:
      parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
+      self_repo_sparkjob_dir: '$(self_repo_sparkjob_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -92,6 +106,45 @@ stages:
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
 
+           - script: dir
+             displayName: List ArmTemplates SparkJob in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+           - task: AzureKeyVault@2
+             inputs:
+                  azureSubscription: 'Stacks.Pipeline.Builds'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+             displayName: 'Get secrets from the keyvault'             
+             
+           - script: |
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
+             displayName: Configure databricks-cli
+
+           - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
+                     echo Destination is /FileStore/scripts/
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs
+
     # Publish ADF
            - task: AzurePowerShell@5
              displayName: 'Stop ADF triggers'
@@ -115,11 +168,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
-                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
+                overrideParameters: $(overrideParameters) 
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -230,6 +279,50 @@ stages:
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
 
+           - script: dir
+             displayName: List ArmTemplates SparkJob in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+
+           - task: AzureKeyVault@2
+             inputs:
+                  azureSubscription: 'Stacks.Pipeline.Builds'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+             displayName: 'Get secrets from the keyvault' 
+
+           - script: |
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
+             displayName: Configure databricks-cli
+
+           - script: |
+                      databricks workspace ls
+                      databricks fs ls
+             displayName: test databricks-cli
+
+           - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
+                     echo Destination is /FileStore/scripts/
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -254,11 +347,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname) 
-                                    -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
-                                    -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-                                    -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-                                    -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)
+                overrideParameters: $(overrideParameters) 
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
