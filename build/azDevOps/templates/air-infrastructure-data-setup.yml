@@ -11,4 +11,4 @@ steps:
       targetType: inline
       script: |
         wget https://github.com/taskctl/taskctl/releases/download/${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-        sudo tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+        tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
