@@ -52,7 +52,7 @@ variables:
      -ADLSstorageAccountName $(blob_adls_storage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
-     -ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName "AzureSqlExampleAdfConnectionString" 
+     -ls_AzureSql_ExampleSource_connectionString $(sql_connection)
      -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
      -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
      -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)'
