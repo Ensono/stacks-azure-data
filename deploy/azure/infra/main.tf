@@ -225,9 +225,9 @@ resource "azurerm_key_vault_secret" "sql_connect_string" {
   key_vault_id = module.kv_default.id
 }
 
-resource "azurerm_key_vault_secret" "sql_connect_string" {
+resource "azurerm_key_vault_secret" "sql_password_string" {
   for_each     = toset(var.sql_db_names)
-  name         = "connect-string-${each.key}"
+  name         = "connect-sql-password-${each.key}"
   value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
 }
