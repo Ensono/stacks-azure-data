@@ -191,6 +191,12 @@ variable "adb_role_adf" {
   default     = "Contributor"
 }
 
+variable "sql_role_adf" {
+  description = "Role assignment for Sql Server."
+  type        = string
+  default     = "Contributor"
+}
+
 variable "e_2_test_role" {
   description = "Role assignment for end to end Testing."
   type        = string

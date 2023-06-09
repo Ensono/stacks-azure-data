@@ -14,8 +14,8 @@
         "ls_KeyVault_properties_typeProperties_baseUrl": {
             "value": "https://amidostacksdeveuwde.vault.azure.net/"
         },
-        "ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName": {
-            "value": "AzureSqlExampleAdfConnectionString"
+        "ls_AzureSql_ExampleSource_connectionString": {
+            "value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
         }
     }
 }

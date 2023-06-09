@@ -83,6 +83,12 @@ resource "azurerm_role_assignment" "kv_role" {
   principal_id         = module.adf.adf_managed_identity
 }
 
+resource "azurerm_role_assignment" "sql_role" {
+  scope                = module.sql.sql_server_id
+  role_definition_name = var.sql_role_adf
+  principal_id         = module.adf.adf_managed_identity
+}
+
 resource "azurerm_role_assignment" "storage_role" {
   scope                = module.adls_default.storage_account_ids[0]
   role_definition_name = var.adls_datalake_role_adf
@@ -219,6 +225,13 @@ resource "azurerm_key_vault_secret" "sql_connect_string" {
   key_vault_id = module.kv_default.id
 }
 
+resource "azurerm_key_vault_secret" "sql_password_string" {
+  for_each     = toset(var.sql_db_names)
+  name         = "connect-sql-password-${each.key}"
+  value        = module.sql.sql_sa_password
+  key_vault_id = module.kv_default.id
+}
+
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -243,7 +256,7 @@ resource "azurerm_role_assignment" "adb_role" {
 }
 
 resource "databricks_token" "pat" {
-  comment  = var.databricks_pat_comment
+  comment = var.databricks_pat_comment
   // 120 day token
   lifetime_seconds = 120 * 24 * 60 * 60
 }
