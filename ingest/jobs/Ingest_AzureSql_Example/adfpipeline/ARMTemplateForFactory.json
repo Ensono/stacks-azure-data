@@ -7,6 +7,18 @@
             "metadata": "Data Factory name",
             "defaultValue": "amido-stacks-dev-euw-de"
         },
+        "ADLSstorageAccountName": {
+            "type": "string",
+            "defaultValue": "amidostacksdeveuwdeadls"
+        },
+        "databricksHost": {
+            "type": "string",
+            "defaultValue": "https://xxxxxxxxx.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
+        },
         "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
             "type": "string",
             "defaultValue": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
@@ -21,8 +33,7 @@
         },
         "ls_AzureSql_ExampleSource_connectionString": {
             "type": "secureString",
-            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'"
-           
+            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'"  
         }
      
     },

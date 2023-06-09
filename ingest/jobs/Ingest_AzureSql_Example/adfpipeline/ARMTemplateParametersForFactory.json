@@ -5,6 +5,15 @@
         "factoryName": {
             "value": "amido-stacks-dev-euw-de"
         },
+        "ADLSstorageAccountName": {
+            "value": "amidostacksdeveuwdeadls"
+        },
+        "databricksHost": {
+            "value": "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "value": "/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
+        },
         "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
             "value": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
         },
