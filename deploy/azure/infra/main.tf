@@ -267,6 +267,8 @@ module "adb1" {
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
   vnet_address_prefix                      = "10.3"
+
+  depends_on = [ azurerm_resource_group.secure ]
 }
 
 resource "azurerm_role_assignment" "adb_role" {
