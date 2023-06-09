@@ -250,7 +250,7 @@ module "adb1" {
   resource_group_location                  = azurerm_resource_group.secure.location
   databricks_sku                           = var.databricks_sku
   resource_tags                            = module.default_label.tags
-  enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
+  enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
   enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
@@ -267,8 +267,11 @@ module "adb1" {
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
   vnet_address_prefix                      = "10.3"
+  public_network_access_enabled            = true
+  create_nat                               = false
+  create_lb                                = true
 
-  depends_on = [ azurerm_resource_group.secure ]
+  depends_on = [azurerm_resource_group.secure]
 }
 
 resource "azurerm_role_assignment" "adb_role" {
