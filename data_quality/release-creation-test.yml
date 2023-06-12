@@ -82,10 +82,26 @@ stages:
               echo "##vso[task.setvariable variable=currentVersion]$version"
             displayName: Extract Version Number
 
+            # Split the version into major, minor, and revision parts
+          - script: |
+              IFS='.' read -ra versionParts <<< "$(currentVersion)"
+              major="${versionParts[0]}"
+              minor="${versionParts[1]}"
+              revision="${versionParts[2]}"
+              echo "Major: $major"
+              echo "Minor: $minor"
+              echo "Revision: $revision"
+              echo "##vso[task.setvariable variable=major]$major"
+              echo "##vso[task.setvariable variable=minor]$minor"
+              echo "##vso[task.setvariable variable=revision]$revision"
+            displayName: Split Version Parts
+
           # Increment the version
           - script: |
-              currentVersion=$(echo $(currentVersion) | awk -F. '{$NF = $NF + 1;} 1' OFS=.)
-              echo "New Version: $currentVersion"
+              newRevision=$((revision + 1))
+              newVersion="v${major}.${minor}.${newRevision}"
+              echo "New Version: $newVersion"
+              echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Increment Version
 
           # Create a GitHub release with these packages
