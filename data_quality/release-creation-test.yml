@@ -53,86 +53,47 @@ stages:
           - checkout: self
             persistCredentials: true
 
-          # Create a tag in the code for this release
-          # - task: Bash@3
-          #   displayName: Tag Code
-          #   inputs:
-          #     targetType: "inline"
-          #     script: |
-          #       git config user.name "BuildService"
-          #       git config user.email "builder@${COMPANY}.com"
-          #       git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
-          #       git push origin v${VERSION_NUMBER}
-          #   env:
-          #     COMPANY: $(company)
-          
-          #   - checkout: self
-
-          # Get the last tag from GitHub
-          # - script: |
-          #     lastTag=$(git describe --tags --abbrev=0)
-          #     if [[ -z $lastTag ]]; then
-          #       major=1
-          #       minor=0
-          #       revision=0
-          #       echo "Last Tag: NOT Present"
-          #     else
-          #       IFS='.' read -ra versionParts <<< "${lastTag#v}"
-          #       major="${versionParts[0]}"
-          #       minor="${versionParts[1]}"
-          #       revision="${versionParts[2]}"
-          #     fi
-          #     newRevision=$[counter(join(${major}, join('-', ${minor})), ${revision})]
-          #     newVersion="v${major}.${minor}.${newRevision}"
-          #     echo "Last Tag: $lastTag"
-          #     echo "New Version: $newVersion"
-          #     echo "##vso[task.setvariable variable=newVersion]$newVersion"
-          #   displayName: Determine New Version
-
           - script: |
-              lastTag=v1.0.437
+              lastTag=$(git describe --tags --abbrev=0)
               if [[ -z $lastTag ]]; then
-                major=1
-                minor=0
-                revision=0
+                version_major=1
+                version_minor=0
+                version_revision=0
                 echo "Last Tag: NOT Present"
               else
                 IFS='.' read -ra versionParts <<< "${lastTag#v}"
-                major="${versionParts[0]}"
-                minor="${versionParts[1]}"
-                lastrevision="${versionParts[2]}"
-                revision=$((lastrevision + 1))
+                version_major="${versionParts[0]}"
+                version_minor="${versionParts[1]}"
+                lastversion_revision="${versionParts[2]}"
+                version_revision=$((lastversion_revision + 1))
               fi
-              newVersion="v${major}.${minor}.${revision}"
+              newVersion="v${version_major}.${version_minor}.${version_revision}"
               echo "Last Tag: $lastTag"
               echo "New Version: $newVersion"
+              echo "##vso[task.setvariable variable=newVersion]$version_major"
+              echo "##vso[task.setvariable variable=newVersion]$version_minor"
+              echo "##vso[task.setvariable variable=newVersion]$version_revision"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
 
-          # Extract the version number from the last tag
-          - script: |
-              version=$(echo $(lastTag) | sed 's/^v//')
-              echo "Version: $version"
-              echo "##vso[task.setvariable variable=currentVersion]$version"
-            displayName: Extract Version Number
+          # # Create a new tag with the incremented version
+          # - script: |
+          #     git config user.name "BuildService"
+          #     git config user.email "builder@${COMPANY}.com"
+          #     git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
+          #     git push origin ${{ variables.newVersion }}
+          #   displayName: Create New Tag
 
-          # Increment the version
-          - script: |
-              newRevision=$((revision + 1))
-              newVersion="v${{ variables.major }}.${{ variables.minor }}.${newRevision}"
-              echo "New Version: $newVersion"
-              echo "##vso[task.setvariable variable=newVersion]$newVersion"
-            displayName: Increment Version
-
-          # Create a GitHub release with these packages
+          #           # Create a GitHub release with these packages
           # - task: GitHubRelease@1
           #   displayName: Create GitHub Release
           #   inputs:
           #     gitHubConnection: $(github_release_service_connection)
           #     repositoryName: $(github_org)/$(self_repo)
-          #     tag: v${VERSION_NUMBER}
+          #     tag: ${{ variables.newVersion }}
           #     releaseNotesSource: 'inline'
           #     releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
           #     tagSource: 'gitTag'
           #     changeLogCompareToRelease: 'lastFullRelease'
           #     changeLogType: 'commitBased'
+
