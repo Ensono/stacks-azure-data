@@ -4,9 +4,9 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from pysparkle.gold import gold_main
+from pysparkle.etl.gold import gold_main
 from pysparkle.logger import setup_logger
-from pysparkle.silver import silver_main
+from pysparkle.etl.silver import silver_main
 from pysparkle.data_quality.data_quality import data_quality_main
 
 
@@ -39,9 +39,9 @@ def gold(partitions):
 
 
 @click.command()
-@click.option("--config_path")
+@click.option("--config-path", help="Path to a JSON config inside Azure Blob container.")
 def data_quality(config_path):
-    """Data Quality Checking."""
+    """Data Quality check."""
     data_quality_main(config_path)
 
 

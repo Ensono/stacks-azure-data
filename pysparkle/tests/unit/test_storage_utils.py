@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pysparkle.adls_utils import *
+from pysparkle.storage_utils import *
 from tests.unit.conftest import TEST_DATA_DIR
 
 TEST_ENV_VARS = {
@@ -10,6 +10,7 @@ TEST_ENV_VARS = {
     ENV_NAME_APPLICATION_ID: "app_id",
     ENV_NAME_DIRECTORY_ID: "dir_id",
     ENV_NAME_ADLS_ACCOUNT: "myadlsaccount",
+    ENV_NAME_BLOB_ACCOUNT: "myblobaccount"
 }
 
 
@@ -59,7 +60,7 @@ def test_set_spark_properties(spark):
 
 
 def test_get_directory_contents(mock_adls_client):
-    paths = get_directory_contents("test_container", "test_path")
+    paths = get_adls_directory_contents("test_container", "test_path")
     assert paths == [file for file in os.listdir(TEST_DATA_DIR)]
 
 

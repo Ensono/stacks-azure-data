@@ -31,7 +31,7 @@ def spark(tmp_path_factory):
 
 @fixture
 def mock_adls_client():
-    with patch("pysparkle.adls_utils.DataLakeServiceClient") as mock_DataLakeServiceClient:
+    with patch("pysparkle.storage_utils.DataLakeServiceClient") as mock_DataLakeServiceClient:
         mock_paths = [MagicMock(name=file) for file in os.listdir(TEST_DATA_DIR)]
         for mock_path, filename in zip(mock_paths, os.listdir(TEST_DATA_DIR)):
             type(mock_path).name = PropertyMock(return_value=filename)
