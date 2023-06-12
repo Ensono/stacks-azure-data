@@ -69,25 +69,25 @@ stages:
           #   - checkout: self
 
           # Get the last tag from GitHub
-          - script: |
-              lastTag=$(git describe --tags --abbrev=0)
-              if [[ -z $lastTag ]]; then
-                major=1
-                minor=0
-                revision=0
-                echo "Last Tag: NOT Present"
-              else
-                IFS='.' read -ra versionParts <<< "${lastTag#v}"
-                major="${versionParts[0]}"
-                minor="${versionParts[1]}"
-                revision="${versionParts[2]}"
-              fi
-              newRevision=$[counter(join(${major}, join('-', ${minor})), ${revision})]
-              newVersion="v${major}.${minor}.${newRevision}"
-              echo "Last Tag: $lastTag"
-              echo "New Version: $newVersion"
-              echo "##vso[task.setvariable variable=newVersion]$newVersion"
-            displayName: Determine New Version
+          # - script: |
+          #     lastTag=$(git describe --tags --abbrev=0)
+          #     if [[ -z $lastTag ]]; then
+          #       major=1
+          #       minor=0
+          #       revision=0
+          #       echo "Last Tag: NOT Present"
+          #     else
+          #       IFS='.' read -ra versionParts <<< "${lastTag#v}"
+          #       major="${versionParts[0]}"
+          #       minor="${versionParts[1]}"
+          #       revision="${versionParts[2]}"
+          #     fi
+          #     newRevision=$[counter(join(${major}, join('-', ${minor})), ${revision})]
+          #     newVersion="v${major}.${minor}.${newRevision}"
+          #     echo "Last Tag: $lastTag"
+          #     echo "New Version: $newVersion"
+          #     echo "##vso[task.setvariable variable=newVersion]$newVersion"
+          #   displayName: Determine New Version
 
           - script: |
               lastTag=$(git describe --tags --abbrev=0)
@@ -103,7 +103,7 @@ stages:
                 lastrevision="${versionParts[2]}"
                 revision=$((lastrevision + 1))
               fi
-              newVersion="v${major}.${minor}.${newRevision}"
+              newVersion="v${major}.${minor}.${revision}"
               echo "Last Tag: $lastTag"
               echo "New Version: $newVersion"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
