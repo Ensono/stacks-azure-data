@@ -90,7 +90,7 @@ stages:
           #   displayName: Determine New Version
 
           - script: |
-              lastTag=$(git describe --tags --abbrev=0)
+              lastTag=v1.0.437
               if [[ -z $lastTag ]]; then
                 major=1
                 minor=0
