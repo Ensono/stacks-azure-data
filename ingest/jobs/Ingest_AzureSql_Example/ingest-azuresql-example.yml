@@ -49,7 +49,7 @@ variables:
     value: '$(self_repo_dir)/ingest/jobs/$(job)/spark-jobs'
   - name: overrideParameters
     value: '-factoryName $(datafactoryname)
-     -ADLSstorageAccountName $(blob_adls_storage)
+     -adlsStorageAccountName $(blob_adls_storage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
      -ls_AzureSql_ExampleSource_connectionString $(sql_connection)
