@@ -81,7 +81,7 @@ stages:
                 minor="${versionParts[1]}"
                 revision="${versionParts[2]}"
               fi
-              newRevision=$[counter(join(variables['major'], join('-', variables['minor']))), variables['revision']]
+              newRevision=$[[counter(join(variables['major'], join('-', variables['minor']))), variables['revision']]]
               newVersion="v${major}.${minor}.${newRevision}"
               echo "Last Tag: $lastTag"
               echo "New Version: $newVersion"
