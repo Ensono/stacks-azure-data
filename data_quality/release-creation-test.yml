@@ -76,13 +76,14 @@ stages:
             displayName: Get Last Tag
 
           # Extract the version number from the last tag
+          # Extract the version number from the last tag
           - script: |
               version=$(echo $(lastTag) | sed 's/^v//')
               echo "Version: $version"
               echo "##vso[task.setvariable variable=currentVersion]$version"
             displayName: Extract Version Number
 
-            # Split the version into major, minor, and revision parts
+          # Split the version into major, minor, and revision parts
           - script: |
               IFS='.' read -ra versionParts <<< "$(currentVersion)"
               major="${versionParts[0]}"
