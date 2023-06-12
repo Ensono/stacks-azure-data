@@ -1,10 +1,7 @@
-from unittest.mock import patch
-from pathlib import Path
 import shutil
+from pathlib import Path
 
-import pytest
-
-from pysparkle.data_quality.data_quality_utils import *
+from pysparkle.dq.data_quality_utils import *
 
 TEST_GX_DIR = Path(__file__).parent.resolve() / "great_expectations"
 
