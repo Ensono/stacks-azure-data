@@ -82,7 +82,7 @@ stages:
                 minor="${versionParts[1]}"
                 revision="${versionParts[2]}"
               fi
-              newRevision=$[counter(join(${major}, join('-', ${minor})), 0)]
+              newRevision=$[counter(join(${major}, join('-', ${minor})), ${revision})]
               newVersion="v${major}.${minor}.${newRevision}"
               echo "Last Tag: $lastTag"
               echo "New Version: $newVersion"
@@ -101,7 +101,7 @@ stages:
                 major="${versionParts[0]}"
                 minor="${versionParts[1]}"
                 lastrevision="${versionParts[2]}"
-                Revision=$((lastrevision + 1))
+                revision=$((lastrevision + 1))
               fi
               newVersion="v${major}.${minor}.${newRevision}"
               echo "Last Tag: $lastTag"
