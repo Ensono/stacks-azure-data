@@ -66,9 +66,9 @@ stages:
                 version_minor="${versionParts[1]}"
                 lastversion_revision="${versionParts[2]}"
                 version_revision=$((lastversion_revision + 1))
+                echo "Last Tag: $lastTag"
               fi
               newVersion="v${version_major}.${version_minor}.${version_revision}"
-              echo "Last Tag: $lastTag"
               echo "New Version: $newVersion"
               echo "##vso[task.setvariable variable=newVersion]$version_major"
               echo "##vso[task.setvariable variable=newVersion]$version_minor"
