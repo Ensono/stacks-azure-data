@@ -261,8 +261,8 @@ module "adb1" {
   create_subnets                           = true
   vnet_name                                = "testdatabricksvnet"
   vnet_resource_group                      = "amido-stacks-euw-de-nonprod-network"
-  # public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
-  # private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
+  public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
+  private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
@@ -270,7 +270,7 @@ module "adb1" {
   public_network_access_enabled            = true
   create_nat                               = false
   create_lb                                = false
-  managed_vnet                             = true
+  managed_vnet                             = false
 
   depends_on = [azurerm_resource_group.secure]
 }
