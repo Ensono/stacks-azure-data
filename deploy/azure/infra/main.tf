@@ -264,8 +264,10 @@ module "adb1" {
   public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
   private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
-  public_subnet_prefix                     = ["10.3.3.0/24"]
-  private_subnet_prefix                    = ["10.3.4.0/24"]
+  # public_subnet_prefix                     = ["10.3.3.0/24"]
+  # private_subnet_prefix                    = ["10.3.4.0/24"]
+  public_subnet_prefix                     = ["10.12.0.0/24"]
+  private_subnet_prefix                    = ["10.12.1.0/24"]
   vnet_address_prefix                      = "10.3"
   public_network_access_enabled            = true
   create_nat                               = false
