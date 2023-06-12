@@ -75,6 +75,7 @@ stages:
                 major=1
                 minor=0
                 revision=0
+                echo "Last Tag: NOT Present"
               else
                 IFS='.' read -ra versionParts <<< "${lastTag#v}"
                 major="${versionParts[0]}"
