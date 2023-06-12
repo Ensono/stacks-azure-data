@@ -259,18 +259,18 @@ module "adb1" {
   databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
   create_subnets                           = true
-  vnet_name                                = "amido-stacks-euw-de-nonprod"
+  vnet_name                                = "testdatabricksvnet"
   vnet_resource_group                      = "amido-stacks-euw-de-nonprod-network"
-  public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
-  private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
+  # public_subnet_name                       = "amido-stacks-euw-de-nonprod-db-public"
+  # private_subnet_name                      = "amido-stacks-euw-de-nonprod-db-private"
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
   vnet_address_prefix                      = "10.3"
   public_network_access_enabled            = true
   create_nat                               = false
-  create_lb                                = true
-  managed_vnet                             = false
+  create_lb                                = false
+  managed_vnet                             = true
 
   depends_on = [azurerm_resource_group.secure]
 }
