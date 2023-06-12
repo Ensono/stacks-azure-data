@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from pysparkle.etl.silver import *
-from tests.unit.conftest import TEST_DATA_DIR
+from tests.unit.conftest import TEST_CSV_DIR
 
 
 def test_filter_csv_files():
@@ -38,7 +38,7 @@ def test_ensure_database_exists(spark, db_schema):
 @patch("pysparkle.etl.silver.get_adls_file_url")
 def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns):
     def side_effect(container, file_name):
-        return f"{TEST_DATA_DIR}/{file_name}"
+        return f"{TEST_CSV_DIR}/{file_name}"
 
     mock_get_adls_file_url.side_effect = side_effect
 

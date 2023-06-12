@@ -88,22 +88,8 @@ def get_adls_directory_contents(container: str, path: str) -> list[str]:
 
     paths = file_system_client.get_paths(path=path)
     paths = [path.name for path in paths]
-    logger.info(f"Directory contents: {paths}")
+    logger.info(f"ADLS directory contents: {paths}")
     return paths
-
-
-def get_adls_file_url(container: str, file_name: str) -> str:
-    """Constructs an Azure Data Lake Storage (ADLS) URL for a specific file.
-
-    Args:
-        container: The name of the ADLS container.
-        file_name: The name of the file (including any subdirectories within the container).
-
-    Returns:
-        Full ADLS URL for the specified file.
-    """
-    adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
-    return f"abfss://{container}@{adls_account}.dfs.core.windows.net/{file_name}"
 
 
 def load_json_from_blob(container: str, file_path: str) -> dict:
@@ -129,3 +115,17 @@ def load_json_from_blob(container: str, file_path: str) -> dict:
 
     blob_content = blob_client.download_blob().readall()
     return json.loads(blob_content)
+
+
+def get_adls_file_url(container: str, file_name: str) -> str:
+    """Constructs an Azure Data Lake Storage (ADLS) URL for a specific file.
+
+    Args:
+        container: The name of the ADLS container.
+        file_name: The name of the file (including any subdirectories within the container).
+
+    Returns:
+        Full ADLS URL for the specified file.
+    """
+    adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
+    return f"abfss://{container}@{adls_account}.dfs.core.windows.net/{file_name}"

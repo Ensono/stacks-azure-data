@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 from pysparkle.storage_utils import *
-from tests.unit.conftest import TEST_DATA_DIR
+from tests.unit.conftest import TEST_CSV_DIR
 
 TEST_ENV_VARS = {
     ENV_NAME_SERVICE_PRINCIPAL_SECRET: "secret",
@@ -59,9 +59,14 @@ def test_set_spark_properties(spark):
     )
 
 
-def test_get_directory_contents(mock_adls_client):
+def test_get_adls_directory_contents(mock_adls_client):
     paths = get_adls_directory_contents("test_container", "test_path")
-    assert paths == [file for file in os.listdir(TEST_DATA_DIR)]
+    assert paths == [file for file in os.listdir(TEST_CSV_DIR)]
+
+
+def test_load_json_from_blob(mock_blob_client, json_contents):
+    json_as_dict = load_json_from_blob("test_container", "test_path")
+    assert json_as_dict == json.loads(json_contents)
 
 
 @patch.dict("os.environ", {ENV_NAME_ADLS_ACCOUNT: "myadlsaccount"}, clear=True)

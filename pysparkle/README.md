@@ -5,7 +5,8 @@
 > - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
 > - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,
 > - AZURE_CLIENT_SECRET - Service Principal Secret,
-> - ADLS_ACCOUNT - ADLS account name.
+> - ADLS_ACCOUNT - ADLS account name,
+> - BLOB_ACCOUNT - Blob Storage account name.
 
 ## Using CLI
 
