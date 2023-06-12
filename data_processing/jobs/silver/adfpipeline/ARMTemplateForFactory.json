@@ -7,9 +7,13 @@
             "metadata": "Data Factory name",
             "defaultValue": "amido-stacks-dev-euw-de"
         },
-        "ADLSstorageAccountName": {
+        "adlsStorageAccountName": {
             "type": "string",
             "defaultValue": "amidostacksdeveuwdeadls"
+        },
+        "blobStorageAccountName": {
+            "type": "string",
+            "defaultValue": "amidostacksdeveuwdeconfi"
         },
         "databricksHost": {
             "type": "string",
@@ -173,7 +177,8 @@
                         "AZURE_CLIENT_SECRET": "{{secrets/key-vault-secret/service-principal-secret}}",
                         "AZURE_CLIENT_ID": "{{secrets/key-vault-secret/azure-client-id}}",
                         "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
-                        "ADLS_ACCOUNT": "[parameters('ADLSstorageAccountName')]",
+                        "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
+                        "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
                         "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",

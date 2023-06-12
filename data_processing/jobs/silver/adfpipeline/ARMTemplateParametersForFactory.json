@@ -5,8 +5,11 @@
         "factoryName": {
             "value": "amido-stacks-dev-euw-de"
         },
-        "ADLSstorageAccountName": {
+        "adlsStorageAccountName": {
             "value": "amidostacksdeveuwdeadls"
+        },
+        "blobStorageAccountName": {
+            "value": "amidostacksdeveuwdeconfi"
         },
         "databricksHost": {
             "value": "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
