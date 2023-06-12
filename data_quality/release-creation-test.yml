@@ -89,7 +89,7 @@ stages:
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
 
-            - script: |
+          - script: |
               lastTag=$(git describe --tags --abbrev=0)
               if [[ -z $lastTag ]]; then
                 major=1
