@@ -266,14 +266,15 @@ module "adb1" {
   pe_subnet_name                           = "amido-stacks-euw-de-nonprod-pe"
   # public_subnet_prefix                     = ["10.3.3.0/24"]
   # private_subnet_prefix                    = ["10.3.4.0/24"]
-  public_subnet_prefix                     = ["10.12.0.0/24"]
-  private_subnet_prefix                    = ["10.12.1.0/24"]
+  public_subnet_prefix  = ["10.12.0.0/24"]
+  private_subnet_prefix = ["10.12.1.0/24"]
   # vnet_address_prefix                      = "10.3"
-  vnet_address_prefix                      = "10.12"
-  public_network_access_enabled            = true
-  create_nat                               = true
-  create_lb                                = false
-  managed_vnet                             = false
+  vnet_address_prefix                   = "10.12"
+  public_network_access_enabled         = true
+  create_nat                            = true
+  create_lb                             = false
+  managed_vnet                          = false
+  network_security_group_rules_required = "AllRules"
 
   depends_on = [azurerm_resource_group.secure]
 }
