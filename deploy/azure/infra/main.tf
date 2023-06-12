@@ -271,10 +271,9 @@ module "adb1" {
   # vnet_address_prefix                      = "10.3"
   vnet_address_prefix                   = "10.12"
   public_network_access_enabled         = true
-  create_nat                            = true
+  create_nat                            = false
   create_lb                             = false
   managed_vnet                          = false
-  network_security_group_rules_required = "AllRules"
 
   depends_on = [azurerm_resource_group.secure]
 }
