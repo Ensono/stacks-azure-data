@@ -268,7 +268,7 @@ module "adb1" {
   public_subnet_prefix                     = ["10.3.3.0/24"]
   private_subnet_prefix                    = ["10.3.4.0/24"]
   pe_subnet_prefix                         = ["10.3.1.0/24"]
-  public_network_access_enabled            = true
+  public_network_access_enabled            = false
   create_nat                               = false
   create_lb                                = false
   managed_vnet                             = false
