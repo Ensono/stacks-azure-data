@@ -83,6 +83,20 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
   subresource_name   = "sqlServer"
 }
 
+resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
+  name               = var.name_pe_db
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.adb1.adb_databricks_id
+  subresource_name   = "databricks_ui_api"
+}
+
+resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
+  name               = "${var.name_pe_db}_auth"
+  data_factory_id    = module.adf.adf_factory_id
+  target_resource_id = module.adb1.adb_databricks_id
+  subresource_name   = "browser_authentication"
+}
+
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
   role_definition_name = var.kv_role_adf

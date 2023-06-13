@@ -119,6 +119,13 @@ variable "name_pe_sql" {
   description = "Specifies the name for Private endpoint for Azure Sql Server."
 }
 
+variable "name_pe_db" {
+  type        = string
+  default     = "private-databricks"
+  description = "Specifies the name for Private endpoint for Azure Databricks."
+
+}
+
 # Log Analytics workspace Details
 
 variable "la_sku" {
