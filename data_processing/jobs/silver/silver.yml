@@ -53,6 +53,7 @@ variables:
   - name: overrideParameters
     value: "-factoryName $(datafactoryname)
      -adlsStorageAccountName $(blob_adls_storage)
+     -blobStorageAccountName $(blob_configStorage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 

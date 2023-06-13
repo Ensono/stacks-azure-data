@@ -50,6 +50,7 @@ variables:
   - name: overrideParameters
     value: '-factoryName $(datafactoryname)
      -adlsStorageAccountName $(blob_adls_storage)
+     -blobStorageAccountName $(blob_configStorage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
      -ls_AzureSql_ExampleSource_connectionString $(sql_connection)
