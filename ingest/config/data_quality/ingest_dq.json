@@ -10,7 +10,7 @@
             "expectation_suite_name": "SalesLT_product_suite",
             "validation_config": [
                 {
-                    "column_name": "SalesOrderID",
+                    "column_name": "ProductID",
                     "expectations": [
                         {
                             "expectation_type": "expect_column_values_to_not_be_null",

@@ -8,6 +8,9 @@
         "adlsStorageAccountName": {
             "value": "amidostacksdeveuwdeadls"
         },
+        "blobStorageAccountName": {
+            "value": "amidostacksdeveuwdeconfi"
+        },
         "databricksHost": {
             "value": "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
         },
@@ -25,6 +28,9 @@
         },
         "ls_AzureSql_ExampleSource_connectionString": {
             "value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
+        },
+        "enableDataQualityIngest": {
+            "value": "true"
         }
     }
 }
