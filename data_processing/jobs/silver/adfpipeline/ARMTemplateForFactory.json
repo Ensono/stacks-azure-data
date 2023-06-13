@@ -33,7 +33,7 @@
     },
     "resources": [
         {
-            "condition": "[equals(parameters('enableDataQualitySilver'), 'false')]",
+            "condition": "[not(parameters('enableDataQualitySilver'))]",
             "name": "[concat(parameters('factoryName'), '/silver')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -81,7 +81,7 @@
             ]
         },
         {
-            "condition": "[equals(parameters('enableDataQualitySilver'), 'true')]",
+            "condition": "[parameters('enableDataQualitySilver')]",
             "name": "[concat(parameters('factoryName'), '/silver_dq')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
