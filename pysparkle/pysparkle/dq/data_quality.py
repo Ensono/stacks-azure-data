@@ -9,6 +9,7 @@ from pysparkle.dq.data_quality_utils import (
     execute_validations,
 )
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
+from pysparkle.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,8 @@ def data_quality_main(config_path):
         logger.info(f"Checking DQ for datasource: {datasource['datasource_name']}...")
 
         source_type = getattr(spark.read, datasource["datasource_type"])
-        df = source_type(datasource["data_location"])
+        data_location = substitute_env_vars(datasource["data_location"])
+        df = source_type(data_location)
 
         gx_context = create_datasource_context(
             datasource["datasource_name"], dq_conf["gx_directory_path"]
