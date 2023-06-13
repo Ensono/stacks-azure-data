@@ -282,6 +282,12 @@ resource "azurerm_role_assignment" "adb_role" {
   principal_id         = module.adf.adf_managed_identity
 }
 
+resource "azurerm_role_assignment" "adb_role1" {
+  scope                = module.adb1.adb_databricks_id
+  role_definition_name = var.adb_role_adf
+  principal_id         = module.adf.adf_managed_identity
+}
+
 resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
