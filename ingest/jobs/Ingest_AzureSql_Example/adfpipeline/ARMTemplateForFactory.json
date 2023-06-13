@@ -40,8 +40,8 @@
             "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'"
         },
         "enableDataQualityIngest": {
-            "type": "string",
-            "defaultValue": "true"
+            "type": "bool",
+            "defaultValue": true
         }
     },
     "variables": {
@@ -49,7 +49,7 @@
     },
     "resources": [
         {
-            "condition": "[equals(parameters('enableDataQualityIngest'), 'false')]",
+            "condition": "[equals(parameters('enableDataQualityIngest'), false)]",
             "name": "[concat(parameters('factoryName'), '/Ingest_AzureSql_Example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -272,7 +272,7 @@
             ]
         },
         {
-            "condition": "[equals(parameters('enableDataQualityIngest'), 'true')]",
+            "condition": "[equals(parameters('enableDataQualityIngest'), true)]",
             "name": "[concat(parameters('factoryName'), '/Ingest_AzureSql_Example_DQ')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -700,7 +700,7 @@
             ]
         },
         {
-            "condition": "[equals(parameters('enableDataQualityIngest'), 'true')]",
+            "condition": "[equals(parameters('enableDataQualityIngest'), true)]",
             "name": "[concat(parameters('factoryName'), '/ls_Databricks_Small')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
