@@ -19,10 +19,12 @@
             "type": "string",
             "defaultValue": "https://amidostacksdeveuwde.vault.azure.net/"
         },
-        "ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName": {
-            "type": "string",
-            "defaultValue": "AzureSqlExampleAdfConnectionString"
+        "ls_AzureSql_ExampleSource_connectionString": {
+            "type": "secureString",
+            "metadata": "Secure string for 'connectionString' of 'ls_AzureSql_ExampleSource'"
+           
         }
+     
     },
     "variables": {
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
@@ -295,6 +297,32 @@
             ]
         },
         {
+            "name": "[concat(parameters('factoryName'), '/adf-managed-vnet-runtime')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "West Europe",
+                        "dataFlowProperties": {
+                            "computeType": "General",
+                            "coreCount": 8,
+                            "timeToLive": 0,
+                            "cleanup": true
+                        }
+                    }
+                },
+                "managedVirtualNetwork": {
+                    "type": "ManagedVirtualNetworkReference",
+                    "referenceName": "default"
+                }
+            },
+            "dependsOn": [
+
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/ds_ex_AzureSql_ExampleSource')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -323,10 +351,17 @@
                 "annotations": [],
                 "type": "AzureBlobStorage",
                 "typeProperties": {
-                    "serviceEndpoint": "[parameters('ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint')]"
+                    "serviceEndpoint": "[parameters('ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint')]",
+                    "accountKind": "BlobStorage"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+            ]
         },
         {
             "name": "[concat(parameters('factoryName'), '/ls_ADLS_DataLake')]",
@@ -337,9 +372,15 @@
                 "type": "AzureBlobFS",
                 "typeProperties": {
                     "url": "[parameters('ls_ADLS_DataLake_properties_typeProperties_url')]"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+            ]
         },
         {
             "name": "[concat(parameters('factoryName'), '/ls_KeyVault')]",
@@ -363,17 +404,23 @@
                 "annotations": [],
                 "type": "AzureSqlDatabase",
                 "typeProperties": {
-                    "connectionString": {
+                    "connectionString": "[parameters('ls_AzureSql_ExampleSource_connectionString')]",
+                    "password": {
                         "type": "AzureKeyVaultSecret",
                         "store": {
                             "referenceName": "ls_KeyVault",
                             "type": "LinkedServiceReference"
                         },
-                        "secretName": "[parameters('ls_AzureSql_ExampleSource_properties_typeProperties_connectionString_secretName')]"
+                        "secretName": "sql-password"
                     }
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
             "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]",
                 "[concat(variables('factoryId'), '/linkedServices/ls_KeyVault')]"
             ]
         }
