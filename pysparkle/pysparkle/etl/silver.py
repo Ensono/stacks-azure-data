@@ -4,10 +4,10 @@ from pathlib import Path
 
 from pyspark.sql import SparkSession
 
-from pysparkle.adls_utils import (
+from pysparkle.storage_utils import (
     check_env,
     get_adls_file_url,
-    get_directory_contents,
+    get_adls_directory_contents,
     set_spark_properties,
 )
 from pysparkle.config import BRONZE_CONTAINER, SILVER_CONTAINER
@@ -75,7 +75,7 @@ def silver_main(dataset_name):
 
     check_env()
     set_spark_properties(spark)
-    input_paths = get_directory_contents(BRONZE_CONTAINER, dataset_name)
+    input_paths = get_adls_directory_contents(BRONZE_CONTAINER, dataset_name)
     csv_files = filter_csv_files(input_paths)
     save_files_as_delta_tables(spark, csv_files)
 

@@ -7,9 +7,13 @@
             "metadata": "Data Factory name",
             "defaultValue": "amido-stacks-dev-euw-de"
         },
-        "ADLSstorageAccountName": {
+        "adlsStorageAccountName": {
             "type": "string",
             "defaultValue": "amidostacksdeveuwdeadls"
+        },
+        "blobStorageAccountName": {
+            "type": "string",
+            "defaultValue": "amidostacksdeveuwdeconfi"
         },
         "databricksHost": {
             "type": "string",
@@ -20,8 +24,8 @@
             "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
         },
         "enableDataQualitySilver": {
-            "type": "string",
-            "defaultValue": "true"
+            "type": "bool",
+            "defaultValue": true
         }
     },
     "variables": {
@@ -29,7 +33,7 @@
     },
     "resources": [
         {
-            "condition": "[equals(parameters('enableDataQualitySilver'), 'false')]",
+            "condition": "[not(parameters('enableDataQualitySilver'))]",
             "name": "[concat(parameters('factoryName'), '/silver')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -77,7 +81,7 @@
             ]
         },
         {
-            "condition": "[equals(parameters('enableDataQualitySilver'), 'true')]",
+            "condition": "[parameters('enableDataQualitySilver')]",
             "name": "[concat(parameters('factoryName'), '/silver_dq')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -173,7 +177,8 @@
                         "AZURE_CLIENT_SECRET": "{{secrets/key-vault-secret/service-principal-secret}}",
                         "AZURE_CLIENT_ID": "{{secrets/key-vault-secret/azure-client-id}}",
                         "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
-                        "ADLS_ACCOUNT": "[parameters('ADLSstorageAccountName')]",
+                        "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
+                        "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
                         "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",

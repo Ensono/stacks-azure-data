@@ -1,20 +1,20 @@
 """
 Data_quality utility functions to set up validations
 """
-from typing import List, Dict
-from pyspark.sql import DataFrame
+from typing import Dict
 
 from great_expectations.core.batch import RuntimeBatchRequest
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
+from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import (
     ExpectationSuiteValidationResult,
 )
-from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.data_context import BaseDataContext
 from great_expectations.data_context.types.base import (
     DataContextConfig,
     FilesystemStoreBackendDefaults,
 )
+from pyspark.sql import DataFrame
 
 
 def create_datasource_context(datasource_name: str, gx_directory_path: str) -> BaseDataContext:
@@ -23,7 +23,7 @@ def create_datasource_context(datasource_name: str, gx_directory_path: str) -> B
 
     Args:
         datasource_name: Name of the datasource to be validated
-        gx_directory_path: directory to store details of the gx context 
+        gx_directory_path: directory to store details of the gx context
 
     Returns:
         Populated data context instance to which expectations can be added
@@ -90,6 +90,7 @@ def add_expectations_for_columns(
             )
 
     return expectation_suite
+
 
 # TODO: add dataclass object describing required dq_conf dict
 def create_expectation_suite(
