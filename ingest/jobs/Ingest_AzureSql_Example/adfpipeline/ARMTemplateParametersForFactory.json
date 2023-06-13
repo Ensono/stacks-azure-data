@@ -30,7 +30,7 @@
             "value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
         },
         "enableDataQualityIngest": {
-            "value": false
+            "value": true
         }
     }
 }
