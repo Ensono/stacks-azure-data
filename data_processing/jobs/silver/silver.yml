@@ -52,7 +52,8 @@ variables:
     value: "$(self_repo_dir)/$(jobtype)/jobs/$(job)/spark-jobs"
   - name: overrideParameters
     value: "-factoryName $(datafactoryname)
-     -ADLSstorageAccountName $(blob_adls_storage)
+     -adlsStorageAccountName $(blob_adls_storage)
+     -blobStorageAccountName $(blob_configStorage)
      -databricksHost $(databricksHost)
      -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 

@@ -5,6 +5,18 @@
         "factoryName": {
             "value": "amido-stacks-dev-euw-de"
         },
+        "adlsStorageAccountName": {
+            "value": "amidostacksdeveuwdeadls"
+        },
+        "blobStorageAccountName": {
+            "value": "amidostacksdeveuwdeconfi"
+        },
+        "databricksHost": {
+            "value": "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "value": "/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
+        },
         "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
             "value": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
         },
@@ -16,6 +28,9 @@
         },
         "ls_AzureSql_ExampleSource_connectionString": {
             "value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
+        },
+        "enableDataQualityIngest": {
+            "value": true
         }
     }
 }

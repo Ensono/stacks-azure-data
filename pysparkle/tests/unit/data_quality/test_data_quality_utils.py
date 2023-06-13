@@ -1,10 +1,7 @@
-from unittest.mock import patch
-from pathlib import Path
 import shutil
+from pathlib import Path
 
-import pytest
-
-from pysparkle.data_quality.data_quality_utils import *
+from pysparkle.dq.data_quality_utils import *
 
 TEST_GX_DIR = Path(__file__).parent.resolve() / "great_expectations"
 
@@ -28,7 +25,9 @@ TEST_DQ_CONF = {
 
 
 def test_create_datasource_context():
-    context = create_datasource_context(TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"])
+    context = create_datasource_context(
+        TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"]
+    )
     assert context.list_datasources()[0]["name"] == TEST_DQ_CONF["datasource_name"]
     assert (
         list(context.list_datasources()[0]["data_connectors"].keys())[0]
@@ -38,7 +37,9 @@ def test_create_datasource_context():
 
 
 def test_add_expectations_for_columns():
-    context = create_datasource_context(TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"])
+    context = create_datasource_context(
+        TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"]
+    )
     expectation_suite = context.create_expectation_suite(
         expectation_suite_name=TEST_DQ_CONF["expectation_suite_name"],
         overwrite_existing=True,
@@ -55,20 +56,22 @@ def test_add_expectations_for_columns():
 
 
 def test_create_expectation_suite():
-    context = create_datasource_context(TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"])
+    context = create_datasource_context(
+        TEST_DQ_CONF["datasource_name"], TEST_DQ_CONF["gx_directory_path"]
+    )
     assert context.list_expectation_suite_names() == []
-    
+
     context = create_expectation_suite(
         context,
         TEST_DQ_CONF,
     )
 
-    assert context.list_expectation_suite_names() == ['movies_metadata_suite']
-    
-    expectation_suite = context.get_expectation_suite('movies_metadata_suite')
+    assert context.list_expectation_suite_names() == ["movies_metadata_suite"]
+
+    expectation_suite = context.get_expectation_suite("movies_metadata_suite")
     expectation = expectation_suite.to_json_dict()["expectations"]
-    
+
     assert expectation[0]["kwargs"] == {"column": "adult"}
     assert expectation[0]["expectation_type"] == "expect_column_values_to_not_be_null"
-    
+
     shutil.rmtree(TEST_DQ_CONF["gx_directory_path"])
