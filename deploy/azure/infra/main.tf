@@ -268,12 +268,13 @@ module "adb1" {
   # private_subnet_prefix                    = ["10.3.4.0/24"]
   public_subnet_prefix  = ["10.12.0.0/24"]
   private_subnet_prefix = ["10.12.1.0/24"]
+  pe_subnet_prefix      = ["10.12.2.0/24"]
   # vnet_address_prefix                      = "10.3"
   # vnet_address_prefix                   = "10.12"
-  public_network_access_enabled         = true
-  create_nat                            = false
-  create_lb                             = false
-  managed_vnet                          = false
+  public_network_access_enabled = true
+  create_nat                    = false
+  create_lb                     = false
+  managed_vnet                  = false
 
   depends_on = [azurerm_resource_group.secure]
 }
