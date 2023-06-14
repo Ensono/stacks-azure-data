@@ -43,8 +43,8 @@ stages:
 - stage: Release
   variables:
       - group: amido-stacks-infra-credentials-nonprod
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
+      # - name: version_number
+      #   value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
       - job: CreateGitHubRelease
         pool:
@@ -61,6 +61,7 @@ stages:
                 minor=$(version_minor)
                 revision=$(version_revision)
                 echo "Last Tag: NOT Present"
+                echo "$(version_major) ,$(version_minor),$(version_revision) "
               else
                 IFS='.' read -ra versionParts <<< "${lastTag#v}"
                 major="${versionParts[0]}"
