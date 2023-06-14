@@ -6,7 +6,8 @@ pr:
     - 'main'
   paths:
     include:
-      - build/*
+      - build/azDevOps/*
+      - build/taskctl/*
       - deploy/azure/infra/*
 
 trigger:
@@ -15,7 +16,8 @@ trigger:
       - 'main'
   paths:
     include:
-      - build/*
+      - build/azDevOps/*
+      - build/taskctl/*      
       - deploy/azure/infra/*
 variables:
   - template: air-infrastructure-data-vars.yml
