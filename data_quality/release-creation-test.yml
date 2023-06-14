@@ -27,6 +27,7 @@ trigger:
 
 variables:
   - template: ../de_build/job-pipeline-vars.yml
+  - template: ../build/version-data-vars.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
   # - name: job  #update job name
   #   value: 'Generate_Ingest_Query'
@@ -56,27 +57,27 @@ stages:
           - script: |
               lastTag=$(git describe --tags --abbrev=0)
               if [[ -z $lastTag ]]; then
-                version_major=1
-                version_minor=0
-                version_revision=0
+                major=$(version_major)
+                minor=$(version_minor)
+                revision=$(version_revision)
                 echo "Last Tag: NOT Present"
               else
                 IFS='.' read -ra versionParts <<< "${lastTag#v}"
-                version_major="${versionParts[0]}"
-                version_minor="${versionParts[1]}"
-                lastversion_revision="${versionParts[2]}"
-                version_revision=$((lastversion_revision + 1))
+                major="${versionParts[0]}"
+                minor="${versionParts[1]}"
+                lastrevision="${versionParts[2]}"
+                revision=$((lastrevision + 1))
                 echo "Last Tag: $lastTag"
               fi
-              newVersion="v${version_major}.${version_minor}.${version_revision}"
+              newVersion="v${major}.${minor}.${revision}"
               echo "New Version: $newVersion"
-              echo "##vso[task.setvariable variable=newVersion]$version_major"
-              echo "##vso[task.setvariable variable=newVersion]$version_minor"
-              echo "##vso[task.setvariable variable=newVersion]$version_revision"
+              echo "##vso[task.setvariable variable=newVersion]$major"
+              echo "##vso[task.setvariable variable=newVersion]$minor"
+              echo "##vso[task.setvariable variable=newVersion]$revision"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
 
-          # # Create a new tag with the incremented version
+          # Create a new tag with the incremented version
           # - script: |
           #     git config user.name "BuildService"
           #     git config user.email "builder@${COMPANY}.com"
@@ -92,8 +93,7 @@ stages:
           #     repositoryName: $(github_org)/$(self_repo)
           #     tag: ${{ variables.newVersion }}
           #     releaseNotesSource: 'inline'
-          #     releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
+          #     releaseNotesInline: "$(major).$(minor).$(revision)"
           #     tagSource: 'gitTag'
           #     changeLogCompareToRelease: 'lastFullRelease'
           #     changeLogType: 'commitBased'
-
