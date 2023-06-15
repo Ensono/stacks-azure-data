@@ -53,6 +53,7 @@ stages:
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
+            ref: 'refs/heads/main'
 
           - script: |
               lastTag=v1.0.500
@@ -91,13 +92,13 @@ stages:
                 echo " 1---->v$(newVersion)"
                 echo "2--->v${{ variables.newVersion }}"
 
-          # Create a new tag with the incremented version
-          # - script: |
-          #     git config user.name "BuildService"
-          #     git config user.email "builder@${COMPANY}.com"
-          #     git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
-          #     git push origin ${{ variables.newVersion }}
-          #   displayName: Create New Tag
+          Create a new tag with the incremented version
+          - script: |
+              git config user.name "BuildService"
+              git config user.email "builder@${COMPANY}.com"
+              git tag -a v$(newVersion) -m "Release created by Azure DevOps"
+              git push origin v$(newVersion)
+            displayName: Create New Tag
 
           #           # Create a GitHub release with these packages
           # - task: GitHubRelease@1
