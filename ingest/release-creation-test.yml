@@ -56,7 +56,7 @@ stages:
             #ref: 'refs/heads/main'
 
           - script: |
-              lastTag=v1.0.500
+              lastTag=v1.0.501
               if [[ -z $lastTag ]]; then
                 major=$(version_major)
                 minor=$(version_minor)
@@ -79,19 +79,19 @@ stages:
             displayName: Determine New Version
 
 
-          - script: |
-              echo " 1---->v$(newVersion)"
-              echo " 1---->v$(major)"
-              echo "2--->v${{ variables.newVersion }}"
-            displayName: Create New Tag
+          # - script: |
+          #     echo " 1---->v$(newVersion)"
+          #     echo " 1---->v$(major)"
+          #     echo "2--->v${{ variables.newVersion }}"
+          #   displayName: Create New Tag
 
-          - task: Bash@3
-            displayName: Tag Code
-            inputs:
-              targetType: "inline"
-              script: |
-                echo " 1---->v$(newVersion)"
-                echo "2--->v${{ variables.newVersion }}"
+          # - task: Bash@3
+          #   displayName: Tag Code
+          #   inputs:
+          #     targetType: "inline"
+          #     script: |
+          #       echo " 1---->v$(newVersion)"
+          #       echo "2--->v${{ variables.newVersion }}"
 
          # Create a new tag with the incremented version
           # - script: |
