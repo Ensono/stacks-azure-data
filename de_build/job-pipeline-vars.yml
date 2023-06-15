@@ -5,6 +5,8 @@ variables:
     value: core-data
   - name: self_repo
     value: stacks-azure-data
+  - name: company
+    value: amido
 
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
