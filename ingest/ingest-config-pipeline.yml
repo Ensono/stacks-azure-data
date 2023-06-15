@@ -175,7 +175,7 @@ stages:
   jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: "ubuntu-20.04"
+          name: $(agentpool_name)
           #name: $(agentpool_name)
         steps:
           # Check out the repo so that it can be tagged
