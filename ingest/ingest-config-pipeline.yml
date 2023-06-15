@@ -209,8 +209,8 @@ stages:
           # - script: |
           #     git config user.name "BuildService"
           #     git config user.email "builder@${COMPANY}.com"
-          #     git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
-          #     git push origin ${{ variables.newVersion }}
+          #     git tag -a ${newVersion} -m "Release created by Azure DevOps"
+          #     git push origin ${newVersion}
           #   displayName: Create New Tag
 
           - task: Bash@3
@@ -220,8 +220,8 @@ stages:
               script: |
                 git config user.name "BuildService"
                 git config user.email "builder@${COMPANY}.com"
-                git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
-                git push origin ${{ variables.newVersion }}
+                git tag -a ${newVersion} -m "Release created by Azure DevOps"
+                git push origin ${newVersion}
             env:
               COMPANY: $(company)          
 
@@ -231,7 +231,7 @@ stages:
             inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
-              tag: ${{ variables.newVersion }}
+              tag: ${newVersion}
               releaseNotesSource: 'inline'
               releaseNotesInline: "$(major).$(minor).$(revision)"
               tagSource: 'gitTag'
