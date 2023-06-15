@@ -199,9 +199,9 @@ stages:
               fi
               newVersion="${major}.${minor}.${revision}"
               echo "New Version: $newVersion"
-              echo "##vso[task.setvariable variable=newVersion]$major"
-              echo "##vso[task.setvariable variable=newVersion]$minor"
-              echo "##vso[task.setvariable variable=newVersion]$revision"
+              echo "##vso[task.setvariable variable=major]$major"
+              echo "##vso[task.setvariable variable=minor]$minor"
+              echo "##vso[task.setvariable variable=revision]$revision"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
 
@@ -223,7 +223,8 @@ stages:
                 git tag -a v${newVersion} -m "Release created by Azure DevOps"
                 git push origin v${newVersion}
             env:
-              COMPANY: $(company)          
+              COMPANY: $(company)
+              newVersion: $(newVersion)         
 
                     # Create a GitHub release with these packages
           - task: GitHubRelease@1
