@@ -55,7 +55,7 @@ stages:
             persistCredentials: true
 
           - script: |
-              lastTag=$(git tag --sort=-creatordate | head -n 1)
+              lastTag=v1.0.500
               if [[ -z $lastTag ]]; then
                 major=$(version_major)
                 minor=$(version_minor)
@@ -76,6 +76,12 @@ stages:
               echo "##vso[task.setvariable variable=newVersion]$revision"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
+
+
+          - script: |
+              echo v$(newVersion)
+              echo v${{ variables.newVersion }}
+            displayName: Create New Tag
 
           # Create a new tag with the incremented version
           # - script: |
