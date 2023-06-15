@@ -206,12 +206,24 @@ stages:
             displayName: Determine New Version
 
           # Create a new tag with the incremented version
-          - script: |
-              git config user.name "BuildService"
-              git config user.email "builder@${COMPANY}.com"
-              git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
-              git push origin ${{ variables.newVersion }}
-            displayName: Create New Tag
+          # - script: |
+          #     git config user.name "BuildService"
+          #     git config user.email "builder@${COMPANY}.com"
+          #     git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
+          #     git push origin ${{ variables.newVersion }}
+          #   displayName: Create New Tag
+
+          - task: Bash@3
+            displayName: Tag Code
+            inputs:
+              targetType: "inline"
+              script: |
+                git config user.name "BuildService"
+                git config user.email "builder@${COMPANY}.com"
+                git tag -a ${{ variables.newVersion }} -m "Release created by Azure DevOps"
+                git push origin ${{ variables.newVersion }}
+            env:
+              COMPANY: $(company)          
 
                     # Create a GitHub release with these packages
           - task: GitHubRelease@1
