@@ -79,9 +79,17 @@ stages:
 
 
           - script: |
-              echo v$(newVersion)
-              echo v${{ variables.newVersion }}
+              echo " 1---->v$(newVersion)"
+              echo "2--->v${{ variables.newVersion }}"
             displayName: Create New Tag
+
+          - task: Bash@3
+            displayName: Tag Code
+            inputs:
+              targetType: "inline"
+              script: |
+                echo " 1---->v$(newVersion)"
+                echo "2--->v${{ variables.newVersion }}"
 
           # Create a new tag with the incremented version
           # - script: |
