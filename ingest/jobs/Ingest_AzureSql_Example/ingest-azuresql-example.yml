@@ -35,7 +35,7 @@ trigger:
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
-  - template: ../..../build/version-data-vars.yml
+  - template: ../../../build/version-data-vars.yml
   - name: job  #update job name
     value: 'Ingest_AzureSql_Example'
   - name: self_repo_adf_dir
