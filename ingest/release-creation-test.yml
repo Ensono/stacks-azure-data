@@ -53,7 +53,7 @@ stages:
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
-            ref: 'refs/heads/main'
+            #ref: 'refs/heads/main'
 
           - script: |
               lastTag=v1.0.500
