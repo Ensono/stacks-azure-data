@@ -112,6 +112,7 @@ stages:
                 git push origin v${newVersion}
             env:
               COMPANY: $(company) 
+              newVersion: $(newVersion) 
 
           #           # Create a GitHub release with these packages
           - task: GitHubRelease@1
@@ -119,7 +120,7 @@ stages:
             inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
-              tag: ${{ variables.newVersion }}
+              tag: v${newVersion}
               releaseNotesSource: 'inline'
               releaseNotesInline: "$(major).$(minor).$(revision)"
               tagSource: 'gitTag'
