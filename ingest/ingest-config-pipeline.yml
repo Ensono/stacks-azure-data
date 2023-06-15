@@ -183,7 +183,7 @@ stages:
             persistCredentials: true
 
           - script: |
-              lastTag=$(git describe --tags --abbrev=0)
+              lastTag=$(git tag --sort=-creatordate | Select-Object -First 1)
               if [[ -z $lastTag ]]; then
                 major=$(version_major)
                 minor=$(version_minor)
