@@ -56,7 +56,7 @@ stages:
             #ref: 'refs/heads/main'
 
           - script: |
-              lastTag=v1.0.501
+              lastTag=v1.0.502
               if [[ -z $lastTag ]]; then
                 major=$(version_major)
                 minor=$(version_minor)
