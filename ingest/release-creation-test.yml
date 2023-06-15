@@ -101,14 +101,14 @@ stages:
             displayName: Create New Tag
 
           #           # Create a GitHub release with these packages
-          # - task: GitHubRelease@1
-          #   displayName: Create GitHub Release
-          #   inputs:
-          #     gitHubConnection: $(github_release_service_connection)
-          #     repositoryName: $(github_org)/$(self_repo)
-          #     tag: ${{ variables.newVersion }}
-          #     releaseNotesSource: 'inline'
-          #     releaseNotesInline: "$(major).$(minor).$(revision)"
-          #     tagSource: 'gitTag'
-          #     changeLogCompareToRelease: 'lastFullRelease'
-          #     changeLogType: 'commitBased'
+          - task: GitHubRelease@1
+            displayName: Create GitHub Release
+            inputs:
+              gitHubConnection: $(github_release_service_connection)
+              repositoryName: $(github_org)/$(self_repo)
+              tag: ${{ variables.newVersion }}
+              releaseNotesSource: 'inline'
+              releaseNotesInline: "$(major).$(minor).$(revision)"
+              tagSource: 'gitTag'
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
