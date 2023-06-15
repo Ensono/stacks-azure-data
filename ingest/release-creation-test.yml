@@ -92,7 +92,7 @@ stages:
                 echo " 1---->v$(newVersion)"
                 echo "2--->v${{ variables.newVersion }}"
 
-          Create a new tag with the incremented version
+         # Create a new tag with the incremented version
           - script: |
               git config user.name "BuildService"
               git config user.email "builder@${COMPANY}.com"
