@@ -1,15 +1,14 @@
 """
 Data_quality utility functions to set up validations
 """
-from typing import Dict
-
+import great_expectations as gx
 from great_expectations.core.batch import RuntimeBatchRequest
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import (
     ExpectationSuiteValidationResult,
 )
-from great_expectations.data_context import BaseDataContext
+from great_expectations.data_context import AbstractDataContext
 from great_expectations.data_context.types.base import (
     DataContextConfig,
     FilesystemStoreBackendDefaults,
@@ -17,7 +16,7 @@ from great_expectations.data_context.types.base import (
 from pyspark.sql import DataFrame
 
 
-def create_datasource_context(datasource_name: str, gx_directory_path: str) -> BaseDataContext:
+def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:
     """
     Given a string containing the datasource name, this function generates a data context instance
 
@@ -54,7 +53,7 @@ def create_datasource_context(datasource_name: str, gx_directory_path: str) -> B
         store_backend_defaults=FilesystemStoreBackendDefaults(root_directory=root_directory),
     )
 
-    context = BaseDataContext(project_config=data_context_config)
+    context = gx.get_context(project_config=data_context_config)
 
     context.add_datasource(**datasource_config)
 
@@ -63,14 +62,14 @@ def create_datasource_context(datasource_name: str, gx_directory_path: str) -> B
 
 def add_expectations_for_columns(
     expectation_suite: ExpectationSuite,
-    validation_conf: Dict,
+    validation_conf: list,
 ) -> ExpectationSuite:
     """
     Add expectations for columns as defined in the config file.
 
     Args:
         expectation_suite: Existing expectation suite to be added to
-        validation_conf: dict containing details of validators to be added to columns
+        validation_conf: list of validators to be added to columns
 
     Returns:
         Expectation suite with new expectations saved
@@ -93,12 +92,12 @@ def add_expectations_for_columns(
 
 
 # TODO: add dataclass object describing required dq_conf dict
-def create_expectation_suite(
-    context: BaseDataContext,
-    dq_conf: Dict,
-) -> BaseDataContext:
+def add_expectation_suite(
+    context: AbstractDataContext,
+    dq_conf: dict,
+) -> AbstractDataContext:
     """
-    Creates an expectation suite, and adds expectations to it
+    Creates an expectation suite and adds expectations to it.
 
     Args:
         context: Existing expectation suite to be added to
@@ -107,21 +106,22 @@ def create_expectation_suite(
     Returns:
         Data context with expectations suite added
     """
-    expectation_suite = context.create_expectation_suite(
-        expectation_suite_name=dq_conf["expectation_suite_name"],
-        overwrite_existing=True,
+
+    expectation_suite: ExpectationSuite = context.add_or_update_expectation_suite(
+        expectation_suite_name=dq_conf["expectation_suite_name"]
     )
+
     expectation_suite = add_expectations_for_columns(
         expectation_suite, dq_conf["validation_config"]
     )
-    context.save_expectation_suite(expectation_suite)
+    context.update_expectation_suite(expectation_suite)
 
     return context
 
 
 def execute_validations(
-    context: BaseDataContext,
-    dq_conf: Dict,
+    context: AbstractDataContext,
+    dq_conf: dict,
     df: DataFrame,
 ) -> ExpectationSuiteValidationResult:
     """

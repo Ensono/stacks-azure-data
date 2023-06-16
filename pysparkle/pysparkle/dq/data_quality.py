@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.dq.data_quality_utils import (
     create_datasource_context,
-    create_expectation_suite,
+    add_expectation_suite,
     execute_validations,
 )
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
@@ -36,7 +36,7 @@ def data_quality_main(config_path):
             datasource["datasource_name"], dq_conf["gx_directory_path"]
         )
 
-        gx_context = create_expectation_suite(gx_context, datasource)
+        gx_context = add_expectation_suite(gx_context, datasource)
 
         results = execute_validations(gx_context, datasource, df)
 
