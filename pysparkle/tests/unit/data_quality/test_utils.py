@@ -1,3 +1,5 @@
+import pytest
+
 from pysparkle.data_quality.utils import *
 
 
@@ -45,21 +47,18 @@ def test_add_expectation_suite(dq_config, datasource_context):
     assert test_expectations == expectations
 
 
-def test_execute_validations_success(spark, dq_config, datasource_context):
-    data = [("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 1)]
-
+@pytest.mark.parametrize(
+    "data,expected",
+    [
+        ([("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 1)], True),
+        ([("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 4)], False),
+        ([("test_1", 1), (None, 2)], False),
+        ([(123, 1), (234, 2), (345, 3)], False),
+    ],
+)
+def test_execute_validations(spark, dq_config, datasource_context, data, expected):
     df = spark.createDataFrame(data, ["test_column_1", "test_column_2"])
 
     context = add_expectation_suite(datasource_context, dq_config)
     result = execute_validations(context, dq_config, df)
-    assert result["success"] is True
-
-
-def test_execute_validations_fail(spark, dq_config, datasource_context):
-    data = [("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 4)]
-
-    df = spark.createDataFrame(data, ["test_column_1", "test_column_2"])
-
-    context = add_expectation_suite(datasource_context, dq_config)
-    result = execute_validations(context, dq_config, df)
-    assert result["success"] is False
+    assert result["success"] is expected
