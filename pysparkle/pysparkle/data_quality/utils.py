@@ -107,7 +107,7 @@ def add_expectation_suite(
         Data context with expectations suite added
     """
 
-    expectation_suite: ExpectationSuite = context.add_or_update_expectation_suite(
+    expectation_suite = context.add_or_update_expectation_suite(
         expectation_suite_name=dq_conf["expectation_suite_name"]
     )
 

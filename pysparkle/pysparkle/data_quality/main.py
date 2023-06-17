@@ -3,9 +3,9 @@ import logging
 from pyspark.sql import SparkSession
 
 from pysparkle.config import CONFIG_CONTAINER
-from pysparkle.dq.data_quality_utils import (
-    create_datasource_context,
+from pysparkle.data_quality.utils import (
     add_expectation_suite,
+    create_datasource_context,
     execute_validations,
 )
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties

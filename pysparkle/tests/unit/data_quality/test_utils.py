@@ -1,4 +1,4 @@
-from pysparkle.dq.data_quality_utils import *
+from pysparkle.data_quality.utils import *
 
 
 def test_create_datasource_context(dq_config, datasource_context):
@@ -21,14 +21,13 @@ def test_add_expectations_for_columns(dq_config):
     assert expectations[0].kwargs["column"] == "test_column_1"
     assert expectations[1].expectation_type == "expect_column_values_to_be_of_type"
     assert expectations[1].kwargs["column"] == "test_column_1"
-    assert expectations[1].kwargs["type_"] == "string"
+    assert expectations[1].kwargs["type_"] == "StringType"
     assert expectations[2].expectation_type == "expect_column_values_to_be_in_set"
     assert expectations[2].kwargs["column"] == "test_column_2"
     assert expectations[2].kwargs["value_set"] == [1, 2, 3]
 
 
 def test_add_expectation_suite(dq_config, datasource_context):
-
     assert datasource_context.list_expectation_suite_names() == []
 
     context = add_expectation_suite(datasource_context, dq_config)
@@ -46,6 +45,21 @@ def test_add_expectation_suite(dq_config, datasource_context):
     assert test_expectations == expectations
 
 
-def test_execute_validations():
-    # TODO
-    pass
+def test_execute_validations_success(spark, dq_config, datasource_context):
+    data = [("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 1)]
+
+    df = spark.createDataFrame(data, ["test_column_1", "test_column_2"])
+
+    context = add_expectation_suite(datasource_context, dq_config)
+    result = execute_validations(context, dq_config, df)
+    assert result["success"] is True
+
+
+def test_execute_validations_fail(spark, dq_config, datasource_context):
+    data = [("test_1", 1), ("test_2", 2), ("test_3", 3), ("test_4", 4)]
+
+    df = spark.createDataFrame(data, ["test_column_1", "test_column_2"])
+
+    context = add_expectation_suite(datasource_context, dq_config)
+    result = execute_validations(context, dq_config, df)
+    assert result["success"] is False

@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from pysparkle.dq.data_quality_utils import create_datasource_context
+from pysparkle.data_quality.utils import create_datasource_context
 
 
 @fixture
@@ -22,7 +22,7 @@ def dq_config(tmp_path):
                     },
                     {
                         "expectation_type": "expect_column_values_to_be_of_type",
-                        "expectation_kwargs": {"type_": "string"},
+                        "expectation_kwargs": {"type_": "StringType"},
                     },
                 ],
             },
@@ -34,13 +34,15 @@ def dq_config(tmp_path):
                         "expectation_kwargs": {"value_set": [1, 2, 3]},
                     }
                 ],
-            }
-        ]
+            },
+        ],
     }
 
 
 @fixture
-def datasource_context(dq_config):
+def datasource_context(spark, dq_config):
+    # Note: Spark fixture is used to ensure proper Spark session settings. Otherwise, SparkSession
+    # gets created when calling `create_datasource_context`, which doesn't meet test requirements.
     datasource_name = dq_config["datasource_name"]
     gx_directory_path = dq_config["gx_directory_path"]
     context = create_datasource_context(datasource_name, gx_directory_path)
