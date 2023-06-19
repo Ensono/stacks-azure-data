@@ -120,7 +120,7 @@ stages:
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-           - template: ../../../templates/air-infrastructure-data-setup.yml
+           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
