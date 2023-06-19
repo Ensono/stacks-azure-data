@@ -86,7 +86,10 @@ stages:
       runOnce:
         deploy:  
           steps:
-
+           - template: ./build/azDevOps/templates/air-infrastructure-data-setup.yml
+             parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+ 
            - task: DownloadPipelineArtifact@2
              displayName: Download Build Artifacts
              inputs:
