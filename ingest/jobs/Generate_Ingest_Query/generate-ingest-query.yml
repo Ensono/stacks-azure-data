@@ -120,9 +120,9 @@ stages:
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-   #        - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-   #          parameters:
-   #           TaskctlVersion: ${{ variables.TaskctlVersion }}
+           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+             parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
 
            - task: Bash@3
              displayName: "TaskCTL: Setup"
