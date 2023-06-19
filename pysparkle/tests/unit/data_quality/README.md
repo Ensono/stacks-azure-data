@@ -1,14 +1,17 @@
 # Usage
 
 ```bash
+pysparkle data-quality --help
 pysparkle data-quality --config-path "data_quality/silver_dq.json"
 ```
+
+`config-path` is a Path to a JSON config inside an Azure Blob container. The container name
+for storing configurations is `config` and it is defined in the configuration set in the pysparkle
+package.
 
 Azure Blob storage account name is expected to be set in an environment variable as explained
 in the main README file. 
 
-The container name for storing configurations is `config` and it is defined in the configuration
-set inside the pysparkle package.
 
 # JSON Configuration File for Great Expectations
 This section describes the structure of the JSON configuration file used in our system.
