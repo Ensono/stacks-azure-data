@@ -85,11 +85,7 @@ stages:
     strategy:
       runOnce:
         deploy:  
-          steps:
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
- 
+          steps: 
            - task: DownloadPipelineArtifact@2
              displayName: Download Build Artifacts
              inputs:
@@ -124,14 +120,7 @@ stages:
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-
-           - task: Bash@3
-             displayName: "TaskCTL: Setup"
-             inputs:
-              targetType: inline
-              script: taskctl setup
-             env:
-              DOCKER_IMAGE_TAG: $(version_number)
+              
            - task: Bash@3
              displayName: "TaskCTL: Lint"
              inputs:
