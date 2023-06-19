@@ -15,6 +15,8 @@ from great_expectations.data_context.types.base import (
 )
 from pyspark.sql import DataFrame
 
+from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
+
 
 def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:
     """
@@ -62,28 +64,27 @@ def create_datasource_context(datasource_name: str, gx_directory_path: str) -> A
 
 def add_expectations_for_columns(
     expectation_suite: ExpectationSuite,
-    validation_conf: list,
+    validation_conf: list[ValidationConfig],
 ) -> ExpectationSuite:
-    """
-    Add expectations for columns as defined in the config file.
+    """Add expectations for columns as defined in the config file.
 
     Args:
-        expectation_suite: Existing expectation suite to be added to
-        validation_conf: list of validators to be added to columns
+        expectation_suite: Existing expectation suite to be added to.
+        validation_conf: List of validators to be added to columns.
 
     Returns:
-        Expectation suite with new expectations saved
+        Expectation suite with new expectations saved.
     """
 
     for column in validation_conf:
-        column_name = column["column_name"]
-        for expectation in column["expectations"]:
+        column_name = column.column_name
+        for expectation in column.expectations:
             expectation_suite.add_expectation(
                 ExpectationConfiguration(
-                    expectation_type=expectation["expectation_type"],
+                    expectation_type=expectation.expectation_type,
                     kwargs={
                         **{"column": column_name},
-                        **expectation["expectation_kwargs"],
+                        **expectation.expectation_kwargs,
                     },
                 )
             )
@@ -91,29 +92,25 @@ def add_expectations_for_columns(
     return expectation_suite
 
 
-# TODO: add dataclass object describing required dq_conf dict
 def add_expectation_suite(
     context: AbstractDataContext,
-    dq_conf: dict,
+    dq_conf: DatasourceConfig,
 ) -> AbstractDataContext:
-    """
-    Creates an expectation suite and adds expectations to it.
+    """Creates an expectation suite and adds expectations to it.
 
     Args:
-        context: Existing expectation suite to be added to
-        dq_conf: dict containing details of validators to be added to column
+        context: Existing expectation suite to be added to.
+        dq_conf: Details of validators to be added to column.
 
     Returns:
-        Data context with expectations suite added
+        Data context with expectations suite added.
     """
 
     expectation_suite = context.add_or_update_expectation_suite(
-        expectation_suite_name=dq_conf["expectation_suite_name"]
+        expectation_suite_name=dq_conf.expectation_suite_name
     )
 
-    expectation_suite = add_expectations_for_columns(
-        expectation_suite, dq_conf["validation_config"]
-    )
+    expectation_suite = add_expectations_for_columns(expectation_suite, dq_conf.validation_config)
     context.update_expectation_suite(expectation_suite)
 
     return context
@@ -121,25 +118,25 @@ def add_expectation_suite(
 
 def execute_validations(
     context: AbstractDataContext,
-    dq_conf: dict,
+    dq_conf: DatasourceConfig,
     df: DataFrame,
 ) -> ExpectationSuiteValidationResult:
     """
     Given a Great Expectations data context, the relevant config, and a dataframe containing the
-    data to be validated, this function runs the validations and returns the result
+    data to be validated, this function runs the validations and returns the result.
 
     Args:
-        context: Great Expectations data context object
-        dq_conf: Dict containing the required config for validation
-        df: Dataframe to be validated
+        context: Great Expectations data context object.
+        dq_conf: The required configuration for validation.
+        df: Dataframe to be validated.
 
     Returns:
-        Validation Result for the applied expectation suite
+        Validation Result for the applied expectation suite.
     """
     batch_request = RuntimeBatchRequest(
-        datasource_name=f"{dq_conf['datasource_name']}",
-        data_connector_name=f"{dq_conf['datasource_name']}_data_connector",
-        data_asset_name=f"{dq_conf['datasource_name']}",
+        datasource_name=f"{dq_conf.datasource_name}",
+        data_connector_name=f"{dq_conf.datasource_name}_data_connector",
+        data_asset_name=f"{dq_conf.datasource_name}",
         batch_identifiers={
             "batch_name": "latest_batch",
         },
@@ -147,7 +144,7 @@ def execute_validations(
     )
     validator = context.get_validator(
         batch_request=batch_request,
-        expectation_suite_name=dq_conf["expectation_suite_name"],
+        expectation_suite_name=dq_conf.expectation_suite_name,
     )
     gx_validation_results = validator.validate()
 

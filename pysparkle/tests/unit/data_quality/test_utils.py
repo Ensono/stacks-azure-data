@@ -4,16 +4,17 @@ from pysparkle.data_quality.utils import *
 
 
 def test_create_datasource_context(dq_config, datasource_context):
-    assert datasource_context.list_datasources()[0]["name"] == dq_config["datasource_name"]
+    datasource_name = dq_config.datasource_config[0].datasource_name
+    assert datasource_context.list_datasources()[0]["name"] == datasource_name
     assert (
         list(datasource_context.list_datasources()[0]["data_connectors"].keys())[0]
-        == f'{dq_config["datasource_name"]}_data_connector'
+        == f"{datasource_name}_data_connector"
     )
 
 
 def test_add_expectations_for_columns(dq_config):
     expectation_suite = ExpectationSuite(expectation_suite_name="test_suite")
-    validation_config = dq_config["validation_config"]
+    validation_config = dq_config.datasource_config[0].validation_config
 
     expectation_suite = add_expectations_for_columns(expectation_suite, validation_config)
     expectations = expectation_suite.expectations
@@ -32,8 +33,8 @@ def test_add_expectations_for_columns(dq_config):
 def test_add_expectation_suite(dq_config, datasource_context):
     assert datasource_context.list_expectation_suite_names() == []
 
-    context = add_expectation_suite(datasource_context, dq_config)
-    expected_suite_name = dq_config["expectation_suite_name"]
+    context = add_expectation_suite(datasource_context, dq_config.datasource_config[0])
+    expected_suite_name = dq_config.datasource_config[0].expectation_suite_name
 
     assert context.list_expectation_suite_names() == [expected_suite_name]
 
@@ -41,7 +42,7 @@ def test_add_expectation_suite(dq_config, datasource_context):
     expectations = expectation_suite.expectations
 
     test_suite = ExpectationSuite(expectation_suite_name="test_suite")
-    test_config = dq_config["validation_config"]
+    test_config = dq_config.datasource_config[0].validation_config
     test_suite = add_expectations_for_columns(test_suite, test_config)
     test_expectations = test_suite.expectations
     assert test_expectations == expectations
@@ -59,6 +60,6 @@ def test_add_expectation_suite(dq_config, datasource_context):
 def test_execute_validations(spark, dq_config, datasource_context, data, expected):
     df = spark.createDataFrame(data, ["test_column_1", "test_column_2"])
 
-    context = add_expectation_suite(datasource_context, dq_config)
-    result = execute_validations(context, dq_config, df)
+    context = add_expectation_suite(datasource_context, dq_config.datasource_config[0])
+    result = execute_validations(context, dq_config.datasource_config[0], df)
     assert result["success"] is expected
