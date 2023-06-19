@@ -120,7 +120,17 @@ stages:
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-              
+           - template: ../../../templates/air-infrastructure-data-setup.yml
+             parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+           - task: Bash@3
+             displayName: "TaskCTL: Setup"
+             inputs:
+              targetType: inline
+              script: taskctl setup
+             env:
+              DOCKER_IMAGE_TAG: $(version_number)   
            - task: Bash@3
              displayName: "TaskCTL: Lint"
              inputs:
