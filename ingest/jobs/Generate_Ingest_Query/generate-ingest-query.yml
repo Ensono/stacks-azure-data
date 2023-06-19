@@ -37,6 +37,7 @@ trigger:
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
+  - template: ../../../build/version-data-vars.yml
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
   - name: self_repo_adf_dir
@@ -324,8 +325,8 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
   variables:
       - group: amido-stacks-infra-credentials-nonprod
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
+      # - name: version_number
+      #   value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
       - job: CreateGitHubRelease
         pool:
@@ -335,7 +336,37 @@ stages:
           - checkout: self
             persistCredentials: true
 
-          # Create a tag in the code for this release
+          - script: |
+              lastTag=$(git tag --sort=-creatordate | head -n 1)
+              if [[ -z $lastTag ]]; then
+                major=$(version_major)
+                minor=$(version_minor)
+                revision=$(version_revision)
+                echo "Last Tag: NOT Present"
+              else
+                IFS='.' read -ra versionParts <<< "${lastTag#v}"
+                major="${versionParts[0]}"
+                minor="${versionParts[1]}"
+                lastrevision="${versionParts[2]}"
+                revision=$((lastrevision + 1))
+                echo "Last Tag: $lastTag"
+              fi
+              newVersion="${major}.${minor}.${revision}"
+              echo "New Version: $newVersion"
+              echo "##vso[task.setvariable variable=major]$major"
+              echo "##vso[task.setvariable variable=minor]$minor"
+              echo "##vso[task.setvariable variable=revision]$revision"
+              echo "##vso[task.setvariable variable=newVersion]$newVersion"
+            displayName: Determine New Version
+
+          # Create a new tag with the incremented version
+          # - script: |
+          #     git config user.name "BuildService"
+          #     git config user.email "builder@${COMPANY}.com"
+          #     git tag -a ${newVersion} -m "Release created by Azure DevOps"
+          #     git push origin ${newVersion}
+          #   displayName: Create New Tag
+
           - task: Bash@3
             displayName: Tag Code
             inputs:
@@ -343,20 +374,21 @@ stages:
               script: |
                 git config user.name "BuildService"
                 git config user.email "builder@${COMPANY}.com"
-                git tag -a v${VERSION_NUMBER} -m "Release created by Azure DevOps"
-                git push origin v${VERSION_NUMBER}
+                git tag -a v${newVersion} -m "Release created by Azure DevOps"
+                git push origin v${newVersion}
             env:
               COMPANY: $(company)
+              newVersion: $(newVersion)         
 
-          # Create a GitHub release with these packages
+                    # Create a GitHub release with these packages
           - task: GitHubRelease@1
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
-              tag: v${VERSION_NUMBER}
+              tag: v${newVersion}
               releaseNotesSource: 'inline'
-              releaseNotesInline: "$(version_major).$(version_minor).$(version_revision)"
+              releaseNotesInline: "$(major).$(minor).$(revision)"
               tagSource: 'gitTag'
               changeLogCompareToRelease: 'lastFullRelease'
               changeLogType: 'commitBased'
