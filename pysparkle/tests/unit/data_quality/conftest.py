@@ -9,7 +9,6 @@ def dq_config(tmp_path) -> Config:
     gx_directory_path = str(tmp_path)
 
     json_config = {
-        "container_name": "test_container",
         "gx_directory_path": gx_directory_path,
         "dataset_name": "movies_dataset",
         "datasource_config": [

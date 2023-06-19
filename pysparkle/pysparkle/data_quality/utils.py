@@ -24,7 +24,7 @@ def create_datasource_context(datasource_name: str, gx_directory_path: str) -> A
 
     Args:
         datasource_name: Name of the datasource to be validated
-        gx_directory_path: directory to store details of the gx context
+        gx_directory_path: Directory to store details of the gx context.
 
     Returns:
         Populated data context instance to which expectations can be added
