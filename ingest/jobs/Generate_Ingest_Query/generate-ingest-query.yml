@@ -63,6 +63,27 @@ stages:
      parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
+   - task: Bash@3
+     displayName: "TaskCTL: Setup"
+     inputs:
+     targetType: inline
+     script: taskctl setup
+     env:
+       DOCKER_IMAGE_TAG: $(version_number)
+   - task: Bash@3
+     displayName: "TaskCTL: Lint"
+     inputs:
+              targetType: inline
+              script: taskctl lint
+     env:
+              # Dotnet Build
+              SELF_REPO_SRC: $(self_repo_src)
+              CLOUD_PROVIDER: "$(cloud_provider)"
+              ARM_TENANT_ID: "$(azure-tenant-id)"
+              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
+              ARM_CLIENT_ID: "$(azure-client-id)"
+              ARM_CLIENT_SECRET: "$(azure-client-secret)"
+              TF_FILE_LOCATION: "$(self_repo_adf_dir)"
 
 #############################################################
 # Deploy to non Prod
@@ -121,17 +142,33 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-           - task: AzureResourceManagerTemplateDeployment@3
-             displayName: 'ARM Template deployment: Resource Group scope'
+           - task: Bash@3
+             displayName: "TaskCTL: Lint"
              inputs:
-                azureResourceManagerConnection: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-                subscriptionId: '$(azure_subscription_id)'
-                resourceGroupName: $(resource_group)
-                location: $(region)
-                csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
-                csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname)
-                deploymentMode: 'Incremental'
+              targetType: inline
+              script: taskctl infrastructure
+             env:
+              # Dotnet Build
+              SELF_REPO_SRC: $(self_repo_src)
+              CLOUD_PROVIDER: "$(cloud_provider)"
+              ARM_TENANT_ID: "$(azure-tenant-id)"
+              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
+              ARM_CLIENT_ID: "$(azure-client-id)"
+              ARM_CLIENT_SECRET: "$(azure-client-secret)"
+              TF_FILE_LOCATION: "$(self_repo_adf_dir)"
+              ENV_NAME: $(Environment.ShortName)
+                    # Azure Authentication
+                    # Terraform Backend Configuration
+              TF_STATE_CONTAINER: $(tf_state_container)
+              TF_STATE_KEY: $(tf_state_key_dev)
+              TF_STATE_RG: $(tf_state_rg)
+              TF_STATE_STORAGE: $(tf_state_storage)
+              TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    # Deployment Specific Configuration
+
+
+              
+          
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
