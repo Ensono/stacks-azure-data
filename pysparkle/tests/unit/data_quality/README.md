@@ -32,7 +32,7 @@ Here is the description of the main elements:
        - `expectation_type`: Name of the Great Expectations expectation class to use.
        - `expectation_kwargs`: The keyword arguments to pass to the expectation class.
 
-## Example
+## Examples
 Here's a minimal example of a configuration file:
 ```json
 {
@@ -63,3 +63,11 @@ Here's a minimal example of a configuration file:
     ]
 }
 ```
+
+### Data location for ADLS files
+In order to validate data stored in ADLS, you need to provide the full path to a given data asset, e.g.:
+
+`"data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"`
+
+> ℹ️ It is possible to use environment variables as in the example above. Placeholders in the form
+> {ENV_VAR_NAME} will be replaced with the corresponding environment variable values.
