@@ -70,10 +70,11 @@ Here's a minimal example of a configuration file:
 }
 ```
 
-### Data location for ADLS files
-In order to validate data stored in ADLS, you need to provide the full path to a given data asset, e.g.:
+### Using environment variables in configuration files
+It is possible to use environment variables in a configuration file for Data Quality.
+Placeholders in the form of {ENV_VAR_NAME} will be replaced with the corresponding environment
+variable values. For example, you can pass the ADLS name using an environment variable:
 
-`"data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"`
-
-> ℹ️ It is possible to use environment variables as in the example above. Placeholders in the form
-> {ENV_VAR_NAME} will be replaced with the corresponding environment variable values.
+```
+"data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"
+```
