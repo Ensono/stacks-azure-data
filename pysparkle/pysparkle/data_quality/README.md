@@ -27,8 +27,10 @@ Here is the description of the main elements:
     3. `data_location`: Location of the given data asset. It can either be a path to the data file
     or a fully qualified table name, depending on the data source. Expectations for each scenario:
         - **File Path**: If the data is stored in a file, like a Parquet file on ADLS, you should
-        provide the complete path to the file. For example,
-        `"adls://accountname.dfs.core.windows.net/myfolder/mysubfolder/myfile.parquet"`.
+        provide the complete path to the file. Examples:
+            - `"abfss://raw@accountname.dfs.core.windows.net/myfolder/mysubfolder/myfile.parquet"`,
+            - `"abfss://raw@accountname.dfs.core.windows.net/myfolder/mysubfolder/*"`,
+            - `"abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*"`.
         - **Table Name**: For tables with metadata managed by a data catalog, you should provide
         the database schema and the table name. For example, `staging.table_name`.
     4. `expectation_suite_name`: Name of the expectation suite associated with this data source.
