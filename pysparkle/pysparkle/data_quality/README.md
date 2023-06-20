@@ -22,15 +22,21 @@ Here is the description of the main elements:
 1. `gx_directory_path`: Path to the Great Expectations metadata store.
 2. `dataset_name`: Name of the dataset that is being processed.
 3. `datasource_config`: List of datasource configurations where each configuration contains the following fields:
-   - `datasource_name`: Name of the data asset, e.g., table or file name.
-   - `datasource_type`: Source system type, e.g., table, parquet, csv. 
-   - `data_location`: Path to the given data asset or a fully qualified table name.
-   - `expectation_suite_name`: Name of the expectation suite associated with this data source.
-   - `validation_config`: A list of validation configurations where each configuration contains the following fields:
-     - `column_name`: Name of the validated column. 
-     - `expectations`: List of expectations where each expectation has the following fields:
-       - `expectation_type`: Name of the Great Expectations expectation class to use.
-       - `expectation_kwargs`: The keyword arguments to pass to the expectation class.
+    1. `datasource_name`: Name of the data asset, e.g., table or file name.
+    2. `datasource_type`: Source system type that Spark can read from, e.g. table, parquet, csv.
+    3. `data_location`: Location of the given data asset. It can either be a path to the data file
+    or a fully qualified table name, depending on the data source. Expectations for each scenario:
+        - **File Path**: If the data is stored in a file, like a Parquet file on ADLS, you should
+        provide the complete path to the file. For example,
+        `"adls://accountname.dfs.core.windows.net/myfolder/mysubfolder/myfile.parquet"`.
+        - **Table Name**: For tables with metadata managed by a data catalog, you should provide
+        the database schema and the table name. For example, `staging.table_name`.
+    4. `expectation_suite_name`: Name of the expectation suite associated with this data source.
+    5. `validation_config`: A list of validation configurations where each configuration contains the following fields:
+        1. `column_name`: Name of the validated column. 
+        2. `expectations`: List of expectations where each expectation has the following fields:
+        3. `expectation_type`: Name of the Great Expectations expectation class to use.
+        4. `expectation_kwargs`: The keyword arguments to pass to the expectation class.
 
 ## Examples
 Here's a minimal example of a configuration file:
