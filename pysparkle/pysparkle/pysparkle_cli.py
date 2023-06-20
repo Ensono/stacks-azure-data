@@ -4,7 +4,7 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from pysparkle.dq.data_quality import data_quality_main
+from pysparkle.data_quality.main import data_quality_main
 from pysparkle.etl.gold import gold_main
 from pysparkle.etl.silver import silver_main
 from pysparkle.logger import setup_logger

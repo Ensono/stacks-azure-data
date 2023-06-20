@@ -12,7 +12,7 @@ def find_placeholders(input_str: str) -> list[str]:
     Returns:
         A list of all found placeholders.
     """
-    return re.findall(r'\{(.+?)\}', input_str)
+    return re.findall(r"\{(.+?)\}", input_str)
 
 
 def substitute_env_vars(input_str: str) -> str:

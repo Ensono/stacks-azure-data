@@ -15,7 +15,7 @@ pysparkle --help
 pysparkle silver --help
 pysparkle silver --dataset-name=movies_dataset
 pysparkle --log-level=warning silver --dataset-name=movies_dataset
-pysparkle gold --partitions 4
+pysparkle data-quality --config-path "data_quality/silver_dq.json"
 ```
 
 ## Using an entrypoint script
@@ -25,7 +25,7 @@ python pysparkle_cli.py --help
 python pysparkle_cli.py silver --help
 python pysparkle_cli.py silver --dataset-name=movies_dataset
 python pysparkle_cli.py --log-level=warning silver --dataset-name=movies_dataset
-python pysparkle_cli.py gold --partitions 4
+python pysparkle_cli.py data-quality --config-path "data_quality/silver_dq.json"
 ```
 
 # Build
@@ -64,13 +64,7 @@ Example setup for running PySparkle from ADF.
                 "name": "Silver",
                 "type": "DatabricksSparkPython",
                 "dependsOn": [],
-                "policy": {
-                    "timeout": "0.12:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
+                "policy": {},
                 "userProperties": [],
                 "typeProperties": {
                     "pythonFile": "dbfs:/FileStore/scripts/pysparkle_cli.py",
