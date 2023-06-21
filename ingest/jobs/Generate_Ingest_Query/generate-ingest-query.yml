@@ -41,7 +41,7 @@ variables:
   - name: job  #update job name
     value: 'Generate_Ingest_Query'
   - name: self_repo_adf_dir
-    value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
+    value: "$(self_repo_dir)/stacks-azure-data/ingest/jobs/$(job)/adfpipeline"
   - name: test_unit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
   - name: test_end_to_end_path
