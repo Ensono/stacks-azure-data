@@ -138,27 +138,25 @@ stages:
                script: taskctl lint
              env:
               # Dotnet Build
-              SELF_REPO_SRC: $(self_repo_src)
               CLOUD_PROVIDER: "$(cloud_provider)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "$(System.DefaultWorkingDirectory)/ArmTemplates"
+              TF_FILE_LOCATION: /agent/_work/1/s/ArmTemplates
            - task: Bash@3
-             displayName: "TaskCTL: Lint"
+             displayName: "TaskCTL: infrastructure"
              inputs:
               targetType: inline
               script: taskctl infrastructure
              env:
               # Dotnet Build
-              SELF_REPO_SRC: $(self_repo_src)
               CLOUD_PROVIDER: "$(cloud_provider)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "$(System.DefaultWorkingDirectory)/ArmTemplates"
+              TF_FILE_LOCATION: /agent/_work/1/s/ArmTemplates
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
