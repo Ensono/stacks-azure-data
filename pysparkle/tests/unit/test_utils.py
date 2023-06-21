@@ -5,11 +5,7 @@ import pytest
 from pysparkle.utils import *
 
 
-TEST_ENV_VARS = {
-    "TEST_VAR1": "value1",
-    "TEST_VAR2": "value2",
-    "ADLS_ACCOUNT": "value3"
-}
+TEST_ENV_VARS = {"TEST_VAR1": "value1", "TEST_VAR2": "value2", "ADLS_ACCOUNT": "value3"}
 
 
 @pytest.mark.parametrize(
