@@ -4,10 +4,10 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from pysparkle.gold import gold_main
+from pysparkle.data_quality.main import data_quality_main
+from pysparkle.etl.gold import gold_main
+from pysparkle.etl.silver import silver_main
 from pysparkle.logger import setup_logger
-from pysparkle.silver import silver_main
-from pysparkle.data_quality.data_quality import data_quality_main
 
 
 @click.group()
@@ -26,7 +26,8 @@ def silver(dataset_name):
     - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
     - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,
     - AZURE_CLIENT_SECRET - Service Principal Secret,
-    - ADLS_ACCOUNT - ADLS account name.
+    - ADLS_ACCOUNT - ADLS account name,
+    - BLOB_ACCOUNT - Blob Storage account name.
     """
     silver_main(dataset_name)
 
@@ -39,9 +40,9 @@ def gold(partitions):
 
 
 @click.command()
-@click.option("--config_path")
+@click.option("--config-path", help="Path to a JSON config inside an Azure Blob container.")
 def data_quality(config_path):
-    """Data Quality Checking."""
+    """Data Quality check."""
     data_quality_main(config_path)
 
 

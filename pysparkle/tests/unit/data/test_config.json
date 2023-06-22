@@ -1,4 +1,5 @@
 {
+    "container_name": "staging",
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "movies_dataset",
     "datasource_config": [
