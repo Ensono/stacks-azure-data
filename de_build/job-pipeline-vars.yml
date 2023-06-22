@@ -17,6 +17,16 @@ variables:
     value: "$(Agent.BuildDirectory)/s"
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
+    - name: tf_state_rg
+    value: Stacks-Ancillary-Resources
+  - name: tf_state_storage
+    value: amidostackstfstate
+  - name: tf_state_container
+    value: tfstate
+  - name: TaskctlVersion
+    value: 1.4.2
+  # - name: pool_vm_image
+  #   value: ubuntu-20.04
   
 
 
