@@ -54,20 +54,6 @@ python pysparkle_cli.py --log-level=warning silver --dataset-name=movies_dataset
 python pysparkle_cli.py data-quality --config-path "data_quality/silver_dq.json"
 ```
 
-## Build
-Use the following command to build a Python wheel (by default saved to `dist` directory).
-
-```bash
-poetry build
-```
-
-## Install
-Please replace the version as required.
-
-```bash
-pip install dist/pysparkle-0.1.1-py3-none-any.whl
-```
-
 ## Prerequisites
 Spark runs on Java 8/11/17, Java 8 prior to version 8u362 support is deprecated
 as of Spark 3.4.0. For details see: https://spark.apache.org/docs/latest/.
