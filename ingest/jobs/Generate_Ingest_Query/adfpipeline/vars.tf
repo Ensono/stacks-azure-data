@@ -1,6 +1,6 @@
 variable "data_factory" {
   type        = string
-  default     = "amido-stacks-dev-euw-rs"
+  default     = "amido-stacks-dev-euw-de"
   description = "value"
 }
 
