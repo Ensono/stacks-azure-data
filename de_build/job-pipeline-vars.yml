@@ -17,7 +17,7 @@ variables:
     value: "$(Agent.BuildDirectory)/s"
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
-    - name: tf_state_rg
+  - name: tf_state_rg
     value: Stacks-Ancillary-Resources
   - name: tf_state_storage
     value: amidostackstfstate
