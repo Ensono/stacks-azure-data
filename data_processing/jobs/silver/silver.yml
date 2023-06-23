@@ -185,7 +185,7 @@ stages:
               targetType: inline
               script: taskctl setup
              env:
-             DOCKER_IMAGE_TAG: $(version_number)   
+              DOCKER_IMAGE_TAG: $(version_number)   
            - task: Bash@3
              displayName: "TaskCTL: Lint"
              inputs:
