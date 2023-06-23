@@ -25,7 +25,7 @@ variable "blobStorageAccountName" {
 
 variable "databricksHost" {
   type        = string
-  default     = "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
+  default     = "aaaa"   #"https://adb-XXXXXXXXXXXX.azuredatabricks.net"
   description = "Databricks Host url id"
 }
 
