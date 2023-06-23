@@ -33,6 +33,38 @@ transformations from Bronze to Silver layer and from Silver to Gold layer, respe
 ## Repository structure
 ```
 stacks-azure-data
+├── build # Resources for building and deploying the solution (Azure DevOps pipelines)
+├── data_processing
+│   ├── config # Configuration files
+│   ├── jobs
+│   │   ├── gold
+│   │   ├── silver
+├── de_build
+├── deploy
+├── docs
+├── ingest
+│   ├── config # Configuration files used by ETL and DQ processes (uploaded to blob storage)
+│   ├── jobs
+│   │   ├── silver
+├── pysparkle # Python library built to streamline data processing; packaged and uploaded to DBFS
+├── utils # Utilities Python package used across solution for local testing
+├── docs # Documentation
+├── infra # TF modules to deploy core Azure resources
+├── tests #
+│   ├── e2e # End-to-end tests (pytest, behave)
+│   ├── integration # Integration tests (pytest, behave)
+|   ├── unit # Unit tests (pytest)
+
+├── .flake8 # Configuration for Flake8 linting
+├── .pre-commit-config.yaml # Configuration for pre-commit
+├── Makefile # Includes commands for environment setup
+├── pyproject.toml # Configuration for Poetry, Black
+└── README.md # This file.
+```
+
+
+```
+stacks-azure-data
 ├── build # Resources for building and deploying the solution (ADO pipelines)
 ├── config # Config files which will be uploaded to blob storage and used by ETL processes (JSON)
 │   ├── schemas # JSON schemas for config files
