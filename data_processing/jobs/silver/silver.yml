@@ -84,7 +84,7 @@ stages:
           script: |
                    echo "Cleaning workspace..."
                    sudo rm -rf $(Build.SourcesDirectory)/*
-      - template: ../templates/air-infrastructure-data-setup.yml
+      - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
         parameters:
           TaskctlVersion: ${{ variables.TaskctlVersion }}
       - task: Bash@3
