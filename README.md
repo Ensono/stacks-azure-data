@@ -33,55 +33,27 @@ transformations from Bronze to Silver layer and from Silver to Gold layer, respe
 ## Repository structure
 ```
 stacks-azure-data
-├── build # Resources for building and deploying the solution (Azure DevOps pipelines)
-├── data_processing
-│   ├── config # Configuration files
-│   ├── jobs
-│   │   ├── gold
-│   │   ├── silver
-├── de_build
-├── deploy
-├── docs
-├── ingest
+├── build # Azure DevOps pipelines configuration for building and deploying the core infrastructure
+├── data_processing # Azure Data Factory ETL pipelines, leveraging Databricks for data transformations
+│   ├── config # Configuration files (uploaded to blob storage)
+│   ├── jobs # Data processing pipelines with optional Data Quality checks
+│   │   ├── gold # Bronze to Silver layer transformations 
+│   │   ├── silver # Silver to Gold layer transformations
+├── de_build # Azure DevOps pipelines configuration for building and deploying ADF pipelines
+├── deploy # TF modules to deploy core Azure resources (used by `build` directory)
+├── docs # Documentation
+├── ingest # Pipeline utilizing ADF for data ingestion, with optional Data Quality checks performed in Databricks
 │   ├── config # Configuration files used by ETL and DQ processes (uploaded to blob storage)
 │   ├── jobs
-│   │   ├── silver
+│   │   ├── Generate_Ingest_Query # Helper utility used in the ingestion pipeline
+│   │   ├── Get_Ingest_Config # Helper utility used in the ingestion pipeline
+│   │   ├── Ingest_AzureSql_Example # Data ingestion pipeline with optional Data Quality checks
 ├── pysparkle # Python library built to streamline data processing; packaged and uploaded to DBFS
-├── utils # Utilities Python package used across solution for local testing
-├── docs # Documentation
-├── infra # TF modules to deploy core Azure resources
-├── tests #
-│   ├── e2e # End-to-end tests (pytest, behave)
-│   ├── integration # Integration tests (pytest, behave)
-|   ├── unit # Unit tests (pytest)
-
+├── utils # Python utilities package used across solution for local testing
 ├── .flake8 # Configuration for Flake8 linting
-├── .pre-commit-config.yaml # Configuration for pre-commit
+├── .pre-commit-config.yaml # Configuration for pre-commit hooks
 ├── Makefile # Includes commands for environment setup
-├── pyproject.toml # Configuration for Poetry, Black
-└── README.md # This file.
-```
-
-
-```
-stacks-azure-data
-├── build # Resources for building and deploying the solution (ADO pipelines)
-├── config # Config files which will be uploaded to blob storage and used by ETL processes (JSON)
-│   ├── schemas # JSON schemas for config files
-├── data_factory # Azure Data Factory resources
-│   ├── adf_managed # Path is managed by development Azure Data Factory - JSON configuration
-│   ├── deployment # Utilities for deploying Azure Data Factory resources
-├── docs # Documentation
-├── infra # TF modules to deploy core Azure resources
-├── tests #
-│   ├── e2e # End-to-end tests (pytest, behave)
-│   ├── integration # Integration tests (pytest, behave)
-|   ├── unit # Unit tests (pytest)
-├── utils # Utilities module to be used across solution
-├── .flake8 # Configuration for Flake8 linting
-├── .pre-commit-config.yaml # Configuration for pre-commit
-├── Makefile # Includes commands for environment setup
-├── pyproject.toml # Configuration for Poetry, Black
+├── pyproject.toml # Project dependecies
 └── README.md # This file.
 ```
 
