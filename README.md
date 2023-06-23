@@ -1,17 +1,24 @@
-# Stacks - Azure Data Ingest solution
+# Stacks - Azure Data Platform solution
 
 ## Overview
 
-This repository contains a template for an Azure data platform solution, utilising Azure Data Factory for orchestration and ingestion, and Azure Data Lake Storage Gen2 for a data lake. Elements of the solution include:
-* Infrastructure-as-code for all solution components (Terraform)
-* Azure Data Factory resources and sample ingest pipeline (from sample source into landing (bronze) data lake zone)
-* Metadata-based ETL configuration files
-* Deployment pipelines for CICD / DataOps for all components
-* Automated tests
+Housing an Azure data platform solution template, this repository leverages **Azure Data Factory**
+for data ingestion and orchestration of data processing using **Databricks**. It also employs
+**Azure Data Lake Storage Gen2** for data lake storage. The solution's data workload naming
+convention originates from Databricks' Medallion Architecture, a system emphasizing structured data
+transformation layers. Key elements of the solution include:
+* Infrastructure as code for all infrastructure components (Terraform & ARM Templates);
+* Azure Data Factory resources and a sample ingest pipeline that transfers data from a sample source
+into a landing (Bronze) data lake zone;
+* Sample data processing pipelines named Silver and Gold. These are responsible for data
+transformations from Bronze to Silver layer and from Silver to Gold layer, respectively;
+* Data Quality validations;
+* Deployment pipelines to enable CI/CD and DataOps for all components;
+* Automated tests to ensure quality assurance and operational efficiency.
 
 ### High-level architecture
 
-![High-level architecture](docs/images/Stacks_Azure_Data_Platform-Ingestion_HLD.png?raw=true "High-level architecture")
+![High-level architecture](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png?raw=true "High-level architecture")
 
 ### Infrastructure deployed
 * Resource Group
@@ -20,10 +27,12 @@ This repository contains a template for an Azure data platform solution, utilisi
 * Azure Blob Storage (for config files)
 * Azure Key Vault
 * Log Analytics Workspace
+* Databricks Workspace
+  * Azure Key Vault-backed secret scope
 
 ## Repository structure
 ```
-stacks-azure-data-ingest
+stacks-azure-data
 ├── build # Resources for building and deploying the solution (ADO pipelines)
 ├── config # Config files which will be uploaded to blob storage and used by ETL processes (JSON)
 │   ├── schemas # JSON schemas for config files

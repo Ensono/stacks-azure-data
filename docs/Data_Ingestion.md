@@ -6,7 +6,7 @@ The solution contains a sample Azure Data Factory pipeline for ingesting data fr
 
 The diagram below gives an overview of the ingestion pipeline design.
 
-![ADF Pipeline Design](images/ADF_PipelineDesign.png?raw=true "ADF Pipeline Design")
+![ADF Pipeline Design](workloads/azure/data/images/ADF_PipelineDesign.png?raw=true "ADF Pipeline Design")
 
 ## Configuration
 
@@ -43,14 +43,14 @@ These config files will be loaded in for a given data source every time an inges
 ### Data Factory pipeline design
 The sample pipelines provided give an example of a data ingest process from source to data lake. The pipelines folder is structured as follows:
 
-![ADF Pipelines](images/ADF_PipelinesList.png?raw=true "ADF Pipelines")
+![ADF Pipelines](workloads/azure/data/images/ADF_PipelinesList.png?raw=true "ADF Pipelines")
 
 * `Ingest` contains ingest pipelines specific to the given data source. These are the parent pipelines that would be triggered on a recurring basis to ingest from a data source.
 * The pipelines within `Utilities` are reusable pipelines, referenced by other pipelines. This would not be triggered independently.
 
 The `ingest_azure_sql_demo` pipeline consists of the following steps:
 
-![ADF Ingest Pipeline](images/ADF_IngestPipeline.png?raw=true "ADF Ingest Pipeline")
+![ADF Ingest Pipeline](workloads/azure/data/images/ADF_IngestPipeline.png?raw=true "ADF Ingest Pipeline")
 
 1. Step 1: Call the utility pipeline `get_ingest_config`, passing the data source name as a parameter. This will return the config data required for the given data source.
 2. Step 2: Loop through each ingest entity:
