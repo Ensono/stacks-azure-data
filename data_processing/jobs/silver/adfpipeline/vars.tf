@@ -25,13 +25,13 @@ variable "blobStorageAccountName" {
 
 variable "databricksHost" {
   type        = string
-  default     = "aaaa"   #"https://adb-XXXXXXXXXXXX.azuredatabricks.net"
+  default     = "https://adb-XXXXXXXXXXXX.azuredatabricks.net"
   description = "Databricks Host url id"
 }
 
 variable "databricksWorkspaceResourceId" {
   type        = string
-  default     = "aaaa"   #"/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
+  default     = "/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"   #"/subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
   description = "Azure Databricks resource id."
 }
 

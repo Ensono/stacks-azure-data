@@ -17,11 +17,11 @@
         },
         "databricksHost": {
             "type": "string",
-            "defaultValue": "aaaaa"
+            "defaultValue": "https://xxxxxxxxx.azuredatabricks.net"
         },
         "databricksWorkspaceResourceId": {
             "type": "string",
-            "defaultValue": "aaaa"
+            "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
         },
         "enableDataQualitySilver": {
             "type": "bool",
@@ -33,7 +33,7 @@
     },
     "resources": [
         {
-            "condition": "[not(parameters('enableDataQualitySilver'))]",
+          //  "condition": "[not(parameters('enableDataQualitySilver'))]",
             "name": "[concat(parameters('factoryName'), '/silver')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -81,7 +81,7 @@
             ]
         },
         {
-            "condition": "[parameters('enableDataQualitySilver')]",
+         //   "condition": "[parameters('enableDataQualitySilver')]",
             "name": "[concat(parameters('factoryName'), '/silver_dq')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
