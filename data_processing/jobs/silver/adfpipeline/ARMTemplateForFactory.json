@@ -17,11 +17,11 @@
         },
         "databricksHost": {
             "type": "string",
-            "defaultValue": "https://xxxxxxxxx.azuredatabricks.net"
+            "defaultValue": "aaaaa"
         },
         "databricksWorkspaceResourceId": {
             "type": "string",
-            "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
+            "defaultValue": "aaaa"
         },
         "enableDataQualitySilver": {
             "type": "bool",
