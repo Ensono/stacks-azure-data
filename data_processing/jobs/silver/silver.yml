@@ -138,7 +138,7 @@ stages:
           steps:
 
 
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup-without-checkout.yml
+           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
