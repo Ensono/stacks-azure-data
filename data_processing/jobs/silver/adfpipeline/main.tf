@@ -3,7 +3,7 @@ locals {
 }
 
 resource "azurerm_resource_group_template_deployment" "example" {
-  name                = "Ingest_AzureSql_Example"
+  name                = "Silver"
   resource_group_name = var.data_factory_resource_group_name
   deployment_mode     = "Incremental"
   parameters_content = jsonencode({
@@ -28,7 +28,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
     }
 
     "enableDataQualitySilver" = {
-      value = var.enableDataQualityIngest
+      value = var.enableDataQualitySilver
     }
 
   })
