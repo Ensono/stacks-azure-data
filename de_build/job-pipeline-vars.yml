@@ -14,7 +14,7 @@ variables:
   # - name: self_repo_src
   #   value: src/api
   - name: self_repo_dir
-    value: "$(Agent.BuildDirectory)/s"
+    value: "$(Agent.BuildDirectory)/s/$(self_repo)"
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
   - name: tf_state_rg
