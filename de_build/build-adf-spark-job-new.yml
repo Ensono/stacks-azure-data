@@ -1,0 +1,82 @@
+parameters:
+  - name: self_repo_dir
+    type: string
+  - name: self_repo_adf_dir
+    type: string
+  - name: self_repo_sparkjob_dir
+    type: string
+
+    steps:
+
+    - task: CopyFiles@2
+      displayName: 'Copy PreandPostDeploymnet File'
+      inputs:
+        SourceFolder: '$(self_repo_dir)/de_build/adf/'
+        Contents: '*.ps1'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+
+    - task: CopyFiles@2
+      displayName: 'Copy ARM Files '
+      inputs:
+        SourceFolder: '$(self_repo_adf_dir)/'
+        Contents: '*'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+
+    - task: CopyFiles@2
+      displayName: 'Copy Spark Job Files '
+      inputs:
+        SourceFolder: '$(self_repo_sparkjob_dir)/'
+        Contents: '*.*'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/SparkJob'
+
+    - script: |
+        mkdir $(Pipeline.Workspace)/ARM_TTK_Download
+        curl -L -o $(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip https://aka.ms/arm-ttk-latest
+      displayName: 'Download ARM TTK'
+
+    - script: |
+        ls $(Pipeline.Workspace)/ARM_TTK_Download
+      displayName: 'Verify: Check downloaded files'
+    
+    - task: ExtractFiles@1
+      displayName: 'Extract ARM TTK'
+      inputs:
+        archiveFilePatterns: '$(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip'
+        destinationFolder: '$(Pipeline.Workspace)/ARM_TTK'
+
+    # - script: |
+    #     ls $(Pipeline.Workspace)/ARM_TTK
+    #   displayName: 'List ARM TTK'
+
+    - pwsh: |
+        Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
+        $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+        $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
+        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices","IDs-Should-Be-Derived-From-ResourceIDs")
+        $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
+        $testOutput = $testOutputParameters + $testOutputtemplate
+        $testOutput
+        
+        if ($testOutput | ? {$_.Errors }) {
+            exit 1 
+        } else {
+            Write-Host "##vso[task.setvariable variable=result.best.practice]$true"
+            exit 0
+        } 
+      errorActionPreference: continue
+      failOnStderr: true
+      displayName: 'Run Best Practices Tests'
+      continueOnError: true
+
+      #  Publish the artifact 
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: SparkJob'
+      inputs:
+        ArtifactName: SparkJob
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/SparkJob'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: ArmTemplates'
+      inputs:
+        ArtifactName: ArmTemplates
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
