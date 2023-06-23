@@ -225,8 +225,8 @@ stages:
               TF_VAR_data_factory: $(datafactoryname)
               TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
               TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              # TF_VAR_databricksHost: "$(databricksHost)"
-              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_databricksHost: "$(databricksHost)"
+              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
