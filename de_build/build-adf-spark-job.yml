@@ -18,7 +18,7 @@ jobs:
         targetType: 'inline'
         script: |
           echo "Cleaning workspace..."
-          rm -rf $(Build.SourcesDirectory)/*
+          sudo rm -rf $(Build.SourcesDirectory)/*
 
     - checkout: self
 
