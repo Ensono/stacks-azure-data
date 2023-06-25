@@ -41,8 +41,10 @@ variables:
     value: 'silver'
   - name: jobtype  #update job name
     value: 'data_processing'
+  - name: self_repo_adf_src  #update job name
+    value: "$(jobtype)/jobs/$(job)/adfpipeline"
   - name: self_repo_adf_dir
-    value: "$(self_repo_dir)/$(jobtype)/jobs/$(job)/adfpipeline"
+    value: "$(self_repo_dir)/$(self_repo_adf_src)/"
   - name: test_unit_path
     value: '$(self_repo_dir)/$(jobtype)/jobs/$(job)/tests/unit/'
   - name: test_end_to_end_path
@@ -158,7 +160,7 @@ stages:
         deploy:  
           steps:
 
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup-without-checkout.yml
+           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -166,9 +168,9 @@ stages:
           #    displayName: Download Build Artifacts
           #    inputs:
           #     targetPath: '$(System.DefaultWorkingDirectory)'
-           - script: dir
-             displayName: List  Workspace
-             workingDirectory: '$(Pipeline.Workspace)/'
+          #  - script: dir
+          #    displayName: List  Workspace
+          #    workingDirectory: '$(Pipeline.Workspace)/'
 
            - script: dir
              displayName: List  Workspace
@@ -248,7 +250,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(jobtype)/jobs/$(job)/adfpipeline/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
+              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
