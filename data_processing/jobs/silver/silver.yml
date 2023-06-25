@@ -87,13 +87,35 @@ stages:
       - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
         parameters:
           TaskctlVersion: ${{ variables.TaskctlVersion }}
+      - script: |
+          lastTag=$(git tag --sort=-creatordate | head -n 1)
+          if [[ -z $lastTag ]]; then
+            major=$(version_major)
+            minor=$(version_minor)
+            revision=$(version_revision)
+            echo "Last Tag: NOT Present"
+          else
+            IFS='.' read -ra versionParts <<< "${lastTag#v}"
+            major="${versionParts[0]}"
+            minor="${versionParts[1]}"
+            lastrevision="${versionParts[2]}"
+            revision=$((lastrevision + 1))
+            echo "Last Tag: $lastTag"
+          fi
+          newVersion="${major}.${minor}.${revision}"
+          echo "New Version: $newVersion"
+          echo "##vso[task.setvariable variable=major]$major"
+          echo "##vso[task.setvariable variable=minor]$minor"
+          echo "##vso[task.setvariable variable=revision]$revision"
+          echo "##vso[task.setvariable variable=newVersion]$newVersion"
+        displayName: Determine New Version
       - task: Bash@3
         displayName: "TaskCTL: Setup"
         inputs:
          targetType: inline
          script: taskctl setup
         env:
-         DOCKER_IMAGE_TAG: $(version_number)   
+         DOCKER_IMAGE_TAG: $(newVersion)   
       - task: Bash@3
         displayName: "TaskCTL: Lint"
         inputs:
@@ -227,7 +249,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "/ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
+              TF_FILE_LOCATION: "./ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
