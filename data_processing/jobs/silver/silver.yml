@@ -157,11 +157,11 @@ stages:
 
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
+             workingDirectory: '$(Pipeline.Workspace)/ArmTemplates'
 
            - script: dir
              displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+             workingDirectory: '$(Pipeline.Workspace)/SparkJob'
 
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
@@ -193,7 +193,7 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     echo Source is $(Pipeline.Workspace)/SparkJob
                      for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
@@ -214,8 +214,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(Pipeline.Workspace)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(Pipeline.Workspace)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
@@ -258,7 +258,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/
+              TF_FILE_LOCATION: "$(Pipeline.Workspace)/ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
