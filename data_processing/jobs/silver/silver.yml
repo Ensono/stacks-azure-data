@@ -156,13 +156,13 @@ stages:
           #    env:
           #     DOCKER_IMAGE_TAG: $(version_number)  
 
-          #  - task: DownloadPipelineArtifact@2
-          #    displayName: Download Build Artifacts
-          #    inputs:
-          #     targetPath: '$(System.DefaultWorkingDirectory)'
+           - task: DownloadPipelineArtifact@2
+             displayName: Download Build Artifacts
+             inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)'
            - script: dir
              displayName: List  Workspace
-             workingDirectory: '$(Pipeline.Workspace)/'
+             workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
            - script: dir
              displayName: List  Workspace
@@ -170,11 +170,11 @@ stages:
 
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(Pipeline.Workspace)/ArmTemplates'
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
 
            - script: dir
              displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(Pipeline.Workspace)/SparkJob'
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
 
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
@@ -206,7 +206,7 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(Pipeline.Workspace)/SparkJob
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
                      for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
@@ -227,8 +227,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(Pipeline.Workspace)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(Pipeline.Workspace)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
