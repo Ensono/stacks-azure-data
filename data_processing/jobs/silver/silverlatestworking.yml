@@ -129,10 +129,11 @@ stages:
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
          TF_FILE_LOCATION: ./$(jobtype)/jobs/$(job)/ 
-      - template: ../../../de_build/arm-validate.yml
+      - template: ../../../de_build/build-adf-spark-job-new.yml
         parameters:
+          self_repo_dir: '$(self_repo_dir)'
           self_repo_adf_dir: '$(self_repo_adf_dir)'
-
+          self_repo_sparkjob_dir: '$(self_repo_sparkjob_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -162,25 +163,25 @@ stages:
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-          #  - task: DownloadPipelineArtifact@2
-          #    displayName: Download Build Artifacts
-          #    inputs:
-          #     targetPath: '$(System.DefaultWorkingDirectory)'
+           - task: DownloadPipelineArtifact@2
+             displayName: Download Build Artifacts
+             inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)'
            - script: dir
              displayName: List  Workspace
-             workingDirectory: '$(Pipeline.Workspace)/'
+             workingDirectory: '$(System.DefaultWorkingDirectory)/'
 
            - script: dir
              displayName: List  Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)'
 
            - script: dir
-             displayName: List ArmTemplates
-             workingDirectory: '$(self_repo_adf_dir)'
+             displayName: List ArmTemplates Artifact in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
 
            - script: dir
-             displayName: List SparkJob
-             workingDirectory: '$(self_repo_sparkjob_dir)'
+             displayName: List ArmTemplates SparkJob in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
 
           #  - script: pip install databricks-cli
           #    displayName: Install Databricks CLI
@@ -212,8 +213,8 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(self_repo_sparkjob_dir)
-                     for file in $(self_repo_sparkjob_dir)/*; do
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
                           databricks fs cp --overwrite "$file" "$destination"
@@ -228,8 +229,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
@@ -248,7 +249,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "/$(jobtype)/jobs/$(job)/adfpipeline/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
+              TF_FILE_LOCATION: "./ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
@@ -270,8 +271,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $false
