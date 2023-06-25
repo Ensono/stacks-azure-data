@@ -137,7 +137,13 @@ stages:
         deploy:  
           steps:
 
-
+           - task: Bash@3
+             displayName: 'Clean Workspace'
+             inputs:
+               targetType: 'inline'
+               script: |
+                       echo "Cleaning workspace..."
+                       sudo rm -rf $(Build.SourcesDirectory)/*
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup-without-checkout.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -154,6 +160,9 @@ stages:
           #    displayName: Download Build Artifacts
           #    inputs:
           #     targetPath: '$(System.DefaultWorkingDirectory)'
+           - script: dir
+             displayName: List  Workspace
+             workingDirectory: '$(Pipeline.Workspace)/'
 
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
