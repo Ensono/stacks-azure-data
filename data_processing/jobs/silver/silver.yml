@@ -166,7 +166,7 @@ stages:
 
            - script: dir
              displayName: List  Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory/'
+             workingDirectory: '$(System.DefaultWorkingDirectory)'
 
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
