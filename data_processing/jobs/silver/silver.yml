@@ -215,30 +215,6 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-          #  - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup-without-checkout.yml
-          #    parameters:
-          #     TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-          #  - task: Bash@3
-          #    displayName: "TaskCTL: Setup"
-          #    inputs:
-          #     targetType: inline
-          #     script: taskctl setup
-          #    env:
-          #     DOCKER_IMAGE_TAG: $(version_number)   
-          #  - task: Bash@3
-          #    displayName: "TaskCTL: Lint"
-          #    inputs:
-          #      targetType: inline
-          #      script: taskctl lint
-          #    env:
-          #     # Dotnet Build
-          #     CLOUD_PROVIDER: "$(cloud_provider)"
-          #     ARM_TENANT_ID: "$(azure-tenant-id)"
-          #     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-          #     ARM_CLIENT_ID: "$(azure-client-id)"
-          #     ARM_CLIENT_SECRET: "$(azure-client-secret)"
-          #     SELF_REPO_SRC: ./$(jobtype)/jobs/$(job)/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/
            - task: Bash@3
              displayName: "TaskCTL: infrastructure"
              inputs:
@@ -251,7 +227,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(jobtype)/jobs/$(job)/adfpipeline/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
+              TF_FILE_LOCATION: "/$(jobtype)/jobs/$(job)/adfpipeline/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
@@ -261,12 +237,12 @@ stages:
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
-              # TF_VAR_data_factory_resource_group_name: $(resource_group)
-              # TF_VAR_data_factory: $(datafactoryname)
-              # TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
-              # TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              # TF_VAR_databricksHost: "$(databricksHost)"
-              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_data_factory_resource_group_name: $(resource_group)
+              TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              TF_VAR_databricksHost: "$(databricksHost)"
+              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
