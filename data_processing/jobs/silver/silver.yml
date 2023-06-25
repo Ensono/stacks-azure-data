@@ -142,13 +142,13 @@ stages:
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-          #  - task: Bash@3
-          #    displayName: "TaskCTL: Setup"
-          #    inputs:
-          #     targetType: inline
-          #     script: taskctl setup
-          #    env:
-          #     DOCKER_IMAGE_TAG: $(version_number)  
+           - task: Bash@3
+             displayName: "TaskCTL: Setup"
+             inputs:
+              targetType: inline
+              script: taskctl setup
+             env:
+              DOCKER_IMAGE_TAG: $(version_number)  
 
           #  - task: DownloadPipelineArtifact@2
           #    displayName: Download Build Artifacts
