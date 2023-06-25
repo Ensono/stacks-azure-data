@@ -137,24 +137,9 @@ stages:
         deploy:  
           steps:
 
-          #  - task: Bash@3
-          #    displayName: 'Clean Workspace'
-          #    inputs:
-          #      targetType: 'inline'
-          #      script: |
-          #              echo "Cleaning workspace..."
-          #              sudo rm -rf $(Build.SourcesDirectory)/*
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup-without-checkout.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-          #  - task: Bash@3
-          #    displayName: "TaskCTL: Setup"
-          #    inputs:
-          #     targetType: inline
-          #     script: taskctl setup
-          #    env:
-          #     DOCKER_IMAGE_TAG: $(version_number)  
 
            - task: DownloadPipelineArtifact@2
              displayName: Download Build Artifacts
@@ -214,12 +199,7 @@ stages:
                         fi
                      done
              displayName: Upload Spark Jobs  
-
-          #  - script: |
-          #            echo Destination is /FileStore/scripts/
-          #            echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-          #            databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
-          #    displayName: Upload Spark Job      
+ 
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -271,7 +251,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./ArmTemplates/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/
+              TF_FILE_LOCATION: "./$(jobtype)/jobs/$(job)/adfpipeline/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
