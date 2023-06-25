@@ -142,10 +142,18 @@ stages:
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-           - task: DownloadPipelineArtifact@2
-             displayName: Download Build Artifacts
+           - task: Bash@3
+             displayName: "TaskCTL: Setup"
              inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)'
+              targetType: inline
+              script: taskctl setup
+             env:
+              DOCKER_IMAGE_TAG: $(version_number)  
+
+          #  - task: DownloadPipelineArtifact@2
+          #    displayName: Download Build Artifacts
+          #    inputs:
+          #     targetPath: '$(System.DefaultWorkingDirectory)'
 
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
