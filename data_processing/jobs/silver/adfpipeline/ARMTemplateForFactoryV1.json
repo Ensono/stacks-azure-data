@@ -1,0 +1,188 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "amido-stacks-dev-euw-de"
+        },
+        "adlsStorageAccountName": {
+            "type": "string",
+            "defaultValue": "amidostacksdeveuwdeadls"
+        },
+        "blobStorageAccountName": {
+            "type": "string",
+            "defaultValue": "amidostacksdeveuwdeconfi"
+        },
+        "databricksHost": {
+            "type": "string",
+            "defaultValue": "https://xxxxxxxxx.azuredatabricks.net"
+        },
+        "databricksWorkspaceResourceId": {
+            "type": "string",
+            "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+
+        {
+            "name": "[concat(parameters('factoryName'), '/silver')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Silver",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/scripts/silver.py",
+                            "parameters": [],
+                            "libraries": [
+                                {
+                                    "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "ls_Databricks_Small",
+                            "type": "LinkedServiceReference"
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "folder": {
+                    "name": "Process"
+                },
+                "annotations": [],
+                "lastPublishTime": "2023-06-13T12:40:04Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/ls_Databricks_Small')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/silver_dq')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "Silver",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/scripts/silver.py",
+                            "parameters": [],
+                            "libraries": [
+                                {
+                                    "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "ls_Databricks_Small",
+                            "type": "LinkedServiceReference"
+                        }
+                    },
+                    {
+                        "name": "DataQuality",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [
+                            {
+                                "activity": "Silver",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/scripts/silver_dq.py",
+                            "parameters": [],
+                            "libraries": [
+                                {
+                                    "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "ls_Databricks_Small",
+                            "type": "LinkedServiceReference"
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "folder": {
+                    "name": "Process"
+                },
+                "annotations": [],
+                "lastPublishTime": "2023-06-26T19:20:25Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/ls_Databricks_Small')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/ls_Databricks_Small')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureDatabricks",
+                "typeProperties": {
+                    "domain": "[parameters('databricksHost')]",
+                    "authentication": "MSI",
+                    "workspaceResourceId": "[parameters('databricksWorkspaceResourceId')]",
+                    "newClusterNodeType": "Standard_DS3_v2",
+                    "newClusterNumOfWorker": "2",
+                    "newClusterSparkEnvVars": {
+                        "AZURE_CLIENT_SECRET": "{{secrets/key-vault-secret/service-principal-secret}}",
+                        "AZURE_CLIENT_ID": "{{secrets/key-vault-secret/azure-client-id}}",
+                        "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
+                        "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
+                        "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
+                        "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+                    },
+                    "newClusterVersion": "13.0.x-scala2.12",
+                    "clusterOption": "Fixed",
+                    "newClusterInitScripts": []
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}
