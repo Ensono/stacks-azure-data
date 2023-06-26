@@ -1,0 +1,118 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name",
+            "defaultValue": "amido-stacks-dev-euw-de"
+        },
+        "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
+            "type": "string",
+            "defaultValue": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
+    }
+},
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/ds_dp_ConfigStore_Json')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "ls_Blob_ConfigStore",
+                    "type": "LinkedServiceReference"
+                },
+                "parameters": {
+                    "filename": {
+                        "type": "String"
+                    },
+                    "path": {
+                        "type": "String"
+                    },
+                    "container": {
+                        "type": "string"
+                    }
+                },
+                "folder": {
+                    "name": "Data_Platform/Config_Store"
+                },
+                "annotations": [],
+                "type": "Json",
+
+
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "fileName": {
+                            "value": "@dataset().filename",
+                            "type": "Expression"
+                        },
+                        "folderPath": {
+                            "value": "@dataset().path",
+                            "type": "Expression"
+                        },
+                        "container": {
+                            "value": "@dataset().container",
+                            "type": "Expression"
+                        }
+                    },
+
+                    
+                    "encodingName": "UTF-8"
+                },
+                "schema": {}
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/ls_Blob_ConfigStore')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/adf-managed-vnet-runtime')]",
+            "type": "Microsoft.DataFactory/factories/integrationRuntimes",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "Managed",
+                "typeProperties": {
+                    "computeProperties": {
+                        "location": "West Europe",
+                        "dataFlowProperties": {
+                            "computeType": "General",
+                            "coreCount": 8,
+                            "timeToLive": 0,
+                            "cleanup": true
+                        }
+                    }
+                },
+                "managedVirtualNetwork": {
+                    "type": "ManagedVirtualNetworkReference",
+                    "referenceName": "default"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/ls_Blob_ConfigStore')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+
+                "typeProperties": {
+                    "serviceEndpoint": "[parameters('ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint')]",
+                    "accountKind": "BlobStorage"
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
+            ]
+        }
+    ]
+}
