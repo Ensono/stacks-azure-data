@@ -48,6 +48,8 @@ variables:
     value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
   - name: junit_path
     value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
+  - name: self_repo_adf_src  #update job name
+    value: "$(jobtype)/jobs/$(job)/adfpipeline"
 
 pool:
   name: $(agentpool_name)
@@ -144,7 +146,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: ./"$(self_repo_adf_src)"
+              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
            - task: Bash@3
              displayName: "TaskCTL: infrastructure"
              inputs:
@@ -157,7 +159,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: ./"$(self_repo_adf_src)"
+              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
@@ -172,7 +174,7 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
