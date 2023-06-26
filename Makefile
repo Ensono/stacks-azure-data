@@ -11,6 +11,5 @@ test_ingest:
 test_ingest_e2e:
 	behave ingest/jobs/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
 
-# TODO: Update to run on Python files only
-# pre_commit:
-#	pre-commit run --all-files
+pre_commit:
+	pre-commit run --all-files
