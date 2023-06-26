@@ -50,6 +50,8 @@ variables:
     value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
   - name: self_repo_adf_src  #update job name
     value: "$(jobtype)/jobs/$(job)/adfpipeline"
+  - name: jobtype  #update job name
+    value: 'ingest'
 
 pool:
   name: $(agentpool_name)
