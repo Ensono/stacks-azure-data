@@ -23,16 +23,11 @@ variables:
     value: amidostackstfstate
   - name: tf_state_container
     value: tfstate
-  - name: tf_state_key_dev
-    value: $(domain)_generate-ingest-query_dev
-  - name: tf_state_key_prod
-    value: $(domain)_generate-ingest-query_prod
   - name: TaskctlVersion
     value: 1.4.2
-  - name: pool_vm_image
-    value: ubuntu-20.04
-
-
+  # - name: pool_vm_image
+  #   value: ubuntu-20.04
+  
 
 # Versioning
   # - name: version_major

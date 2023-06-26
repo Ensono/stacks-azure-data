@@ -8,30 +8,29 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-
+# trigger:
+# - none
 pr:
   branches:
     include:
     - 'main'
   paths:
     include:
-      - ingest/jobs/Generate_Ingest_Query/adfpipeline/*
-      - ingest/jobs/Generate_Ingest_Query/tests/*
-      - ingest/jobs/Generate_Ingest_Query/generate-ingest-query.yml
+      - data_processing/jobs/silver/adfpipeline/*
+      - data_processing/jobs/silver/tests/*
+      - data_processing/jobs/silver/spark-jobs/*
+      - data_processing/jobs/silver/silver.yml
 
 trigger:
   branches:
-   
     include:
       - 'main'
   paths:
     include:
-      - ingest/jobs/Generate_Ingest_Query/adfpipeline/*
-      - ingest/jobs/Generate_Ingest_Query/tests/*
-      - ingest/jobs/Generate_Ingest_Query/generate-ingest-query.yml
-
-
-
+      - data_processing/jobs/silver/adfpipeline/*
+      - data_processing/jobs/silver/tests/*
+      - data_processing/jobs/silver/spark-jobs/*
+      - data_processing/jobs/silver/silver.yml
 
 
 variables:
@@ -39,19 +38,25 @@ variables:
   - template: ../../../de_build/air-data-testing-vars.yml
   - template: ../../../build/version-data-vars.yml
   - name: job  #update job name
-    value: 'Generate_Ingest_Query'
-  - name: self_repo_adf_dir
-    value: "$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline"
-  - name: test_unit_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
-  - name: test_end_to_end_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
-  - name: junit_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
-  - name: self_repo_adf_src  #update job name
-    value: "$(jobtype)/jobs/$(job)/adfpipeline"
+    value: 'silver'
   - name: jobtype  #update job name
-    value: 'ingest'
+    value: 'data_processing'
+  - name: self_repo_adf_dir
+    value: "$(self_repo_dir)/$(jobtype)/jobs/$(job)/adfpipeline"
+  - name: test_unit_path
+    value: '$(self_repo_dir)/$(jobtype)/jobs/$(job)/tests/unit/'
+  - name: test_end_to_end_path
+    value: '$(self_repo_dir)/$(jobtype)/jobs/$(job)/tests/end_to_end/features/'
+  - name: junit_path
+    value: '$(self_repo_dir)/$(jobtype)/jobs/$(job)/junit/'
+  - name: self_repo_sparkjob_dir
+    value: "$(self_repo_dir)/$(jobtype)/jobs/$(job)/spark-jobs"
+  - name: overrideParameters
+    value: "-factoryName $(datafactoryname)
+     -adlsStorageAccountName $(blob_adls_storage)
+     -blobStorageAccountName $(blob_configStorage)
+     -databricksHost $(databricksHost)
+     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
 
 pool:
   name: $(agentpool_name)
@@ -64,10 +69,11 @@ stages:
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-   - template: ../../../de_build/build-ingest-job.yml
+   - template: ../../../de_build/build-adf-spark-job.yml
      parameters:
       self_repo_dir: '$(self_repo_dir)'
       self_repo_adf_dir: '$(self_repo_adf_dir)'
+      self_repo_sparkjob_dir: '$(self_repo_sparkjob_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -76,9 +82,9 @@ stages:
   variables:
       - group: amido-stacks-de-pipeline-nonprod
       - group: amido-stacks-infra-credentials-nonprod
-      - group: stacks-credentials-nonprod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
+
   dependsOn: Build_Stage
   jobs:
   - deployment: Deploy_NonPROD
@@ -90,7 +96,8 @@ stages:
     strategy:
       runOnce:
         deploy:  
-          steps: 
+          steps:
+
            - task: DownloadPipelineArtifact@2
              displayName: Download Build Artifacts
              inputs:
@@ -99,18 +106,55 @@ stages:
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-            
-          #  - task: AzureCLI@2
-          #    inputs:
-          #      azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-          #      scriptType: 'pscore'
-          #      scriptLocation: 'inlineScript'
-          #      inlineScript: 'az deployment group what-if `
-          #                     --resource-group $(resource_group) `
-          #                     --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
-          #                     --parameters $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
-          #                     --parameters factoryName=amido-stacks-dev-euw-de  `
-          #                     --exclude-change-types Ignore'        
+
+           - script: dir
+             displayName: List ArmTemplates SparkJob in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+
+          #  - script: pip install databricks-cli
+          #    displayName: Install Databricks CLI
+
+           - task: AzureKeyVault@2
+             inputs:
+                  azureSubscription: 'Stacks.Pipeline.Builds'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+             displayName: 'Get secrets from the keyvault'             
+             
+           - script: |
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
+             displayName: Configure databricks-cli
+
+           - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
+                     echo Destination is /FileStore/scripts/
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs  
+
+          #  - script: |
+          #            echo Destination is /FileStore/scripts/
+          #            echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+          #            databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
+          #    displayName: Upload Spark Job      
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -125,58 +169,25 @@ stages:
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-           - task: Bash@3
-             displayName: "TaskCTL: Setup"
+           - task: AzureResourceManagerTemplateDeployment@3
+             displayName: 'ARM Template deployment: Resource Group scope'
              inputs:
-              targetType: inline
-              script: taskctl setup
-             env:
-              DOCKER_IMAGE_TAG: $(version_number)   
-           - task: Bash@3
-             displayName: "TaskCTL: Lint"
-             inputs:
-               targetType: inline
-               script: taskctl lint
-             env:
-              # Dotnet Build
-              CLOUD_PROVIDER: "$(cloud_provider)"
-              ARM_TENANT_ID: "$(azure-tenant-id)"
-              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-              ARM_CLIENT_ID: "$(azure-client-id)"
-              ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-           - task: Bash@3
-             displayName: "TaskCTL: infrastructure"
-             inputs:
-              targetType: inline
-              script: taskctl infrastructure
-             env:
-              # Dotnet Build
-              CLOUD_PROVIDER: "$(cloud_provider)"
-              ARM_TENANT_ID: "$(azure-tenant-id)"
-              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-              ARM_CLIENT_ID: "$(azure-client-id)"
-              ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-              ENV_NAME: $(Environment.ShortName)
-                    # Azure Authentication
-                    # Terraform Backend Configuration
-              TF_STATE_CONTAINER: $(tf_state_container)
-              TF_STATE_KEY: $(tf_state_key_dev)
-              TF_STATE_RG: $(tf_state_rg)
-              TF_STATE_STORAGE: $(tf_state_storage)
-              TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
-                    # Deployment Specific Configuration
+                azureResourceManagerConnection: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+                subscriptionId: '$(azure_subscription_id)'
+                resourceGroupName: $(resource_group)
+                location: $(region)
+                csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
+                csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
+                overrideParameters: $(overrideParameters)                       
+                deploymentMode: 'Incremental'
+
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
               ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
@@ -184,65 +195,65 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-    # Start Testing 
-  - deployment: Test_NonPROD
-    displayName: 'Testing  NonPROD'
-    environment: ${{ variables.domain }}-nonprod
-    dependsOn: Deploy_NonPROD
-    pool:
-      name: $(agentpool_name)
-    strategy:
-      runOnce:
-        deploy:  
-          steps:
-           - checkout: self
-           - task: AzureCLI@2
-             inputs:
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               ScriptType: 'bash'
-               scriptLocation: 'inlineScript'
-               inlineScript: az account show 
+  #   # Start Testing 
+  # - deployment: Test_NonPROD
+  #   displayName: 'Testing  NonPROD'
+  #   environment: ${{ variables.domain }}-nonprod
+  #   dependsOn: Deploy_NonPROD
+  #   pool:
+  #     name: $(agentpool_name)
+  #   strategy:
+  #     runOnce:
+  #       deploy:  
+  #         steps:
+  #          - checkout: self
+  #         #  - task: AzureCLI@2
+  #         #    inputs:
+  #         #      azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+  #         #      ScriptType: 'bash'
+  #         #      scriptLocation: 'inlineScript'
+  #         #      inlineScript: az account show 
            
-           - task: UsePythonVersion@0
-             inputs:
-                versionSpec: '$(pythonVersion)'
-                githubToken: '$(github_token)'
-                addToPath: true
+  #          - task: UsePythonVersion@0
+  #            inputs:
+  #               versionSpec: '$(pythonVersion)'
+  #               githubToken: '$(github_token)'
+  #               addToPath: true
 
-             displayName: Set Python Version
+  #            displayName: Set Python Version
 
-           - bash: |
-              pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
-             displayName: 'Install Pipeline Tools'
-           - bash: |
-              poetry install 
-             displayName: 'Running poetry install'
-             workingDirectory:  '$(self_repo_dir)'
-           - bash: |
-               python -m pytest $(test_unit_path)
-             displayName: 'Running py test'
-             workingDirectory:  '$(self_repo_dir)'
+  #          - bash: |
+  #             pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+  #            displayName: 'Install Pipeline Tools'
+  #          - bash: |
+  #             poetry install 
+  #            displayName: 'Running poetry install'
+  #            workingDirectory:  '$(self_repo_dir)'
+  #          - bash: |
+  #              python -m pytest $(test_unit_path)
+  #            displayName: 'Running py test'
+  #            workingDirectory:  '$(self_repo_dir)'
 
-           - bash: |
-               poetry run behave $(test_end_to_end_path)  --junit --junit-directory $(junit_path)
-             displayName: 'Running e2e Test'
-             workingDirectory:  '$(self_repo_dir)'
-             env:
-                  AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
-                  AZURE_RESOURCE_GROUP_NAME: $(resource_group)
-                  AZURE_DATA_FACTORY_NAME: $(datafactoryname)
-                  AZURE_REGION_NAME: $(region)
-                  AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
-                  AZURE_CLIENT_ID: $(azure-client-id)
-                  AZURE_CLIENT_SECRET: $(azure-client-secret)
-                  AZURE_TENANT_ID: $(azure-tenant-id)   
+  #          - bash: |
+  #              poetry run behave $(test_end_to_end_path)  --junit --junit-directory $(junit_path)
+  #            displayName: 'Running e2e Test'
+  #            workingDirectory:  '$(self_repo_dir)'
+  #            env:
+  #                 AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
+  #                 AZURE_RESOURCE_GROUP_NAME: $(resource_group)
+  #                 AZURE_DATA_FACTORY_NAME: $(datafactoryname)
+  #                 AZURE_REGION_NAME: $(region)
+  #                 AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
+  #                 AZURE_CLIENT_ID: $(azure-client-id)
+  #                 AZURE_CLIENT_SECRET: $(azure-client-secret)
+  #                 AZURE_TENANT_ID: $(azure-tenant-id)   
 
-           - task: PublishTestResults@2
-             displayName: 'Publish Test Results'
-             inputs:
-                testResultsFiles: '**/*.xml'
-                searchFolder: $(junit_path)
-             condition: succeededOrFailed()
+  #          - task: PublishTestResults@2
+  #            displayName: 'Publish Test Results'
+  #            inputs:
+  #               testResultsFiles: '**/*.xml'
+  #               searchFolder: $(junit_path)
+  #            condition: succeededOrFailed()
   
 
 #############################################################
@@ -279,6 +290,54 @@ stages:
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
 
+           - script: dir
+             displayName: List ArmTemplates SparkJob in Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+
+          #  - script: pip install databricks-cli
+          #    displayName: Install Databricks CLI
+
+           - task: AzureKeyVault@2
+             inputs:
+                  azureSubscription: 'Stacks.Pipeline.Builds'
+                  KeyVaultName: $(keyvault_name)
+                  SecretsFilter: '*'
+                  RunAsPreJob: false
+             displayName: 'Get secrets from the keyvault' 
+
+           - script: |
+                      echo "$(databricks-host)
+                      $(databricks-token)" | databricks configure --token
+             displayName: Configure databricks-cli
+
+           - script: |
+                      databricks workspace ls
+                      databricks fs ls
+             displayName: test databricks-cli
+
+           - script: |
+                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                      echo "folder_exists: $folder_exists"
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      then
+                          echo "Creating Folder"
+                          databricks fs mkdirs dbfs:/FileStore/scripts
+                      else
+                          echo "Folder Exists"
+                      fi
+             displayName: 'Create Scripts Folder If Not Exists'
+
+           - script: |
+                     echo Destination is /FileStore/scripts/
+                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
+                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                        if [[ -f $file ]]; then
+                          destination="dbfs:/FileStore/scripts/$(basename $file)"
+                          databricks fs cp --overwrite "$file" "$destination"
+                        fi
+                     done
+             displayName: Upload Spark Jobs  
+
     # Publish ADF
            - task: AzurePowerShell@5
              displayName: 'Stop ADF triggers'
@@ -302,7 +361,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName $(datafactoryname)
+                overrideParameters: $(overrideParameters)
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -358,6 +417,14 @@ stages:
               echo "##vso[task.setvariable variable=revision]$revision"
               echo "##vso[task.setvariable variable=newVersion]$newVersion"
             displayName: Determine New Version
+
+          # Create a new tag with the incremented version
+          # - script: |
+          #     git config user.name "BuildService"
+          #     git config user.email "builder@${COMPANY}.com"
+          #     git tag -a ${newVersion} -m "Release created by Azure DevOps"
+          #     git push origin ${newVersion}
+          #   displayName: Create New Tag
 
           - task: Bash@3
             displayName: Tag Code

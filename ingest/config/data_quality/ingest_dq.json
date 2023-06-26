@@ -1,5 +1,4 @@
 {
-    "container_name": "raw",
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "SalesLT",
     "datasource_config": [

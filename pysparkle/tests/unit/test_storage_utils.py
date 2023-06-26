@@ -10,7 +10,7 @@ TEST_ENV_VARS = {
     ENV_NAME_APPLICATION_ID: "app_id",
     ENV_NAME_DIRECTORY_ID: "dir_id",
     ENV_NAME_ADLS_ACCOUNT: "myadlsaccount",
-    ENV_NAME_BLOB_ACCOUNT: "myblobaccount"
+    ENV_NAME_BLOB_ACCOUNT: "myblobaccount",
 }
 
 
