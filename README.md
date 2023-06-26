@@ -53,7 +53,7 @@ stacks-azure-data
 ├── .flake8 # Configuration for Flake8 linting
 ├── .pre-commit-config.yaml # Configuration for pre-commit hooks
 ├── Makefile # Includes commands for environment setup
-├── pyproject.toml # Project dependecies
+├── pyproject.toml # Project dependencies
 └── README.md # This file.
 ```
 
