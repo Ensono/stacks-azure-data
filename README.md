@@ -7,11 +7,11 @@ for data ingestion and orchestration of data processing using **Databricks**. It
 **Azure Data Lake Storage Gen2** for data lake storage. The solution's data workload naming
 convention originates from Databricks' Medallion Architecture, a system emphasizing structured data
 transformation layers. Key elements of the solution include:
-* Infrastructure as code for all infrastructure components (Terraform & ARM Templates);
-* Azure Data Factory resources and a sample ingest pipeline that transfers data from a sample source
-into a landing (Bronze) data lake zone;
+* Infrastructure as code (IaC) for all infrastructure components (Terraform & ARM Templates);
+* Azure Data Factory (ADF) resources and a sample ingest pipeline that transfers data from a sample
+source into a landing (Bronze) data lake zone;
 * Sample data processing pipelines named Silver and Gold. These are responsible for data
-transformations from Bronze to Silver layer and from Silver to Gold layer, respectively;
+transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
 * Data Quality validations;
 * Deployment pipelines to enable CI/CD and DataOps for all components;
 * Automated tests to ensure quality assurance and operational efficiency.
@@ -37,7 +37,7 @@ stacks-azure-data
 ├── data_processing # Azure Data Factory ETL pipelines, leveraging Databricks for data transformations
 │   ├── config # Configuration files (uploaded to blob storage)
 │   ├── jobs # Data processing pipelines with optional Data Quality checks
-│   │   ├── gold # Bronze to Silver layer transformations 
+│   │   ├── gold # Bronze to Silver layer transformations
 │   │   ├── silver # Silver to Gold layer transformations
 ├── de_build # Azure DevOps pipelines configuration for building and deploying ADF pipelines
 ├── deploy # TF modules to deploy core Azure resources (used by `build` directory)
@@ -73,29 +73,30 @@ A Makefile has been created to assist with setting up the development environmen
 make setup_dev_environment
 ```
 
+#### Poetry basics
 To install packages within Poetry, use (this will add the dependency to `pyproject.toml`):
 ```bash
 poetry add packagename
 ```
-to install a package for use only in the dev environment, use:
+To install a package for use only in the dev environment, use:
 ```bash
 poetry add packagename --group dev
 ```
 
 ### Running unit tests
 
-In order to run unit tests run the following command:
+In order to run unit tests for the Ingest pipeline run the following command:
 
 ```bash
-make test
+make test_ingest
 ```
 
 ### Running E2E Tests
 
-To run E2E tests locally you will need to login through the Azure CLI:
+To run E2E tests locally, you will need to login through the Azure CLI:
 
 ```bash
-az login 
+az login
 ```
 
 To set the correct subscription run:
@@ -104,7 +105,7 @@ To set the correct subscription run:
 az account set --subscription <name or id>
 ```
 
-To run the E2E tests you need to set up the following environment variables.
+To run the E2E tests, you need to set up the following environment variables:
 
 - `SUBSCRIPTION_ID`
 - `RESOURCE_GROUP_NAME`
@@ -115,8 +116,8 @@ To run the E2E tests you need to set up the following environment variables.
 The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
 whilst clearing up directories please check you have the necessary permissions to read, write and execute against ADLS.
 
-To run the E2E tests run:
+To run the E2E tests for the Ingest pipeline run:
 
 ```bash
-make test_e2e
+make test_ingest_e2e
 ```
