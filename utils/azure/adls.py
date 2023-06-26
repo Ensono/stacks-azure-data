@@ -44,7 +44,9 @@ def delete_directories_adls(
         delete_directory_adls(adls_client, container_name, directory_path)
 
 
-def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, directory_path: str):
+def delete_directory_adls(
+    adls_client: DataLakeServiceClient, container_name, directory_path: str
+):
     """
     Deletes an ADLS directory.
 
@@ -54,7 +56,9 @@ def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, di
     :return:
         None
     """
-    adls_directory_client = adls_client.get_directory_client(container_name, directory_path)
+    adls_directory_client = adls_client.get_directory_client(
+        container_name, directory_path
+    )
     if adls_directory_client.exists():
         adls_directory_client.delete_directory()
     else:
@@ -80,5 +84,8 @@ def all_files_present_in_adls(
     adls_fs_client = adls_client.get_file_system_client(container_name)
     actual_paths = adls_fs_client.get_paths(directory_name)
     for expected_file in expected_files:
-        assert any(expected_file in actual_output_file.name for actual_output_file in actual_paths)
+        assert any(
+            expected_file in actual_output_file.name
+            for actual_output_file in actual_paths
+        )
     return True

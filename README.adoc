@@ -36,10 +36,10 @@ ADF-managed approach with Automated ADF publish:
 - The Azure DevOps pipeline build is triggered every time a new commit is made to master. It validates the resources and generates an ARM template as an artifact if validation succeeds.
 - The DevOps Release pipeline is configured to create a new release and deploy the ARM template each time a new build is available.
 
-In the approach, the build pipeline uses the ADFUtilities NPM package, which will validate all the resources and generate the ARM templates. 
+In the approach, the build pipeline uses the ADFUtilities NPM package, which will validate all the resources and generate the ARM templates.
 
 The build pipeline is responsible for validating Data Factory resources and generating the ARM template instead of the Data Factory UI (Publish button).
 
 The ADO pipeline handles deployment in each environment.
 
-Pre- and post-deployment scripts for stopping, starting, and cleaning up resources are generated automatically during the build process, so there is no need to maintain these scripts separately. 
+Pre- and post-deployment scripts for stopping, starting, and cleaning up resources are generated automatically during the build process, so there is no need to maintain these scripts separately.

@@ -16,7 +16,7 @@
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
-       
+
         {
             "name": "[concat(parameters('factoryName'), '/Get_Ingest_Config')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
@@ -146,7 +146,7 @@
                 "[concat(variables('factoryId'), '/datasets/ds_dp_ConfigStore_Json')]"
             ]
         },
-        
+
         {
             "name": "[concat(parameters('factoryName'), '/ds_dp_ConfigStore_Json')]",
             "type": "Microsoft.DataFactory/factories/datasets",
@@ -240,6 +240,6 @@
                 "[concat(variables('factoryId'), '/integrationRuntimes/adf-managed-vnet-runtime')]"
             ]
         }
-       
+
     ]
 }

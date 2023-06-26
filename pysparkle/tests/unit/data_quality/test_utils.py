@@ -16,7 +16,9 @@ def test_add_expectations_for_columns(dq_config):
     expectation_suite = ExpectationSuite(expectation_suite_name="test_suite")
     validation_config = dq_config.datasource_config[0].validation_config
 
-    expectation_suite = add_expectations_for_columns(expectation_suite, validation_config)
+    expectation_suite = add_expectations_for_columns(
+        expectation_suite, validation_config
+    )
     expectations = expectation_suite.expectations
 
     assert len(expectations) == 3

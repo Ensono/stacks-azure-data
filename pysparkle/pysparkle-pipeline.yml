@@ -54,13 +54,13 @@ stages:
               pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
           - bash: |
-              poetry install 
+              poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_pysparkle_dir)
           - bash: |
               poetry run pytest -rf -v tests -k unit
             displayName: 'Run Unit Tests'
-            workingDirectory:  '$(self_repo_pysparkle_dir)'          
+            workingDirectory:  '$(self_repo_pysparkle_dir)'
           - bash: |
               poetry build
             displayName: Build Project
@@ -95,7 +95,7 @@ stages:
           name: $(agentpool_name)
         strategy:
           runOnce:
-            deploy:  
+            deploy:
               steps:
               - task: DownloadPipelineArtifact@2
                 displayName: Download Build Artifacts
@@ -110,7 +110,7 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get Keyvault Secrets' 
+                displayName: 'Get Keyvault Secrets'
               - script: |
                           echo "$(databricks-host)
                           $(databricks-token)" | databricks configure --token
@@ -126,7 +126,7 @@ stages:
   # Deploy to Prod
   #############################################################
   - stage: Deploy_Prod_Stage
-    dependsOn: 
+    dependsOn:
       - Build_Stage
       - Deploy_NonPROD_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -142,7 +142,7 @@ stages:
           name: $(agentpool_name)
         strategy:
           runOnce:
-            deploy:  
+            deploy:
               steps:
               - task: DownloadPipelineArtifact@2
                 displayName: Download Build Artifacts
@@ -157,7 +157,7 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get Keyvault Secrets'            
+                displayName: 'Get Keyvault Secrets'
               - script: |
                           echo "$(databricks-host)
                           $(databricks-token)" | databricks configure --token

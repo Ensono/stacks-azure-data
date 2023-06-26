@@ -32,7 +32,7 @@ jobs:
     - script: |
         ls $(Pipeline.Workspace)/ARM_TTK_Download
       displayName: 'Verify: Check downloaded files'
-    
+
     - task: ExtractFiles@1
       displayName: 'Extract ARM TTK'
       inputs:
@@ -51,19 +51,19 @@ jobs:
         $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
         $testOutput = $testOutputParameters + $testOutputtemplate
         $testOutput
-        
+
         if ($testOutput | ? {$_.Errors }) {
-            exit 1 
+            exit 1
         } else {
             Write-Host "##vso[task.setvariable variable=result.best.practice]$true"
             exit 0
-        } 
+        }
       errorActionPreference: continue
       failOnStderr: true
       displayName: 'Run Best Practices Tests'
       continueOnError: true
 
-        # Publish the artifact 
+        # Publish the artifact
     # - task: PublishBuildArtifacts@1
     #   displayName: 'Publish Artifact: ConfigFiles'
     #   inputs:

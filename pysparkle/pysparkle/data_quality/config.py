@@ -2,7 +2,9 @@ from pydantic import BaseModel, Field
 
 
 class Expectation(BaseModel):
-    expectation_type: str = Field(description="The name of the GX expectation class to use.")
+    expectation_type: str = Field(
+        description="The name of the GX expectation class to use."
+    )
     expectation_kwargs: dict = Field(
         description="The keyword arguments to pass to the expectation class."
     )
@@ -14,8 +16,12 @@ class ValidationConfig(BaseModel):
 
 
 class DatasourceConfig(BaseModel):
-    datasource_name: str = Field(description="Data asset name (e.g. table or file name).")
-    datasource_type: str = Field(description="Source system type (e.g. table, parquet, csv).")
+    datasource_name: str = Field(
+        description="Data asset name (e.g. table or file name)."
+    )
+    datasource_type: str = Field(
+        description="Source system type (e.g. table, parquet, csv)."
+    )
     data_location: str = Field(
         description="Path to the given data asset or a fully qualified table name."
     )
