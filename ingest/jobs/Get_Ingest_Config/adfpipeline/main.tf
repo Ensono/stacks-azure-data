@@ -10,7 +10,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
     "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint" = {
       value = var.ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint
     }
-        "factoryName" = {
+    "factoryName" = {
       value = local.factoryName
     }
 
