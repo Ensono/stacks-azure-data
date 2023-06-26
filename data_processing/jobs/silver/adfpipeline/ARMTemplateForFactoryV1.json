@@ -22,6 +22,10 @@
         "databricksWorkspaceResourceId": {
             "type": "string",
             "defaultValue": "/subscriptions/xxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.Databricks/workspaces/xxxxxxxxxxx"
+        },
+        "enableDataQualitySilver": {
+            "type": "bool",
+            "defaultValue": true
         }
     },
     "variables": {
@@ -30,6 +34,7 @@
     "resources": [
 
         {
+            "condition": "[not(parameters('enableDataQualitySilver'))]",
             "name": "[concat(parameters('factoryName'), '/silver')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -77,6 +82,7 @@
             ]
         },
         {
+            "condition": "[parameters('enableDataQualitySilver')]",
             "name": "[concat(parameters('factoryName'), '/silver_dq')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
