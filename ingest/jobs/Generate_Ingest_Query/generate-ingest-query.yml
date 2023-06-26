@@ -144,7 +144,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
+              TF_FILE_LOCATION: ./"$(self_repo_adf_src)"
            - task: Bash@3
              displayName: "TaskCTL: infrastructure"
              inputs:
@@ -157,7 +157,7 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
+              TF_FILE_LOCATION: ./"$(self_repo_adf_src)"
               ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     # Terraform Backend Configuration
