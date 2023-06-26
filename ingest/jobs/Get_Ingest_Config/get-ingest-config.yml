@@ -64,6 +64,7 @@ stages:
 - stage: Build_Stage
   variables:
       - group: amido-stacks-de-pipeline-nonprod
+      - group: stacks-credentials-nonprod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
@@ -133,6 +134,7 @@ stages:
   variables:
       - group: amido-stacks-de-pipeline-nonprod
       - group: amido-stacks-infra-credentials-nonprod
+      - group: stacks-credentials-nonprod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   dependsOn: Build_Stage
@@ -196,7 +198,7 @@ stages:
               TF_STATE_KEY: $(tf_state_key_dev)
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
-              TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret=$(azure-client-secret)"
+              TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
@@ -282,6 +284,7 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
       - group: amido-stacks-de-pipeline-prod
+      - group:  stacks-credentials-prod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
@@ -344,7 +347,7 @@ stages:
               TF_STATE_KEY: $(tf_state_key_prod)>
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
-              TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret=$(azure-client-secret)"
+              TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'

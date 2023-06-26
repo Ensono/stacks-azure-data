@@ -283,6 +283,7 @@ stages:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
       - group: amido-stacks-de-pipeline-prod
+      - group:  stacks-credentials-prod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
