@@ -167,11 +167,6 @@ stages:
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
-
-
-              
-          
-
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
              inputs:
