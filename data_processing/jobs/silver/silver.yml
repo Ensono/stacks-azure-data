@@ -164,14 +164,6 @@ stages:
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-          #  - task: DownloadPipelineArtifact@2
-          #    displayName: Download Build Artifacts
-          #    inputs:
-          #     targetPath: '$(System.DefaultWorkingDirectory)'
-          #  - script: dir
-          #    displayName: List  Workspace
-          #    workingDirectory: '$(Pipeline.Workspace)/'
-
            - script: dir
              displayName: List  Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)'
@@ -183,9 +175,6 @@ stages:
            - script: dir
              displayName: List SparkJob
              workingDirectory: '$(self_repo_sparkjob_dir)'
-
-          #  - script: pip install databricks-cli
-          #    displayName: Install Databricks CLI
 
            - task: AzureKeyVault@2
              inputs:
