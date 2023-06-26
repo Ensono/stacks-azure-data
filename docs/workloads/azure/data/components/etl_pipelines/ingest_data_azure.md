@@ -8,7 +8,7 @@ Link to the pipeline: [stacks-azure-data/ingest](https://github.com/amido/stacks
 
 The diagram below gives an overview of the ingestion pipeline design.
 
-![ADF Pipeline Design](../../images/ADF_IngestPipelineDesign.png?raw=true "ADF Pipeline Design")
+![ADF Pipeline Design](../../images/ADF_IngestPipelineDesign.png?raw=true)
 
 ## Configuration
 The ingest process is designed around reusable pipelines which are metadata-driven. This means once
@@ -63,29 +63,28 @@ The pipelines folder is structured as follows:
 * `Ingest` contains ingest pipelines specific to the given data source. These are the parent
 pipelines that would be triggered on a recurring basis to ingest from a data source. All pipelines
 have their equivalents that include Data Quality validations. Depending on your particular needs,
-you can deploy each of the pipelines with or without this additional Data Quality step.
+you can deploy each of the pipelines with or without this additional Data Quality step. More on
+Data Quality can be found [here](data_quality_azure.md).
 * The pipelines within `Utilities` are reusable and referenced by other pipelines. They are not
 meant to be triggered independently.
 
-The `Ingest_AzureSql_Example_DQ` pipeline consists of the following steps:
+The `Ingest_AzureSql_Example` pipeline consists of the following steps:
 
-![ADF Ingest Pipeline](../../images/ADF_Ingest_AzureSql_Example_DQ.png?raw=true "ADF Ingest Pipeline")
+![Ingest_AzureSql_Example](../../images/ADF_Ingest_AzureSql_Example.png?raw=true)
 
 1. **Get_Ingest_Config**: Calls the utility pipeline, passing the data source name as a parameter.
 This will return the configuration required for the given data source.
 2. **For_Each_Ingest_Entity**: Loop through each ingest entity performing the following steps:
-   * **Generate_Ingest_Query**: Generates a SQL query to extract the data from a required time
-   range, according to the provided configuration. Depending on the load type, of of the two
+   1. **Generate_Ingest_Query**: Generates a SQL query to extract the data from a required time
+   range, according to the provided configuration. Depending on the load type, one of the two
    scenarios below will be apploed:
-     * Full extraction loads all available data for a given set of columns,
-     * Delta queries contain a `WHERE` clause to restrict the date range loaded.
+       * Full extraction loads all available data for a given set of columns,
+       * Delta queries contain a `WHERE` clause to restrict the date range loaded.
 
-     The following picture shows these two possibilities:
+       The following picture shows these two possibilities:
 
-     <img src="../../images/ADF_IngestGenerateIngestQuery.png" alt="drawing" width="300"/>
+       <img src="../../images/ADF_IngestGenerateIngestQuery.png" alt="drawing" width="300"/>
 
-   * **SQL_to_ADLS**: Execute the SQL query against the data source, and copy the results to the
-   Data Lake storage landing container under the appropriate path (data is validated using ADF`s
-   built-in data validation capability).
-3. **Data_Quality**: Performs additional data quality checks based on the user-provided configurations.
-This is an optional stage. More on Data Quality can be found [here](data_quality_azure.md).
+   2. **SQL_to_ADLS**: Execute the SQL query against the data source, and copy the results to the
+   Azure Data Lake storage landing container under the appropriate path (data is validated using
+   ADF`s built-in data validation capability).
