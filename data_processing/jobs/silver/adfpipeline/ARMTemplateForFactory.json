@@ -176,7 +176,7 @@
                     "newClusterSparkEnvVars": {
                         "AZURE_CLIENT_SECRET": "abc",
                         "AZURE_CLIENT_ID": "abc",
-                        "AZURE_TENANT_ID": "secrets/key-vault-secret/azure-tenant-id",
+                        "AZURE_TENANT_ID": "${{secrets/key-vault-secret/azure-tenant-id}}",
                         "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
                         "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
                         "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
