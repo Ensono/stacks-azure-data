@@ -761,11 +761,11 @@ resource "azurerm_resource_group_template_deployment" "example" {
                     "newClusterNodeType": "Standard_DS3_v2",
                     "newClusterNumOfWorker": "2",
                     "newClusterSparkEnvVars": {
-                        "AZURE_CLIENT_SECRET": "{{secrets/key-vault-secret/service-principal-secret}}",
-                        "AZURE_CLIENT_ID": "{{secrets/key-vault-secret/azure-client-id}}",
-                        "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
-                        "ADLS_ACCOUNT": "amidostacksdeveuwdeadls",
-                        "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
+                        "AZURE_CLIENT_SECRET": "abc",
+                        "AZURE_CLIENT_ID": "abs",
+                        "AZURE_TENANT_ID": "abc",
+                        "ADLS_ACCOUNT": "abcds",
+                        "BLOB_ACCOUNT": "test",
                         "PYSPARK_PYTHON": "databricks"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",
