@@ -13,7 +13,7 @@ keywords:
 
 # Repository structure
 
-Navigation around [stacks-azure-data](https://github.com/amido/stacks-azure-data) repository:
+Structure of [stacks-azure-data](https://github.com/amido/stacks-azure-data) repository:
 
 ```
 stacks-azure-data
