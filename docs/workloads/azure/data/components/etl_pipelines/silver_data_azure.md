@@ -1,7 +1,7 @@
 # Silver processing
 
 Silver processing represents the 'Bronze to Silver' layer transformations. It accepts raw data
-files (e.g. CSV) as an input and converts it into a more structured delta format.
+(e.g. CSV files) as an input and converts it into a more structured delta format.
 Azure Data Lake Storage (ADLS Gen2) has been chosen as both the source and destination system for
 our data processing.
 
