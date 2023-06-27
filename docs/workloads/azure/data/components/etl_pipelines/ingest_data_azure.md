@@ -48,7 +48,7 @@ example JSON config file below:
     "enabled": true,                           # Boolean flag to enable / disable the data source from being ingested
     "ingest_entities": [                       # Array of entities to be ingested from the source
         {
-            "version": 1,                      # Version number - increment this if the entitiy's schema changes
+            "version": 1,                      # Version number - increment this if the entity's schema changes
             "display_name": "SalesLT.Product", # Name to identify the entity - must be unique per data source
             "enabled": true,                   # Boolean flag to enable / disable the entity from being ingested
             "schema": "SalesLT",               # (SQL sources only) Database schema
