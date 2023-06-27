@@ -762,11 +762,11 @@ resource "azurerm_resource_group_template_deployment" "example" {
                     "newClusterNumOfWorker": "2",
                     "newClusterSparkEnvVars": {
                         "AZURE_CLIENT_SECRET": "abc",
-                        "AZURE_CLIENT_ID": "abs",
-                        "AZURE_TENANT_ID": "abc",
-                        "ADLS_ACCOUNT": "abcds",
-                        "BLOB_ACCOUNT": "test",
-                        "PYSPARK_PYTHON": "databricks"
+                        "AZURE_CLIENT_ID": "abc",
+                        "AZURE_TENANT_ID": "abcd",
+                        "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
+                        "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
+                        "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",
                     "clusterOption": "Fixed",
