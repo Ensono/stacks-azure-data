@@ -1,3 +1,4 @@
-# Using Stacks CLI to deploy core infrastructure components
+# Infrastructure deployment
 
-Commands, configurations, requirements
+Documentation on using Stacks CLI to deploy core infrastructure components.
+Commands, configurations, requirements.

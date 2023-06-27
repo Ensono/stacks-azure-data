@@ -1,8 +1,8 @@
-# Stacks - Azure Data Platform solution
+# Stacks - Azure Data Platform
 
 ## Overview
 
-Housing an Azure data platform solution template, [stacks-azure-data](https://github.com/amido/stacks-azure-data)
+Housing an Azure data platform template, [stacks-azure-data](https://github.com/amido/stacks-azure-data)
 repository leverages **Azure Data Factory** for data ingestion and orchestration of data processing
 using **Databricks**. It also employs **Azure Data Lake Storage Gen2** for data lake storage.
 The solution's data workload naming convention originates from Databricks' Medallion Architecture,
@@ -19,7 +19,7 @@ transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, r
 
 ### High-level architecture
 
-![High-level architecture](images/Stacks_Azure_Data_Platform-HLD.png?raw=true "High-level architecture")
+![High-level architecture](images/Stacks_Azure_Data_Platform-HLD.png?raw=true)
 
 ### Infrastructure deployed
 * Resource Group

@@ -8,7 +8,7 @@ Link to the pipeline: [stacks-azure-data/ingest](https://github.com/amido/stacks
 
 The diagram below gives an overview of the ingestion pipeline design.
 
-![ADF Pipeline Design](../../images/ADF_IngestPipelineDesign.png?raw=true)
+![ADF_IngestPipelineDesign.png](../../images/ADF_IngestPipelineDesign.png?raw=true)
 
 ## Configuration
 The ingest process is designed around reusable pipelines which are metadata-driven. This means once
@@ -58,7 +58,7 @@ the Data Factory pipeline.
 The provided sample pipelines give an example of a data ingest process from source to the data lake.
 The pipelines folder is structured as follows:
 
-![ADF Pipelines](../../images/ADF_IngestPipelinesList.png?raw=true "ADF Pipelines")
+![ADF_IngestPipelinesList.png](../../images/ADF_IngestPipelinesList.png?raw=true)
 
 * `Ingest` contains ingest pipelines specific to the given data source. These are the parent
 pipelines that would be triggered on a recurring basis to ingest from a data source. All pipelines
@@ -70,7 +70,7 @@ meant to be triggered independently.
 
 The `Ingest_AzureSql_Example` pipeline consists of the following steps:
 
-![Ingest_AzureSql_Example](../../images/ADF_Ingest_AzureSql_Example.png?raw=true)
+![ADF_Ingest_AzureSql_Example.png](../../images/ADF_Ingest_AzureSql_Example.png?raw=true)
 
 1. **Get_Ingest_Config**: Calls the utility pipeline, passing the data source name as a parameter.
 This will return the configuration required for the given data source.
