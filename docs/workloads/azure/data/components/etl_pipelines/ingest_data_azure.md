@@ -64,7 +64,7 @@ example JSON config file below:
 
 These configuration files will be loaded in for a given data source every time an ingestion pipeline
 is triggered in Data Factory, and all entities will be ingested. To disable a particular ingest
-source or entitiy without removing it, you can set `"enabled": false` – these will be ignored by
+source or entity without removing it, you can set `"enabled": false` – these will be ignored by
 the Data Factory pipeline.
 
 ### Data Factory pipeline design
