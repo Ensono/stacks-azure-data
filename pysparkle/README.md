@@ -12,7 +12,7 @@ including nested datatypes and arrays, which give us enough complexity for trans
 
 ## Key components
 The naming convention for the data pipelines originates in Databricks' Medallion Architecture, which
-emphasizes structured data transformation layers. The key components of PySparkle include:
+emphasises structured data transformation layers. The key components of PySparkle include:
 - **Silver processing**: This represents the 'Bronze to Silver' layer transformations. It accepts
 raw data (CSV files) as an input and converts it into a more structured delta format.
 - **Gold processing**: This embodies the 'Silver to Gold' layer transformations. It performs
