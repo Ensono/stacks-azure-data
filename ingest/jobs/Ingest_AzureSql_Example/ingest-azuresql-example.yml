@@ -218,7 +218,7 @@ stages:
              displayName: "TaskCTL: infrastructure"
              inputs:
               targetType: inline
-              script: taskctl infrastructure
+              script: taskctl -d infrastructure 
              env:
               # Dotnet Build
               CLOUD_PROVIDER: "$(cloud_provider)"
