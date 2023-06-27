@@ -93,7 +93,7 @@ Here's a minimal example of a configuration file:
 
 ### Using environment variables in configuration files
 It is possible to use environment variables in a configuration file for Data Quality.
-Placeholders in the form of {ENV_VAR_NAME} will be replaced with the corresponding environment
+Placeholders in the form of `{ENV_VAR_NAME}` will be replaced with the corresponding environment
 variable values. For example, you can pass the ADLS name using an environment variable:
 
 ```json
