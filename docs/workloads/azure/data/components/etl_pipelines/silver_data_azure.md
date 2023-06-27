@@ -2,8 +2,8 @@
 
 Silver processing represents the 'Bronze to Silver' layer transformations. It accepts raw data
 (CSV files) as an input and converts it into a more structured delta format.
-Azure Data Lake Storage (ADLS) has been chosen as both the source and destination system for our
-data processing.
+Azure Data Lake Storage (ADLS Gen2) has been chosen as both the source and destination system for
+our data processing.
 
 ## Pipeline overview
 

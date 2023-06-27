@@ -20,14 +20,14 @@ advanced transformations, creating optimized, aggregated data sets for downstrea
 - **Data Quality**: PySparkle performs data quality checks according to user-provided
 configurations, ensuring the reliability and accuracy of the data.
 
-We have chosen Azure Data Lake Storage (ADLS) as both the source and destination systems for our
-data processing due to its scalability, security features, and seamless integration with our data
-processing workflows.
+We have chosen Azure Data Lake Storage (ADLS Gen2) as both the source and destination systems for
+our data processing due to its scalability, security features, and seamless integration with our
+data processing workflows.
 
 ## PySparkle Usage
 
 > ℹ️ PySparkle Silver processing requires the following environment variables to be set
-> to access Azure Data Lake Storage (ADLS):
+> to access Azure Data Lake Storage (ADLS Gen2):
 > - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
 > - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,
 > - AZURE_CLIENT_SECRET - Service Principal Secret,
