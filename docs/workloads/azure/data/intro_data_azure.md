@@ -1,4 +1,20 @@
-# Stacks - Azure Data Platform
+---
+id: intro_data_azure
+title: Architecture Overview
+sidebar_label: Architecture Overview
+hide_title: true
+hide_table_of_contents: false
+description: Azure Data Platform - Architecture Overview
+keywords:
+  - data
+  - python
+  - etl
+  - databricks
+  - azure
+  - adf
+---
+
+# Stacks – Azure Data Platform
 
 ## Overview
 
