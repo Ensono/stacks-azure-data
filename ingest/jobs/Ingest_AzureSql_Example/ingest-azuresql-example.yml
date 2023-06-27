@@ -65,6 +65,7 @@ variables:
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
+  
 
 pool:
   name: $(agentpool_name)
@@ -163,15 +164,6 @@ stages:
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-
-           - script: dir
-             displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-           - script: dir
-             displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
            - task: AzureKeyVault@2
              inputs:
                   azureSubscription: 'Stacks.Pipeline.Builds'
@@ -199,8 +191,8 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                     echo Source is $(self_repo_sparkjob_dir)
+                     for file in $(self_repo_sparkjob_dir)/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
                           databricks fs cp --overwrite "$file" "$destination"
@@ -243,6 +235,16 @@ stages:
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+              TF_VAR_data_factory_resource_group_name: $(resource_group)
+              TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              TF_VAR_databricksHost: "$(databricksHost)"
+              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_ls_AzureSql_ExampleSource_connectionString: "$(sql_connection)"
+              TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
+              TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
+              TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
@@ -387,8 +389,8 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                     echo Source is $(self_repo_sparkjob_dir)
+                     for file in $(self_repo_sparkjob_dir)/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
                           databricks fs cp --overwrite "$file" "$destination"
@@ -431,6 +433,17 @@ stages:
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+              TF_VAR_data_factory_resource_group_name: $(resource_group)
+              TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              TF_VAR_databricksHost: "$(databricksHost)"
+              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_ls_AzureSql_ExampleSource_connectionString: "$(sql_connection)"
+              TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
+              TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
+              TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
+
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
