@@ -1,12 +1,15 @@
-# Stacks - Azure Data Platform solution
+# Stacks Azure Data Platform
 
 ## Overview
 
-Housing an Azure data platform solution template, this repository leverages **Azure Data Factory**
-for data ingestion and orchestration of data processing using **Databricks**. It also employs
-**Azure Data Lake Storage Gen2** for data lake storage. The solution's data workload naming
-convention originates from Databricks' Medallion Architecture, a system emphasizing structured data
-transformation layers. Key elements of the solution include:
+The Stacks Azure Data Platform solution provides a template for deploying a production-ready data
+platform, including **Azure Data Factory** for data ingestion and orchestration, **Databricks** for
+data processing and **Azure Data Lake Storage Gen2** for data lake storage. The solution's data
+workload naming convention originates from Databricks' Medallion Architecture, a system emphasising
+structured data transformation layers.
+
+Key elements of the solution include:
+
 * Infrastructure as code (IaC) for all infrastructure components (Terraform & ARM Templates);
 * Azure Data Factory (ADF) resources and a sample ingest pipeline that transfers data from a sample
 source into a landing (Bronze) data lake zone;
