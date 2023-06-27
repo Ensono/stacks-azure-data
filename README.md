@@ -12,7 +12,7 @@ transformation layers. Key elements of the solution include:
 source into a landing (Bronze) data lake zone;
 * Sample data processing pipelines named Silver and Gold. These are responsible for data
 transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
-* Data Quality validations;
+* Data Quality framework using Great Expectations;
 * Deployment pipelines to enable CI/CD and DataOps for all components;
 * Automated tests to ensure quality assurance and operational efficiency.
 
