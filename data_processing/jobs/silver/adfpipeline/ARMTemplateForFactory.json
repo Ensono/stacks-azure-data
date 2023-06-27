@@ -26,12 +26,7 @@
         "enableDataQualitySilver": {
             "type": "bool",
             "defaultValue": true
-        },
-        "azureClientID": {
-            "type": "string",
-            "defaultValue": "aaaaaaa"
         }
-        
     },
     "variables": {
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
@@ -180,8 +175,8 @@
                     "newClusterNumOfWorker": "2",
                     "newClusterSparkEnvVars": {
                         "AZURE_CLIENT_SECRET": "abc",
-                        "AZURE_CLIENT_ID": "[parameters('azureClientID')]",
-                        "AZURE_TENANT_ID": "[parameters('azureClientID')]",
+                        "AZURE_CLIENT_ID": "abc",
+                        "AZURE_TENANT_ID": "`{`{secrets/key-vault-secret/service-principal-secret}`}`",
                         "ADLS_ACCOUNT": "[parameters('adlsStorageAccountName')]",
                         "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
                         "PYSPARK_PYTHON": "/databricks/python3/bin/python3"

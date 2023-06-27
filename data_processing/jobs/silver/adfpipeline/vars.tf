@@ -41,8 +41,3 @@ variable "enableDataQualitySilver" {
   description = "Enable Data Quality Ingest."
 }
 
-variable "azureClientID" {
-  type        = string
-  default     = "{{secrets/key-vault-secret/azure-client-id}}"
-  description = "Databricks Host url id"
-}

@@ -30,10 +30,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
     "enableDataQualitySilver" = {
       value = var.enableDataQualitySilver
     }
-
-    "azureClientID" = {
-      value = var.azureClientID
-    }
+    
 
   })
   template_content = "${file("./ARMTemplateForFactory.json")}"
