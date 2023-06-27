@@ -4,7 +4,7 @@ title: Architecture Overview
 sidebar_label: Architecture Overview
 hide_title: true
 hide_table_of_contents: false
-description: Azure Data Platform - Architecture Overview
+description: Architecture overview for the deployed solution
 keywords:
   - data
   - python

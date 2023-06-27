@@ -1,3 +1,16 @@
+---
+id: ingest_data_azure
+title: Data Ingestion
+sidebar_label: Data Ingestion
+hide_title: true
+hide_table_of_contents: false
+description: Data ingestion pipeline
+keywords:
+  - ingest
+  - adf
+  - etl
+---
+
 # Data Ingestion
 The solution contains a sample Azure Data Factory pipeline for ingesting data from a sample data
 source (Azure SQL) and loading data into the data lake 'landing' zone.

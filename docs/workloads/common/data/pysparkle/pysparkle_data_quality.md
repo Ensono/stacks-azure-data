@@ -1,3 +1,18 @@
+---
+id: pysparkle_data_quality
+title: PySparkle Data Quality
+sidebar_label: Data Quality
+hide_title: true
+hide_table_of_contents: false
+description: PySparkle Data Quality overview
+keywords:
+  - pysparkle
+  - spark
+  - pyspark
+  - python
+  - data quality
+---
+
 # PySparkle Data Quality
 PySparkle performs data quality checks based on the user-provided configurations. At its core, it
 utilizes the capabilities of the [Great Expectations](https://greatexpectations.io/) platform.

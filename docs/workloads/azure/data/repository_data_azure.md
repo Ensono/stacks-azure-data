@@ -1,3 +1,16 @@
+---
+id: repository_data_azure
+title: Repository
+sidebar_label: Repository
+hide_title: true
+hide_table_of_contents: false
+description: Repository structure explained
+keywords:
+  - data
+  - python
+  - repository
+---
+
 # Repository structure
 
 Navigation around [stacks-azure-data](https://github.com/amido/stacks-azure-data) repository:

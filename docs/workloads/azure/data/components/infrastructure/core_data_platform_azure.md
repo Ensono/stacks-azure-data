@@ -1,3 +1,19 @@
+---
+id: core_data_platform_azure
+title: Infrastructure
+sidebar_label: Infrastructure
+hide_title: true
+hide_table_of_contents: false
+description: Infrastructure overview
+keywords:
+  - azure
+  - resource group
+  - adf
+  - adls
+  - databricks
+  - key vault
+---
+
 # Infrastructure - TODO
 
 Documentation on the Infrastructure used and (maybe) the high level deployment approach.

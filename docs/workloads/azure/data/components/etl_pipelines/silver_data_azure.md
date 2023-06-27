@@ -1,3 +1,17 @@
+---
+id: silver_data_azure
+title: Silver Pipeline
+sidebar_label: Silver Pipeline
+hide_title: true
+hide_table_of_contents: false
+description: Silver processing pipeline
+keywords:
+  - silver
+  - adf
+  - etl
+  - databricks
+---
+
 # Silver processing
 
 Silver processing represents the 'Bronze to Silver' layer transformations. It accepts raw data
