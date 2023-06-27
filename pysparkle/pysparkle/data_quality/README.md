@@ -14,7 +14,7 @@ for storing configurations is `config` and it is defined in the configuration se
 package.
 
 Azure Blob storage account name is expected to be set in an environment variable as explained
-in the main README file.
+in the main README file. 
 
 
 ## JSON Configuration File for Great Expectations
@@ -39,7 +39,7 @@ Here is the description of the main elements:
         the database schema and the table name. For example, `staging.table_name`.
     4. `expectation_suite_name`: Name of the expectation suite associated with this data source.
     5. `validation_config`: A list of validation configurations where each configuration contains the following fields:
-        1. `column_name`: Name of the validated column.
+        1. `column_name`: Name of the validated column. 
         2. `expectations`: List of expectations where each expectation has the following fields:
         3. `expectation_type`: Name of the Great Expectations expectation class to use.
         4. `expectation_kwargs`: The keyword arguments to pass to the expectation class.

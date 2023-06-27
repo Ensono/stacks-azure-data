@@ -20,13 +20,9 @@ def data_quality_main(config_path):
 
     dq_conf_dict = load_json_from_blob(CONFIG_CONTAINER, config_path)
     dq_conf = Config.parse_obj(dq_conf_dict)
-    logger.info(
-        f"Running Data Quality processing for dataset: {dq_conf.dataset_name}..."
-    )
+    logger.info(f"Running Data Quality processing for dataset: {dq_conf.dataset_name}...")
 
-    spark = SparkSession.builder.appName(
-        f"DataQuality-{dq_conf.dataset_name}"
-    ).getOrCreate()
+    spark = SparkSession.builder.appName(f"DataQuality-{dq_conf.dataset_name}").getOrCreate()
 
     set_spark_properties(spark)
 

@@ -39,15 +39,10 @@ def test_set_spark_properties(spark):
     set_spark_properties(spark)
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
     assert (
-        spark.conf.get(
-            f"fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net"
-        )
-        == "OAuth"
+        spark.conf.get(f"fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net") == "OAuth"
     )
     assert (
-        spark.conf.get(
-            f"fs.azure.account.oauth.provider.type.{adls_account}.dfs.core.windows.net"
-        )
+        spark.conf.get(f"fs.azure.account.oauth.provider.type.{adls_account}.dfs.core.windows.net")
         == "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider"
     )
     assert spark.conf.get(
@@ -79,8 +74,6 @@ def test_get_adls_file_url():
     container = "mycontainer"
     file_name = "myfolder/myfile.txt"
 
-    expected_url = (
-        "abfss://mycontainer@myadlsaccount.dfs.core.windows.net/myfolder/myfile.txt"
-    )
+    expected_url = "abfss://mycontainer@myadlsaccount.dfs.core.windows.net/myfolder/myfile.txt"
 
     assert get_adls_file_url(container, file_name) == expected_url

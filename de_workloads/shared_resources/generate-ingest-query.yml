@@ -21,7 +21,7 @@ pr:
 
 trigger:
   branches:
-
+   
     include:
       - 'main'
   paths:
@@ -84,7 +84,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:
+        deploy:  
           steps:
 
            - task: DownloadPipelineArtifact@2
@@ -95,7 +95,7 @@ stages:
            - script: dir
              displayName: List ArmTemplates Artifact in Workspace
              workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
+            
           #  - task: AzureCLI@2
           #    inputs:
           #      azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
@@ -106,7 +106,7 @@ stages:
           #                     --template-file $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json `
           #                     --parameters $(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json `
           #                     --parameters factoryName=amido-stacks-dev-euw-de  `
-          #                     --exclude-change-types Ignore'
+          #                     --exclude-change-types Ignore'        
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -147,7 +147,7 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-    # Start Testing
+    # Start Testing 
   - deployment: Test_NonPROD
     displayName: 'Testing  NonPROD'
     environment: ${{ variables.domain }}-nonprod
@@ -156,7 +156,7 @@ stages:
       name: $(agentpool_name)
     strategy:
       runOnce:
-        deploy:
+        deploy:  
           steps:
            - checkout: self
            - task: AzureCLI@2
@@ -164,8 +164,8 @@ stages:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                ScriptType: 'bash'
                scriptLocation: 'inlineScript'
-               inlineScript: az account show
-
+               inlineScript: az account show 
+           
            - task: UsePythonVersion@0
              inputs:
                 versionSpec: '$(pythonVersion)'
@@ -178,7 +178,7 @@ stages:
               pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
              displayName: 'Install Pipeline Tools'
            - bash: |
-              poetry install
+              poetry install 
              displayName: 'Running poetry install'
              workingDirectory:  '$(self_repo_dir)'
            - bash: |
@@ -198,7 +198,7 @@ stages:
                   AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
                   AZURE_CLIENT_ID: $(azure-client-id)
                   AZURE_CLIENT_SECRET: $(azure-client-secret)
-                  AZURE_TENANT_ID: $(azure-tenant-id)
+                  AZURE_TENANT_ID: $(azure-tenant-id)   
 
            - task: PublishTestResults@2
              displayName: 'Publish Test Results'
@@ -206,13 +206,13 @@ stages:
                 testResultsFiles: '**/*.xml'
                 searchFolder: $(junit_path)
              condition: succeededOrFailed()
-
+  
 
 #############################################################
 # Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
-  dependsOn:
+  dependsOn: 
     - Build_Stage
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -229,7 +229,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:
+        deploy:  
           steps:
 
 
@@ -280,7 +280,7 @@ stages:
                               -predeployment $false
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-
+ 
 - stage: Release
   dependsOn:
       - Build_Stage

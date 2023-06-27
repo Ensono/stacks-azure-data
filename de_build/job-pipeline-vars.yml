@@ -17,7 +17,7 @@ variables:
     value: "$(Agent.BuildDirectory)/s"
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
-
+  
 
 
 # Versioning

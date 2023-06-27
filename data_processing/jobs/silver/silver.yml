@@ -95,7 +95,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:
+        deploy:  
           steps:
 
            - task: DownloadPipelineArtifact@2
@@ -120,8 +120,8 @@ stages:
                   KeyVaultName: $(keyvault_name)
                   SecretsFilter: '*'
                   RunAsPreJob: false
-             displayName: 'Get secrets from the keyvault'
-
+             displayName: 'Get secrets from the keyvault'             
+             
            - script: |
                       echo "$(databricks-host)
                       $(databricks-token)" | databricks configure --token
@@ -130,7 +130,7 @@ stages:
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
                       echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No file or directory exists"* ]];
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
                       then
                           echo "Creating Folder"
                           databricks fs mkdirs dbfs:/FileStore/scripts
@@ -148,13 +148,13 @@ stages:
                           databricks fs cp --overwrite "$file" "$destination"
                         fi
                      done
-             displayName: Upload Spark Jobs
+             displayName: Upload Spark Jobs  
 
           #  - script: |
           #            echo Destination is /FileStore/scripts/
           #            echo Source is $(System.DefaultWorkingDirectory)/SparkJob
           #            databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/SparkJob/*.* dbfs:/FileStore/scripts/
-          #    displayName: Upload Spark Job
+          #    displayName: Upload Spark Job      
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -179,7 +179,7 @@ stages:
                 location: $(region)
                 csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
                 csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: $(overrideParameters)
+                overrideParameters: $(overrideParameters)                       
                 deploymentMode: 'Incremental'
 
            - task: AzurePowerShell@5
@@ -195,7 +195,7 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-  #   # Start Testing
+  #   # Start Testing 
   # - deployment: Test_NonPROD
   #   displayName: 'Testing  NonPROD'
   #   environment: ${{ variables.domain }}-nonprod
@@ -204,7 +204,7 @@ stages:
   #     name: $(agentpool_name)
   #   strategy:
   #     runOnce:
-  #       deploy:
+  #       deploy:  
   #         steps:
   #          - checkout: self
   #         #  - task: AzureCLI@2
@@ -212,8 +212,8 @@ stages:
   #         #      azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
   #         #      ScriptType: 'bash'
   #         #      scriptLocation: 'inlineScript'
-  #         #      inlineScript: az account show
-
+  #         #      inlineScript: az account show 
+           
   #          - task: UsePythonVersion@0
   #            inputs:
   #               versionSpec: '$(pythonVersion)'
@@ -226,7 +226,7 @@ stages:
   #             pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
   #            displayName: 'Install Pipeline Tools'
   #          - bash: |
-  #             poetry install
+  #             poetry install 
   #            displayName: 'Running poetry install'
   #            workingDirectory:  '$(self_repo_dir)'
   #          - bash: |
@@ -246,7 +246,7 @@ stages:
   #                 AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
   #                 AZURE_CLIENT_ID: $(azure-client-id)
   #                 AZURE_CLIENT_SECRET: $(azure-client-secret)
-  #                 AZURE_TENANT_ID: $(azure-tenant-id)
+  #                 AZURE_TENANT_ID: $(azure-tenant-id)   
 
   #          - task: PublishTestResults@2
   #            displayName: 'Publish Test Results'
@@ -254,13 +254,13 @@ stages:
   #               testResultsFiles: '**/*.xml'
   #               searchFolder: $(junit_path)
   #            condition: succeededOrFailed()
-
+  
 
 #############################################################
 # Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
-  dependsOn:
+  dependsOn: 
     - Build_Stage
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -277,7 +277,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:
+        deploy:  
           steps:
 
 
@@ -303,7 +303,7 @@ stages:
                   KeyVaultName: $(keyvault_name)
                   SecretsFilter: '*'
                   RunAsPreJob: false
-             displayName: 'Get secrets from the keyvault'
+             displayName: 'Get secrets from the keyvault' 
 
            - script: |
                       echo "$(databricks-host)
@@ -318,7 +318,7 @@ stages:
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
                       echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No file or directory exists"* ]];
+                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
                       then
                           echo "Creating Folder"
                           databricks fs mkdirs dbfs:/FileStore/scripts
@@ -336,7 +336,7 @@ stages:
                           databricks fs cp --overwrite "$file" "$destination"
                         fi
                      done
-             displayName: Upload Spark Jobs
+             displayName: Upload Spark Jobs  
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -376,7 +376,7 @@ stages:
                               -predeployment $false
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
-
+ 
 - stage: Release
   dependsOn:
       - Build_Stage

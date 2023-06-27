@@ -18,9 +18,7 @@ from pyspark.sql import DataFrame
 from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
 
 
-def create_datasource_context(
-    datasource_name: str, gx_directory_path: str
-) -> AbstractDataContext:
+def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:
     """
     Given a string containing the datasource name, this function generates a data context instance
 
@@ -54,9 +52,7 @@ def create_datasource_context(
     root_directory = f"{gx_directory_path}/{datasource_name}/"
 
     data_context_config = DataContextConfig(
-        store_backend_defaults=FilesystemStoreBackendDefaults(
-            root_directory=root_directory
-        ),
+        store_backend_defaults=FilesystemStoreBackendDefaults(root_directory=root_directory),
     )
 
     context = gx.get_context(project_config=data_context_config)
@@ -114,9 +110,7 @@ def add_expectation_suite(
         expectation_suite_name=dq_conf.expectation_suite_name
     )
 
-    expectation_suite = add_expectations_for_columns(
-        expectation_suite, dq_conf.validation_config
-    )
+    expectation_suite = add_expectations_for_columns(expectation_suite, dq_conf.validation_config)
     context.update_expectation_suite(expectation_suite)
 
     return context

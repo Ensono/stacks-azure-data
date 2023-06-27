@@ -65,8 +65,6 @@ def check_adf_pipeline_in_complete_state(
         bool
     """
     pipeline_run = adf_client.pipeline_runs.get(
-        resource_group_name=resource_group_name,
-        factory_name=data_factory_name,
-        run_id=run_id,
+        resource_group_name=resource_group_name, factory_name=data_factory_name, run_id=run_id
     )
     return pipeline_run.status in ["Succeeded", "Failed"]

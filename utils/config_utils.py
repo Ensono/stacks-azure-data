@@ -22,9 +22,7 @@ def get_config_folder(stage: str = None, pipeline_name: str = None) -> str:
         return (project_root / "config").resolve()
 
 
-def get_config_full_path(
-    path: str, stage: str = None, pipeline_name: str = None
-) -> str:
+def get_config_full_path(path: str, stage: str = None, pipeline_name: str = None) -> str:
     """
     Gets the full system path to the required resource
         :param path: Path of the required resource within the config folder
@@ -39,9 +37,7 @@ def get_config_full_path(
     return resource
 
 
-def load_config_as_dict(
-    path: str, stage: str = None, pipeline_name: str = None
-) -> dict:
+def load_config_as_dict(path: str, stage: str = None, pipeline_name: str = None) -> dict:
     """
     Gets the contents of the required JSON resource and converts to a dictionary
         :param path: Path of the required resource within the config folder (e.g 'folder1/resource1.json')
@@ -54,9 +50,7 @@ def load_config_as_dict(
         return json.load(f)
 
 
-def load_configs_as_list(
-    path: str, stage: str = None, pipeline_name: str = None
-) -> list[dict]:
+def load_configs_as_list(path: str, stage: str = None, pipeline_name: str = None) -> list[dict]:
     """
     Gets all JSON config files within the given path
         :param path: Path of the required resources folder within the config folder (e.g 'folder1')

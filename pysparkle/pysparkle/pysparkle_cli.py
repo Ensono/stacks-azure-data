@@ -40,9 +40,7 @@ def gold(partitions):
 
 
 @click.command()
-@click.option(
-    "--config-path", help="Path to a JSON config inside an Azure Blob container."
-)
+@click.option("--config-path", help="Path to a JSON config inside an Azure Blob container.")
 def data_quality(config_path):
     """Data Quality check."""
     data_quality_main(config_path)

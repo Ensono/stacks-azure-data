@@ -51,10 +51,7 @@ def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
 def poll_adf_pipeline(context, seconds: str):
     polling2.poll(
         lambda: check_adf_pipeline_in_complete_state(
-            adf_client,
-            AZURE_RESOURCE_GROUP_NAME,
-            AZURE_DATA_FACTORY_NAME,
-            context.run_id,
+            adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, context.run_id
         ),
         step=int(seconds),
         timeout=300,
@@ -73,9 +70,7 @@ def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
     "the files {output_files} are present in the ADLS container {container_name} in the directory "
     "{directory_name}"
 )
-def check_all_files_present_in_adls(
-    context, output_files, container_name, directory_name
-):
+def check_all_files_present_in_adls(context, output_files, container_name, directory_name):
     expected_files_list = json.loads(output_files)
     assert all_files_present_in_adls(
         adls_client, container_name, directory_name, expected_files_list

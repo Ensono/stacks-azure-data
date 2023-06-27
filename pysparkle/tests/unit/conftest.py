@@ -20,8 +20,7 @@ def spark(tmp_path_factory):
         .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
         .config("spark.sql.warehouse.dir", temp_dir)
         .config(
-            "spark.sql.catalog.spark_catalog",
-            "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+            "spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog"
         )
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .getOrCreate()
@@ -33,9 +32,7 @@ def spark(tmp_path_factory):
 
 @fixture
 def mock_adls_client():
-    with patch(
-        "pysparkle.storage_utils.DataLakeServiceClient"
-    ) as mock_DataLakeServiceClient:
+    with patch("pysparkle.storage_utils.DataLakeServiceClient") as mock_DataLakeServiceClient:
         mock_paths = [MagicMock(name=file) for file in os.listdir(TEST_CSV_DIR)]
         for mock_path, filename in zip(mock_paths, os.listdir(TEST_CSV_DIR)):
             type(mock_path).name = PropertyMock(return_value=filename)
@@ -61,9 +58,7 @@ def mock_blob_client(json_contents):
     with patch("pysparkle.storage_utils.BlobServiceClient") as mock_BlobServiceClient:
         mock_blob_client = MagicMock()
         mock_blob_client.download_blob.return_value.readall.return_value = json_contents
-        mock_BlobServiceClient.return_value.get_blob_client.return_value = (
-            mock_blob_client
-        )
+        mock_BlobServiceClient.return_value.get_blob_client.return_value = mock_blob_client
 
         yield mock_BlobServiceClient
 
