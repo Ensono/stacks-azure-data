@@ -29,7 +29,7 @@
         },
         "azureClientID": {
             "type": "string",
-            "defaultValue": "{{secrets/key-vault-secret/azure-client-id}}"
+            "defaultValue": "aaaaaaa"
         }
         
     },
