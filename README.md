@@ -99,7 +99,7 @@ make test
 To run E2E tests locally, you will need to login through the Azure CLI:
 
 ```bash
-az login 
+az login
 ```
 
 To set the correct subscription run:
