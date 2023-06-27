@@ -206,8 +206,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(self_repo_dir)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
@@ -404,8 +404,8 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(self_repo_dir)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ArmTemplates/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
