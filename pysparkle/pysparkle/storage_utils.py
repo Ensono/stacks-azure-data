@@ -122,7 +122,7 @@ def load_json_from_blob(container: str, file_path: str) -> dict:
 
 
 def get_adls_file_url(container: str, file_name: str) -> str:
-    """Constructs an Azure Data Lake Storage (ADLS Gen2) URL for a specific file.
+    """Constructs an Azure Data Lake Storage (ADLS) URL for a specific file.
 
     Args:
         container: The name of the ADLS container.
