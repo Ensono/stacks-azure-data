@@ -35,7 +35,7 @@ The pipelines folder is structured as follows:
 
 ![ADF_SilverPipelinesList.png](../../images/ADF_SilverPipelinesList.png)
 
-Similar to other ETL pipelines, Silver has its equivalent that includes Data Quality validations.
+Similar to other ETL pipelines, Silver can optionally include a Data Quality validations step.
 Depending on your particular needs, you can deploy each of the pipelines with or without a Data
 Quality step. More on Data Quality can be found [here](data_quality_azure.md).
 
