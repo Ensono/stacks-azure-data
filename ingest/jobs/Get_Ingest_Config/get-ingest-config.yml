@@ -224,7 +224,6 @@ stages:
       runOnce:
         deploy:  
           steps:
-           - checkout: self
            - task: AzureCLI@2
              inputs:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
