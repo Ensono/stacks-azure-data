@@ -88,7 +88,7 @@ poetry add packagename --group dev
 In order to run unit tests for the Ingest pipeline run the following command:
 
 ```bash
-make test_ingest
+make test
 ```
 
 ### Running E2E Tests
@@ -116,8 +116,8 @@ To run the E2E tests, you need to set up the following environment variables:
 The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
 whilst clearing up directories please check you have the necessary permissions to read, write and execute against ADLS.
 
-To run the E2E tests for the Ingest pipeline run:
+To run the E2E tests run:
 
 ```bash
-make test_ingest_e2e
+make test_e2e
 ```

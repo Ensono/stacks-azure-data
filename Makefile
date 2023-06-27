@@ -5,10 +5,10 @@ setup_dev_environment:
 	poetry update
 	pre-commit install
 
-test_ingest:
+test:
 	python -m pytest ingest/jobs/Ingest_AzureSql_Example/tests/unit
 
-test_ingest_e2e:
+test_e2e:
 	behave ingest/jobs/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
 
 pre_commit:
