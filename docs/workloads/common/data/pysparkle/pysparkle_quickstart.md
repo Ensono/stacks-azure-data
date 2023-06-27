@@ -31,7 +31,7 @@ emphasises structured data transformation layers. The key components of PySparkl
 - **Silver processing**: This represents the 'Bronze to Silver' layer transformations. It accepts
 raw data (CSV files) as an input and converts it into a more structured delta format.
 - **Gold processing**: This embodies the 'Silver to Gold' layer transformations. It performs
-advanced transformations, creating optimized, aggregated data sets for downstream consumption.
+advanced transformations, creating optimised, aggregated data sets for downstream consumption.
 - **Data Quality**: PySparkle performs data quality checks according to user-provided
 configurations, ensuring the reliability and accuracy of the data.
 
