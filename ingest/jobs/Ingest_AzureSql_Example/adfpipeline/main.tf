@@ -766,7 +766,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
                         "AZURE_TENANT_ID": "{{secrets/key-vault-secret/azure-tenant-id}}",
                         "ADLS_ACCOUNT": "amidostacksdeveuwdeadls",
                         "BLOB_ACCOUNT": "[parameters('blobStorageAccountName')]",
-                        "PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+                        "PYSPARK_PYTHON": "databricks"
                     },
                     "newClusterVersion": "13.0.x-scala2.12",
                     "clusterOption": "Fixed",
