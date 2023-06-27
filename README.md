@@ -85,7 +85,7 @@ poetry add packagename --group dev
 
 ### Running unit tests
 
-In order to run unit tests for the Ingest pipeline run the following command:
+In order to run unit tests, run the following command:
 
 ```bash
 make test
