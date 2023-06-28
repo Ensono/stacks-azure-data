@@ -2,15 +2,13 @@
 id: data_quality_azure
 title: Data Quality
 sidebar_label: Data Quality
-hide_title: true
+hide_title: false
 hide_table_of_contents: false
 description: Approach to DQ validations
 keywords:
   - data quality
   - great expectations
 ---
-
-# Data Quality
 
 [stacks-azure-data](https://github.com/amido/stacks-azure-data) ETL pipelines in Azure Data Factory
 can be deployed with additional 'Data Quality' checks. These checks validate that the outputs of
@@ -25,14 +23,14 @@ library, an open-source Python-based library, to perform these checks.
 
 The design of the Data Quality processing is outlined in the following diagram.
 
-![ADF_Ingest_AzureSql_Example_DQ.png](../../images/ADF_DataQualityDesign.png?raw=true)
+![ADF_Ingest_AzureSql_Example_DQ.png](../../images/ADF_DataQualityDesign.png)
 
 
 ## ADF Pipelines with DQ
 
 ### Ingest
 
-![ADF_Ingest_AzureSql_Example_DQ.png](../../images/ADF_Ingest_AzureSql_Example_DQ.png?raw=true)
+![ADF_Ingest_AzureSql_Example_DQ.png](../../images/ADF_Ingest_AzureSql_Example_DQ.png)
 
 ### Silver
 
