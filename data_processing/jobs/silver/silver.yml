@@ -354,22 +354,21 @@ stages:
         deploy:  
           steps:
 
-
-           - task: DownloadPipelineArtifact@2
-             displayName: Download Build Artifacts
-             inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)'
+           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+             parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
 
            - script: dir
-             displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
+             displayName: List  Workspace
+             workingDirectory: '$(System.DefaultWorkingDirectory)'
 
            - script: dir
-             displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
+             displayName: List ArmTemplates
+             workingDirectory: '$(self_repo_adf_dir)'
 
-          #  - script: pip install databricks-cli
-          #    displayName: Install Databricks CLI
+           - script: dir
+             displayName: List SparkJob
+             workingDirectory: '$(self_repo_sparkjob_dir)'
 
            - task: AzureKeyVault@2
              inputs:
@@ -377,17 +376,12 @@ stages:
                   KeyVaultName: $(keyvault_name)
                   SecretsFilter: '*'
                   RunAsPreJob: false
-             displayName: 'Get secrets from the keyvault' 
-
+             displayName: 'Get secrets from the keyvault'             
+             
            - script: |
                       echo "$(databricks-host)
                       $(databricks-token)" | databricks configure --token
              displayName: Configure databricks-cli
-
-           - script: |
-                      databricks workspace ls
-                      databricks fs ls
-             displayName: test databricks-cli
 
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
@@ -403,14 +397,15 @@ stages:
 
            - script: |
                      echo Destination is /FileStore/scripts/
-                     echo Source is $(System.DefaultWorkingDirectory)/SparkJob
-                     for file in $(System.DefaultWorkingDirectory)/SparkJob/*; do
+                     echo Source is $(self_repo_sparkjob_dir)
+                     for file in $(self_repo_sparkjob_dir)/*; do
                         if [[ -f $file ]]; then
                           destination="dbfs:/FileStore/scripts/$(basename $file)"
                           databricks fs cp --overwrite "$file" "$destination"
                         fi
                      done
              displayName: Upload Spark Jobs  
+ 
 
     # Publish ADF
            - task: AzurePowerShell@5
@@ -418,38 +413,57 @@ stages:
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $true
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-           - task: AzureResourceManagerTemplateDeployment@3
-             displayName: 'ARM Template deployment: Resource Group scope'
+           - task: Bash@3
+             displayName: "TaskCTL: infrastructure"
              inputs:
-                azureResourceManagerConnection: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-                subscriptionId: '$(azure_subscription_id)'
-                resourceGroupName: $(resource_group)
-                location: $(region)
-                csmFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json'
-                csmParametersFile: '$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json'
-                overrideParameters: $(overrideParameters)
-                deploymentMode: 'Incremental'
+              targetType: inline
+              script: taskctl infrastructure
+             env:
+              # Dotnet Build
+              CLOUD_PROVIDER: "$(cloud_provider)"
+              ARM_TENANT_ID: "$(azure-tenant-id)"
+              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
+              ARM_CLIENT_ID: "$(azure-client-id)"
+              ARM_CLIENT_SECRET: "$(azure-client-secret)"
+              TF_FILE_LOCATION: "./$(self_repo_adf_src)/"   #./$(jobtype)/jobs/$(job)/adfpipeline/   #$(SELF_REPO_ADF_DIR)  ./$(jobtype)/jobs/$(job)/adfpipeline/ ./ArmTemplates/
+              ENV_NAME: $(Environment.ShortName)
+                    # Azure Authentication
+                    # Terraform Backend Configuration
+              TF_STATE_CONTAINER: $(tf_state_container)
+              TF_STATE_KEY: $(tf_state_key_prod)
+              TF_STATE_RG: $(tf_state_rg)
+              TF_STATE_STORAGE: $(tf_state_storage)
+              TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                    # Deployment Specific Configuration
+              TF_VAR_data_factory_resource_group_name: $(resource_group)
+              TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              TF_VAR_databricksHost: "$(databricksHost)"
+              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
 
            - task: AzurePowerShell@5
              displayName: 'Clean resources and start ADF triggers'
              inputs:
               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
               ScriptType: 'FilePath'
-              ScriptPath: '$(System.DefaultWorkingDirectory)/ArmTemplates/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(System.DefaultWorkingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
+              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
                               -ResourceGroupName $(resource_group)
                               -DataFactoryName $(datafactoryname)
                               -predeployment $false
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
+
+           
  
 - stage: Release
   dependsOn:
