@@ -27,12 +27,13 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "ls_ADLS_D
 
 # Make this resource conditional
 resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_Small" {
+  count                      = var.include_databricks_resources ? 1 : 0
   name                       = "ls_Databricks_Small"
   resource_group_name        = var.resource_group_name
   data_factory_name          = var.adf_account_name
   integration_runtime_name   = var.integration_runtime_name
-  adb_domain                 = var.databricks_domain
-  msi_work_space_resource_id = var.databricks_workspace_id
+  adb_domain                 = var.databricks_workspace_url
+  msi_work_space_resource_id = var.databricks_workspace_resource_id
 
   new_cluster_config {
     node_type             = "Standard_DS3_v2"

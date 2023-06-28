@@ -32,3 +32,20 @@ variable "adls_datalake_url" {
   type        = string
   description = "ADLS Data Lake - URL"
 }
+
+variable "include_databricks_resources" {
+  type        = bool
+  description = "Include Databricks resources (e.g. linked services) in Data Factory"
+}
+
+variable "databricks_workspace_url" {
+  type        = string
+  description = "Databricks - Workspace URL"
+  default     = null
+}
+
+variable "databricks_workspace_resource_id" {
+  type        = string
+  description = "Databricks - Workspace Resource ID"
+  default     = null
+}
