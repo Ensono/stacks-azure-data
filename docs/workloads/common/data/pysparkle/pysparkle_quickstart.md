@@ -1,3 +1,18 @@
+---
+id: pysparkle_quickstart
+title: PySparkle
+sidebar_label: Quickstart
+hide_title: true
+hide_table_of_contents: false
+description: PySparkle library overview
+keywords:
+  - pysparkle
+  - spark
+  - pyspark
+  - python
+  - etl
+---
+
 # PySparkle
 
 PySparkle is a Python library built to streamline data processing workflows with Apache Spark.
