@@ -1,11 +1,6 @@
-variable "resource_group_name" {
+variable "data_factory_id" {
   type        = string
-  description = "Azure Resource Group name"
-}
-
-variable "adf_account_name" {
-  type        = string
-  description = "Azure Data Factory account name"
+  description = "Azure Data Factory ID"
 }
 
 variable "integration_runtime_name" {
