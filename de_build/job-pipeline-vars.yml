@@ -29,7 +29,6 @@ variables:
   #   value: ubuntu-20.04
   
 
-
 # Versioning
   # - name: version_major
   #   value: 1
