@@ -1,17 +1,27 @@
-# Stacks - Azure Data Ingest solution
+# Stacks Azure Data Platform
 
 ## Overview
 
-This repository contains a template for an Azure data platform solution, utilising Azure Data Factory for orchestration and ingestion, and Azure Data Lake Storage Gen2 for a data lake. Elements of the solution include:
-* Infrastructure-as-code for all solution components (Terraform)
-* Azure Data Factory resources and sample ingest pipeline (from sample source into landing (bronze) data lake zone)
-* Metadata-based ETL configuration files
-* Deployment pipelines for CICD / DataOps for all components
-* Automated tests
+The Stacks Azure Data Platform solution provides a template for deploying a production-ready data
+platform, including **Azure Data Factory** for data ingestion and orchestration, **Databricks** for
+data processing and **Azure Data Lake Storage Gen2** for data lake storage. The solution's data
+workload naming convention originates from Databricks' Medallion Architecture, a system emphasising
+structured data transformation layers.
+
+Key elements of the solution include:
+
+* Infrastructure as code (IaC) for all infrastructure components (Terraform & ARM Templates);
+* Azure Data Factory (ADF) resources and a sample ingest pipeline that transfers data from a sample
+source into a landing (Bronze) data lake zone;
+* Sample data processing pipelines named Silver and Gold. These are responsible for data
+transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
+* Data Quality framework using Great Expectations;
+* Deployment pipelines to enable CI/CD and DataOps for all components;
+* Automated tests to ensure quality assurance and operational efficiency.
 
 ### High-level architecture
 
-![High-level architecture](docs/images/Stacks_Azure_Data_Platform-Ingestion_HLD.png?raw=true "High-level architecture")
+![High-level architecture](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png?raw=true "High-level architecture")
 
 ### Infrastructure deployed
 * Resource Group
@@ -20,27 +30,33 @@ This repository contains a template for an Azure data platform solution, utilisi
 * Azure Blob Storage (for config files)
 * Azure Key Vault
 * Log Analytics Workspace
+* Databricks Workspace
+  * Azure Key Vault-backed secret scope
 
 ## Repository structure
 ```
-stacks-azure-data-ingest
-├── build # Resources for building and deploying the solution (ADO pipelines)
-├── config # Config files which will be uploaded to blob storage and used by ETL processes (JSON)
-│   ├── schemas # JSON schemas for config files
-├── data_factory # Azure Data Factory resources
-│   ├── adf_managed # Path is managed by development Azure Data Factory - JSON configuration
-│   ├── deployment # Utilities for deploying Azure Data Factory resources
+stacks-azure-data
+├── build # Azure DevOps pipelines configuration for building and deploying the core infrastructure
+├── data_processing # Azure Data Factory ETL pipelines, leveraging Databricks for data transformations
+│   ├── config # Configuration files (uploaded to blob storage)
+│   ├── jobs # Data processing pipelines with optional Data Quality checks
+│   │   ├── gold # Bronze to Silver layer transformations
+│   │   ├── silver # Silver to Gold layer transformations
+├── de_build # Azure DevOps pipelines configuration for building and deploying ADF pipelines
+├── deploy # TF modules to deploy core Azure resources (used by `build` directory)
 ├── docs # Documentation
-├── infra # TF modules to deploy core Azure resources
-├── tests #
-│   ├── e2e # End-to-end tests (pytest, behave)
-│   ├── integration # Integration tests (pytest, behave)
-|   ├── unit # Unit tests (pytest)
-├── utils # Utilities module to be used across solution
+├── ingest # Pipeline utilizing ADF for data ingestion, with optional Data Quality checks performed in Databricks
+│   ├── config # Configuration files used by ETL and DQ processes (uploaded to blob storage)
+│   ├── jobs
+│   │   ├── Generate_Ingest_Query # Helper utility used in the ingestion pipeline
+│   │   ├── Get_Ingest_Config # Helper utility used in the ingestion pipeline
+│   │   ├── Ingest_AzureSql_Example # Data ingestion pipeline with optional Data Quality checks
+├── pysparkle # Python library built to streamline data processing; packaged and uploaded to DBFS
+├── utils # Python utilities package used across solution for local testing
 ├── .flake8 # Configuration for Flake8 linting
-├── .pre-commit-config.yaml # Configuration for pre-commit
+├── .pre-commit-config.yaml # Configuration for pre-commit hooks
 ├── Makefile # Includes commands for environment setup
-├── pyproject.toml # Configuration for Poetry, Black
+├── pyproject.toml # Project dependencies
 └── README.md # This file.
 ```
 
@@ -60,18 +76,19 @@ A Makefile has been created to assist with setting up the development environmen
 make setup_dev_environment
 ```
 
+#### Poetry basics
 To install packages within Poetry, use (this will add the dependency to `pyproject.toml`):
 ```bash
 poetry add packagename
 ```
-to install a package for use only in the dev environment, use:
+To install a package for use only in the dev environment, use:
 ```bash
 poetry add packagename --group dev
 ```
 
 ### Running unit tests
 
-In order to run unit tests run the following command:
+In order to run unit tests, run the following command:
 
 ```bash
 make test
@@ -79,10 +96,10 @@ make test
 
 ### Running E2E Tests
 
-To run E2E tests locally you will need to login through the Azure CLI:
+To run E2E tests locally, you will need to login through the Azure CLI:
 
 ```bash
-az login 
+az login
 ```
 
 To set the correct subscription run:
@@ -91,7 +108,7 @@ To set the correct subscription run:
 az account set --subscription <name or id>
 ```
 
-To run the E2E tests you need to set up the following environment variables.
+To run the E2E tests, you need to set up the following environment variables:
 
 - `SUBSCRIPTION_ID`
 - `RESOURCE_GROUP_NAME`

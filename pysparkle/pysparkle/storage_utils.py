@@ -52,7 +52,9 @@ def set_spark_properties(spark: SparkSession) -> None:
         spark: Spark session.
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
-    spark.conf.set(f"fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net", "OAuth")
+    spark.conf.set(
+        f"fs.azure.account.auth.type.{adls_account}.dfs.core.windows.net", "OAuth"
+    )
     spark.conf.set(
         f"fs.azure.account.oauth.provider.type.{adls_account}.dfs.core.windows.net",
         "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
@@ -83,7 +85,9 @@ def get_adls_directory_contents(container: str, path: str) -> list[str]:
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
     adls_url = f"https://{adls_account}.dfs.core.windows.net"
-    adls_client = DataLakeServiceClient(account_url=adls_url, credential=DefaultAzureCredential())
+    adls_client = DataLakeServiceClient(
+        account_url=adls_url, credential=DefaultAzureCredential()
+    )
     file_system_client = adls_client.get_file_system_client(file_system=container)
 
     paths = file_system_client.get_paths(path=path)
