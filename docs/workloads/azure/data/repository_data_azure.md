@@ -1,8 +1,8 @@
 ---
 id: repository_data_azure
-title: Repository
+title: Repository structure
 sidebar_label: Repository
-hide_title: true
+hide_title: false
 hide_table_of_contents: false
 description: Repository structure explained
 keywords:
@@ -11,11 +11,9 @@ keywords:
   - repository
 ---
 
-# Repository structure
-
 Structure of [stacks-azure-data](https://github.com/amido/stacks-azure-data) repository:
 
-```
+```md
 stacks-azure-data
 ├── build # Azure DevOps pipelines configuration for building and deploying the core infrastructure
 ├── data_processing # Azure Data Factory ETL pipelines, leveraging Databricks for data transformations
