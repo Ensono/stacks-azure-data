@@ -79,13 +79,13 @@ stages:
   - job: Build_Job
     displayName: 'Build_Job'
     steps:
-      - task: Bash@3
-        displayName: 'Clean Workspace'
-        inputs:
-          targetType: 'inline'
-          script: |
-                   echo "Cleaning workspace..."
-                   sudo rm -rf $(Build.SourcesDirectory)/*
+      # - task: Bash@3
+      #   displayName: 'Clean Workspace'
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #              echo "Cleaning workspace..."
+      #              sudo rm -rf $(Build.SourcesDirectory)/*
       - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
         parameters:
           TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -422,7 +422,6 @@ stages:
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
-            clean: true
 
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
