@@ -79,7 +79,7 @@ stages:
   - job: Build_Job
     displayName: 'Build_Job'
     workspace:
-      clean: all
+      clean: resources
     steps:
       # - task: Bash@3
       #   displayName: 'Clean Workspace'
