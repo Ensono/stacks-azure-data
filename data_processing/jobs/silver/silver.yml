@@ -58,7 +58,7 @@ variables:
   #    -adlsStorageAccountName $(blob_adls_storage)
   #    -blobStorageAccountName $(blob_configStorage)
   #    -databricksHost $(databricksHost)
-     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
+  #  -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)"
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
