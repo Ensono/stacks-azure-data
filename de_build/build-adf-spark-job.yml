@@ -12,6 +12,16 @@ jobs:
 
     steps:
 
+    - task: Bash@3
+      displayName: 'Clean Workspace'
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo "Cleaning workspace..."
+          sudo rm -rf $(Build.SourcesDirectory)/*
+
+    - checkout: self
+
     - task: CopyFiles@2
       displayName: 'Copy PreandPostDeploymnet File'
       inputs:
@@ -23,7 +33,7 @@ jobs:
       displayName: 'Copy ARM Files '
       inputs:
         SourceFolder: '$(self_repo_adf_dir)/'
-        Contents: '*.json'
+        Contents: '*'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
 
     - task: CopyFiles@2
