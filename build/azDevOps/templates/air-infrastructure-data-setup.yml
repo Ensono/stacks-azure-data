@@ -4,6 +4,7 @@ parameters:
 steps:
   # Checkout self repo
   - checkout: self
+    clean: true
   # Install Taskfile so that the tests can be run
   - task: Bash@3
     displayName: "Install: Taskctl"
