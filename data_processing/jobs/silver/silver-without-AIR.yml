@@ -8,18 +8,18 @@
 
 name: "$(Build.SourceBranchName)-init"
 
-# trigger:
-# - none
-pr:
-  branches:
-    include:
-    - 'main'
-  paths:
-    include:
-      - data_processing/jobs/silver/adfpipeline/*
-      - data_processing/jobs/silver/tests/*
-      - data_processing/jobs/silver/spark-jobs/*
-      - data_processing/jobs/silver/silver.yml
+trigger:
+- none
+# pr:
+#   branches:
+#     include:
+#     - 'main'
+#   paths:
+#     include:
+#       - data_processing/jobs/silver/adfpipeline/*
+#       - data_processing/jobs/silver/tests/*
+#       - data_processing/jobs/silver/spark-jobs/*
+#       - data_processing/jobs/silver/silver.yml
 
 trigger:
   branches:
