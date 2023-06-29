@@ -40,3 +40,4 @@ variable "enableDataQualitySilver" {
   default     = true
   description = "Enable Data Quality Ingest."
 }
+
