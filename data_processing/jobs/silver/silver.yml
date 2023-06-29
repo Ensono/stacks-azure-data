@@ -422,6 +422,7 @@ stages:
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
+            clean: true
 
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
