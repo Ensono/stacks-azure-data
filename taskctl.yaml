@@ -30,3 +30,8 @@ pipelines:
       depends_on: infra:init
     - task: infra:apply
       depends_on: infra:plan
+
+  infrastructurePlan:
+    - task: infra:init
+    - task: infra:plan
+      depends_on: infra:init
