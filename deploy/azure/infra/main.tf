@@ -286,7 +286,7 @@ module "adb1" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
+  enable_enableDbfsFileBrowser             = false
   add_rbac_users                           = false
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
@@ -320,7 +320,7 @@ resource "azurerm_role_assignment" "adb_role1" {
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
-
+/*
 resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
@@ -339,7 +339,7 @@ resource "azurerm_key_vault_secret" "databricks-host" {
   value        = module.adb.databricks_hosturl
   key_vault_id = module.kv_default.id
 }
-*/
+
 resource "databricks_secret_scope" "kv" {
   name = var.databricks_secret_scope_kv
 
@@ -348,3 +348,4 @@ resource "databricks_secret_scope" "kv" {
     dns_name    = module.kv_default.vault_uri
   }
 }
+*/
