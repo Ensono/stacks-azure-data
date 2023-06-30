@@ -243,8 +243,8 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = false
-  add_rbac_users                           = false
+  enable_enableDbfsFileBrowser             = true
+  add_rbac_users                           = true
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
 }
