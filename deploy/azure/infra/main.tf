@@ -325,12 +325,14 @@ resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
   lifetime_seconds = 120 * 24 * 60 * 60
+  depends_on = [ module.adb ]
 }
 
 resource "azurerm_key_vault_secret" "databricks_token" {
   name         = var.databricks-token
   value        = databricks_token.pat.token_value
   key_vault_id = module.kv_default.id
+  depends_on = [ module.adb ]
 }
 
 
@@ -338,6 +340,7 @@ resource "azurerm_key_vault_secret" "databricks-host" {
   name         = var.databricks-host
   value        = module.adb.databricks_hosturl
   key_vault_id = module.kv_default.id
+  depends_on = [ module.adb ]
 }
 
 resource "databricks_secret_scope" "kv" {
@@ -347,4 +350,5 @@ resource "databricks_secret_scope" "kv" {
     resource_id = module.kv_default.id
     dns_name    = module.kv_default.vault_uri
   }
+  depends_on = [ module.adb ]
 }
