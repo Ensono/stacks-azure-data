@@ -1,4 +1,8 @@
-# Usage
+# PySparkle Data Quality
+PySparkle performs data quality checks based on the user-provided configurations. At its core, it
+utilises the capabilities of the [Great Expectations](https://greatexpectations.io/) platform.
+
+## Usage
 
 ```bash
 pysparkle data-quality --help
@@ -13,7 +17,7 @@ Azure Blob storage account name is expected to be set in an environment variable
 in the main README file. 
 
 
-# JSON Configuration File for Great Expectations
+## JSON Configuration File for Great Expectations
 This section describes the structure of the JSON configuration file used in our system.
 The configuration is defined using Python's Pydantic library for data validation.
 
@@ -40,7 +44,7 @@ Here is the description of the main elements:
         3. `expectation_type`: Name of the Great Expectations expectation class to use.
         4. `expectation_kwargs`: The keyword arguments to pass to the expectation class.
 
-## Examples
+### Example
 Here's a minimal example of a configuration file:
 ```json
 {
@@ -77,6 +81,8 @@ It is possible to use environment variables in a configuration file for Data Qua
 Placeholders in the form of {ENV_VAR_NAME} will be replaced with the corresponding environment
 variable values. For example, you can pass the ADLS name using an environment variable:
 
-```
-"data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"
+```json
+{
+  "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"
+}
 ```
