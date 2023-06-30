@@ -86,20 +86,20 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   name               = var.name_pe_db
   data_factory_id    = module.adf.adf_factory_id
-  target_resource_id = module.adb.adb_databricks_id
+  target_resource_id = module.adb1.adb_databricks_id
   subresource_name   = "databricks_ui_api"
 
-  depends_on = [module.adb]
+  depends_on = [module.adb1]
 
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   name               = "${var.name_pe_db}_auth"
   data_factory_id    = module.adf.adf_factory_id
-  target_resource_id = module.adb.adb_databricks_id
+  target_resource_id = module.adb1.adb_databricks_id
   subresource_name   = "browser_authentication"
 
-  depends_on = [module.adb]
+  depends_on = [module.adb1]
 }
 
 resource "azurerm_role_assignment" "kv_role" {
@@ -257,7 +257,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
-/*
+
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -274,11 +274,11 @@ module "adb" {
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
 }
-*/
+
 # databricks workspace
-module "adb" {
+module "adb1" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
-  resource_namer                           = module.default_label.id
+  resource_namer                           = "${module.default_label.id}-secure"
   resource_group_name                      = azurerm_resource_group.secure.name
   resource_group_location                  = azurerm_resource_group.secure.location
   databricks_sku                           = var.databricks_sku
@@ -315,13 +315,12 @@ resource "azurerm_role_assignment" "adb_role" {
   principal_id         = module.adf.adf_managed_identity
 }
 
-/*
 resource "azurerm_role_assignment" "adb_role1" {
   scope                = module.adb1.adb_databricks_id
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
-*/
+
 resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
