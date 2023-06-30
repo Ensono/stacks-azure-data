@@ -86,20 +86,20 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   name               = var.name_pe_db
   data_factory_id    = module.adf.adf_factory_id
-  target_resource_id = module.adb1.adb_databricks_id
+  target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "databricks_ui_api"
 
-  depends_on = [module.adb1]
+  depends_on = [module.adb]
 
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   name               = "${var.name_pe_db}_auth"
   data_factory_id    = module.adf.adf_factory_id
-  target_resource_id = module.adb1.adb_databricks_id
+  target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "browser_authentication"
 
-  depends_on = [module.adb1]
+  depends_on = [module.adb]
 }
 
 resource "azurerm_role_assignment" "kv_role" {
@@ -317,7 +317,7 @@ resource "azurerm_role_assignment" "adb_role" {
 }
 
 resource "azurerm_role_assignment" "adb_role1" {
-  scope                = module.adb1.adb_databricks_id
+  scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
