@@ -83,6 +83,13 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: 'Clean Workspace'
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                       echo "Cleaning workspace..."
+                       sudo rm -rf $(Build.SourcesDirectory)/*    
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
