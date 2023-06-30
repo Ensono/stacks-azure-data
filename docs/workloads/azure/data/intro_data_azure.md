@@ -1,6 +1,6 @@
 ---
 id: intro_data_azure
-title: Stacks Azure Data Platform – Architecture Overview
+title: Stacks Azure Data Platform
 sidebar_label: Architecture Overview
 hide_title: false
 hide_table_of_contents: false
