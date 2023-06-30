@@ -307,7 +307,7 @@ variable "enable_enableDbfsFileBrowser" {
 variable "add_rbac_users" {
   description = "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "rbac_databricks_users" {
