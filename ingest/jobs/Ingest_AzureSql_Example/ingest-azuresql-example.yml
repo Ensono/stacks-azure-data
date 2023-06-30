@@ -356,14 +356,6 @@ stages:
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-           - script: dir
-             displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-           - script: dir
-             displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
-
            - task: AzureKeyVault@2
              inputs:
                   azureSubscription: 'Stacks.Pipeline.Builds'
