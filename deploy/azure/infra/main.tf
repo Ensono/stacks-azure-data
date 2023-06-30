@@ -257,6 +257,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
+/*
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -273,9 +274,10 @@ module "adb" {
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
 }
+*/
 
 # databricks workspace
-module "adb1" {
+module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
   resource_namer                           = "${module.default_label.id}-secure"
   resource_group_name                      = azurerm_resource_group.secure.name
