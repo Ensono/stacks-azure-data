@@ -257,7 +257,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
-
+/*
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -274,7 +274,7 @@ module "adb" {
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
 }
-
+*/
 # databricks workspace
 module "adb1" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
@@ -308,13 +308,13 @@ module "adb1" {
 
   depends_on = [azurerm_resource_group.secure]
 }
-
+/*
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
-
+*/
 resource "azurerm_role_assignment" "adb_role1" {
   scope                = module.adb1.adb_databricks_id
   role_definition_name = var.adb_role_adf
@@ -333,12 +333,13 @@ resource "azurerm_key_vault_secret" "databricks_token" {
   key_vault_id = module.kv_default.id
 }
 
+/*
 resource "azurerm_key_vault_secret" "databricks-host" {
   name         = var.databricks-host
   value        = module.adb.databricks_hosturl
   key_vault_id = module.kv_default.id
 }
-
+*/
 resource "databricks_secret_scope" "kv" {
   name = var.databricks_secret_scope_kv
 
