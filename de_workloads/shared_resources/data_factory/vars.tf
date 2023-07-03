@@ -11,6 +11,18 @@ variable "data_factory_resource_group_name" {
   description = "Azure Data Factory resource group name"
 }
 
+variable "key_vault_resource_group_name" {
+
+  type        = string
+  default     = "amido-stacks-dev-euw-de"
+  description = "Azure Key Vault resource group name"
+}
+
+variable "key_vault_uri" {
+  type        = string
+  description = "Azure Key Vault URI"
+}
+
 variable "integration_runtime_name" {
   type        = string
   description = "Azure Data Factory Integration Runtime name"

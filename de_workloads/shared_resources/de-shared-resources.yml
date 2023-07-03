@@ -25,9 +25,7 @@ variables:
   - template: ../../../build/version-data-vars.yml
   - name: job  # update job type
     value: 'shared_resources'
-  # - name: jobtype  # update job type
-  #   value: 'ingest'
-  - name: include_data_quality  # update data quality option
+  - name: include_databricks_resources  # update databricks option
     value: 'true'
   - name: self_repo_job_dir
     value: '$(self_repo_dir)/de_workloads/$(job)'
@@ -220,15 +218,16 @@ stages:
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
-              # TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
-              # TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              # TF_VAR_databricksHost: "$(databricksHost)"
-              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
-              TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
-              # TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
-              # TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
-              # TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
-              TF_VAR_include_data_quality: "$(include_data_quality)"
+              TF_VAR_integration_runtime_name: $(datafactoryname) # TO ADD
+              TF_VAR_blob_configstore_name: $(blob_configStorage)
+              TF_VAR_blob_configstore_endpoint: $(Blob_ConfigStore_serviceEndpoint)
+              TF_VAR_adls_datalake_name: $(blob_adls_storage)
+              TF_VAR_adls_datalake_url: $(ADLS_DataLake_URL)
+              TF_VAR_databricks_workspace_url: "$(databricksHost)"
+              TF_VAR_databricks_workspace_resource_id: "$(databricksWorkspaceResourceId)"
+              TF_VAR_key_vault_resource_group_name: $(resource_group)
+              TF_VAR_key_vault_uri: $(KeyVault_baseURL)
+              TF_VAR_include_databricks_resources: "$(include_data_quality)"
 
 
   #   # Start Testing

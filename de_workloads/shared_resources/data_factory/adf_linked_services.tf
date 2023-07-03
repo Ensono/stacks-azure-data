@@ -10,9 +10,8 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "ls_Blob_Confi
 resource "azurerm_data_factory_linked_service_key_vault" "ls_KeyVault" {
   name            = "ls_KeyVault"
   data_factory_id = data.azurerm_data_factory.factory.id
-  key_vault_id    = var.key_vault_id
+  key_vault_id    = data.azurerm_key_vault.key_vault.id
 }
-
 
 resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "ls_ADLS_DataLake" {
   name                     = "ls_ADLS_DataLake"
