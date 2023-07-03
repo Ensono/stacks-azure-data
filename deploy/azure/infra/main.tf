@@ -232,7 +232,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
-
+/*
 
 # databricks workspace
 module "adb" {
