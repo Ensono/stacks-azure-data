@@ -17,12 +17,6 @@ resource "azurerm_resource_group" "default" {
   tags     = module.default_label.tags
 }
 
-resource "azurerm_resource_group" "secure" {
-  name     = "${module.default_label.id}-secure"
-  location = var.resource_group_location
-  tags     = module.default_label.tags
-}
-
 # KV for ADF
 module "kv_default" {
   source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
@@ -287,7 +281,7 @@ module "adb" {
   create_lb                                = false
   managed_vnet                             = false
 
-  depends_on = [azurerm_resource_group.secure]
+  depends_on = [azurerm_resource_group.default]
 }
 
 
