@@ -368,6 +368,50 @@ variable "databricks_pat_comment" {
   description = "Comment for databricks PAT"
 }
 
+variable "vnet_resource_group" {
+  type        = string
+  default     = ""
+  description = "The Resource Group which the VNET is provisioned."
+}
+
+variable "public_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Public Databricks Subnet."
+}
+
+variable "private_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Private Databricks Subnet."
+}
+
+variable "public_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Public Databricks Subnet."
+}
+
+variable "private_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Private Databricks Subnet."
+
+}
+
+variable "pe_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Private Endpoints Databricks Subnet."
+
+}
+
+variable "pe_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Subnet used to provision Private Endpoints into."
+}
+
 ############################################
 # NETWORK INFORMATION
 ############################################
