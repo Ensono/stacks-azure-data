@@ -1,13 +1,6 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-# Sample YAML file to validate and export an ARM template into a build artifact
-# Requires a package.json file located in the target repository
+# Config pipeline for job Ingest_AzureSql_Example
 
 name: "$(Build.SourceBranchName)-init"
-
 
 pr:
   branches:
@@ -15,30 +8,32 @@ pr:
     - 'main'
   paths:
     include:
-      - ingest/config/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
       - ingest/ingest-config-pipeline.yml
 
 trigger:
   branches:
-   
+
     include:
       - 'main'
   paths:
     include:
-      - ingest/config/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
       - ingest/ingest-config-pipeline.yml
 
 
 variables:
-  - template: ../de_build/job-pipeline-vars.yml
-  - template: ../build/version-data-vars.yml
+  - template: ../../../de_build/job-pipeline-vars.yml
+  - template: ../../../build/version-data-vars.yml
 #  - template: de_build/adf/air-data-testing-vars.yml
   - name: job  #update job name
-    value: 'Generate_Ingest_Query'
+    value: 'Ingest_AzureSql_Example'
+  - name: jobtype  # update job type
+    value: 'ingest'
   - name: self_repo_blob_config
-    value: "$(self_repo_dir)/ingest/config"
+    value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)/config'
   - name: blob_config_destination
-    value: config
+    value: 'config/$(jobtype)/$(job)'
 
 pool:
   name: $(agentpool_name)
@@ -50,8 +45,8 @@ stages:
       # - name: version_number
       #   value: "$(version_major).$(version_minor).$(version_revision)"
   jobs:
-  - job: Build_Ingest_Config
-    displayName: 'Build_Ingest_Config'
+  - job: Build_Config
+    displayName: 'Build_Config'
 
     steps:
 
@@ -61,7 +56,7 @@ stages:
         SourceFolder: '$(self_repo_blob_config)'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
 
-        # Publish the artifact 
+        # Publish the artifact
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: ConfigFiles'
       inputs:
@@ -89,7 +84,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:  
+        deploy:
           steps:
 
 
@@ -119,7 +114,7 @@ stages:
 # Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
-  dependsOn: 
+  dependsOn:
     - Build_Stage
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -136,7 +131,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:  
+        deploy:
           steps:
 
 
@@ -161,8 +156,8 @@ stages:
                               --account-name $(blob_configStorage) `
                               --overwrite'
 
-  
- 
+
+
 - stage: Release
   dependsOn:
       - Build_Stage

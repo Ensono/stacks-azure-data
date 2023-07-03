@@ -8,7 +8,6 @@ pr:
     - 'main'
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/config/*
       - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
       - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
       - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
@@ -22,7 +21,6 @@ trigger:
       - 'main'
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/config/*
       - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
       - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
       - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
