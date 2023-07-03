@@ -232,6 +232,8 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
+/*
+
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -285,3 +287,4 @@ resource "databricks_secret_scope" "kv" {
   }
   depends_on = [ module.adb ]
 }
+*/
