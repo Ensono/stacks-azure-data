@@ -290,6 +290,7 @@ module "adb" {
   depends_on = [azurerm_resource_group.secure]
 }
 
+
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
@@ -328,3 +329,4 @@ resource "databricks_secret_scope" "kv" {
   }
   depends_on = [ module.adb ]
 }
+*/

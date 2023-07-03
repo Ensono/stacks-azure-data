@@ -65,6 +65,7 @@ variables:
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
+    value: $(domain)_$(job)_prod
   
 
 pool:
@@ -355,14 +356,6 @@ stages:
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-           - script: dir
-             displayName: List ArmTemplates Artifact in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/ArmTemplates'
-
-           - script: dir
-             displayName: List ArmTemplates SparkJob in Workspace
-             workingDirectory: '$(System.DefaultWorkingDirectory)/SparkJob'
 
            - task: AzureKeyVault@2
              inputs:
