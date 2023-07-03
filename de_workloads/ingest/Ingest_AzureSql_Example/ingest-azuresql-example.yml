@@ -1,10 +1,4 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-# Sample YAML file to validate and export an ARM template into a build artifact
-# Requires a package.json file located in the target repository
+# Build and deploy pipeline for job Ingest_AzureSql_Example
 
 name: "$(Build.SourceBranchName)-init"
 
@@ -39,8 +33,12 @@ variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job  #update job name
+  - name: job  # update job name
     value: 'Ingest_AzureSql_Example'
+  - name: jobtype  # update job type
+    value: 'ingest'
+  - name: include_data_quality  # update data quality option
+    value: 'true'
   - name: self_repo_adf_dir
     value: '$(self_repo_dir)/de_workloads/ingest/$(job)/data_factory'
   - name: test_unit_path
@@ -61,10 +59,8 @@ variables:
      -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
      -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
      -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)'
-  - name: self_repo_adf_src  #update job name
-    value: "$(jobtype)/jobs/$(job)/adfpipeline"
-  - name: jobtype  #update job name
-    value: 'ingest'
+  - name: self_repo_adf_src
+    value: "$(jobtype)/jobs/$(job)/data_factory"
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
@@ -205,19 +201,6 @@ stages:
              displayName: Upload Spark Jobs
 
     # Publish ADF
-           - task: AzurePowerShell@5
-             displayName: 'Stop ADF triggers'
-             inputs:
-              azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-              ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
-                              -ResourceGroupName $(resource_group)
-                              -DataFactoryName $(datafactoryname)
-                              -predeployment $true
-                              -deleteDeployment $false
-              azurePowerShellVersion: 'LatestVersion'
-
            - task: Bash@3
              displayName: "TaskCTL: infrastructure"
              inputs:
@@ -241,27 +224,16 @@ stages:
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
-              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
-              TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              TF_VAR_databricksHost: "$(databricksHost)"
-              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
-              TF_VAR_ls_AzureSql_ExampleSource_connectionString: "$(sql_connection)"
-              TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
-              TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
-              TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
+              # TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              # TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              # TF_VAR_databricksHost: "$(databricksHost)"
+              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
+              # TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
+              # TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
+              # TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
+              TF_VAR_include_data_quality: "$(include_data_quality)"
 
-           - task: AzurePowerShell@5
-             displayName: 'Clean resources and start ADF triggers'
-             inputs:
-              azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-              ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
-                              -ResourceGroupName $(resource_group)
-                              -DataFactoryName $(datafactoryname)
-                              -predeployment $false
-                              -deleteDeployment $false
-              azurePowerShellVersion: 'LatestVersion'
 
   #   # Start Testing
   - deployment: Test_NonPROD
@@ -402,19 +374,6 @@ stages:
              displayName: Upload Spark Jobs
 
     # Publish ADF
-           - task: AzurePowerShell@5
-             displayName: 'Stop ADF triggers'
-             inputs:
-              azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-              ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
-                              -ResourceGroupName $(resource_group)
-                              -DataFactoryName $(datafactoryname)
-                              -predeployment $true
-                              -deleteDeployment $false
-              azurePowerShellVersion: 'LatestVersion'
-
            - task: Bash@3
              displayName: "TaskCTL: infrastructure"
              inputs:
@@ -438,28 +397,16 @@ stages:
               TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
-              TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
-              TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              TF_VAR_databricksHost: "$(databricksHost)"
-              TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
-              TF_VAR_ls_AzureSql_ExampleSource_connectionString: "$(sql_connection)"
-              TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
-              TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
-              TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
+              # TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
+              # TF_VAR_blobStorageAccountName: $(blob_configStorage)
+              # TF_VAR_databricksHost: "$(databricksHost)"
+              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
+              TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
+              # TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
+              # TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
+              # TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
+              TF_VAR_include_data_quality: "$(include_data_quality)"
 
-
-           - task: AzurePowerShell@5
-             displayName: 'Clean resources and start ADF triggers'
-             inputs:
-              azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-              ScriptType: 'FilePath'
-              ScriptPath: '$(self_repo_dir)/de_build/adf/PrePostDeploymentScriptLatest.ps1'
-              ScriptArguments:  -armTemplate "$(self_repo_adf_dir)/ARMTemplateForFactory.json"
-                              -ResourceGroupName $(resource_group)
-                              -DataFactoryName $(datafactoryname)
-                              -predeployment $false
-                              -deleteDeployment $false
-              azurePowerShellVersion: 'LatestVersion'
 
 - stage: Release
   dependsOn:
