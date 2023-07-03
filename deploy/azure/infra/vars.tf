@@ -304,11 +304,18 @@ variable "enable_enableDbfsFileBrowser" {
   default     = true
 }
 
+variable "public_network_access_enabled" {
+  description = "If set to true, User will be able to access databrick workspace  UI from Azure portal, this should set to false in production."
+  type        = bool
+  default     = true
+}
+
 variable "add_rbac_users" {
   description = "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false."
   type        = bool
   default     = false
 }
+
 
 variable "rbac_databricks_users" {
   type = map(object({
