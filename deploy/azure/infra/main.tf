@@ -257,25 +257,6 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
-/*
-# databricks workspace
-module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
-  resource_namer                           = module.default_label.id
-  resource_group_name                      = azurerm_resource_group.default.name
-  resource_group_location                  = azurerm_resource_group.default.location
-  databricks_sku                           = var.databricks_sku
-  resource_tags                            = module.default_label.tags
-  enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
-  data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
-  databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  add_rbac_users                           = var.add_rbac_users
-  rbac_databricks_users                    = var.rbac_databricks_users
-  databricks_group_display_name            = var.databricks_group_display_name
-}
-*/
-# databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
   resource_namer                           = module.default_label.id
@@ -286,8 +267,8 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = false
-  add_rbac_users                           = false
+  enable_enableDbfsFileBrowser             = true
+  add_rbac_users                           = true
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
@@ -314,13 +295,8 @@ resource "azurerm_role_assignment" "adb_role" {
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 }
-/*
-resource "azurerm_role_assignment" "adb_role1" {
-  scope                = module.adb1.adb_databricks_id
-  role_definition_name = var.adb_role_adf
-  principal_id         = module.adf.adf_managed_identity
-}
-*/
+
+
 resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
