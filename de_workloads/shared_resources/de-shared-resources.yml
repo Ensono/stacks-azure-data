@@ -1,4 +1,4 @@
-# Build and deploy pipeline for job Ingest_AzureSql_Example
+# Build and deploy pipeline for data engineering workloads shared resources
 
 name: "$(Build.SourceBranchName)-init"
 
