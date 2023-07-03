@@ -14,22 +14,25 @@ pr:
     - 'main'
   paths:
     include:
-      - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
-      - ingest/jobs/Ingest_AzureSql_Example/tests/*
-      - ingest/jobs/Ingest_AzureSql_Example/spark-jobs/*
-      - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
+      - de_workloads/ingest/Ingest_AzureSql_Example/config/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/ingest-azuresql-example.yml
+
 
 trigger:
   branches:
-   
+
     include:
       - 'main'
   paths:
     include:
-      - ingest/jobs/Ingest_AzureSql_Example/adfpipeline/*
-      - ingest/jobs/Ingest_AzureSql_Example/tests/*
-      - ingest/jobs/Ingest_AzureSql_Example/spark-jobs/*
-      - ingest/jobs/Ingest_AzureSql_Example/ingest-azuresql-example.yml
+      - de_workloads/ingest/Ingest_AzureSql_Example/config/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
+      - de_workloads/ingest/Ingest_AzureSql_Example/ingest-azuresql-example.yml
 
 
 variables:
@@ -39,15 +42,15 @@ variables:
   - name: job  #update job name
     value: 'Ingest_AzureSql_Example'
   - name: self_repo_adf_dir
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/adfpipeline'
+    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/data_factory'
   - name: test_unit_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/unit/'
+    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/unit/'
   - name: test_end_to_end_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/tests/end_to_end/features/'
+    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/end_to_end/features/'
   - name: junit_path
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/junit/'
+    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/junit/'
   - name: self_repo_sparkjob_dir
-    value: '$(self_repo_dir)/ingest/jobs/$(job)/spark-jobs'
+    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/spark-jobs'
   - name: overrideParameters
     value: '-factoryName $(datafactoryname)
      -adlsStorageAccountName $(blob_adls_storage)
@@ -66,7 +69,7 @@ variables:
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
     value: $(domain)_$(job)_prod
-  
+
 
 pool:
   name: $(agentpool_name)
@@ -120,7 +123,7 @@ stages:
          targetType: inline
          script: taskctl setup
         env:
-         DOCKER_IMAGE_TAG: $(newVersion)   
+         DOCKER_IMAGE_TAG: $(newVersion)
       - task: Bash@3
         displayName: "TaskCTL: Lint"
         inputs:
@@ -133,7 +136,7 @@ stages:
          ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
-         TF_FILE_LOCATION: ./$(jobtype)/jobs/$(job)/ 
+         TF_FILE_LOCATION: ./$(jobtype)/jobs/$(job)/
       - template: ../../../de_build/arm-validate.yml
         parameters:
           self_repo_adf_dir: '$(self_repo_adf_dir)'
@@ -158,7 +161,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:  
+        deploy:
           steps:
 
 
@@ -181,7 +184,7 @@ stages:
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
                       echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      if [[ $folder_exists == *"No file or directory exists"* ]];
                       then
                           echo "Creating Folder"
                           databricks fs mkdirs dbfs:/FileStore/scripts
@@ -219,7 +222,7 @@ stages:
              displayName: "TaskCTL: infrastructure"
              inputs:
               targetType: inline
-              script: taskctl -d infrastructure 
+              script: taskctl -d infrastructure
              env:
               # Dotnet Build
               CLOUD_PROVIDER: "$(cloud_provider)"
@@ -260,7 +263,7 @@ stages:
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
 
-  #   # Start Testing 
+  #   # Start Testing
   - deployment: Test_NonPROD
     displayName: 'Testing  NonPROD'
     environment: ${{ variables.domain }}-nonprod
@@ -269,15 +272,15 @@ stages:
       name: $(agentpool_name)
     strategy:
       runOnce:
-        deploy:  
+        deploy:
           steps:
            - task: AzureCLI@2
              inputs:
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                ScriptType: 'bash'
                scriptLocation: 'inlineScript'
-               inlineScript: az account show 
-           
+               inlineScript: az account show
+
            - task: UsePythonVersion@0
              inputs:
                 versionSpec: '$(pythonVersion)'
@@ -290,7 +293,7 @@ stages:
               pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
              displayName: 'Install Pipeline Tools'
            - bash: |
-              poetry install 
+              poetry install
              displayName: 'Running poetry install'
              workingDirectory:  '$(self_repo_dir)'
            - bash: |
@@ -310,7 +313,7 @@ stages:
                   AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
                   AZURE_CLIENT_ID: $(azure-client-id)
                   AZURE_CLIENT_SECRET: $(azure-client-secret)
-                  AZURE_TENANT_ID: $(azure-tenant-id)   
+                  AZURE_TENANT_ID: $(azure-tenant-id)
 
            - task: PublishTestResults@2
              displayName: 'Publish Test Results'
@@ -318,13 +321,13 @@ stages:
                 testResultsFiles: '**/*.xml'
                 searchFolder: $(junit_path)
              condition: succeededOrFailed()
-  
+
 
 #############################################################
 # Deploy to Prod
 #############################################################
 - stage: Deploy_Prod_Stage
-  dependsOn: 
+  dependsOn:
     - Build_Stage
     - Deploy_NonPROD_Stage
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -342,7 +345,7 @@ stages:
 
     strategy:
       runOnce:
-        deploy:  
+        deploy:
           steps:
 
            - task: Bash@3
@@ -351,7 +354,7 @@ stages:
                targetType: 'inline'
                script: |
                        echo "Cleaning workspace..."
-                       sudo rm -rf $(Build.SourcesDirectory)/*    
+                       sudo rm -rf $(Build.SourcesDirectory)/*
 
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
@@ -378,7 +381,7 @@ stages:
            - script: |
                       folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
                       echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No file or directory exists"* ]]; 
+                      if [[ $folder_exists == *"No file or directory exists"* ]];
                       then
                           echo "Creating Folder"
                           databricks fs mkdirs dbfs:/FileStore/scripts
@@ -457,7 +460,7 @@ stages:
                               -predeployment $false
                               -deleteDeployment $false
               azurePowerShellVersion: 'LatestVersion'
- 
+
 - stage: Release
   dependsOn:
       - Build_Stage
@@ -472,14 +475,14 @@ stages:
         pool:
           name: $(agentpool_name)
         steps:
-        
+
           - task: Bash@3
             displayName: 'Clean Workspace'
             inputs:
               targetType: 'inline'
               script: |
                       echo "Cleaning workspace..."
-                      sudo rm -rf $(Build.SourcesDirectory)/*    
+                      sudo rm -rf $(Build.SourcesDirectory)/*
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
