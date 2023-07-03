@@ -8,23 +8,15 @@ pr:
     - 'main'
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/ingest-azuresql-example.yml
-
+      - de_workloads/ingest/Ingest_AzureSql_Example/*
 
 trigger:
   branches:
-
     include:
       - 'main'
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/data_factory/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/spark-jobs/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/tests/*
-      - de_workloads/ingest/Ingest_AzureSql_Example/ingest-azuresql-example.yml
+      - de_workloads/ingest/Ingest_AzureSql_Example/*
 
 
 variables:
@@ -47,27 +39,19 @@ variables:
     value: '$(self_repo_dir)/de_workloads/ingest/$(job)/junit/'
   - name: self_repo_sparkjob_dir
     value: '$(self_repo_dir)/de_workloads/ingest/$(job)/spark-jobs'
-  - name: overrideParameters
-    value: '-factoryName $(datafactoryname)
-     -adlsStorageAccountName $(blob_adls_storage)
-     -blobStorageAccountName $(blob_configStorage)
-     -databricksHost $(databricksHost)
-     -databricksWorkspaceResourceId $(databricksWorkspaceResourceId)
-     -ls_AzureSql_ExampleSource_connectionString $(sql_connection)
-     -ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint $(Blob_ConfigStore_serviceEndpoint)
-     -ls_ADLS_DataLake_properties_typeProperties_url $(ADLS_DataLake_URL)
-     -ls_KeyVault_properties_typeProperties_baseUrl $(KeyVault_baseURL)'
   - name: self_repo_adf_src
     value: "$(jobtype)/jobs/$(job)/data_factory"
+  - name: self_repo_blob_config
+    value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)/config'
+  - name: blob_config_destination
+    value: 'config/$(jobtype)/$(job)'
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
     value: $(domain)_$(job)_prod
 
-
 pool:
   name: $(agentpool_name)
-
 
 stages:
 - stage: Build_Stage
@@ -157,11 +141,22 @@ stages:
       runOnce:
         deploy:
           steps:
-
-
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          # Publish Config files
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(self_repo_blob_config) `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
+
            - task: AzureKeyVault@2
              inputs:
                   azureSubscription: 'Stacks.Pipeline.Builds'
@@ -329,6 +324,18 @@ stages:
            - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          # Publish Config files
+           - task: AzureCLI@2
+             inputs:
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
+               scriptType: 'pscore'
+               scriptLocation: 'inlineScript'
+               inlineScript: 'az storage blob upload-batch `
+                              --source $(self_repo_blob_config) `
+                              --destination $(blob_config_destination) `
+                              --account-name $(blob_configStorage) `
+                              --overwrite'
 
            - task: AzureKeyVault@2
              inputs:
