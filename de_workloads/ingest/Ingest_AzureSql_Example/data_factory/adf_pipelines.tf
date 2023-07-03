@@ -17,7 +17,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example" {
 }
 
 resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example_DQ" {
-  count           = var.include_data_quality == false ? 1 : 0
+  count           = var.include_data_quality == true ? 1 : 0
   name            = "Ingest_AzureSql_Example_DQ"
   data_factory_id = var.data_factory_id
   activities_json = file("${path.module}/pipelines/Ingest_AzureSql_Example_DQ.json")
