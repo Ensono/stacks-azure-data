@@ -1,6 +1,3 @@
-import logging
-
-from collections import Counter
 from jsonschema import validate
 
 from utils.config_utils import load_config_as_dict, load_configs_as_list
