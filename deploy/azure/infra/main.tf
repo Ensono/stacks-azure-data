@@ -329,4 +329,3 @@ resource "databricks_secret_scope" "kv" {
   }
   depends_on = [ module.adb ]
 }
-*/
