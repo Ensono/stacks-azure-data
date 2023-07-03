@@ -132,6 +132,12 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                    TF_VAR_public_subnet_name: "amido-stacks-euw-de-nonprod-db-public"
+                    TF_VAR_private_subnet_name: "amido-stacks-euw-de-nonprod-db-private"
+                    TF_VAR_pe_subnet_name: "amido-stacks-euw-de-nonprod-pe"
+                    TF_VAR_public_subnet_prefix: ["10.3.3.0/24"]
+                    TF_VAR_private_subnet_prefix: ["10.3.4.0/24"]
+                    TF_VAR_pe_subnet_prefix: ["10.3.1.0/24"]
                     
 
   #   yamllint disable rule:comments-indentation
@@ -206,6 +212,13 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                    TF_VAR_public_subnet_name: "amido-stacks-euw-de-prod-db-public"
+                    TF_VAR_private_subnet_name: "amido-stacks-euw-de-prod-db-private"
+                    TF_VAR_pe_subnet_name: "amido-stacks-euw-de-prod-pe"
+                    TF_VAR_public_subnet_prefix: ["10.4.3.0/24"]
+                    TF_VAR_private_subnet_prefix: ["10.4.4.0/24"]
+                    TF_VAR_pe_subnet_prefix: ["10.4.1.0/24"]
+                    
 
 
   - stage: Release
