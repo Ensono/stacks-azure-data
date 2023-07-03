@@ -23,28 +23,30 @@ variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../de_build/air-data-testing-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job  # update job name
-    value: 'Ingest_AzureSql_Example'
-  - name: jobtype  # update job type
-    value: 'ingest'
+  - name: job  # update job type
+    value: 'shared_resources'
+  # - name: jobtype  # update job type
+  #   value: 'ingest'
   - name: include_data_quality  # update data quality option
     value: 'true'
+  - name: self_repo_job_dir
+    value: '$(self_repo_dir)/de_workloads/$(job)'
   - name: self_repo_adf_dir
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/data_factory'
+    value: '$(self_repo_job_dir)/data_factory'
   - name: test_unit_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/unit/'
+    value: '$(self_repo_job_dir)/tests/unit/'
   - name: test_end_to_end_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/end_to_end/features/'
+    value: '$(self_repo_job_dir)/tests/end_to_end/features/'
   - name: junit_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/junit/'
+    value: '$(self_repo_job_dir)/junit/'
   - name: self_repo_sparkjob_dir
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/spark-jobs'
+    value: '$(self_repo_job_dir)/spark-jobs'
   - name: self_repo_adf_src
-    value: "$(jobtype)/jobs/$(job)/data_factory"
+    value: "de_workloads/$(job)/data_factory"
   - name: self_repo_blob_config
-    value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)/config'
+    value: '$(self_repo_job_dir)/config'
   - name: blob_config_destination
-    value: 'config/$(jobtype)/$(job)'
+    value: 'config/$(job)'
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
@@ -114,7 +116,7 @@ stages:
          ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
-         TF_FILE_LOCATION: ./$(jobtype)/jobs/$(job)/
+         TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
       - template: ../../../de_build/arm-validate.yml
         parameters:
           self_repo_adf_dir: '$(self_repo_adf_dir)'

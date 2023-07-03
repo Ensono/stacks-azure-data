@@ -29,20 +29,22 @@ variables:
     value: 'ingest'
   - name: include_data_quality  # update data quality option
     value: 'true'
+  - name: self_repo_job_dir
+    value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)'
   - name: self_repo_adf_dir
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/data_factory'
+    value: '$(self_repo_job_dir)/data_factory'
   - name: test_unit_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/unit/'
+    value: '$(self_repo_job_dir)/tests/unit/'
   - name: test_end_to_end_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/tests/end_to_end/features/'
+    value: '$(self_repo_job_dir)/tests/end_to_end/features/'
   - name: junit_path
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/junit/'
+    value: '$(self_repo_job_dir)/junit/'
   - name: self_repo_sparkjob_dir
-    value: '$(self_repo_dir)/de_workloads/ingest/$(job)/spark-jobs'
+    value: '$(self_repo_job_dir)/spark-jobs'
   - name: self_repo_adf_src
-    value: "$(jobtype)/jobs/$(job)/data_factory"
+    value: "de_workloads/$(jobtype)/$(job)/data_factory"
   - name: self_repo_blob_config
-    value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)/config'
+    value: '$(self_repo_job_dir)/config'
   - name: blob_config_destination
     value: 'config/$(jobtype)/$(job)'
   - name: tf_state_key_dev
