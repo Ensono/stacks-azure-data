@@ -269,7 +269,7 @@ module "adb" {
   create_subnets                           = true
   create_pe_subnet                         = false
   vnet_name                                = var.vnet_name
-  vnet_resource_group                      = var.vnet_resource_group
+  vnet_resource_group                      = var.vnet_resource_group_name
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
