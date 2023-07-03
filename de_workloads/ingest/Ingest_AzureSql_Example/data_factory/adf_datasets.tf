@@ -1,6 +1,6 @@
 resource "azurerm_data_factory_custom_dataset" "ds_ex_AzureSql_ExampleSource" {
   name            = "ds_ex_AzureSql_ExampleSource"
-  data_factory_id = var.data_factory_id
+  data_factory_id = data.azurerm_data_factory.factory.id
   type            = "AzureSqlTable"
   folder          = "External_Sources"
   linked_service {

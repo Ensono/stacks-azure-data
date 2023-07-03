@@ -1,6 +1,14 @@
-variable "data_factory_id" {
+variable "data_factory" {
   type        = string
-  description = "Azure Data Factory ID"
+  default     = "amido-stacks-dev-euw-rs"
+  description = "Azure Data Factory name"
+}
+
+variable "data_factory_resource_group_name" {
+
+  type        = string
+  default     = "amido-stacks-dev-euw-de"
+  description = "Azure Data Factory resource group name"
 }
 
 variable "azuresql_examplesource_connectionstring" {
