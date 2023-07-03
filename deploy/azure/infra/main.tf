@@ -232,6 +232,8 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
+/*
+=======
 
 
 # databricks workspace
@@ -251,7 +253,7 @@ module "adb" {
   databricks_group_display_name            = var.databricks_group_display_name
 }
 
-/*
+
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
