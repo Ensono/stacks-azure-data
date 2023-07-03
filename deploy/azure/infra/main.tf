@@ -109,7 +109,7 @@ resource "azurerm_log_analytics_workspace" "la" {
   tags                = module.default_label.tags
 }
 
-#Below role assingment is needed to run end to end Test in pipeline
+#Below role assignment is needed to run end to end Test in pipeline
 resource "azurerm_role_assignment" "e_2_test_role" {
   scope                = module.adls_default.storage_account_ids[1]
   role_definition_name = var.e_2_test_role
@@ -199,7 +199,7 @@ resource "azurerm_key_vault_secret" "sql_password" {
 }
 
 
-# Storage accounts for data lake and config
+# SQL Database
 module "sql" {
   source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
   resource_namer             = module.default_label.id

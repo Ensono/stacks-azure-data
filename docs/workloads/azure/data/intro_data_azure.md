@@ -38,10 +38,12 @@ transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, r
 ### Infrastructure deployed
 
 * Resource Group
-* Azure Data Factory
+* MS SQL Database
+* Key Vault
 * Azure Data Lake Storage Gen2
-* Azure Blob Storage (for config files)
-* Azure Key Vault
-* Log Analytics Workspace
+* Azure Blob Storage
 * Databricks Workspace
-    * Azure Key Vault-backed secret scope
+* Azure Data Factory
+* Log Analytics Workspace
+
+For details please see [Infrastructure](components/infrastructure/core_data_platform_azure.md).
