@@ -232,6 +232,10 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
+/*
+=======
+
+
 # databricks workspace
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
@@ -243,11 +247,12 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  add_rbac_users                           = var.add_rbac_users
+  enable_enableDbfsFileBrowser             = false
+  add_rbac_users                           = false
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
 }
+
 
 resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
@@ -259,18 +264,21 @@ resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
   // 120 day token
   lifetime_seconds = 120 * 24 * 60 * 60
+  depends_on = [ module.adb ]
 }
 
 resource "azurerm_key_vault_secret" "databricks_token" {
   name         = var.databricks-token
   value        = databricks_token.pat.token_value
   key_vault_id = module.kv_default.id
+  depends_on = [ module.adb ]
 }
 
 resource "azurerm_key_vault_secret" "databricks-host" {
   name         = var.databricks-host
   value        = module.adb.databricks_hosturl
   key_vault_id = module.kv_default.id
+  depends_on = [ module.adb ]
 }
 
 resource "databricks_secret_scope" "kv" {
@@ -280,4 +288,6 @@ resource "databricks_secret_scope" "kv" {
     resource_id = module.kv_default.id
     dns_name    = module.kv_default.vault_uri
   }
+  depends_on = [ module.adb ]
 }
+*/

@@ -3,8 +3,7 @@ parameters:
 
 steps:
   # Checkout self repo
-  - checkout: self
-  
+  #- checkout: self
   # Install Taskfile so that the tests can be run
   - task: Bash@3
     displayName: "Install: Taskctl"
