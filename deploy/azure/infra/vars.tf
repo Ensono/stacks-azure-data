@@ -119,6 +119,13 @@ variable "name_pe_sql" {
   description = "Specifies the name for Private endpoint for Azure Sql Server."
 }
 
+variable "name_pe_db" {
+  type        = string
+  default     = "private-databricks"
+  description = "Specifies the name for Private endpoint for Azure Databricks."
+
+}
+
 # Log Analytics workspace Details
 
 variable "la_sku" {
@@ -297,11 +304,18 @@ variable "enable_enableDbfsFileBrowser" {
   default     = true
 }
 
+variable "public_network_access_enabled" {
+  description = "If set to true, User will be able to access databrick workspace  UI from Azure portal, this should set to false in production."
+  type        = bool
+  default     = true
+}
+
 variable "add_rbac_users" {
   description = "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false."
   type        = bool
   default     = true
 }
+
 
 variable "rbac_databricks_users" {
   type = map(object({
@@ -352,6 +366,50 @@ variable "databricks_pat_comment" {
   type        = string
   default     = "Terraform Provisioning"
   description = "Comment for databricks PAT"
+}
+
+variable "vnet_resource_group" {
+  type        = string
+  default     = ""
+  description = "The Resource Group which the VNET is provisioned."
+}
+
+variable "public_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Public Databricks Subnet."
+}
+
+variable "private_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Private Databricks Subnet."
+}
+
+variable "public_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Public Databricks Subnet."
+}
+
+variable "private_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Private Databricks Subnet."
+
+}
+
+variable "pe_subnet_prefix" {
+  type        = list(string)
+  default     = []
+  description = "IP Address Space fo the Private Endpoints Databricks Subnet."
+
+}
+
+variable "pe_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the Subnet used to provision Private Endpoints into."
 }
 
 ############################################
