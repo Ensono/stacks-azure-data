@@ -313,7 +313,7 @@ variable "public_network_access_enabled" {
 variable "add_rbac_users" {
   description = "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false."
   type        = bool
-  default     = false
+  default     = true
 }
 
 
