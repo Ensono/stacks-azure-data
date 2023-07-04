@@ -3,7 +3,11 @@ from pysparkle.pysparkle_cli import cli
 
 def call_pysparkle_entrypoint():
     cli(
-        ["data-quality", "--config-path", "data_quality/silver_dq.json"],
+        [
+            "data-quality",
+            "--config-path",
+            "data_processing/silver/data_quality/silver_dq.json",
+        ],
         standalone_mode=False,
     )
 

@@ -6,7 +6,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
   folder          = "Utilities"
   parameters = {
     config_container = "config",
-    config_path      = "ingest_sources",
+    config_path      = "",
     config_file      = ""
   }
   depends_on = [

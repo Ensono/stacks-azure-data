@@ -6,7 +6,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example" {
   description     = "Ingest from demo Azure SQL database using ingest config file."
   folder          = "Ingest"
   parameters = {
-    data_source_name = "example_azuresql_1",
+    data_source_name = "Ingest_AzureSql_Example",
     window_start     = "2020-01-01",
     window_start     = "2020-01-31",
     correlation_id   = ""
@@ -24,7 +24,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example_DQ" {
   description     = "Ingest from demo Azure SQL database using ingest config file, with data quality checks."
   folder          = "Ingest"
   parameters = {
-    data_source_name = "example_azuresql_1",
+    data_source_name = "Ingest_AzureSql_Example",
     window_start     = "2020-01-01",
     window_start     = "2020-01-31",
     correlation_id   = ""
