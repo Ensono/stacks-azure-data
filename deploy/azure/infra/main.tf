@@ -76,7 +76,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
   target_resource_id = module.sql.sql_server_id
   subresource_name   = "sqlServer"
 }
-/*
+
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   name               = var.name_pe_db
   data_factory_id    = module.adf.adf_factory_id
@@ -95,7 +95,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 
   depends_on = [module.adb]
 }
-*/
+
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
   role_definition_name = var.kv_role_adf
@@ -250,7 +250,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
 }
-/*
+
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
   resource_namer                           = module.default_label.id
@@ -323,4 +323,3 @@ resource "databricks_secret_scope" "kv" {
   }
   depends_on = [module.adb]
 }
-*/
