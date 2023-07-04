@@ -1,20 +1,17 @@
 variable "data_factory" {
   type        = string
-  default     = "amido-stacks-dev-euw-rs"
   description = "Azure Data Factory name"
 }
 
 variable "data_factory_resource_group_name" {
 
   type        = string
-  default     = "amido-stacks-dev-euw-de"
   description = "Azure Data Factory resource group name"
 }
 
 variable "key_vault_resource_group_name" {
 
   type        = string
-  default     = "amido-stacks-dev-euw-de"
   description = "Azure Key Vault resource group name"
 }
 
@@ -40,12 +37,12 @@ variable "blob_configstore_endpoint" {
 
 variable "adls_datalake_name" {
   type        = string
-  description = "ADLS Data Lake - storage account name"
+  description = "Azure Data Lake Storage - storage account name"
 }
 
 variable "adls_datalake_url" {
   type        = string
-  description = "ADLS Data Lake - URL"
+  description = "Azure Data Lake Storage - URL"
 }
 
 variable "include_databricks_resources" {

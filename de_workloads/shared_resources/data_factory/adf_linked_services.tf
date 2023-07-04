@@ -4,7 +4,7 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "ls_Blob_Confi
   integration_runtime_name = var.integration_runtime_name
   use_managed_identity     = true
   service_endpoint         = var.blob_configstore_endpoint
-  storage_storage_kind     = "BlobStorage"
+  storage_kind     = "BlobStorage"
 }
 
 resource "azurerm_data_factory_linked_service_key_vault" "ls_KeyVault" {
@@ -21,7 +21,6 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "ls_ADLS_D
   url                      = var.adls_datalake_url
 }
 
-# Make this resource conditional
 resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_Small" {
   count                      = var.include_databricks_resources ? 1 : 0
   name                       = "ls_Databricks_Small"

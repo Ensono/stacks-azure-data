@@ -167,7 +167,6 @@ stages:
                   RunAsPreJob: false
              displayName: 'Get secrets from the keyvault'
 
-          # TODO: Make the Databricks / spark steps conditional if data quality is not required
            - script: |
                       echo "$(databricks-host)
                       $(databricks-token)" | databricks configure --token
