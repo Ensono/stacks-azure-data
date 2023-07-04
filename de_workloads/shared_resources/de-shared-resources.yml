@@ -115,9 +115,6 @@ stages:
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
          TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-      - template: ../../de_build/arm-validate.yml
-        parameters:
-          self_repo_adf_dir: '$(self_repo_adf_dir)'
 
 #############################################################
 # Deploy to non Prod

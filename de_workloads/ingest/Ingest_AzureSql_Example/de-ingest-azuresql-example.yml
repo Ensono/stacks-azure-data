@@ -117,9 +117,6 @@ stages:
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
          TF_FILE_LOCATION: ./$(jobtype)/jobs/$(job)/
-      - template: ../../../de_build/arm-validate.yml
-        parameters:
-          self_repo_adf_dir: '$(self_repo_adf_dir)'
 
 #############################################################
 # Deploy to non Prod
@@ -150,6 +147,7 @@ stages:
           # Publish Config files
            - task: AzureCLI@2
              inputs:
+          # TODO: This should not be hardcoded to a subscription
                azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
