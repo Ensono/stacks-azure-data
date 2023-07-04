@@ -370,7 +370,7 @@ stages:
                     # Azure Authentication
                     # Terraform Backend Configuration
               TF_STATE_CONTAINER: $(tf_state_container)
-              TF_STATE_KEY: $(tf_state_key_prod)>
+              TF_STATE_KEY: $(tf_state_key_prod)
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
