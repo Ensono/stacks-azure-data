@@ -1,0 +1,61 @@
+[
+    {
+        "name": "Silver",
+        "type": "DatabricksSparkPython",
+        "dependsOn": [],
+        "policy": {
+            "timeout": "0.12:00:00",
+            "retry": 0,
+            "retryIntervalInSeconds": 30,
+            "secureOutput": false,
+            "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+            "pythonFile": "dbfs:/FileStore/scripts/silver.py",
+            "parameters": [],
+            "libraries": [
+                {
+                    "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                }
+            ]
+        },
+        "linkedServiceName": {
+            "referenceName": "ls_Databricks_Small",
+            "type": "LinkedServiceReference"
+        }
+    },
+    {
+        "name": "DataQuality",
+        "type": "DatabricksSparkPython",
+        "dependsOn": [
+            {
+                "activity": "Silver",
+                "dependencyConditions": [
+                    "Succeeded"
+                ]
+            }
+        ],
+        "policy": {
+            "timeout": "0.12:00:00",
+            "retry": 0,
+            "retryIntervalInSeconds": 30,
+            "secureOutput": false,
+            "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+            "pythonFile": "dbfs:/FileStore/scripts/silver_dq.py",
+            "parameters": [],
+            "libraries": [
+                {
+                    "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                }
+            ]
+        },
+        "linkedServiceName": {
+            "referenceName": "ls_Databricks_Small",
+            "type": "LinkedServiceReference"
+        }
+    }
+]
