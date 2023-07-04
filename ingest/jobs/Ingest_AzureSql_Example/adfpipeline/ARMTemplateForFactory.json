@@ -724,6 +724,10 @@
                     "newClusterVersion": "13.0.x-scala2.12",
                     "clusterOption": "Fixed",
                     "newClusterInitScripts": []
+                },
+                "connectVia": {
+                    "referenceName": "adf-managed-vnet-runtime",
+                    "type": "IntegrationRuntimeReference"
                 }
             },
             "dependsOn": []
