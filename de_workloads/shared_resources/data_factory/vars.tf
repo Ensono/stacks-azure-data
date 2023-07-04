@@ -17,32 +17,32 @@ variable "key_vault_resource_group_name" {
 
 variable "key_vault_uri" {
   type        = string
-  description = "Azure Key Vault URI"
+  description = "Azure Key Vault URI, e.g. https://amidostacksdeveuwde.vault.azure.net/"
 }
 
 variable "integration_runtime_name" {
   type        = string
-  description = "Azure Data Factory Integration Runtime name"
+  description = "Azure Data Factory Integration Runtime name, e.g. adf-managed-vnet-runtime"
 }
 
 variable "blob_configstore_name" {
   type        = string
-  description = "Blob storage Config Store - storage account name"
+  description = "Blob storage Config Store - storage account name, e.g. amidostacksdeveuwdeconfi"
 }
 
 variable "blob_configstore_endpoint" {
   type        = string
-  description = "Blob storage Config Store - service endpoint"
+  description = "Blob storage Config Store - service endpoint, e.g. https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
 }
 
 variable "adls_datalake_name" {
   type        = string
-  description = "Azure Data Lake Storage - storage account name"
+  description = "Azure Data Lake Storage - storage account name, e.g. amidostacksdeveuwdeadls"
 }
 
 variable "adls_datalake_url" {
   type        = string
-  description = "Azure Data Lake Storage - URL"
+  description = "Azure Data Lake Storage - URL, e.g. https://amidostacksdeveuwdeadls.dfs.core.windows.net/"
 }
 
 variable "include_databricks_resources" {
@@ -52,12 +52,12 @@ variable "include_databricks_resources" {
 
 variable "databricks_workspace_url" {
   type        = string
-  description = "Databricks - Workspace URL"
+  description = "Databricks - Workspace URL, e.g. https://adb-XXXXXXXXXXXX.azuredatabricks.net"
   default     = null
 }
 
 variable "databricks_workspace_resource_id" {
   type        = string
-  description = "Databricks - Workspace Resource ID"
+  description = "Databricks - Workspace Resource ID, e.g. /subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
   default     = null
 }
