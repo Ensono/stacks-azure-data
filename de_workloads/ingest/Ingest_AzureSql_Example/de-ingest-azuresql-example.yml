@@ -40,7 +40,7 @@ variables:
   - name: junit_path
     value: '$(self_repo_job_dir)/junit/'
   - name: self_repo_sparkjob_dir
-    value: '$(self_repo_job_dir)/spark-jobs'
+    value: '$(self_repo_job_dir)/spark_jobs'
   - name: self_repo_adf_src
     value: "de_workloads/$(jobtype)/$(job)/data_factory"
   - name: self_repo_blob_config
