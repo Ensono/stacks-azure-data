@@ -24,9 +24,9 @@ variables:
     value: '../../build'
   - name: de_build_path  # update job type
     value: '../../de_build'
-  - template: $(de_build_path)/job-pipeline-vars.yml
-  - template: $(de_build_path)/air-data-testing-vars.yml
-  - template: $(build_path)/version-data-vars.yml
+  - template: '$(de_build_path)/job-pipeline-vars.yml'
+  - template: '$(de_build_path)/air-data-testing-vars.yml'
+  - template: '$(build_path)/version-data-vars.yml'
   - name: job  # update job type
     value: 'shared_resources'
   - name: include_databricks_resources  # update databricks option
