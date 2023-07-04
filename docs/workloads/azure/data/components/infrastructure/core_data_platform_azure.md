@@ -85,9 +85,9 @@ projects would need to have networking prerequisites such as ExpressRoute or VPN
 the workspace. If this is not possible, then a virtual machine will need to be set up within the
 transit subnet. Users will then need to RDP into the VM and access the workspace via that.
 
-Within the default Stacks deployment, the Databricks is provisioned with VNet injection, while
-leaving the workspace UI open. This is to improve developer experience in case there is no
-networking/VPN set up properly configured in a target subscription.
+Within the default Stacks deployment, Databricks is provisioned with VNet injection while leaving
+the workspace UI open. This is to improve developer experience in case there is no networking/VPN
+set up properly configured in the target subscription.
 
 Enabling public workspace access only opens access to the UI via public internet. Access is still
 restricted based on the IAM policy.
