@@ -31,7 +31,7 @@ stages:
     jobs:
       - job: Validate
         pool:
-          vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         steps:
           - template: ../templates/air-infrastructure-data-setup.yml
@@ -67,6 +67,7 @@ stages:
       - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: amido-stacks-euw-de-nonprod-network
+      - group: amido-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
         value: dev
       # Available in Terraform Output, but not yet enabled to export as pipeline vars
@@ -76,13 +77,20 @@ stages:
         value: nonprod
     jobs:
       - deployment: InfraNonProd
-        pool:
-          vmImage: $(pool_vm_image)
+        pool: #"amido-stacks-core-data-agent-pool"
+          name: $(agentpool_name)
         environment: ${{ variables.domain }}-nonprod
         strategy:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: 'Clean Workspace'
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                       echo "Cleaning workspace..."
+                       sudo rm -rf $(Build.SourcesDirectory)/*    
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -125,6 +133,13 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                    TF_VAR_public_subnet_name: "amido-stacks-euw-de-nonprod-db-public"
+                    TF_VAR_private_subnet_name: "amido-stacks-euw-de-nonprod-db-private"
+                    TF_VAR_pe_subnet_name: "amido-stacks-euw-de-nonprod-pe"
+                    TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
+                    TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
+                    TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+                    
 
   #   yamllint disable rule:comments-indentation
 
@@ -135,6 +150,7 @@ stages:
       - group: amido-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
       - group: amido-stacks-euw-de-prod-network
+      - group: amido-stacks-de-pipeline-prod
       - name: Environment.ShortName
         value: prod
       - name: dns_base_domain
@@ -144,7 +160,7 @@ stages:
     jobs:
       - deployment: AppInfraProd
         pool:
-          vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         environment: ${{ variables.domain }}-prod
 
@@ -198,6 +214,14 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                    TF_VAR_public_subnet_name: "amido-stacks-euw-de-prod-db-public"
+                    TF_VAR_private_subnet_name: "amido-stacks-euw-de-prod-db-private"
+                    TF_VAR_pe_subnet_name: "amido-stacks-euw-de-prod-pe"
+                    TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
+                    TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
+                    TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+                    TF_VAR_public_network_access_enabled: false
+                    
 
 
   - stage: Release
@@ -212,7 +236,7 @@ stages:
     jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         steps:
           # Check out the repo so that it can be tagged
           - checkout: self
