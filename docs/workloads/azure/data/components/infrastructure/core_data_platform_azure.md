@@ -49,8 +49,8 @@ There are two subfolders in this directory:
     * **Managed identity** for the service instance;
     * **Managed virtual network** enabled by default. Creating an integration runtime within
     a managed virtual network ensures the data integration process is isolated and secure.
-9. **Managed private endpoints** created in the Data Factory managed virtual network that establish
-   private links to Azure resources, such as:
+9. **Managed private endpoints** created in the Data Factory managed virtual network, these
+   establish private links to Azure resources, such as:
     * Blob Storage
     * Azure Data Lake Storage
     * Key Vault
@@ -87,5 +87,7 @@ transit subnet. Users will then need to RDP into the VM and access the workspace
 
 Within Stacks setup, the Databricks is provisioned with VNet injection, while leaving the workspace
 UI open. This is to improve developer experience in case there is no networking/VPN set up properly
-configured in a target subscription. Enabling public workspace access only opens the UI via public
-internet. Access is still restricted based on the IAM policy.
+configured in a target subscription.
+
+Enabling public workspace access only opens access to the UI via public internet. Access is still
+restricted based on the IAM policy.
