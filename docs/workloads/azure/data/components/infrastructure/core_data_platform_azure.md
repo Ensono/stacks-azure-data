@@ -30,7 +30,7 @@ There are two subfolders in this directory:
 `infra` subfolder contains the following definitions:
 
 1. **Resource Group**
-2. **MS SQL Database** instance with database schemas
+2. **Azure SQL Database** sample instance with database schemas
 3. **Key Vault**
 4. **Key Vault Secrets**:
     * Connection strings for the created SQL databases
