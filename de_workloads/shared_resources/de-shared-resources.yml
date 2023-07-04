@@ -20,9 +20,13 @@ trigger:
 
 
 variables:
-  - template: ../../../de_build/job-pipeline-vars.yml
-  - template: ../../../de_build/air-data-testing-vars.yml
-  - template: ../../../build/version-data-vars.yml
+  - name: build_path  # update job type
+    value: '../../build'
+  - name: de_build_path  # update job type
+    value: '../../de_build'
+  - template: $(de_build_path)/job-pipeline-vars.yml
+  - template: $(de_build_path)/air-data-testing-vars.yml
+  - template: $(build_path)/version-data-vars.yml
   - name: job  # update job type
     value: 'shared_resources'
   - name: include_databricks_resources  # update databricks option
@@ -70,7 +74,7 @@ stages:
           script: |
                    echo "Cleaning workspace..."
                    sudo rm -rf $(Build.SourcesDirectory)/*
-      - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+      - template: $(build_path)/azDevOps/templates/air-infrastructure-data-setup.yml
         parameters:
           TaskctlVersion: ${{ variables.TaskctlVersion }}
       - script: |
@@ -115,7 +119,7 @@ stages:
          ARM_CLIENT_ID: "$(azure-client-id)"
          ARM_CLIENT_SECRET: "$(azure-client-secret)"
          TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-      - template: ../../../de_build/arm-validate.yml
+      - template: $(de_build_path)/arm-validate.yml
         parameters:
           self_repo_adf_dir: '$(self_repo_adf_dir)'
 
@@ -141,7 +145,7 @@ stages:
       runOnce:
         deploy:
           steps:
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+           - template: $(build_path)/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -323,7 +327,7 @@ stages:
                        echo "Cleaning workspace..."
                        sudo rm -rf $(Build.SourcesDirectory)/*
 
-           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+           - template: $(build_path)/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -404,14 +408,7 @@ stages:
               TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
-              # TF_VAR_adlsStorageAccountName: $(blob_adls_storage)
-              # TF_VAR_blobStorageAccountName: $(blob_configStorage)
-              # TF_VAR_databricksHost: "$(databricksHost)"
-              # TF_VAR_databricksWorkspaceResourceId: "$(databricksWorkspaceResourceId)"
               TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
-              # TF_VAR_ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint: $(Blob_ConfigStore_serviceEndpoint)
-              # TF_VAR_ls_ADLS_DataLake_properties_typeProperties_url: $(ADLS_DataLake_URL)
-              # TF_VAR_ls_KeyVault_properties_typeProperties_baseUrl: $(KeyVault_baseURL)
               TF_VAR_include_data_quality: "$(include_data_quality)"
 
 
