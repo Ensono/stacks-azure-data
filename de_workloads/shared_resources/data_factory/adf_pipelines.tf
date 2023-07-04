@@ -1,5 +1,5 @@
 resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
-  name            = "Get_Ingest_Config"
+  name            = "NEW_Get_Ingest_Config"
   data_factory_id = data.azurerm_data_factory.factory.id
   activities_json = file("${path.module}/pipelines/Get_Ingest_Config.json")
   description     = "Retrieve ingest config from the config store for the specified data source."
@@ -15,7 +15,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
 }
 
 resource "azurerm_data_factory_pipeline" "pipeline_Generate_Ingest_Query" {
-  name            = "Generate_Ingest_Query"
+  name            = "NEW_Generate_Ingest_Query"
   data_factory_id = data.azurerm_data_factory.factory.id
   activities_json = file("${path.module}/pipelines/Generate_Ingest_Query.json")
   description     = "Generate an ingest query from the provided ingest entity configuration."
