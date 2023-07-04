@@ -1,7 +1,8 @@
 from behave import use_fixture
 
-from constants import SQL_DB_INGEST_DIRECTORY_NAME
 from fixtures import azure_adls_clean_up
+
+SQL_DB_INGEST_DIRECTORY_NAME = "example_azuresql_1"
 
 
 def before_scenario(context, scenario):

@@ -1,7 +1,7 @@
 from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 from behave import fixture
-from constants import (
+from utils.constants import (
     ADLS_URL,
     RAW_CONTAINER_NAME,
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
