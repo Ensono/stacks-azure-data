@@ -78,16 +78,14 @@ The following diagram shows network configuration in all three environments:
 
 Stacks Azure Data Platform uses VNet injection to deploy Databricks to a custom virtual network.
 
-We recommend that Azure Databricks is deployed in a fully secure manner using secure cluster
-connectivity and disabling public workspace access. This means that Databricks can only be accessed
-over a private endpoint from within the private network. This also means that projects would need to
-have networking prerequisites such as ExpressRoute or VPNs in order to access the workspace. If this
-is not possible, then a virtual machine will need to be set up within the transit subnet. Users will
-then need to RDP into the VM and access the workspace via that.
+In most scenarios, we would recommend that Azure Databricks is deployed in a fully secure manner
+using secure cluster connectivity and disabling public workspace access. This means that Databricks
+can only be accessed over a private endpoint from within the private network. This also means that
+projects would need to have networking prerequisites such as ExpressRoute or VPNs in order to access
+the workspace. If this is not possible, then a virtual machine will need to be set up within the
+transit subnet. Users will then need to RDP into the VM and access the workspace via that.
 
-Within Stacks setup, we provision Databricks with VNet injection, but leave the workspace UI open.
-This is to improve developer experience as there is no networking/VPN set up within stacks. If we
-lock down the workspace, then we would require extra virtual machines.
-
-Enabling public workspace access only opens the UI via public internet. Access is still restricted
-based on the IAM policy.
+Within Stacks setup, the Databricks is provisioned with VNet injection, while leaving the workspace
+UI open. This is to improve developer experience in case there is no networking/VPN set up properly
+configured in a target subscription. Enabling public workspace access only opens the UI via public
+internet. Access is still restricted based on the IAM policy.
