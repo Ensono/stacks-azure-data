@@ -36,6 +36,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+.DS_Store
 
 #IDE
 .vscode
