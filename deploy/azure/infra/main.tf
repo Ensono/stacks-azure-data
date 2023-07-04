@@ -250,7 +250,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
 }
-
+/*
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
   resource_namer                           = module.default_label.id
@@ -323,3 +323,4 @@ resource "databricks_secret_scope" "kv" {
   }
   depends_on = [module.adb]
 }
+*/
