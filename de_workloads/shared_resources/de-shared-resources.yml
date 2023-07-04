@@ -145,7 +145,7 @@ stages:
           # Publish Config files
            - task: AzureCLI@2
              inputs:
-               azureSubscription: 'amido.stacks ($(azure_subscription_id))'
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
                inlineScript: 'az storage blob upload-batch `
@@ -240,7 +240,7 @@ stages:
           steps:
            - task: AzureCLI@2
              inputs:
-               azureSubscription: 'amido.stacks ($(azure_subscription_id))'
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                ScriptType: 'bash'
                scriptLocation: 'inlineScript'
                inlineScript: az account show
@@ -327,7 +327,7 @@ stages:
           # Publish Config files
            - task: AzureCLI@2
              inputs:
-               azureSubscription: 'amido.stacks ($(azure_subscription_id))'
+               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
                scriptType: 'pscore'
                scriptLocation: 'inlineScript'
                inlineScript: 'az storage blob upload-batch `
