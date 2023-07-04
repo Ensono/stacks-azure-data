@@ -208,7 +208,7 @@ stages:
               TF_VAR_databricks_workspace_resource_id: "$(databricksWorkspaceResourceId)"
               TF_VAR_key_vault_resource_group_name: $(resource_group)
               TF_VAR_key_vault_uri: $(KeyVault_baseURL)
-              TF_VAR_include_databricks_resources: "$(include_data_quality)"
+              TF_VAR_include_databricks_resources: "$(include_databricks_resources)"
 
 
   #   # Start Testing
@@ -375,7 +375,7 @@ stages:
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
               TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
-              TF_VAR_include_data_quality: "$(include_data_quality)"
+              TF_VAR_include_databricks_resources: "$(include_databricks_resources)"
 
 
 - stage: Release
