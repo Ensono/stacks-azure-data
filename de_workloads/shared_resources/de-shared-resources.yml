@@ -41,10 +41,6 @@ variables:
     value: '$(self_repo_job_dir)/spark_jobs'
   - name: self_repo_adf_src
     value: "de_workloads/$(job)/data_factory"
-  - name: self_repo_blob_config
-    value: '$(self_repo_job_dir)/config'
-  - name: blob_config_destination
-    value: 'config/$(job)'
   - name: tf_state_key_dev
     value: $(domain)_$(job)_dev
   - name: tf_state_key_prod
@@ -141,19 +137,6 @@ stages:
            - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-          # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-             # TODO: Remove hardcoded reference to subscription
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch `
-                              --source $(self_repo_blob_config) `
-                              --destination $(blob_config_destination) `
-                              --account-name $(blob_configStorage) `
-                              --overwrite'
 
            - task: AzureKeyVault@2
              inputs:
@@ -325,19 +308,6 @@ stages:
            - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
              parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-          # Publish Config files
-           - task: AzureCLI@2
-             inputs:
-             # TODO: Remove hardcoded reference to subscription
-               azureSubscription: 'amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)'
-               scriptType: 'pscore'
-               scriptLocation: 'inlineScript'
-               inlineScript: 'az storage blob upload-batch `
-                              --source $(self_repo_blob_config) `
-                              --destination $(blob_config_destination) `
-                              --account-name $(blob_configStorage) `
-                              --overwrite'
 
            - task: AzureKeyVault@2
              inputs:
