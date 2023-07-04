@@ -55,7 +55,7 @@ There are two subfolders in this directory:
     * Azure Data Lake Storage
     * Key Vault
     * SQL Database
-10. **Role assignments** that assign an ADF managed identity roles to access the resources linked by
+10. **Role assignments** that assign ADF managed identity roles to access the resources linked by
    the private endpoints, as well as the Databricks workspace.
 11. **Log Analytics Workspace**
 
