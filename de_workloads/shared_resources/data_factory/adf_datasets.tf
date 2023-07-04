@@ -10,8 +10,8 @@ resource "azurerm_data_factory_dataset_json" "ds_dp_ConfigStore_Json" {
   }
   azure_blob_storage_location {
     container                 = "@dataset().container"
-    folderPath                = "@dataset().path"
-    fileName                  = "@dataset().filename"
+    path                      = "@dataset().path"
+    filename                  = "@dataset().filename"
     dynamic_container_enabled = true
     dynamic_path_enabled      = true
     dynamic_filename_enabled  = true
@@ -31,8 +31,8 @@ resource "azurerm_data_factory_dataset_parquet" "ds_dp_DataLake_Parquet" {
   }
   azure_blob_storage_location {
     container                = "raw"
-    folderPath               = "@dataset().path"
-    fileName                 = "@dataset().filename"
+    path                     = "@dataset().path"
+    filename                 = "@dataset().filename"
     dynamic_path_enabled     = true
     dynamic_filename_enabled = true
   }
