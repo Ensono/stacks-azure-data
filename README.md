@@ -1,5 +1,8 @@
 # Stacks Azure Data Platform
 
+Link to the official documentation:
+[Stacks Azure Data Platform](https://stacks.amido.com/docs/workloads/azure/data/intro_data_azure).
+
 ## Overview
 
 The Stacks Azure Data Platform solution provides a template for deploying a production-ready data
@@ -21,43 +24,48 @@ transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, r
 
 ### High-level architecture
 
-![High-level architecture](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png?raw=true "High-level architecture")
+![High-level architecture.png](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
 
 ### Infrastructure deployed
+
 * Resource Group
-* Azure Data Factory
+* Azure SQL Database
+* Key Vault
 * Azure Data Lake Storage Gen2
-* Azure Blob Storage (for config files)
-* Azure Key Vault
-* Log Analytics Workspace
+* Azure Blob Storage
 * Databricks Workspace
-  * Azure Key Vault-backed secret scope
+* Azure Data Factory
+* Log Analytics Workspace
 
 ## Repository structure
-```
+
+```md
 stacks-azure-data
-├── build # Azure DevOps pipelines configuration for building and deploying the core infrastructure
+├── build           # Azure DevOps pipelines configuration for building and deploying the core infrastructure
 ├── data_processing # Azure Data Factory ETL pipelines, leveraging Databricks for data transformations
-│   ├── config # Configuration files (uploaded to blob storage)
-│   ├── jobs # Data processing pipelines with optional Data Quality checks
-│   │   ├── gold # Bronze to Silver layer transformations
-│   │   ├── silver # Silver to Gold layer transformations
-├── de_build # Azure DevOps pipelines configuration for building and deploying ADF pipelines
-├── deploy # TF modules to deploy core Azure resources (used by `build` directory)
-├── docs # Documentation
-├── ingest # Pipeline utilizing ADF for data ingestion, with optional Data Quality checks performed in Databricks
-│   ├── config # Configuration files used by ETL and DQ processes (uploaded to blob storage)
+│   ├── config      # Configuration files (uploaded to blob storage)
+│   ├── jobs        # Data processing pipelines with optional Data Quality checks
+│   │   ├── gold    # Bronze to Silver layer transformations
+│   │   ├── silver  # Silver to Gold layer transformations
+├── de_build        # Azure DevOps pipelines configuration for building and deploying ADF pipelines
+├── deploy          # TF modules to deploy core Azure resources (used by `build` directory)
+├── docs            # Documentation
+├── ingest          # Pipeline utilizing ADF for data ingestion, with optional Data Quality checks
+│   ├── config      # Configuration files used by ETL and DQ processes (uploaded to blob storage)
 │   ├── jobs
-│   │   ├── Generate_Ingest_Query # Helper utility used in the ingestion pipeline
-│   │   ├── Get_Ingest_Config # Helper utility used in the ingestion pipeline
+│   │   ├── Generate_Ingest_Query   # Helper utility used in the ingestion pipeline
+│   │   ├── Get_Ingest_Config       # Helper utility used in the ingestion pipeline
 │   │   ├── Ingest_AzureSql_Example # Data ingestion pipeline with optional Data Quality checks
-├── pysparkle # Python library built to streamline data processing; packaged and uploaded to DBFS
-├── utils # Python utilities package used across solution for local testing
-├── .flake8 # Configuration for Flake8 linting
-├── .pre-commit-config.yaml # Configuration for pre-commit hooks
-├── Makefile # Includes commands for environment setup
-├── pyproject.toml # Project dependencies
-└── README.md # This file.
+├── pysparkle       # Python library built to streamline data processing; packaged and uploaded to DBFS
+├── utils           # Python utilities package used across solution for local testing
+├── .flake8         # Configuration for Flake8 linting
+├── .pre-commit-config.yaml         # Configuration for pre-commit hooks
+├── Makefile        # Includes commands for environment setup
+├── pyproject.toml  # Project dependencies
+├── README.md       # This file
+├── stackscli.yml   # Tells the Stacks CLI what operations to perform when the project is scaffolded
+├── taskctl.yaml    # Controls the independent runner
+└── yamllint.conf   # Linter configuration for YAML files used by the independent runner
 ```
 
 ## Developing the solution
@@ -69,19 +77,24 @@ stacks-azure-data
 * (Windows users) A Linux distribution, e.g. WSL2 https://docs.microsoft.com/en-us/windows/wsl/install
 
 ### Setup Environment
+
 Install the applications listed above, and ensure Poetry is added to your `$PATH`.
 
 A Makefile has been created to assist with setting up the development environment. Run:
+
 ```bash
 make setup_dev_environment
 ```
 
 #### Poetry basics
 To install packages within Poetry, use (this will add the dependency to `pyproject.toml`):
+
 ```bash
 poetry add packagename
 ```
+
 To install a package for use only in the dev environment, use:
+
 ```bash
 poetry add packagename --group dev
 ```
