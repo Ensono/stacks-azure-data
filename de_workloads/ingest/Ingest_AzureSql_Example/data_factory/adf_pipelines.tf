@@ -7,7 +7,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example" {
   folder          = "Ingest"
   parameters = {
     data_source_name = "Ingest_AzureSql_Example",
-    window_start     = "2020-01-01",
+    window_end       = "2020-01-01",
     window_start     = "2020-01-31",
     correlation_id   = ""
   }
@@ -25,7 +25,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example_DQ" {
   folder          = "Ingest"
   parameters = {
     data_source_name = "Ingest_AzureSql_Example",
-    window_start     = "2020-01-01",
+    window_end       = "2020-01-01",
     window_start     = "2020-01-31",
     correlation_id   = ""
   }
