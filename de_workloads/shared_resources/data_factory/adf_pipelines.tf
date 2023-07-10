@@ -14,7 +14,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
       value = local.factoryName
     }
   })
-  template_content = file("ARMTemplateForFactory.json")
+  template_content = file("${path.module}/ARMTemplateForFactory.json")
 }
 
 # resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
