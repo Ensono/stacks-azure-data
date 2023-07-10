@@ -29,6 +29,8 @@ variables:
     value: 'ingest'
   - name: include_data_quality  # update data quality option
     value: 'true'
+  - name: integration_runtime_name  # TODO: get this from pipeline variables
+    value: 'adf-managed-vnet-runtime'
   - name: self_repo_job_dir
     value: '$(self_repo_dir)/de_workloads/$(jobtype)/$(job)'
   - name: self_repo_adf_dir
@@ -166,33 +168,34 @@ stages:
              displayName: 'Get secrets from the keyvault'
 
           # TODO: Make the Databricks / spark steps conditional if data quality is not required
-           - script: |
-                      echo "$(databricks-host)
-                      $(databricks-token)" | databricks configure --token
-             displayName: Configure databricks-cli
+          # TODO: Re-add these steps once databricks issue is resolved
+          #  - script: |
+          #             echo "$(databricks-host)
+          #             $(databricks-token)" | databricks configure --token
+          #    displayName: Configure databricks-cli
 
-           - script: |
-                      folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                      echo "folder_exists: $folder_exists"
-                      if [[ $folder_exists == *"No file or directory exists"* ]];
-                      then
-                          echo "Creating Folder"
-                          databricks fs mkdirs dbfs:/FileStore/scripts
-                      else
-                          echo "Folder Exists"
-                      fi
-             displayName: 'Create Scripts Folder If Not Exists'
+          #  - script: |
+          #             folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+          #             echo "folder_exists: $folder_exists"
+          #             if [[ $folder_exists == *"No file or directory exists"* ]];
+          #             then
+          #                 echo "Creating Folder"
+          #                 databricks fs mkdirs dbfs:/FileStore/scripts
+          #             else
+          #                 echo "Folder Exists"
+          #             fi
+          #    displayName: 'Create Scripts Folder If Not Exists'
 
-           - script: |
-                     echo Destination is /FileStore/scripts/
-                     echo Source is $(self_repo_sparkjob_dir)
-                     for file in $(self_repo_sparkjob_dir)/*; do
-                        if [[ -f $file ]]; then
-                          destination="dbfs:/FileStore/scripts/$(basename $file)"
-                          databricks fs cp --overwrite "$file" "$destination"
-                        fi
-                     done
-             displayName: Upload Spark Jobs
+          #  - script: |
+          #            echo Destination is /FileStore/scripts/
+          #            echo Source is $(self_repo_sparkjob_dir)
+          #            for file in $(self_repo_sparkjob_dir)/*; do
+          #               if [[ -f $file ]]; then
+          #                 destination="dbfs:/FileStore/scripts/$(basename $file)"
+          #                 databricks fs cp --overwrite "$file" "$destination"
+          #               fi
+          #            done
+          #    displayName: Upload Spark Jobs
 
     # Publish ADF
            - task: Bash@3
@@ -218,6 +221,7 @@ stages:
               TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_integration_runtime_name: $(integration_runtime_name)
               TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
               TF_VAR_include_data_quality: "$(include_data_quality)"
 
@@ -396,9 +400,9 @@ stages:
               TF_STATE_RG: $(tf_state_rg)
               TF_STATE_STORAGE: $(tf_state_storage)
               TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
-              # Update TF_VARs based on this job's data factory variables
               TF_VAR_data_factory_resource_group_name: $(resource_group)
               TF_VAR_data_factory: $(datafactoryname)
+              TF_VAR_integration_runtime_name: $(integration_runtime_name)
               TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
               TF_VAR_include_data_quality: "$(include_data_quality)"
 

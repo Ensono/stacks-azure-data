@@ -1,6 +1,6 @@
 resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example" {
   count           = var.include_data_quality == false ? 1 : 0
-  name            = "Ingest_AzureSql_Example"
+  name            = "NEW_Ingest_AzureSql_Example"
   data_factory_id = data.azurerm_data_factory.factory.id
   activities_json = file("${path.module}/pipelines/Ingest_AzureSql_Example.json")
   description     = "Ingest from demo Azure SQL database using ingest config file."
@@ -18,7 +18,7 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example" {
 
 resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_Example_DQ" {
   count           = var.include_data_quality == true ? 1 : 0
-  name            = "Ingest_AzureSql_Example_DQ"
+  name            = "NEW_Ingest_AzureSql_Example_DQ"
   data_factory_id = data.azurerm_data_factory.factory.id
   activities_json = file("${path.module}/pipelines/Ingest_AzureSql_Example_DQ.json")
   description     = "Ingest from demo Azure SQL database using ingest config file, with data quality checks."

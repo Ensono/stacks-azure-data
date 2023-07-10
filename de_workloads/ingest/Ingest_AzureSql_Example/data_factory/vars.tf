@@ -4,7 +4,6 @@ variable "data_factory" {
 }
 
 variable "data_factory_resource_group_name" {
-
   type        = string
   description = "Azure Data Factory resource group name"
 }
@@ -17,6 +16,12 @@ variable "azuresql_examplesource_connectionstring" {
 variable "key_vault_linked_service_name" {
   type        = string
   description = "ADF Key Vault linked service name, e.g. ls_KeyVault"
+  default     = "ls_KeyVault"
+}
+
+variable "integration_runtime_name" {
+  type        = string
+  description = "Azure Data Factory Integration Runtime name, e.g. adf-managed-vnet-runtime"
 }
 
 variable "include_data_quality" {
