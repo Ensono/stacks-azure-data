@@ -14,6 +14,8 @@ azure-identity = "^1.12.0"
 azure-mgmt-datafactory = "^3.1.0"
 azure-storage-file-datalake = "^12.11.0"
 polling2 = "^0.5.0"
+jinja2 = "^3.1.2"
+pyyaml = "^6.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
