@@ -61,6 +61,8 @@ variables:
     value: 1.4.2
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
+  - name: pool_vm_image
+    value: ubuntu-20.04
 
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
