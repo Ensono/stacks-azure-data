@@ -140,6 +140,6 @@
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/ds_dp_ConfigStore_Json')]"
             ]
-        },
+        }
     ]
 }
