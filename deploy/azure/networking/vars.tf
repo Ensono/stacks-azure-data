@@ -183,6 +183,11 @@ variable "create_private_dns_zone" {
   description = "Determines if the networking modules creates a private dns zone."
 }
 
+variable "dns_zone_name" {
+  default     = ["privatelink.vaultcore.azure.net", "privatelink.azuredatabricks.net", "privatelink.database.windows.net", "privatelink.blob.core.windows.net", "privatelink.dfs.core.windows.net"]
+  description = "The name of the Private DNS Zone. Must be a valid domain name. Changing this forces a new resource to be created."
+  type        = list(string)
+}
 
 ############################################
 # VMSS INFORMATION
