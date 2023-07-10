@@ -378,6 +378,13 @@ variable "pe_subnet_name" {
   description = "Name of the Subnet used to provision Private Endpoints into."
 }
 
+variable "browser_authentication_enabled" {
+  type        = bool
+  default     = false
+  description = "Specify wether to create to private endpoint for browser authentication, False in Dev and True in Production should be enable in on enviroment."
+}
+
+
 ############################################
 # NETWORK INFORMATION
 ############################################

@@ -277,6 +277,7 @@ module "adb" {
   create_nat                               = false
   create_lb                                = false
   managed_vnet                             = false
+  browser_authentication_enabled           = var.browser_authentication_enabled
 
   depends_on = [azurerm_resource_group.default]
 }
