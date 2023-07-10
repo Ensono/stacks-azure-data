@@ -390,7 +390,7 @@ variable "browser_authentication_enabled" {
 ############################################
 
 variable "enable_private_networks" {
-  default     = false
+  default     = true
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
