@@ -473,3 +473,32 @@ variable "pe_resource_group_location" {
   default     = "westeurope"
   description = "Location of the resource group to provision private endpoint in."
 }
+variable "dns_resource_group_name" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "Name of the resource group where pvt dns is present."
+}
+
+variable "blob_private_dns_zone_name" {
+  type        = string
+  default     = "privatelink.blob.core.windows.net"
+  description = "Specifies the Name of the Private DNS Zone Group for blob."
+}
+
+variable "blob_dns_resource_group_name" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "Name of the resource group where pvt dns is present for blob."
+}
+
+variable "dfs_private_dns_zone_name" {
+  type        = string
+  default     = "privatelink.dfs.core.windows.net"
+  description = "Specifies the Name of the Private DNS Zone Group for blob."
+}
+
+variable "dfs_dns_resource_group_name" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "Name of the resource group where pvt dns is present for blob."
+}
