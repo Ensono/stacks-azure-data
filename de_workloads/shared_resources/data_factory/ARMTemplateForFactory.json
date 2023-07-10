@@ -134,12 +134,9 @@
                 "folder": {
                     "name": "Utilities"
                 },
-                "annotations": [],
-                "lastPublishTime": "2023-05-15T11:08:48Z"
+                "annotations": []
             },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/datasets/ds_dp_ConfigStore_Json')]"
-            ]
+            "dependsOn": []
         }
     ]
 }
