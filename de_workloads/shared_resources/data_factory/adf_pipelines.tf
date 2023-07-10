@@ -1,9 +1,5 @@
-# locals {
-#   factoryName = data.azurerm_data_factory.example.name
-# }
-
-resource "azurerm_resource_group_template_deployment" "example" {
-  name                = "get-ingest-config"
+resource "azurerm_resource_group_template_deployment" "pipeline_Get_Ingest_Config_PM" {
+  name                = "PM_Get_Ingest_Config"
   resource_group_name = var.data_factory_resource_group_name
   deployment_mode     = "Incremental"
   parameters_content = jsonencode({
@@ -14,21 +10,21 @@ resource "azurerm_resource_group_template_deployment" "example" {
   template_content = file("${path.module}/ARMTemplateForFactory.json")
 }
 
-# resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
-#   name            = "NEW_Get_Ingest_Config"
-#   data_factory_id = data.azurerm_data_factory.factory.id
-#   activities_json = file("${path.module}/pipelines/Get_Ingest_Config.json")
-#   description     = "Retrieve ingest config from the config store for the specified data source."
-#   folder          = "Utilities"
-#   parameters = {
-#     config_container = "config",
-#     config_path      = "",
-#     config_file      = ""
-#   }
-#   depends_on = [
-#     azurerm_data_factory_dataset_json.ds_dp_ConfigStore_Json
-#   ]
-# }
+resource "azurerm_data_factory_pipeline" "pipeline_Get_Ingest_Config" {
+  name            = "NEW_Get_Ingest_Config"
+  data_factory_id = data.azurerm_data_factory.factory.id
+  activities_json = file("${path.module}/pipelines/Get_Ingest_Config.json")
+  description     = "Retrieve ingest config from the config store for the specified data source."
+  folder          = "Utilities"
+  parameters = {
+    config_container = "config",
+    config_path      = "",
+    config_file      = ""
+  }
+  depends_on = [
+    azurerm_data_factory_dataset_json.ds_dp_ConfigStore_Json
+  ]
+}
 
 resource "azurerm_data_factory_pipeline" "pipeline_Generate_Ingest_Query" {
   name            = "NEW_Generate_Ingest_Query"
