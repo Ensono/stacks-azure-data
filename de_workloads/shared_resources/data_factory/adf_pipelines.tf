@@ -1,6 +1,6 @@
-locals {
-  factoryName = data.azurerm_data_factory.example.name
-}
+# locals {
+#   factoryName = data.azurerm_data_factory.example.name
+# }
 
 resource "azurerm_resource_group_template_deployment" "example" {
   name                = "get-ingest-config"
@@ -11,7 +11,7 @@ resource "azurerm_resource_group_template_deployment" "example" {
       value = var.ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint
     }
     "factoryName" = {
-      value = local.factoryName
+      value = data.azurerm_data_factory.factory.name
     }
   })
   template_content = file("${path.module}/ARMTemplateForFactory.json")
