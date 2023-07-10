@@ -11,12 +11,13 @@
             },
             "waitOnCompletion": true,
             "parameters": {
-                "config_file": {
-                    "value": "@{pipeline().parameters.data_source_name}.json",
+                "config_container": "config",
+                "config_path": {
+                    "value": "ingest/@{pipeline().parameters.data_source_name}/ingest_sources",
                     "type": "Expression"
                 },
-                "config_path": {
-                    "value": "ingest/@{pipeline().parameters.data_source_name}",
+                "config_file": {
+                    "value": "@{pipeline().parameters.data_source_name}.json",
                     "type": "Expression"
                 }
             }
