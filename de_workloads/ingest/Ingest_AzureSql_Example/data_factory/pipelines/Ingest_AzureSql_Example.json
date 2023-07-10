@@ -162,7 +162,7 @@
                                             "referenceName": "ds_dp_DataLake_Parquet",
                                             "type": "DatasetReference",
                                             "parameters": {
-                                                "directory": {
+                                                "path": {
                                                     "value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}/@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
                                                     "type": "Expression"
                                                 },
