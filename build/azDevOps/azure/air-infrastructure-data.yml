@@ -31,7 +31,8 @@ stages:
     jobs:
       - job: Validate
         pool:
-          vmImage: $(pool_vm_image)
+         # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         steps:
           - template: ../templates/air-infrastructure-data-setup.yml
@@ -78,7 +79,8 @@ stages:
     jobs:
       - deployment: InfraNonProd
         pool: #"amido-stacks-core-data-agent-pool"
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         environment: ${{ variables.domain }}-nonprod
         strategy:
           runOnce:
@@ -160,7 +162,8 @@ stages:
     jobs:
       - deployment: AppInfraProd
         pool:
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         environment: ${{ variables.domain }}-prod
 
@@ -236,7 +239,8 @@ stages:
     jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         steps:
           # Check out the repo so that it can be tagged
           - checkout: self
