@@ -4,7 +4,6 @@ variable "data_factory" {
 }
 
 variable "data_factory_resource_group_name" {
-
   type        = string
   description = "Azure Data Factory resource group name"
 }
@@ -15,9 +14,9 @@ variable "key_vault_resource_group_name" {
   description = "Azure Key Vault resource group name"
 }
 
-variable "key_vault_uri" {
+variable "key_vault_name" {
   type        = string
-  description = "Azure Key Vault URI, e.g. https://amidostacksdeveuwde.vault.azure.net/"
+  description = "Azure Key Vault URI, e.g. amidostacksdeveuwde"
 }
 
 variable "integration_runtime_name" {
