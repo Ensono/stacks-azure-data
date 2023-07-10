@@ -6,11 +6,7 @@
             "type": "string",
             "metadata": "Data Factory name",
             "defaultValue": "amido-stacks-dev-euw-de"
-        },
-        "ls_Blob_ConfigStore_properties_typeProperties_serviceEndpoint": {
-            "type": "string",
-            "defaultValue": "https://amidostacksdeveuwdeconfi.blob.core.windows.net/"
-    }
+        }
     },
     "variables": {
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
