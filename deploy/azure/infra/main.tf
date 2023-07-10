@@ -253,7 +253,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/new-secure-databricks"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location
