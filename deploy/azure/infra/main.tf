@@ -253,7 +253,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/new-secure-databricks"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location
@@ -262,10 +262,6 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  add_rbac_users                           = var.add_rbac_users
-  rbac_databricks_users                    = var.rbac_databricks_users
-  databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
   create_subnets                           = true
   create_pe_subnet                         = false
@@ -321,6 +317,14 @@ resource "databricks_secret_scope" "kv" {
   keyvault_metadata {
     resource_id = module.kv_default.id
     dns_name    = module.kv_default.vault_uri
+  }
+  depends_on = [module.adb]
+}
+
+resource "databricks_workspace_conf" "this" {
+  count = var.databricks_enableDbfsFileBrowser ? 1 : 0
+  custom_config = {
+    "enableDbfsFileBrowser" : "true"
   }
   depends_on = [module.adb]
 }
