@@ -50,9 +50,9 @@ variables:
   - name: blob_config_destination
     value: 'config/$(jobtype)/$(job)'
   - name: tf_state_key_dev
-    value: $(domain)_$(job)_dev
+    value: $(domain)_$(jobtype)_$(job)_dev
   - name: tf_state_key_prod
-    value: $(domain)_$(job)_prod
+    value: $(domain)_$(jobtype)_$(job)_prod
 
 pool:
   name: $(agentpool_name)
