@@ -310,40 +310,6 @@ variable "public_network_access_enabled" {
   default     = true
 }
 
-# variable "add_rbac_users" {
-#   description = "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false."
-#   type        = bool
-#   default     = true
-# }
-
-
-# variable "rbac_databricks_users" {
-#   type = map(object({
-#     display_name = string
-#     user_name    = string
-#     active       = bool
-#   }))
-#   description = "If 'add_rbac_users' set to true then specifies RBAC Databricks users"
-#   default = {
-#     MehdiKimakhe = {
-#       display_name = "Mehdi Kimakhe"
-#       user_name    = "mehdi.kimakhe@amido.com"
-#       active       = true
-#     }
-#     LorraineSnaddon = {
-#       display_name = "Lorraine Snaddon"
-#       user_name    = "lorraine.snaddon@amido.com"
-#       active       = true
-#     }
-#   }
-# }
-
-# variable "databricks_group_display_name" {
-#   type        = string
-#   description = "If 'add_rbac_users' set to true then specifies databricks group display name"
-#   default     = "project_users"
-# }
-
 variable "databricks-host" {
   type        = string
   default     = "databricks-host"

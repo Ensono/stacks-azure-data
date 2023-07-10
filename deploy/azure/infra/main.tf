@@ -262,10 +262,6 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  # enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  # add_rbac_users                           = var.add_rbac_users
-  # rbac_databricks_users                    = var.rbac_databricks_users
-  # databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
   create_subnets                           = true
   create_pe_subnet                         = false
@@ -332,29 +328,3 @@ resource "databricks_workspace_conf" "this" {
   }
   depends_on = [module.adb]
 }
-
-# resource "databricks_user" "rbac_users" {
-#   for_each     = var.add_rbac_users ? var.rbac_databricks_users : {}
-#   display_name = each.value.display_name
-#   user_name    = each.value.user_name
-#   active       = each.value.active
-
-#   depends_on = [module.adb]
-# }
-
-# resource "databricks_group" "project_users" {
-#   count                 = var.add_rbac_users ? 1 : 0
-#   display_name          = var.databricks_group_display_name
-#   workspace_access      = var.enable_workspace_access
-#   databricks_sql_access = var.enable_sql_access
-
-#   depends_on = [module.adb]
-# }
-
-# resource "databricks_group_member" "project_users" {
-#   for_each  = var.add_rbac_users ? databricks_user.rbac_users : {}
-#   group_id  = databricks_group.project_users[0].id
-#   member_id = each.value.id
-
-#   depends_on = [module.adb]
-# }
