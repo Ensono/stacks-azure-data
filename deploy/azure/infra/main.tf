@@ -31,8 +31,7 @@ module "kv_default" {
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
+  dns_resource_group_name    = var.dns_resource_group_name
 }
 
 # module call for ADF
@@ -180,19 +179,22 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer             = module.default_label.id
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  storage_account_details    = var.storage_account_details
-  container_access_type      = var.container_access_type
-  resource_tags              = module.default_label.tags
-  enable_private_network     = true
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
+  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
+  resource_namer               = module.default_label.id
+  resource_group_name          = azurerm_resource_group.default.name
+  resource_group_location      = azurerm_resource_group.default.location
+  storage_account_details      = var.storage_account_details
+  container_access_type        = var.container_access_type
+  resource_tags                = module.default_label.tags
+  enable_private_network       = true
+  pe_subnet_id                 = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name       = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location   = var.pe_resource_group_location
+  dfs_dns_resource_group_name  = var.dns_resource_group_name
+  blob_dns_resource_group_name = var.dns_resource_group_name
+  blob_private_dns_zone_name   = var.blob_private_dns_zone_name
+  dfs_private_dns_zone_name    = var.dfs_private_dns_zone_name
+
 }
 
 
@@ -232,8 +234,7 @@ module "sql" {
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
+  dns_resource_group_name    = var.dns_resource_group_name
 
 }
 
@@ -252,7 +253,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/secure-databricks"
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/new-secure-databricks"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location
@@ -261,10 +262,6 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  add_rbac_users                           = var.add_rbac_users
-  rbac_databricks_users                    = var.rbac_databricks_users
-  databricks_group_display_name            = var.databricks_group_display_name
   enable_private_network                   = true
   create_subnets                           = true
   create_pe_subnet                         = false
@@ -280,6 +277,7 @@ module "adb" {
   create_nat                               = false
   create_lb                                = false
   managed_vnet                             = false
+  browser_authentication_enabled           = var.browser_authentication_enabled
 
   depends_on = [azurerm_resource_group.default]
 }
@@ -320,6 +318,14 @@ resource "databricks_secret_scope" "kv" {
   keyvault_metadata {
     resource_id = module.kv_default.id
     dns_name    = module.kv_default.vault_uri
+  }
+  depends_on = [module.adb]
+}
+
+resource "databricks_workspace_conf" "this" {
+  count = var.databricks_enableDbfsFileBrowser ? 1 : 0
+  custom_config = {
+    "enableDbfsFileBrowser" : "true"
   }
   depends_on = [module.adb]
 }
