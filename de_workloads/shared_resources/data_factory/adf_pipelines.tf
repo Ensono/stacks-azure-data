@@ -7,7 +7,7 @@ resource "azurerm_resource_group_template_deployment" "pipeline_Get_Ingest_Confi
       value = data.azurerm_data_factory.factory.name
     }
   })
-  template_content = file("${path.module}/pipelines/ARM_Get_Ingest_Config.json")
+  template_content = file("${path.module}/pipelines/Get_Ingest_Config.json")
 }
 
 resource "azurerm_resource_group_template_deployment" "pipeline_Generate_Ingest_Query" {
@@ -19,5 +19,5 @@ resource "azurerm_resource_group_template_deployment" "pipeline_Generate_Ingest_
       value = data.azurerm_data_factory.factory.name
     }
   })
-  template_content = file("${path.module}/pipelines/ARM_Generate_Ingest_Query.json")
+  template_content = file("${path.module}/pipelines/Generate_Ingest_Query.json")
 }
