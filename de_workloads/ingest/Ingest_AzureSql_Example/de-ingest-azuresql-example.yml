@@ -27,7 +27,7 @@ variables:
   - name: jobtype # update job type
     value: "ingest"
   - name: include_data_quality # update data quality option
-    value: "false"
+    value: "true"
   - name: integration_runtime_name # TODO: get this from pipeline variables
     value: "adf-managed-vnet-runtime"
   - name: self_repo_job_dir
