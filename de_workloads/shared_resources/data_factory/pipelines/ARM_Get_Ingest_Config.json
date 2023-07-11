@@ -4,8 +4,7 @@
     "parameters": {
         "factoryName": {
             "type": "string",
-            "metadata": "Data Factory name",
-            "defaultValue": "amido-stacks-dev-euw-de"
+            "metadata": "Data Factory name"
         }
     },
     "variables": {
