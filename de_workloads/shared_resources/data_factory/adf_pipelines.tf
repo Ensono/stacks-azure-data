@@ -8,6 +8,9 @@ resource "azurerm_resource_group_template_deployment" "pipeline_Get_Ingest_Confi
     }
   })
   template_content = file("${path.module}/pipelines/Get_Ingest_Config.json")
+  depends_on = [
+    azurerm_data_factory_dataset_json.ds_dp_ConfigStore_Json
+  ]
 }
 
 resource "azurerm_resource_group_template_deployment" "pipeline_Generate_Ingest_Query" {
