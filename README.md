@@ -123,7 +123,7 @@ az account set --subscription <name or id>
 
 To run the E2E tests, you need to set up the following environment variables:
 
-- `SUBSCRIPTION_ID`
+- `AZURE_SUBSCRIPTION_ID`
 - `RESOURCE_GROUP_NAME`
 - `DATA_FACTORY_NAME`
 - `REGION_NAME`
