@@ -163,34 +163,33 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                # TODO: Re-add these steps once databricks issue is resolved
-                # - script: |
-                #     echo "$(databricks-host)
-                #     $(databricks-token)" | databricks configure --token
-                #   displayName: Configure databricks-cli
+                - script: |
+                    echo "$(databricks-host)
+                    $(databricks-token)" | databricks configure --token
+                  displayName: Configure databricks-cli
 
-                # - script: |
-                #     folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                #     echo "folder_exists: $folder_exists"
-                #     if [[ $folder_exists == *"No file or directory exists"* ]];
-                #     then
-                #         echo "Creating Folder"
-                #         databricks fs mkdirs dbfs:/FileStore/scripts
-                #     else
-                #         echo "Folder Exists"
-                #     fi
-                #   displayName: "Create Scripts Folder If Not Exists"
+                - script: |
+                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                    echo "folder_exists: $folder_exists"
+                    if [[ $folder_exists == *"No file or directory exists"* ]];
+                    then
+                        echo "Creating Folder"
+                        databricks fs mkdirs dbfs:/FileStore/scripts
+                    else
+                        echo "Folder Exists"
+                    fi
+                  displayName: "Create Scripts Folder If Not Exists"
 
-                # - script: |
-                #     echo Destination is /FileStore/scripts/
-                #     echo Source is $(self_repo_sparkjob_dir)
-                #     for file in $(self_repo_sparkjob_dir)/*; do
-                #        if [[ -f $file ]]; then
-                #          destination="dbfs:/FileStore/scripts/$(basename $file)"
-                #          databricks fs cp --overwrite "$file" "$destination"
-                #        fi
-                #     done
-                #   displayName: Upload Spark Jobs
+                - script: |
+                    echo Destination is /FileStore/scripts/
+                    echo Source is $(self_repo_sparkjob_dir)
+                    for file in $(self_repo_sparkjob_dir)/*; do
+                       if [[ -f $file ]]; then
+                         destination="dbfs:/FileStore/scripts/$(basename $file)"
+                         databricks fs cp --overwrite "$file" "$destination"
+                       fi
+                    done
+                  displayName: Upload Spark Jobs
 
                 # Publish ADF
                 - task: Bash@3
