@@ -2,7 +2,7 @@ resource "random_uuid" "deployment" {
 }
 
 resource "azurerm_resource_group_template_deployment" "pipeline_Ingest_AzureSql_Example" {
-  count           = var.include_data_quality == false ? 1 : 1
+#   count           = var.include_data_quality == false ? 1 : 0
   name                = "Ingest_AzureSql_Example-${random_uuid.deployment.result}"
   resource_group_name = var.data_factory_resource_group_name
   deployment_mode     = "Incremental"
@@ -18,7 +18,7 @@ resource "azurerm_resource_group_template_deployment" "pipeline_Ingest_AzureSql_
 }
 
 resource "azurerm_resource_group_template_deployment" "pipeline_Ingest_AzureSql_Example_DQ" {
-  count           = var.include_data_quality == true ? 1 : 1
+#   count           = var.include_data_quality == true ? 1 : 0
   name                = "Ingest_AzureSql_Example_DQ-${random_uuid.deployment.result}"
   resource_group_name = var.data_factory_resource_group_name
   deployment_mode     = "Incremental"
