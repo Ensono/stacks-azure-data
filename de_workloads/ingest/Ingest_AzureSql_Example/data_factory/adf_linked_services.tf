@@ -4,7 +4,7 @@ resource "azurerm_data_factory_linked_custom_service" "ls_AzureSql_ExampleSource
   integration_runtime {
     name = var.integration_runtime_name
   }
-  type                 = "AzureSqlDatabase"
+  type                 = var.linked_service_type
   description          = "Azure SQL example linked service."
   type_properties_json = <<JSON
 {
@@ -15,7 +15,7 @@ resource "azurerm_data_factory_linked_custom_service" "ls_AzureSql_ExampleSource
           "referenceName": "${var.key_vault_linked_service_name}",
           "type": "LinkedServiceReference"
       },
-      "secretName": "sql-password"
+      "secretName": "${var.key_vault_secret_name}"
   }
 }
 JSON
