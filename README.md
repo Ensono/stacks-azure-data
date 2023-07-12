@@ -120,7 +120,7 @@ To run the E2E tests, you need to set up the following environment variables:
 - `RESOURCE_GROUP_NAME`
 - `DATA_FACTORY_NAME`
 - `REGION_NAME`
-- `STORAGE_ACCOUNT_NAME`
+- `AZURE_STORAGE_ACCOUNT_NAME`
 
 The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
 whilst clearing up directories please check you have the necessary permissions to read, write and execute against ADLS.
