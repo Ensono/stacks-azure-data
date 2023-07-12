@@ -8,6 +8,6 @@ Feature:Data Factory Get Ingest Config
     And the ADF pipeline Get_Ingest_Config has finished with state Succeeded
     And the ADF pipeline completed in less than 120 seconds
 
-    Examples: Output files
-    |parameters|output_files|
-    |{"window_start" : "2020-01-01", "window_end": "2020-01-31"}|["example_azuresql_1.json", "schema/ingest_config_schema.json"]|
+    Examples: Get config
+    |parameters|
+    |{"config_container" : "config", "config_file": "Ingest_AzureSql_Example.json", "config_path": "ingest/Ingest_AzureSql_Example/ingest_sources"}|
