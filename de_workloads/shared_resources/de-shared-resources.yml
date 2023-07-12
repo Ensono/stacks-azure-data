@@ -25,8 +25,6 @@ variables:
     value: "shared_resources"
   - name: include_databricks_resources # update databricks option
     value: "true"
-  - name: integration_runtime_name # TODO: get this from pipeline variables
-    value: "adf-managed-vnet-runtime"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(job)"
   - name: self_repo_adf_dir
