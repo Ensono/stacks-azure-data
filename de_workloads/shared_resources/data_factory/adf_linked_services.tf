@@ -35,9 +35,9 @@ resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_S
     min_number_of_workers = 2
     max_number_of_workers = 2
     spark_environment_variables = {
-      AZURE_CLIENT_SECRET = "{{secrets/key-vault-secret/service-principal-secret}}"
-      AZURE_CLIENT_ID     = "{{secrets/key-vault-secret/azure-client-id}}"
-      AZURE_TENANT_ID     = "{{secrets/key-vault-secret/azure-tenant-id}}"
+      AZURE_CLIENT_SECRET = "{{secrets/key-vault-backed/service-principal-secret}}"
+      AZURE_CLIENT_ID     = "{{secrets/key-vault-backed/azure-client-id}}"
+      AZURE_TENANT_ID     = "{{secrets/key-vault-backed/azure-tenant-id}}"
       ADLS_ACCOUNT        = var.adls_datalake_name
       BLOB_ACCOUNT        = var.blob_configstore_name
       PYSPARK_PYTHON      = "/databricks/python3/bin/python3"
