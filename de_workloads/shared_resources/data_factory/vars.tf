@@ -59,3 +59,9 @@ variable "databricks_workspace_resource_id" {
   description = "Databricks - Workspace Resource ID, e.g. /subscriptions/XXXXXXXXXXXXX/resourceGroups/XXXXXXXXXXX/providers/Microsoft.Databricks/workspaces/XXXXXXX"
   default     = null
 }
+
+variable "arm_deployment_mode" {
+  type        = string
+  description = "Deployment mode for any ARM resources"
+  default     = "Incremental"
+}
