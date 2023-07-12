@@ -26,8 +26,8 @@ resource "azurerm_data_factory_dataset_parquet" "ds_dp_DataLake_Parquet" {
   linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.ls_ADLS_DataLake.name
   folder              = "Data_Platform/Data_Lake"
   parameters = {
-    path = "",
-    filename  = ""
+    path     = "",
+    filename = ""
   }
   azure_blob_storage_location {
     container                = "raw"

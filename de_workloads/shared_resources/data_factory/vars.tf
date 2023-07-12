@@ -9,7 +9,6 @@ variable "data_factory_resource_group_name" {
 }
 
 variable "key_vault_resource_group_name" {
-
   type        = string
   description = "Azure Key Vault resource group name"
 }

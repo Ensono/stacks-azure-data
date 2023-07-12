@@ -4,7 +4,6 @@ variable "data_factory" {
 }
 
 variable "data_factory_resource_group_name" {
-
   type        = string
   description = "Azure Data Factory resource group name"
 }
