@@ -134,7 +134,6 @@ stages:
                     TF_VAR_build_agent_ip: $(build_agent_ip)
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
-                    TF_VAR_create_subnets: true
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
                     TF_VAR_public_subnet_name: "amido-stacks-euw-de-nonprod-db-public"
                     TF_VAR_private_subnet_name: "amido-stacks-euw-de-nonprod-db-private"
