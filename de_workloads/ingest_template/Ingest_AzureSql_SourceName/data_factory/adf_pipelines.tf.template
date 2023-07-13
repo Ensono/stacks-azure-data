@@ -14,3 +14,5 @@ resource "azurerm_data_factory_pipeline" "pipeline_Ingest_AzureSql_{{ source_nam
     azurerm_data_factory_custom_dataset.ds_ex_AzureSql_ExampleSource
   ]
 }
+
+TaskctlVersion: ${{ variables.TaskctlVersion }}
