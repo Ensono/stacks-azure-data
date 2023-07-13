@@ -224,7 +224,7 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?feature/sql-network-update"
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=feature/sql-network-update"
   resource_namer                = module.default_label.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
