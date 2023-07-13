@@ -69,6 +69,13 @@ variable "enable_private_networks" {
   description = "Enable Private Networking for Secure Data Platform."
 }
 
+
+variable "link_dns_network" {
+  description = "weather link DNS with vnets"
+  type        = bool
+  default     = false
+}
+
 variable "network_details" {
   type = map(object({
     name                = string
