@@ -218,7 +218,7 @@ stages:
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
-                    TF_VAR_azuresql_examplesource_connectionstring: "$(sql_connection)"
+                    TF_VAR_linked_service_connectionstring: "$(sql_connection)"
                     TF_VAR_include_data_quality: "$(include_data_quality)"
 
       #   # Start Testing
