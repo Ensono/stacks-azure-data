@@ -19,19 +19,20 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
-  resource_namer             = substr(replace(module.default_label.id, "-", ""), 0, 24)
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  create_kv_networkacl       = false
-  enable_rbac_authorization  = false
-  resource_tags              = module.default_label.tags
-  contributor_object_ids     = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network     = true
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location = var.pe_resource_group_location
-  dns_resource_group_name    = var.dns_resource_group_name
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
+  resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
+  resource_group_name           = azurerm_resource_group.default.name
+  resource_group_location       = azurerm_resource_group.default.location
+  create_kv_networkacl          = false
+  enable_rbac_authorization     = false
+  resource_tags                 = module.default_label.tags
+  contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  enable_private_network        = true
+  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location    = var.pe_resource_group_location
+  dns_resource_group_name       = var.dns_resource_group_name
+  public_network_access_enabled = var.kv_public_network_access_enabled
 }
 
 # module call for ADF
@@ -179,21 +180,22 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer               = module.default_label.id
-  resource_group_name          = azurerm_resource_group.default.name
-  resource_group_location      = azurerm_resource_group.default.location
-  storage_account_details      = var.storage_account_details
-  container_access_type        = var.container_access_type
-  resource_tags                = module.default_label.tags
-  enable_private_network       = true
-  pe_subnet_id                 = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name       = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location   = var.pe_resource_group_location
-  dfs_dns_resource_group_name  = var.dns_resource_group_name
-  blob_dns_resource_group_name = var.dns_resource_group_name
-  blob_private_dns_zone_name   = var.blob_private_dns_zone_name
-  dfs_private_dns_zone_name    = var.dfs_private_dns_zone_name
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
+  resource_namer                = module.default_label.id
+  resource_group_name           = azurerm_resource_group.default.name
+  resource_group_location       = azurerm_resource_group.default.location
+  storage_account_details       = var.storage_account_details
+  container_access_type         = var.container_access_type
+  resource_tags                 = module.default_label.tags
+  enable_private_network        = true
+  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location    = var.pe_resource_group_location
+  dfs_dns_resource_group_name   = var.dns_resource_group_name
+  blob_dns_resource_group_name  = var.dns_resource_group_name
+  blob_private_dns_zone_name    = var.blob_private_dns_zone_name
+  dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
+  public_network_access_enabled = var.sa_public_network_access_enabled
 
 }
 
@@ -222,19 +224,20 @@ resource "azurerm_key_vault_secret" "sql_password" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
-  resource_namer             = module.default_label.id
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  sql_version                = var.sql_version
-  administrator_login        = var.administrator_login
-  sql_db_names               = var.sql_db_names
-  resource_tags              = module.default_label.tags
-  enable_private_network     = true
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location = var.pe_resource_group_location
-  dns_resource_group_name    = var.dns_resource_group_name
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
+  resource_namer                = module.default_label.id
+  resource_group_name           = azurerm_resource_group.default.name
+  resource_group_location       = azurerm_resource_group.default.location
+  sql_version                   = var.sql_version
+  administrator_login           = var.administrator_login
+  sql_db_names                  = var.sql_db_names
+  resource_tags                 = module.default_label.tags
+  enable_private_network        = true
+  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
+  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_resource_group_location    = var.pe_resource_group_location
+  dns_resource_group_name       = var.dns_resource_group_name
+  public_network_access_enabled = var.sql_public_network_access_enabled
 
 }
 

@@ -513,3 +513,25 @@ variable "dfs_dns_resource_group_name" {
   default     = "amido-stacks-euw-de-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
+
+############################################
+# PUBLIC NETWORK ACCESS INFORMATION
+############################################
+
+variable "kv_public_network_access_enabled" {
+  type        = bool
+  default     = false
+  description = "Allow public network access to Key Vault. Set as true or false."
+}
+
+variable "sa_public_network_access_enabled" {
+  type        = bool
+  default     = false
+  description = "Allow public network access to storage account. Set as true or false."
+}
+
+variable "sql_public_network_access_enabled" {
+  type        = bool
+  default     = false
+  description = "Allow public network access to sql server. Set as true or false."
+}
