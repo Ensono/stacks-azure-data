@@ -146,7 +146,7 @@ stages:
                 - task: AzureCLI@2
                   inputs:
                     # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)"
+                    azureSubscription: "Stacks.Pipeline.Builds"
                     scriptType: "pscore"
                     scriptLocation: "inlineScript"
                     inlineScript: "az storage blob upload-batch `
@@ -232,7 +232,7 @@ stages:
                 - task: AzureCLI@2
                   inputs:
                     # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)"
+                    azureSubscription: "Stacks.Pipeline.Builds"
                     ScriptType: "bash"
                     scriptLocation: "inlineScript"
                     inlineScript: az account show
@@ -319,7 +319,7 @@ stages:
                 - task: AzureCLI@2
                   inputs:
                     # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "amido.stacks (719637e5-aedd-4fb1-b231-5101b45f8bb5)"
+                    azureSubscription: "Stacks.Pipeline.Builds"
                     scriptType: "pscore"
                     scriptLocation: "inlineScript"
                     inlineScript: "az storage blob upload-batch `
