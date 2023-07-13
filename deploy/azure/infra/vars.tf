@@ -390,7 +390,7 @@ variable "browser_authentication_enabled" {
 ############################################
 
 variable "enable_private_networks" {
-  default     = false
+  default     = true
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
@@ -414,16 +414,54 @@ variable "vnet_resource_group_name" {
 }
 
 variable "dns_zone_name" {
-  type        = string
-  default     = "privatelink.amido-stacks-core-data-euw-de.com"
-  description = "The name of the Private DNS Zone"
+  default     = ["privatelink.vaultcore.azure.net", "privatelink.azuredatabricks.net", "privatelink.database.windows.net", "privatelink.blob.core.windows.net", "privatelink.dfs.core.windows.net"]
+  description = "The name of the Private DNS Zone. Must be a valid domain name. Changing this forces a new resource to be created."
+  type        = list(string)
 }
+
 
 variable "dns_zone_resource_group" {
   type        = string
   default     = "amido-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
+
+variable "dev_vnet_resource_group_name" {
+  type        = string
+  default     = "amido-stacks-euw-de-nonprod-network"
+  description = "The Resource Group for the Private DNS Zone."
+}
+
+variable "prod_vnet_resource_group_name" {
+  type        = string
+  default     = "amido-stacks-euw-de-prod-network"
+  description = "The Resource Group for the Private DNS Zone."
+}
+
+
+variable "dev_network_spoke" {
+  type        = string
+  default     = "amido-stacks-euw-de-nonprod"
+  description = "The Resource Group for the Private DNS Zone."
+}
+
+variable "prod_network_spoke" {
+  type        = string
+  default     = "amido-stacks-euw-de-prod"
+  description = "The Resource Group for the Private DNS Zone."
+}
+variable "link_dns_dev_spoke_network" {
+  type        = bool
+  default     = false
+  description = "link DNS zones to dev network"
+}
+
+variable "link_dns_prod_spoke_network" {
+  type        = bool
+  default     = false
+  description = "link DNS zones to Prod network"
+}
+
 
 ############################################
 # PRIVATE ENDPOINT INFORMATION

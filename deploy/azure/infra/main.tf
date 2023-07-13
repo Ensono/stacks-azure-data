@@ -266,8 +266,8 @@ module "adb" {
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
   enable_private_network                   = true
-  create_subnets                           = true
   create_pe_subnet                         = false
+  create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
   public_subnet_name                       = var.public_subnet_name
