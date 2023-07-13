@@ -19,6 +19,7 @@ module "networking" {
   create_fw_public_ip     = var.create_fw_public_ip
   create_private_dns_zone = var.create_private_dns_zone
   dns_zone_name           = var.dns_zone_name
+  link_dns_network        = var.link_dns_network
 }
 
 module "vmss" {
