@@ -532,6 +532,6 @@ variable "sa_public_network_access_enabled" {
 
 variable "sql_public_network_access_enabled" {
   type        = bool
-  default     = false
+  default     = true
   description = "Allow public network access to storage account. Set as true or false."
 }
