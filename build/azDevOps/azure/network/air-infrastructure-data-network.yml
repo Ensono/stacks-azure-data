@@ -113,3 +113,4 @@ stages:
                     TF_VAR_name_domain: $(domain)
                     TF_VAR_stage: $(Environment.ShortName)
                     TF_VAR_enable_private_networks: true
+                    TF_VAR_link_dns_network: true
