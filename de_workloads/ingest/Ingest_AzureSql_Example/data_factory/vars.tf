@@ -14,15 +14,21 @@ variable "linked_service_type" {
   default     = "AzureSqlDatabase"
 }
 
-variable "dataset_type" {
+variable "linked_service_connectionstring" {
   type        = string
-  description = "Type of Dataset in Data Factory"
-  default     = "AzureSqlTable"
+  description = "Data source connection string, e.g. Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
 }
 
-variable "azuresql_examplesource_connectionstring" {
+variable "linked_service_name" {
   type        = string
-  description = "Azure SQL Example Source - connection string, e.g. Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=sqldbtest;User ID=mssqladmin"
+  description = "Data source linked service name"
+  default     = "ls_AzureSql_ExampleSource"
+}
+
+variable "linked_service_description" {
+  type        = string
+  description = "Data source linked service description"
+  default     = "Azure SQL example linked service."
 }
 
 variable "key_vault_linked_service_name" {
@@ -40,6 +46,18 @@ variable "key_vault_secret_name" {
 variable "integration_runtime_name" {
   type        = string
   description = "Azure Data Factory Integration Runtime name, e.g. adf-managed-vnet-runtime"
+}
+
+variable "dataset_type" {
+  type        = string
+  description = "Type of Dataset in Data Factory"
+  default     = "AzureSqlTable"
+}
+
+variable "dataset_name" {
+  type        = string
+  description = "Name of Dataset in Data Factory"
+  default     = "ds_ex_AzureSql_ExampleSource"
 }
 
 variable "include_data_quality" {
