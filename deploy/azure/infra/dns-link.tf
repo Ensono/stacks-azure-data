@@ -15,5 +15,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "prod-privatelink-dns" 
   registration_enabled  = false # Auto registration_enabled set to false as we cannot add multiple Private DNS to 1 Vnet
   private_dns_zone_name = each.key
   virtual_network_id    = data.azurerm_virtual_network.prod.id
-  depends_on            = [ data.azurerm_virtual_network.dev]
+  depends_on            = [data.azurerm_virtual_network.dev]
 }

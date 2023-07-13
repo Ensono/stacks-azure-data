@@ -451,14 +451,14 @@ variable "prod_network_spoke" {
   description = "The Resource Group for the Private DNS Zone."
 }
 variable "link_dns_dev_spoke_network" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "link DNS zones to dev network"
 }
 
 variable "link_dns_prod_spoke_network" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "link DNS zones to Prod network"
 }
 
