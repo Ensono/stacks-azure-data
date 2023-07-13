@@ -21,5 +21,5 @@ data "azurerm_virtual_network" "dev" {
 
 data "azurerm_virtual_network" "prod" {
   name                = var.prod_network_spoke
-  resource_group_name = var.var.dev_vnet_resource_group_name
+  resource_group_name = var.dev_vnet_resource_group_name
 }
