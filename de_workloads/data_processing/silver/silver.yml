@@ -42,7 +42,7 @@ variables:
   - name: self_repo_adf_src
     value: "de_workloads/$(jobtype)/$(job)/data_factory"
   - name: self_repo_spark_src  
-    value: "de_workloads/$(jobtype)/$(job)/spark-jobs"
+    value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
   - name: self_repo_blob_config
     value: "$(self_repo_job_dir)/config"
   - name: blob_config_destination
@@ -143,21 +143,21 @@ stages:
           runOnce:
             deploy:
               steps:
-                # - task: Bash@3
-                #   displayName: "Clean Workspace"
-                #   inputs:
-                #     targetType: "inline"
-                #     script: |
-                #       echo "Cleaning workspace..."
-                #       sudo rm -rf $(Build.SourcesDirectory)/*
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
 
                 - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-                - script: dir
-                  displayName: List  Workspace
-                  workingDirectory: '$(System.DefaultWorkingDirectory)'
+                # - script: dir
+                #   displayName: List  Workspace
+                #   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
                 # Publish Config files
                 - task: AzureCLI@2
