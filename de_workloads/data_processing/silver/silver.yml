@@ -41,6 +41,8 @@ variables:
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
     value: "de_workloads/$(jobtype)/$(job)/data_factory"
+  - name: self_repo_spark_src  
+    value: "de_workloads/$(jobtype)/$(job)/spark-jobs"
   - name: self_repo_blob_config
     value: "$(self_repo_job_dir)/config"
   - name: blob_config_destination
@@ -51,8 +53,7 @@ variables:
     value: $(domain)_$(jobtype)_$(job)_prod
   - name: dbfs_destination  #update job name
     value: 'dbfs:/FileStore/scriptsTest'
-  - name: self_repo_spark_src  
-    value: "$(jobtype)/jobs/$(job)/spark-jobs"
+
 
 pool:
   name: $(agentpool_name)
