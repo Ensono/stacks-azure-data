@@ -155,10 +155,6 @@ stages:
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-                # - script: dir
-                #   displayName: List  Workspace
-                #   workingDirectory: '$(System.DefaultWorkingDirectory)'
-
                 # Publish Config files
                 - task: AzureCLI@2
                   inputs:
@@ -337,38 +333,17 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                - script: |
-                    echo "$(databricks-host)
-                    $(databricks-token)" | databricks configure --token
-                  displayName: Configure databricks-cli
-
-                - script: |
-                    databricks workspace ls
-                    databricks fs ls
-                  displayName: test databricks-cli
-
-                - script: |
-                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                    echo "folder_exists: $folder_exists"
-                    if [[ $folder_exists == *"No file or directory exists"* ]];
-                    then
-                        echo "Creating Folder"
-                        databricks fs mkdirs dbfs:/FileStore/scripts
-                    else
-                        echo "Folder Exists"
-                    fi
-                  displayName: "Create Scripts Folder If Not Exists"
-
-                - script: |
-                    echo Destination is /FileStore/scripts/
-                    echo Source is $(self_repo_sparkjob_dir)
-                    for file in $(self_repo_sparkjob_dir)/*; do
-                       if [[ -f $file ]]; then
-                         destination="dbfs:/FileStore/scripts/$(basename $file)"
-                         databricks fs cp --overwrite "$file" "$destination"
-                       fi
-                    done
-                  displayName: Upload Spark Jobs
+                - task: Bash@3
+                  displayName: "TaskCTL: Databricks"
+                  inputs:
+                    targetType: inline
+                    script: taskctl databricks
+                  env:
+                    # Dotnet Build
+                    DATABRICKS_HOST: "$(databricks-host)"
+                    DATABRICKS_TOKEN: "$(databricks-token)"
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
                 - task: Bash@3
