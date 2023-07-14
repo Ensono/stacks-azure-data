@@ -35,6 +35,14 @@ stages:
           name: $(agentpool_name)
 
         steps:
+
+          - task: Bash@3
+            displayName: 'Clean Workspace'
+            inputs:
+              targetType: 'inline'
+              script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
           - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -173,6 +181,14 @@ stages:
             deploy:
               steps:
 
+                - task: Bash@3
+                  displayName: 'Clean Workspace'
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                       echo "Cleaning workspace..."
+                       sudo rm -rf $(Build.SourcesDirectory)/*    
+
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -245,6 +261,13 @@ stages:
           # vmImage: $(pool_vm_image)
           name: $(agentpool_name)
         steps:
+          - task: Bash@3
+            displayName: 'Clean Workspace'
+            inputs:
+              targetType: 'inline'
+              script: |
+                 echo "Cleaning workspace..."
+                 sudo rm -rf $(Build.SourcesDirectory)/*    
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
