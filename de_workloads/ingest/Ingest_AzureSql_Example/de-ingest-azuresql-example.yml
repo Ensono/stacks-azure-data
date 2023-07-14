@@ -240,6 +240,13 @@ stages:
                     scriptLocation: "inlineScript"
                     inlineScript: az account show
 
+                - task: AzureCLI@2
+                  inputs:
+                    # TODO: Remove hardcoded reference to subscription
+                    azureSubscription: "Stacks.Pipeline.Builds"
+                    scriptType: "pscore"
+                    scriptLocation: "inlineScript"
+                    inlineScript: "az storage fs file list -f raw --account-name amidostacksdeveuwdeadls"
                 - task: UsePythonVersion@0
                   inputs:
                     versionSpec: "$(pythonVersion)"
