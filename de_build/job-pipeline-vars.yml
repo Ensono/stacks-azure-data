@@ -27,17 +27,10 @@ variables:
     value: 1.4.2
   # - name: pool_vm_image
   #   value: ubuntu-20.04
-  
-
-# Versioning
-  # - name: version_major
-  #   value: 1
-  # - name: version_minor
-  #   value: 0
-  # - name: version_revision
-  #   value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
-  # - name: version_number
-  #   value: $(version_major).$(version_minor).$(version_revision)
+  - name: pythonVersion
+    value: '3.10.10'
+  - name: test_unit_path
+    value: 'tests/unit/'
 
 # GitHub infomration
   - name: create_release

@@ -74,11 +74,12 @@ The pipelines folder is structured as follows:
 
 ![ADF_IngestPipelinesList.png](../../images/ADF_IngestPipelinesList.png)
 
-* `Ingest` contains ingest pipelines specific to the given data source. These are the parent
-pipelines that would be triggered on a recurring basis to ingest from a data source. All pipelines
-have their equivalents that include Data Quality validations. Depending on your particular needs,
-you can deploy each of the pipelines with or without this additional Data Quality step. More on
-Data Quality can be found [here](data_quality_azure.md).
+* `Ingest` contains ingest pipelines specific to the given data source. The naming convention for
+these pipelines is `Ingest_{SourceType}_{SourceName}`. These are the parent pipelines that would be
+triggered on a recurring basis to ingest from a data source. All pipelines have their equivalents
+that include Data Quality validations. Depending on your particular needs, you can deploy each of
+the pipelines with or without this additional Data Quality step. More on Data Quality can be found
+[here](data_quality_azure.md).
 * The pipelines within `Utilities` are reusable and referenced by other pipelines. They are not
 meant to be triggered independently.
 

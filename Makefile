@@ -6,10 +6,10 @@ setup_dev_environment:
 	pre-commit install
 
 test:
-	python -m pytest ingest/jobs/Ingest_AzureSql_Example/tests/unit
+	python -m pytest de_workloads/ingest/Ingest_AzureSql_Example/tests/unit
 
 test_e2e:
-	behave ingest/jobs/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
+	behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
 
 pre_commit:
 	pre-commit run --all-files

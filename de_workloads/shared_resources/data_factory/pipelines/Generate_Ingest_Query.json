@@ -1,0 +1,127 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/Generate_Ingest_Query')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Generate an ingest query from the provided ingest entity configuration.",
+                "activities": [
+                    {
+                        "name": "Load_Type",
+                        "type": "Switch",
+                        "dependsOn": [],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "on": {
+                                "value": "@pipeline().parameters.ingest_entity_config['load_type']",
+                                "type": "Expression"
+                            },
+                            "cases": [
+                                {
+                                    "value": "full",
+                                    "activities": [
+                                        {
+                                            "name": "Full_Load_Query",
+                                            "type": "SetVariable",
+                                            "dependsOn": [],
+                                            "userProperties": [],
+                                            "typeProperties": {
+                                                "variableName": "query",
+                                                "value": {
+                                                    "value": "SELECT @{pipeline().parameters.ingest_entity_config['columns']}\nFROM @{pipeline().parameters.ingest_entity_config['schema']}.@{pipeline().parameters.ingest_entity_config['table']};",
+                                                    "type": "Expression"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "value": "delta",
+                                    "activities": [
+                                        {
+                                            "name": "Delta_Load_Query",
+                                            "description": "",
+                                            "type": "SetVariable",
+                                            "dependsOn": [],
+                                            "userProperties": [],
+                                            "typeProperties": {
+                                                "variableName": "query",
+                                                "value": {
+                                                    "value": "SELECT @{pipeline().parameters.ingest_entity_config['columns']}\nFROM @{pipeline().parameters.ingest_entity_config['schema']}.@{pipeline().parameters.ingest_entity_config['table']}\nWHERE @{pipeline().parameters.ingest_entity_config['delta_date_column']} >= '@{pipeline().parameters.window_start}'\nAND @{pipeline().parameters.ingest_entity_config['delta_date_column']} < '@{pipeline().parameters.window_end}';",
+                                                    "type": "Expression"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Return_Query",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "Load_Type",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "pipelineReturnValue",
+                            "value": [
+                                {
+                                    "key": "generated_query",
+                                    "value": {
+                                        "type": "Expression",
+                                        "content": "@variables('query')"
+                                    }
+                                }
+                            ],
+                            "setSystemVariable": true
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "parameters": {
+                    "ingest_entity_config": {
+                        "type": "object"
+                    },
+                    "window_start": {
+                        "type": "string"
+                    },
+                    "window_end": {
+                        "type": "string"
+                    }
+                },
+                "variables": {
+                    "query": {
+                        "type": "String"
+                    }
+                },
+                "folder": {
+                    "name": "Utilities"
+                },
+                "annotations": []
+            },
+            "dependsOn": []
+        }
+    ]
+}
