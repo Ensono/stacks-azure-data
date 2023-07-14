@@ -155,6 +155,10 @@ stages:
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
+                - script: dir
+                  displayName: List  Workspace
+                  workingDirectory: '$(System.DefaultWorkingDirectory)'
+
                 # Publish Config files
                 - task: AzureCLI@2
                   inputs:
