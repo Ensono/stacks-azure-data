@@ -176,17 +176,17 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                - task: Bash@3
-                  displayName: "TaskCTL: Databricks"
-                  inputs:
-                    targetType: inline
-                    script: taskctl databricks
-                  env:
-                    # Dotnet Build
-                    DATABRICKS_HOST: "$(databricks-host)"
-                    DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
-                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
+                # - task: Bash@3
+                #   displayName: "TaskCTL: Databricks"
+                #   inputs:
+                #     targetType: inline
+                #     script: taskctl databricks
+                #   env:
+                #     # Dotnet Build
+                #     DATABRICKS_HOST: "$(databricks-host)"
+                #     DATABRICKS_TOKEN: "$(databricks-token)"
+                #     DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                #     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
                 - task: Bash@3
