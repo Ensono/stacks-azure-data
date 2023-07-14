@@ -124,11 +124,11 @@ tasks:
            Write-Output "
            Upload Spark Jobs or Whl to DBFS"
            $destinationPath=$env:DATABRICKS_DBFS_LOCATION
-           $self_repo_sparkjob_dir=$env:DATABRICKS_SOURCE_LOCATION        
+           $databricks_source_path=$env:DATABRICKS_SOURCE_LOCATION        
            Write-Output "DBFS destination is $destinationPath"
-           Write-Output "DBFS Source File location is $self_repo_sparkjob_dir"
+           Write-Output "DBFS Source File location is $databricks_source_path"
 
-            $files = Get-ChildItem -Path $self_repo_sparkjob_dir
+            $files = Get-ChildItem -Path $databricks_source_path
             foreach ($file in $files) {
                 if ($file -is [System.IO.FileInfo]) {
                     Write-Output  $file.Name
