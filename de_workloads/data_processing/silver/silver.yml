@@ -51,6 +51,8 @@ variables:
     value: $(domain)_$(jobtype)_$(job)_prod
   - name: dbfs_destination  #update job name
     value: 'dbfs:/FileStore/scriptsTest'
+  - name: self_repo_spark_src  
+    value: "$(jobtype)/jobs/$(job)/spark-jobs"
 
 pool:
   name: $(agentpool_name)
