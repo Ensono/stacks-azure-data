@@ -1,0 +1,11 @@
+source_name: Example
+
+ado_variable_groups_nonprod:
+  - amido-stacks-de-pipeline-nonprod
+  - amido-stacks-infra-credentials-nonprod
+  - stacks-credentials-nonprod-kv
+
+ado_variable_groups_prod:
+  - amido-stacks-de-pipeline-prod
+  - amido-stacks-infra-credentials-prod
+  - stacks-credentials-prod-kv
