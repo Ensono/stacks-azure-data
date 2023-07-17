@@ -54,7 +54,9 @@ pool:
 stages:
   - stage: Build_Stage
     variables:
-      - group: amido-stacks-de-pipeline-nonprod
+      {%- for group in ado_variable_groups_nonprod %}
+      - group: {{ group }}
+      {%- endfor %}
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
@@ -118,9 +120,9 @@ stages:
   #############################################################
   - stage: Deploy_NonPROD_Stage
     variables:
-      - group: amido-stacks-de-pipeline-nonprod
-      - group: amido-stacks-infra-credentials-nonprod
-      - group: stacks-credentials-nonprod-kv
+      {%- for group in ado_variable_groups_nonprod %}
+      - group: {{ group }}
+      {%- endfor %}
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
     dependsOn: Build_Stage
@@ -160,6 +162,34 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
+                - script: |
+                    echo "$(databricks-host)
+                    $(databricks-token)" | databricks configure --token
+                  displayName: Configure databricks-cli
+
+                - script: |
+                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
+                    echo "folder_exists: $folder_exists"
+                    if [[ $folder_exists == *"No file or directory exists"* ]];
+                    then
+                        echo "Creating Folder"
+                        databricks fs mkdirs dbfs:/FileStore/scripts
+                    else
+                        echo "Folder Exists"
+                    fi
+                  displayName: "Create Scripts Folder If Not Exists"
+
+                - script: |
+                    echo Destination is /FileStore/scripts/
+                    echo Source is $(self_repo_sparkjob_dir)
+                    for file in $(self_repo_sparkjob_dir)/*; do
+                       if [[ -f $file ]]; then
+                         destination="dbfs:/FileStore/scripts/$(basename $file)"
+                         databricks fs cp --overwrite "$file" "$destination"
+                       fi
+                    done
+                  displayName: Upload Spark Jobs
+
                 # Publish ADF
                 - task: Bash@3
                   displayName: "TaskCTL: infrastructure"
@@ -186,7 +216,6 @@ stages:
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
                     TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-                    TF_VAR_include_data_quality: "$(include_data_quality)"
 
       #   # Start Testing
       - deployment: Test_NonPROD
@@ -257,8 +286,9 @@ stages:
       - Deploy_NonPROD_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-de-pipeline-prod
-      - group: stacks-credentials-prod-kv
+      {%- for group in ado_variable_groups_prod %}
+      - group: {{ group }}
+      {%- endfor %}
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
@@ -364,7 +394,6 @@ stages:
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
                     TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-                    TF_VAR_include_data_quality: "$(include_data_quality)"
 
   - stage: Release
     dependsOn:
@@ -372,7 +401,9 @@ stages:
       - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
+    {%- for group in ado_variable_groups_nonprod %}
+      - group: {{ group }}
+    {%- endfor %}
       # - name: version_number
       #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
