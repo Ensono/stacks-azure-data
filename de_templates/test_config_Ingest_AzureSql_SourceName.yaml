@@ -9,3 +9,7 @@ ado_variable_groups_prod:
   - amido-stacks-de-pipeline-prod
   - amido-stacks-infra-credentials-prod
   - stacks-credentials-prod-kv
+
+
+window_start_default: 2020-01-01
+window_end_default: 2020-01-31
