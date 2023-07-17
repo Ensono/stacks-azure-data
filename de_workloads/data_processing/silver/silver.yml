@@ -52,7 +52,7 @@ variables:
   - name: tf_state_key_prod
     value: $(domain)_$(jobtype)_$(job)_prod
   - name: dbfs_destination  #update job name
-    value: 'dbfs:/FileStore/scriptsTest'
+    value: 'dbfs:/FileStore/scripts'
 
 
 pool:
