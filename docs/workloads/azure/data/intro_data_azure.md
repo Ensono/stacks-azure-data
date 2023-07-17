@@ -52,7 +52,6 @@ For details please see [Infrastructure](components/infrastructure/core_data_plat
 
 Example data engineering workloads are provided, which run within a deployed Stacks Azure Data Platform. These are categorised as follows:
 
-
 * [Ingest](components/etl_pipelines/ingest_data_azure.md)
 * [Data Processing](components/etl_pipelines/silver_data_azure.md)
 * Shared resources - to be referenced by multiple workloads (for example, common Data Factory linked services or datasets)
