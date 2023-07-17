@@ -1,4 +1,4 @@
-# Build and deploy pipeline for job Ingest_AzureSql_Example
+# Build and deploy pipeline for job Ingest_AzureSql_{{ source_name }}
 
 name: "$(Build.SourceBranchName)-init"
 
@@ -8,7 +8,7 @@ pr:
       - "main"
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/*
+      - de_workloads/ingest/Ingest_AzureSql_{{ source_name }}/*
 
 trigger:
   branches:
@@ -16,17 +16,15 @@ trigger:
       - "main"
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/*
+      - de_workloads/ingest/Ingest_AzureSql_{{ source_name }}/*
 
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
   - name: job # update job name
-    value: "Ingest_AzureSql_Example"
+    value: "Ingest_AzureSql_{{ source_name }}"
   - name: jobtype # update job type
     value: "ingest"
-  - name: include_data_quality # update data quality option
-    value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(jobtype)/$(job)"
   - name: self_repo_adf_dir
@@ -108,7 +106,6 @@ stages:
               targetType: inline
               script: taskctl lint
             env:
-              # Dotnet Build
               CLOUD_PROVIDER: "$(cloud_provider)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
@@ -163,35 +160,6 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                # TODO: Make the Databricks / spark steps conditional if data quality is not required
-                - script: |
-                    echo "$(databricks-host)
-                    $(databricks-token)" | databricks configure --token
-                  displayName: Configure databricks-cli
-
-                - script: |
-                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                    echo "folder_exists: $folder_exists"
-                    if [[ $folder_exists == *"No file or directory exists"* ]];
-                    then
-                        echo "Creating Folder"
-                        databricks fs mkdirs dbfs:/FileStore/scripts
-                    else
-                        echo "Folder Exists"
-                    fi
-                  displayName: "Create Scripts Folder If Not Exists"
-
-                - script: |
-                    echo Destination is /FileStore/scripts/
-                    echo Source is $(self_repo_sparkjob_dir)
-                    for file in $(self_repo_sparkjob_dir)/*; do
-                       if [[ -f $file ]]; then
-                         destination="dbfs:/FileStore/scripts/$(basename $file)"
-                         databricks fs cp --overwrite "$file" "$destination"
-                       fi
-                    done
-                  displayName: Upload Spark Jobs
-
                 # Publish ADF
                 - task: Bash@3
                   displayName: "TaskCTL: infrastructure"
@@ -199,7 +167,6 @@ stages:
                     targetType: inline
                     script: taskctl -d infrastructure
                   env:
-                    # Dotnet Build
                     CLOUD_PROVIDER: "$(cloud_provider)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
@@ -378,7 +345,6 @@ stages:
                     targetType: inline
                     script: taskctl infrastructure
                   env:
-                    # Dotnet Build
                     CLOUD_PROVIDER: "$(cloud_provider)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
