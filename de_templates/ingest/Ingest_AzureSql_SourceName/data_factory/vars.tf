@@ -60,11 +60,6 @@ variable "dataset_name" {
   default     = "ds_ex_AzureSql_ExampleSource"
 }
 
-variable "include_data_quality" {
-  type        = bool
-  description = "Include data quality step in pipeline"
-}
-
 variable "arm_deployment_mode" {
   type        = string
   description = "Deployment mode for any ARM resources"
