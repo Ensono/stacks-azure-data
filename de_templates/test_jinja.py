@@ -22,7 +22,7 @@ with open("test_config_Ingest_AzureSql_SourceName.yaml", "r") as file:
 
 environment = Environment(undefined=SilentUndefined)
 with open(
-    "ingest/Ingest_AzureSql_SourceName/de-ingest-azuresql-example.yml.jinja", "r"
+    "ingest/Ingest_AzureSql_SourceName/de-ingest-azuresql-source-name.yml.jinja", "r"
 ) as file:
     content = file.read()
 
