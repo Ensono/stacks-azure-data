@@ -1,0 +1,35 @@
+pipeline_name: Ingest_AzureSql_Example
+source_name: example
+data_source_type: azure_sql
+dataset_name: ds_ex_AzureSql_Example
+dataset_linked_service_name: ls_AzureSql_Example
+
+
+ado_variable_groups_nonprod:
+  - amido-stacks-de-pipeline-nonprod
+  - amido-stacks-infra-credentials-nonprod
+  - stacks-credentials-nonprod-kv
+
+ado_variable_groups_prod:
+  - amido-stacks-de-pipeline-prod
+  - amido-stacks-infra-credentials-prod
+  - stacks-credentials-prod-kv
+
+
+# Datalake containers
+
+bronze_container: raw
+silver_container: staging
+gold_container: curated
+
+
+# Workload config
+
+window_start_default: 2020-01-01
+window_end_default: 2020-01-31
+
+
+# E2E test config
+
+adf_pipeline_timeout_seconds: 180
+adf_pipeline_status_check_interval_seconds: 10
