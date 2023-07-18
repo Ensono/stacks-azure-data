@@ -44,7 +44,7 @@ with open(
 
 
 with open(
-    "ingest/Ingest_AzureSql_SourceName/config/ingest_sources/Ingest_AzureSql_Example.json.jinja",
+    "ingest/Ingest_AzureSql_SourceName/config/ingest_sources/Ingest_AzureSql_SourceName.json.jinja",
     "r",
 ) as file:
     content = file.read()
@@ -55,6 +55,16 @@ print(template.render(config))
 
 with open(
     "ingest/Ingest_AzureSql_SourceName_DQ/config/data_quality/ingest_dq.json.jinja", "r"
+) as file:
+    content = file.read()
+
+template = environment.from_string(content)
+print(template.render(config))
+
+
+with open(
+    "ingest/Ingest_AzureSql_SourceName/tests/end_to_end/features/azure_data_ingest.feature.jinja",
+    "r",
 ) as file:
     content = file.read()
 

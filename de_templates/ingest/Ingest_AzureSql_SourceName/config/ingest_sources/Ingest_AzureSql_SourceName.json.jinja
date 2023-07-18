@@ -1,7 +1,7 @@
 {
-    "data_source_name": "{{ source_name }}_azuresql",
+    "data_source_name": "{{ source_name | lower }}_azuresql_1",
     "data_source_type": "azure_sql",
-    "enabled": {{ enabled }},
+    "enabled": {{ ingest_source_enabled }},
     "ingest_entities": [
         {%- for entity in ingest_entities %}
         {
