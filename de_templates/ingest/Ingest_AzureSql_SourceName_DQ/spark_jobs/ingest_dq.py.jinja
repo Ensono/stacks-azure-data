@@ -6,7 +6,7 @@ def call_pysparkle_entrypoint():
         [
             "data-quality",
             "--config-path",
-            "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json",
+            "ingest/Ingest_AzureSql_{{ source_name }}_DQ/data_quality/ingest_dq.json",
         ],
         standalone_mode=False,
     )
