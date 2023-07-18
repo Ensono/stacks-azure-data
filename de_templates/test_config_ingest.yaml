@@ -1,5 +1,4 @@
 pipeline_name: Ingest_AzureSql_Example
-source_name: example
 data_source_type: azure_sql
 dataset_name: ds_ex_AzureSql_Example
 dataset_linked_service_name: ls_AzureSql_Example
