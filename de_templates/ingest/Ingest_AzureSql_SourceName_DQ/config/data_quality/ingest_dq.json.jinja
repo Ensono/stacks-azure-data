@@ -1,0 +1,29 @@
+{
+    "gx_directory_path": "/dbfs/great_expectations/",
+    "dataset_name": "{{ dataset_name }}",
+    "datasource_config": [
+        {%- for source in datasource_config %}
+        {
+            "datasource_name": "{{ source.datasource_name }}",
+            "datasource_type": "{{ source.datasource_type }}",
+            "data_location": "{{ source.data_location }}",
+            "expectation_suite_name": "{{ source.expectation_suite_name }}",
+            "validation_config": [
+                {%- for config in source.validation_config %}
+                {
+                    "column_name": "{{ config.column_name }}",
+                    "expectations": [
+                        {%- for expectation in config.expectations %}
+                        {
+                            "expectation_type": "{{ expectation.expectation_type }}",
+                            "expectation_kwargs": {{ expectation.expectation_kwargs | tojson }}
+                        }{%- if not loop.last %},{% endif -%}
+                        {%- endfor %}
+                    ]
+                }{%- if not loop.last %},{% endif -%}
+                {%- endfor %}
+            ]
+        }{%- if not loop.last %},{% endif -%}
+        {%- endfor %}
+    ]
+}

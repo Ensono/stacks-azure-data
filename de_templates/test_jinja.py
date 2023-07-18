@@ -21,8 +21,40 @@ with open("test_config_Ingest_AzureSql_SourceName.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 environment = Environment(undefined=SilentUndefined)
+
+
+def to_json_boolean(value):
+    return "true" if value else "false"
+
+
+def quote_non_null(value):
+    return f'"{value}"' if value else "null"
+
+
+environment.filters["to_json_boolean"] = to_json_boolean
+environment.filters["quote_non_null"] = quote_non_null
+
 with open(
     "ingest/Ingest_AzureSql_SourceName/de-ingest-azuresql-source-name.yml.jinja", "r"
+) as file:
+    content = file.read()
+
+# template = environment.from_string(content)
+# print(template.render(config))
+
+
+with open(
+    "ingest/Ingest_AzureSql_SourceName/config/ingest_sources/Ingest_AzureSql_Example.json.jinja",
+    "r",
+) as file:
+    content = file.read()
+
+template = environment.from_string(content)
+print(template.render(config))
+
+
+with open(
+    "ingest/Ingest_AzureSql_SourceName_DQ/config/data_quality/ingest_dq.json.jinja", "r"
 ) as file:
     content = file.read()
 
