@@ -11,5 +11,56 @@ ado_variable_groups_prod:
   - stacks-credentials-prod-kv
 
 
+# Workload config
+
 window_start_default: 2020-01-01
 window_end_default: 2020-01-31
+
+# Ingest sources
+
+enabled: true
+
+ingest_entities:
+  - version: 1
+    display_name: SalesLT.Product
+    enabled: true
+    schema: SalesLT
+    table: Product
+    columns: "*"
+    load_type: full
+    delta_date_column: null
+    delta_upsert_key: null
+  - version: 1
+    display_name: SalesLT.SalesOrderHeader
+    enabled: true
+    schema: SalesLT
+    table: SalesOrderHeader
+    columns: "SalesOrderID, RevisionNumber, OrderDate, DueDate, ShipDate, Status, OnlineOrderFlag, SalesOrderNumber, PurchaseOrderNumber, AccountNumber, CustomerID, ShipToAddressID, BillToAddressID, ShipMethod, CreditCardApprovalCode, SubTotal, TaxAmt, Freight, TotalDue, Comment, rowguid, ModifiedDate"
+    load_type: delta
+    delta_date_column: ModifiedDate
+    delta_upsert_key: SalesOrderID
+  - version: 1
+    display_name: SalesLT.SalesOrderDetailID
+    enabled: true
+    schema: SalesLT
+    table: SalesOrderDetail
+    columns: "SalesOrderID, SalesOrderDetailID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount, LineTotal, rowguid, ModifiedDate"
+    load_type: delta
+    delta_date_column: ModifiedDate
+    delta_upsert_key: "SalesOrderID, SalesOrderDetailID"
+
+
+# Data Quality config
+
+dataset_name: SalesLT
+
+datasource_config:
+  - datasource_name: SalesLT.Product
+    datasource_type: parquet
+    data_location: "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*"
+    expectation_suite_name: SalesLT_product_suite
+    validation_config:
+      - column_name: ProductID
+        expectations:
+          - expectation_type: expect_column_values_to_not_be_null
+            expectation_kwargs: {}
