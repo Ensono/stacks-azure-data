@@ -17,34 +17,23 @@ class SilentUndefined(Undefined):
         return self.__class__(name=f"{self}[{name}]")
 
 
-with open("test_config_Ingest_AzureSql_SourceName.yaml", "r") as file:
+with open("test_config_ingest.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 environment = Environment(undefined=SilentUndefined)
 
 
-def to_json_boolean(value):
-    return "true" if value else "false"
-
-
-def quote_non_null(value):
-    return f'"{value}"' if value else "null"
-
-
-environment.filters["to_json_boolean"] = to_json_boolean
-environment.filters["quote_non_null"] = quote_non_null
-
 with open(
-    "ingest/Ingest_AzureSql_SourceName/de-ingest-azuresql-source-name.yml.jinja", "r"
+    "ingest/Ingest_SourceType_SourceName/de-ingest-ado-pipeline.yml.jinja", "r"
 ) as file:
     content = file.read()
 
-# template = environment.from_string(content)
-# print(template.render(config))
+template = environment.from_string(content)
+print(template.render(config))
 
 
 with open(
-    "ingest/Ingest_AzureSql_SourceName/config/ingest_sources/Ingest_AzureSql_SourceName.json.jinja",
+    "ingest/Ingest_SourceType_SourceName/config/ingest_sources/Ingest_SourceType_SourceName.json.jinja",
     "r",
 ) as file:
     content = file.read()
@@ -54,7 +43,7 @@ print(template.render(config))
 
 
 with open(
-    "ingest/Ingest_AzureSql_SourceName_DQ/config/data_quality/ingest_dq.json.jinja", "r"
+    "ingest/Ingest_SourceType_SourceName_DQ/config/data_quality/ingest_dq.json", "r"
 ) as file:
     content = file.read()
 
@@ -63,7 +52,7 @@ print(template.render(config))
 
 
 with open(
-    "ingest/Ingest_AzureSql_SourceName/tests/end_to_end/features/azure_data_ingest.feature.jinja",
+    "ingest/Ingest_SourceType_SourceName/tests/end_to_end/features/azure_data_ingest.feature.jinja",
     "r",
 ) as file:
     content = file.read()
