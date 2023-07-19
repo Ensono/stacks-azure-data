@@ -36,8 +36,3 @@ gold_container: curated
 
 window_start_default: 2020-01-01
 window_end_default: 2020-01-31
-
-
-# E2E test config
-
-adf_pipeline_timeout_seconds: 180
