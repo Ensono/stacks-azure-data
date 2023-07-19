@@ -16,7 +16,7 @@
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
-                "description": "Ingest from demo Azure SQL database using ingest config file, with data quality checks.",
+                "description": "{{ pipeline_description }}",
                 "activities": [
                     {
                         "name": "Get_Ingest_Config",
@@ -62,7 +62,7 @@
                             "isSequential": false,
                             "activities": [
                                 {
-                                    "name": "SQL_to_ADLS",
+                                    "name": "{{ data_source_type | upper }}_to_ADLS",
                                     "type": "Copy",
                                     "dependsOn": [
                                         {
@@ -152,7 +152,7 @@
                                     },
                                     "inputs": [
                                         {
-                                            "referenceName": "{{ dataset_name }}",
+                                            "referenceName": "ds_{{ dataset_name }}",
                                             "type": "DatasetReference",
                                             "parameters": {}
                                         }
