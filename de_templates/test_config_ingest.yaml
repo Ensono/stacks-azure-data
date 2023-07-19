@@ -35,4 +35,3 @@ window_end_default: 2020-01-31
 # E2E test config
 
 adf_pipeline_timeout_seconds: 180
-adf_pipeline_status_check_interval_seconds: 10
