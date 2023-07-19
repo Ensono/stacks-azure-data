@@ -4,7 +4,7 @@ Feature:Azure Data Ingest
 
   Scenario Outline: Data Factory Ingest SQL Database into ADLS
     Given the ADF pipeline {{ pipeline_name }} has been triggered with <parameters>
-    And I poll the pipeline every {{ adf_pipeline_status_check_interval_seconds }} seconds until it has completed
+    And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline {{ pipeline_name }} has finished with state Succeeded
     And the ADF pipeline completed in less than {{ adf_pipeline_timeout_seconds }} seconds
     Then the files <output_files> are present in the ADLS container {{ bronze_container }} in the directory {{ pipeline_name }}
