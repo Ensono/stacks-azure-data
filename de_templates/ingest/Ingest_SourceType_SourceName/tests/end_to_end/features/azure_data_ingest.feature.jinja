@@ -6,7 +6,7 @@ Feature:Azure Data Ingest
     Given the ADF pipeline {{ pipeline_name }} has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline {{ pipeline_name }} has finished with state Succeeded
-    And the ADF pipeline completed in less than {{ adf_pipeline_timeout_seconds }} seconds
+    And the ADF pipeline completed in less than 180 seconds
     Then the files <output_files> are present in the ADLS container {{ bronze_container }} in the directory {{ pipeline_name }}
 
     Examples: Output files
