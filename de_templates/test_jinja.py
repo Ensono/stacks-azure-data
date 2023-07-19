@@ -59,3 +59,13 @@ with open(
 
 template = environment.from_string(content)
 print(template.render(config))
+
+
+with open(
+    "ingest/Ingest_SourceType_SourceName/data_factory/pipelines/ARM_IngestTemplate.json.jinja",
+    "r",
+) as file:
+    content = file.read()
+
+template = environment.from_string(content)
+print(template.render(config))
