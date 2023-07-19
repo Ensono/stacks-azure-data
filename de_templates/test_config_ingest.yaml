@@ -2,7 +2,7 @@ pipeline_name: Ingest_AzureSql_Example
 pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
 data_source_type: azure_sql
 
-# Used to create ADF dataset and linked service, named ds_<dataset_name> and ls_<dataset_name>.
+# Used to create an ADF dataset and a linked service, named ds_<dataset_name> and ls_<dataset_name>
 dataset_name: AzureSql_Example
 
 
