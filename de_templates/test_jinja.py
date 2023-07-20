@@ -30,9 +30,7 @@ DQ_INGEST_DIR = "ingest/Ingest_SourceType_SourceName_DQ"
 
 class Template(Enum):
     ADO = f"{INGEST_DIR}/de-ingest-ado-pipeline.yml.jinja"
-    CONFIG = (
-        f"{INGEST_DIR}/config/ingest_sources/Ingest_SourceType_SourceName.json.jinja"
-    )
+    CONFIG = f"{INGEST_DIR}/config/ingest_sources/ingest_config.json.jinja"
     ARM = f"{INGEST_DIR}/data_factory/pipelines/ARM_IngestTemplate.json.jinja"
     TF_DATASET = f"{INGEST_DIR}/data_factory/adf_datasets.tf.jinja"
     TF_LINKED_SERVICE = f"{INGEST_DIR}/data_factory/adf_linked_services.tf.jinja"
@@ -48,7 +46,7 @@ class Template(Enum):
     DQ_ADO = f"{DQ_INGEST_DIR}/de-ingest-ado-pipeline.yml.jinja"
 
 
-with open(Template.DQ_ADO.value, "r") as file:
+with open(Template.DQ_SPARK.value, "r") as file:
     content = file.read()
 
 template = environment.from_string(content)
