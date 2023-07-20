@@ -39,10 +39,8 @@ variables:
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
     value: "de_workloads/$(job)/data_factory"
-  - name: tf_state_key_dev
-    value: $(domain)_$(job)_dev
-  - name: tf_state_key_prod
-    value: $(domain)_$(job)_prod
+  - name: tf_state_key
+    value: $(domain)_$(job)
 
 pool:
   name: $(agentpool_name)
@@ -192,10 +190,10 @@ stages:
                       # Azure Authentication
                       # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_dev)
+                    TF_STATE_KEY: $(tf_state_key)
                     TF_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
@@ -365,10 +363,10 @@ stages:
                       # Azure Authentication
                       # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_prod)
+                    TF_STATE_KEY: $(tf_state_key)
                     TF_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
