@@ -65,7 +65,7 @@ stages:
       - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - name: Environment.ShortName
-        value: core-data
+        value: dev
       # Available in Terraform Output, but not yet enabled to export as pipeline vars
       - name: dns_base_domain
         value: nonprod.amidostacks.com
