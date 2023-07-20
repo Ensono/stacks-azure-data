@@ -46,7 +46,7 @@ class Template(Enum):
     DQ_ADO = f"{DQ_INGEST_DIR}/de-ingest-ado-pipeline.yml.jinja"
 
 
-with open(Template.DQ_SPARK.value, "r") as file:
+with open(Template.ARM.value, "r") as file:
     content = file.read()
 
 template = environment.from_string(content)
