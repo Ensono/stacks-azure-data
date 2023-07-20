@@ -37,3 +37,10 @@ pipelines:
       depends_on: infra:init
     - task: infra:apply
       depends_on: infra:plan
+
+  databricks:
+    - task: databricks:connect
+    - task: databricks:createdir
+      depends_on: databricks:connect
+    - task: databricks:upload
+      depends_on: databricks:createdir
