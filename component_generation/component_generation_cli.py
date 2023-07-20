@@ -1,16 +1,13 @@
 import logging
 import shutil
+import yaml
 
 import click
 from click_loglevel import LogLevel
 
-from pysparkle.logger import setup_logger
-from jinja2 import Environment, PackageLoader, select_autoescape
+from component_generation.logger import setup_logger
+from component_generation.utils import render_template_component
 
-env = Environment(
-    loader=PackageLoader("component_generation"),
-    autoescape=select_autoescape()
-)
 
 @click.group()
 @click.option("--log-level", "-l", type=LogLevel(), default=logging.INFO)
@@ -23,13 +20,20 @@ def cli(log_level):
 @click.option("--data-quality/--no-data-quality", "-dq/", default=False, help="Flag to determine whether to include data quality in template")
 def gen_ingest(config_path, data_quality):
     """Generate new ingest pipeline"""
-
-
     if data_quality:
         template_source_folder = "Ingest_SourceType_SourceName_DQ"
-        template = env.get_template("ingest_dq_template.whatever") # Change to real file name
     else:
         template_source_folder = "Ingest_SourceType_SourceName"
-        template = env.get_template("ingest_template.whatever") # Change to real file name
+    #  config path - "component_generation/test_config_ingest.yaml"
+    with open(config_path, "r") as file:
+        config = yaml.safe_load(file)
 
-    template.stream(config).dumps(f'{config["pipeline_name"]}.')
+    template_source_path = f"de_templates/ingest/{template_source_folder}/"
+    target_dir = f"./ingest/jobs/{config['pipeline']}"
+
+    render_template_component(config, template_source_path, target_dir)
+
+cli.add_command(gen_ingest)
+
+if __name__ == "__main__":
+    cli(standalone_mode=False)
