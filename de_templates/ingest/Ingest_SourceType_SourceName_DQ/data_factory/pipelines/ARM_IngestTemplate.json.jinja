@@ -1,3 +1,4 @@
+{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -79,7 +80,7 @@
                                     "userProperties": [],
                                     "typeProperties": {
                                         "source": {
-                                            "type": "AzureSqlSource",
+                                            "type": "{% if data_source_type == 'azure_sql' %}AzureSqlSource{% else %}''{% endif %}",
                                             "additionalColumns": [
                                                 {
                                                     "name": "meta_ingestion_datetime",
