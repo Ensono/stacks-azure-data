@@ -1,5 +1,5 @@
 # `dataset_name` parameter is used to determine names of the following ADF resources:
-# - pipeline: Ingest_<dataset_name>
+pipeline: Ingest_test
 # - dataset: ds_<dataset_name>
 # - linked service: ls_<dataset_name>
 dataset_name: AzureSql_Example
