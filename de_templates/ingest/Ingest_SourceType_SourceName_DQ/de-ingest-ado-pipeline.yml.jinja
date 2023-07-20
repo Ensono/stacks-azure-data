@@ -73,7 +73,7 @@ stages:
                 sudo rm -rf $(Build.SourcesDirectory)/*
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              TaskctlVersion: ${{ variables.TaskctlVersion|default('{{ variables.TaskctlVersion }}') }}
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
@@ -130,7 +130,7 @@ stages:
     jobs:
       - deployment: Deploy_NonPROD
         displayName: "Deploy To NonPROD"
-        environment: ${{ variables.domain }}-nonprod
+        environment: ${{ variables.domain|default('{{ variables.domain }}') }}-nonprod
         pool:
           name: $(agentpool_name)
 
@@ -140,7 +140,7 @@ stages:
               steps:
                 - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+                    TaskctlVersion: ${{ variables.TaskctlVersion|default('{{ variables.TaskctlVersion }}') }}
 
                 # Publish Config files
                 - task: AzureCLI@2
@@ -221,7 +221,7 @@ stages:
       #   # Start Testing
       - deployment: Test_NonPROD
         displayName: "Testing  NonPROD"
-        environment: ${{ variables.domain }}-nonprod
+        environment: ${{ variables.domain|default('{{ variables.domain }}') }}-nonprod
         dependsOn: Deploy_NonPROD
         pool:
           name: $(agentpool_name)
@@ -295,7 +295,7 @@ stages:
     jobs:
       - deployment: Deploy_PRDO
         displayName: "Deploy To PROD"
-        environment: ${{ variables.domain }}-prod
+        environment: ${{ variables.domain|default('{{ variables.domain }}') }}-prod
         pool:
           name: $(agentpool_name)
 
@@ -313,7 +313,7 @@ stages:
 
                 - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+                    TaskctlVersion: ${{ variables.TaskctlVersion|default('{{ variables.TaskctlVersion }}') }}
 
                 # Publish Config files
                 - task: AzureCLI@2
