@@ -129,6 +129,8 @@ stages:
       - group: stacks-credentials-nonprod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
+      - name: Environment.ShortName
+        value: dev
     dependsOn: Build_Stage
     jobs:
       - deployment: Deploy_NonPROD
@@ -287,6 +289,8 @@ stages:
       - group: stacks-credentials-prod-kv
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
+      - name: Environment.ShortName
+        value: prod
     jobs:
       - deployment: Deploy_PRDO
         displayName: "Deploy To PROD"
