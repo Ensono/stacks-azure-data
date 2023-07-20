@@ -214,11 +214,11 @@
                     },
                     "window_end": {
                         "type": "string",
-                        "defaultValue": "{{ window_end_default }}"
+                        "defaultValue": "{{ window_end_default | default('2020-01-31') }}"
                     },
                     "window_start": {
                         "type": "string",
-                        "defaultValue": "{{ window_start_default }}"
+                        "defaultValue": "{{ window_start_default | default('2020-01-01') }}"
                     },
                     "correlation_id": {
                         "type": "string"
