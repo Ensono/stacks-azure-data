@@ -1,3 +1,4 @@
+{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
 from jsonschema import validate
 
 from utils.config_utils import (

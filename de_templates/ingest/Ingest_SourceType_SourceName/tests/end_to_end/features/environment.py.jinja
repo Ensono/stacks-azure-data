@@ -1,3 +1,4 @@
+{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
 from behave import use_fixture
 
 from fixtures import azure_adls_clean_up
