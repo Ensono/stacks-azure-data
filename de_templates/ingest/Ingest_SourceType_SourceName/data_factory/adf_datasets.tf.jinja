@@ -4,7 +4,7 @@ resource "azurerm_data_factory_custom_dataset" "ds_{{ dataset_name }}" {
   type            = "{% if data_source_type == 'azure_sql' %}AzureSqlTable{% else %}''{% endif %}"
   folder          = "External_Sources"
   linked_service {
-    name = "ls_{{ dataset_name }}"
+    name = azurerm_data_factory_linked_custom_service.ls_{{ dataset_name }}.name
   }
   type_properties_json = jsonencode({})
   schema_json          = jsonencode({})
