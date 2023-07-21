@@ -27,13 +27,19 @@ def ingest(config_path, data_quality):
         template_source_folder = "Ingest_SourceType_SourceName_DQ"
     else:
         template_source_folder = "Ingest_SourceType_SourceName"
+    
+    click.echo("Reading config from provided path...")
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
+    click.echo("Successfully read config file.\n")
 
     template_source_path = f"de_templates/ingest/{template_source_folder}/"
     target_dir = f"de_workloads/ingest/{config['pipeline']}"
 
+    click.echo("Rendering component templates with provided config...")
     render_template_components(config, template_source_path, target_dir)
+    click.echo("Successfully rendered new component!")
+
 
 if __name__ == "__main__":
     cli(standalone_mode=False)
