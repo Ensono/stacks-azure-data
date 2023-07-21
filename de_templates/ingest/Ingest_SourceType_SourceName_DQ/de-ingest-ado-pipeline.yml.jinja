@@ -44,10 +44,12 @@ variables:
     value: "$(self_repo_job_dir)/config"
   - name: blob_config_destination
     value: "config/$(jobtype)/$(job)"
-  - name: tf_state_key_dev
-    value: $(domain)_$(jobtype)_$(job)_dev
-  - name: tf_state_key_prod
-    value: $(domain)_$(jobtype)_$(job)_prod
+  - name: tf_state_key
+    value: $(domain)_$(jobtype)_$(job)
+  - name: dbfs_destination
+    value: 'dbfs:/FileStore/scripts'
+  - name: self_repo_spark_src
+    value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 
 pool:
   name: $(agentpool_name)
@@ -126,6 +128,8 @@ stages:
       {%- endfor %}
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
+      - name: Environment.ShortName
+        value: dev
     dependsOn: Build_Stage
     jobs:
       - deployment: Deploy_NonPROD
@@ -138,6 +142,14 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
+
                 - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: {% raw %}${{ variables.TaskctlVersion }}{% endraw %}
@@ -163,33 +175,17 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                - script: |
-                    echo "$(databricks-host)
-                    $(databricks-token)" | databricks configure --token
-                  displayName: Configure databricks-cli
-
-                - script: |
-                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                    echo "folder_exists: $folder_exists"
-                    if [[ $folder_exists == *"No file or directory exists"* ]];
-                    then
-                        echo "Creating Folder"
-                        databricks fs mkdirs dbfs:/FileStore/scripts
-                    else
-                        echo "Folder Exists"
-                    fi
-                  displayName: "Create Scripts Folder If Not Exists"
-
-                - script: |
-                    echo Destination is /FileStore/scripts/
-                    echo Source is $(self_repo_sparkjob_dir)
-                    for file in $(self_repo_sparkjob_dir)/*; do
-                       if [[ -f $file ]]; then
-                         destination="dbfs:/FileStore/scripts/$(basename $file)"
-                         databricks fs cp --overwrite "$file" "$destination"
-                       fi
-                    done
-                  displayName: Upload Spark Jobs
+                - task: Bash@3
+                  displayName: "TaskCTL: Databricks"
+                  inputs:
+                    targetType: inline
+                    script: taskctl databricks
+                  env:
+                    # Dotnet Build
+                    DATABRICKS_HOST: "$(databricks-host)"
+                    DATABRICKS_TOKEN: "$(databricks-token)"
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
                 - task: Bash@3
@@ -209,10 +205,10 @@ stages:
                       # Azure Authentication
                       # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_dev)
+                    TF_STATE_KEY: $(tf_state_key)
                     TF_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
@@ -292,6 +288,8 @@ stages:
       {%- endfor %}
       - name: version_number
         value: "$(version_major).$(version_minor).$(version_revision)"
+      - name: Environment.ShortName
+        value: prod
     jobs:
       - deployment: Deploy_PRDO
         displayName: "Deploy To PROD"
@@ -336,38 +334,18 @@ stages:
                     RunAsPreJob: false
                   displayName: "Get secrets from the keyvault"
 
-                - script: |
-                    echo "$(databricks-host)
-                    $(databricks-token)" | databricks configure --token
-                  displayName: Configure databricks-cli
+                - task: Bash@3
+                  displayName: "TaskCTL: Databricks"
+                  inputs:
+                    targetType: inline
+                    script: taskctl databricks
+                  env:
+                    # Dotnet Build
+                    DATABRICKS_HOST: "$(databricks-host)"
+                    DATABRICKS_TOKEN: "$(databricks-token)"
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
-                - script: |
-                    databricks workspace ls
-                    databricks fs ls
-                  displayName: test databricks-cli
-
-                - script: |
-                    folder_exists=$(databricks fs ls dbfs:/FileStore/scripts 2>&1)
-                    echo "folder_exists: $folder_exists"
-                    if [[ $folder_exists == *"No file or directory exists"* ]];
-                    then
-                        echo "Creating Folder"
-                        databricks fs mkdirs dbfs:/FileStore/scripts
-                    else
-                        echo "Folder Exists"
-                    fi
-                  displayName: "Create Scripts Folder If Not Exists"
-
-                - script: |
-                    echo Destination is /FileStore/scripts/
-                    echo Source is $(self_repo_sparkjob_dir)
-                    for file in $(self_repo_sparkjob_dir)/*; do
-                       if [[ -f $file ]]; then
-                         destination="dbfs:/FileStore/scripts/$(basename $file)"
-                         databricks fs cp --overwrite "$file" "$destination"
-                       fi
-                    done
-                  displayName: Upload Spark Jobs
 
                 # Publish ADF
                 - task: Bash@3
@@ -387,10 +365,10 @@ stages:
                       # Azure Authentication
                       # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_prod)
+                    TF_STATE_KEY: $(tf_state_key)
                     TF_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
