@@ -7,7 +7,7 @@ At present the library works to ease usage of the templates within the [de_templ
 
 ## Key components
 
-The key components of datastacks currently include:
+The key components of Datastacks currently include:
 
 - **Generate**: This command contains subcommands which generate components for the data platform given a config file. 
 
