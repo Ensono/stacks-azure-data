@@ -4,7 +4,7 @@ import yaml
 from pathlib import Path
 
 
-def render_template_component(config, template_source_path, target_dir):
+def render_template_components(config, template_source_path, target_dir):
     Path(target_dir).mkdir(parents=True, exist_ok=True)
     templateLoader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
     templateEnv = Environment(loader=templateLoader, autoescape=True)
