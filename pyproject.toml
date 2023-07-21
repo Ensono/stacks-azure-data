@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "component_generation"
+name = "datastacks"
 version = "0.1.0"
 description = ""
 authors = ["Andy Durkan <andy.durkan@ensono.com>"]
@@ -20,7 +20,7 @@ jinja2 = "^3.1.2"
 pyyaml = "^6.0.1"
 
 [tool.poetry.scripts]
-component_generation = "component_generation.component_generation_cli:cli"
+datastacks = "datastacks.datastacks_cli:cli"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

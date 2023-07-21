@@ -5,14 +5,14 @@ import yaml
 import click
 from click_loglevel import LogLevel
 
-from component_generation.logger import setup_logger
-from component_generation.utils import render_template_component
+from datastacks.logger import setup_logger
+from datastacks.utils import render_template_component
 
 
 @click.group()
 @click.option("--log-level", "-l", type=LogLevel(), default=logging.INFO)
 def cli(log_level):
-    setup_logger("component_generation", log_level)
+    setup_logger("datastacks", log_level)
 
 
 @click.command()
@@ -24,7 +24,6 @@ def gen_ingest(config_path, data_quality):
         template_source_folder = "Ingest_SourceType_SourceName_DQ"
     else:
         template_source_folder = "Ingest_SourceType_SourceName"
-    #  config path - "component_generation/test_config_ingest.yaml"
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
 
