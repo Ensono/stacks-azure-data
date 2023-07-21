@@ -3,7 +3,7 @@
 [Datastacks](https://github.com/amido/stacks-azure-data/tree/main/Datastacks) is a Python library
 built to support the Ensono Stacks Data Platform which can be used for various functions within the project.
 
-At present the library works to ease usage of the templates within the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) directory, and provides a cli which can be used to generate new components to be used within a data platform.
+At present the library works to ease usage of the templates within the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) directory, and provides a CLI which can be used to generate new components to be used within a data platform.
 
 ## Key components
 
