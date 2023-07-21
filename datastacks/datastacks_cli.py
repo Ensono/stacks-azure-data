@@ -6,7 +6,7 @@ import click
 from click_loglevel import LogLevel
 
 from datastacks.logger import setup_logger
-from datastacks.utils import render_template_component
+from datastacks.utils import render_template_components
 
 
 @click.group()
@@ -14,11 +14,14 @@ from datastacks.utils import render_template_component
 def cli(log_level):
     setup_logger("datastacks", log_level)
 
+@cli.group()
+def generate():
+    pass
 
-@click.command()
+@generate.command()
 @click.option("--config-path", "-c", type=str, help="Absolute path to config file on local machine")
-@click.option("--data-quality/--no-data-quality", "-dq/", default=False, help="Flag to determine whether to include data quality in template")
-def gen_ingest(config_path, data_quality):
+@click.option("--data-quality/--no-data-quality", "-dq/-ndq", default=False, help="Flag to determine whether to include data quality in template")
+def ingest(config_path, data_quality):
     """Generate new ingest pipeline"""
     if data_quality:
         template_source_folder = "Ingest_SourceType_SourceName_DQ"
@@ -28,11 +31,9 @@ def gen_ingest(config_path, data_quality):
         config = yaml.safe_load(file)
 
     template_source_path = f"de_templates/ingest/{template_source_folder}/"
-    target_dir = f"./ingest/jobs/{config['pipeline']}"
+    target_dir = f"de_workloads/ingest/{config['pipeline']}"
 
-    render_template_component(config, template_source_path, target_dir)
-
-cli.add_command(gen_ingest)
+    render_template_components(config, template_source_path, target_dir)
 
 if __name__ == "__main__":
     cli(standalone_mode=False)
