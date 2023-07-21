@@ -35,7 +35,7 @@ python datastacks_cli.py generate ingest --config-path="de_templates/test_config
 
 ## Required Config File
 
-For component generation, the Datastacks cli take a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the templates folder.
+For component generation, the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the de_templates folder.
 
 ```yaml
 # `dataset_name` parameter is used to determine names of the following ADF resources:
