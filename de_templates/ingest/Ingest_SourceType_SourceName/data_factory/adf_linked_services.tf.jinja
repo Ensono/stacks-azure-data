@@ -12,7 +12,7 @@ resource "azurerm_data_factory_linked_custom_service" "ls_{{ dataset_name }}" {
   "password": {
       "type": "AzureKeyVaultSecret",
       "store": {
-          "referenceName": "{{ key_vault_linked_service_name }}",
+          "referenceName": "${var.key_vault_linked_service_name}",
           "type": "LinkedServiceReference"
       },
       "secretName": "{{ data_source_password_key_vault_secret_name }}"
