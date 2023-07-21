@@ -18,6 +18,12 @@ variable "integration_runtime_name" {
   description = "Azure Data Factory Integration Runtime name, e.g. adf-managed-vnet-runtime"
 }
 
+variable "key_vault_linked_service_name" {
+  type        = string
+  description = "ADF Key Vault linked service name"
+  default     = "{{ key_vault_linked_service_name }}"
+}
+
 variable "arm_deployment_mode" {
   type        = string
   description = "Deployment mode for any ARM resources"
