@@ -1,31 +1,15 @@
 from enum import Enum
-from jinja2 import Environment, Undefined
+from jinja2 import Environment
 import yaml
-
-
-class SilentUndefined(Undefined):
-    def __str__(self):
-        return (
-            self._undefined_name
-            if self._undefined_name is not None
-            else super().__str__()
-        )
-
-    def __getattr__(self, name):
-        return self.__class__(name=f"{self}.{name}")
-
-    def __getitem__(self, name):
-        return self.__class__(name=f"{self}[{name}]")
-
-
-with open("test_config_ingest.yaml", "r") as file:
-    config = yaml.safe_load(file)
-
-environment = Environment(undefined=SilentUndefined)
 
 
 INGEST_DIR = "ingest/Ingest_SourceType_SourceName"
 DQ_INGEST_DIR = "ingest/Ingest_SourceType_SourceName_DQ"
+
+environment = Environment()
+
+with open("test_config_ingest.yaml", "r") as file:
+    config = yaml.safe_load(file)
 
 
 class Template(Enum):
