@@ -1,41 +1,42 @@
 # Datastacks
 
-[Datastacks](https://github.com/amido/stacks-azure-data/tree/main/Datastacks) is a Python library
-built to support the Ensono Stacks Data Platform which can be used for various functions within the project.
+Datastacks is a utility built to support various functions within the Ensono Stacks Data Platform. The library and its associated CLI is intended to assist developers working within a deployed Stacks Data Platform, supporting common tasks such as generating new data engineering workloads and running Spark jobs.
 
-At present the library works to ease usage of the templates within the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) directory, and provides a CLI which can be used to generate new components to be used within a data platform.
+### Using the Datastacks CLI
 
-## Key components
+* [Setup project environment](../README.md#developing-the-solution)
+```bash
+# Initiate Datastacks using poetry:
+poetry run datastack
 
-The key components of Datastacks currently include:
+# Run Datastacks from the command line
+datastacks --help
 
-- **Generate**: This command contains subcommands which generate components for the data platform given a config file. 
+# Alternatively, run using entrypoint script
+python datastacks/datastacks_cli.py --help
+```
 
-  - **Ingest**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline
+## Generating data workloads
 
-### Using CLI
+Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](../de_templates) directory.
+
+- **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
+
+  - **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline
+
+### Examples
 
 ```bash
-datastacks --help
-datastacks generate --help
-datastacks generate ingest --help
+# Generate resources for an ingest pipeline
 datastacks generate ingest --config-path="de_templates/test_config_ingest.yaml"
+
+# Generate resources for an ingest pipeline, with added Data Quality steps
 datastacks generate ingest --config-path="de_templates/test_config_ingest.yaml" --data-quality
 ```
 
-### Using an entrypoint script
+### Required config file
 
-```bash
-python datastacks_cli.py --help
-python datastacks_cli.py generate --help
-python datastacks_cli.py generate ingest --help
-python datastacks_cli.py generate ingest --config-path="de_templates/test_config_ingest.yaml"
-python datastacks_cli.py generate ingest --config-path="de_templates/test_config_ingest.yaml" --data-quality
-```
-
-## Required Config File
-
-For component generation, the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the de_templates folder.
+In order to generate a new data engineering workload the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the [de_templates](../de_templates/test_config_ingest.yaml) folder.
 
 ```yaml
 # `dataset_name` parameter is used to determine names of the following ADF resources:
