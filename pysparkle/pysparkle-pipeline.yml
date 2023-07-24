@@ -129,12 +129,12 @@ stages:
 #                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
 #                         databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
 #                 displayName: Upload whl
-                - task: Bash@3
-                  displayName: "TaskCTL: Databricks"
-                  inputs:
+              - task: Bash@3
+                displayName: "TaskCTL: Databricks"
+                inputs:
                     targetType: inline
                     script: taskctl databricks
-                  env:
+                env:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
