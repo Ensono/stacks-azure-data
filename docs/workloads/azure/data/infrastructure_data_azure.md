@@ -1,5 +1,5 @@
 ---
-id: core_data_platform_azure
+id: infrastructure_data_azure
 title: Infrastructure
 sidebar_label: Infrastructure
 hide_title: false
@@ -14,9 +14,6 @@ keywords:
   - databricks
   - key vault
 ---
-
-Azure DevOps pipelines for building and deploying the core infrastructure are configured in
-[build](https://github.com/amido/stacks-azure-data/tree/main/build) folder.
 
 Core data platform resources are defined within Terraform templates and grouped inside
 [deploy/azure](https://github.com/amido/stacks-azure-data/tree/main/deploy/azure) directory.
@@ -38,6 +35,7 @@ There are two subfolders in this directory:
     * Service Principal Secret
     * Azure Tenant ID – Directory ID for Azure Active Directory application
     * Azure Client ID – Application ID for Azure Active Directory application
+    * Databricks access token & host
     * Other secret names with empty values to be replaced manually. Existing secrets are not
     overwritten.
 5. **Azure Data Lake Storage Gen2**
@@ -54,8 +52,10 @@ There are two subfolders in this directory:
     * Azure Data Lake Storage
     * Key Vault
     * SQL Database
+    * Databricks UI
+    * Databricks Browser Authentication Page
 10. **Role assignments** that assign ADF managed identity roles to access the resources linked by
-   the private endpoints, as well as the Databricks workspace.
+   the private endpoints.
 11. **Log Analytics Workspace**
 
 ## Networking
@@ -71,7 +71,7 @@ The following diagram shows network configuration in all three environments:
 * nonprod (`is_hub: false`)
 * prod (`is_hub: false`)
 
-![network_hub_spoke.png](../../images/network_hub_spoke.png)
+![network_hub_spoke.png](images/network_hub_spoke.png)
 
 ### Databricks secure cluster connectivity
 
@@ -90,3 +90,8 @@ set up properly configured in the target subscription.
 
 Enabling public workspace access only opens access to the UI via public internet. Access is still
 restricted based on the IAM policy.
+
+## Deployment
+
+Azure DevOps pipelines for building and deploying the core infrastructure are configured in the
+[build](https://github.com/amido/stacks-azure-data/tree/main/build) folder.
