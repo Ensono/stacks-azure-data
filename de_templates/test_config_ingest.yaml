@@ -8,6 +8,7 @@ data_source_type: azure_sql
 
 key_vault_linked_service_name: ls_KeyVault
 data_source_password_key_vault_secret_name: sql-password
+data_source_connection_string_variable_name: sql_connection
 
 
 # Azure DevOps configurations
