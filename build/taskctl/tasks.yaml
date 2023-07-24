@@ -136,3 +136,53 @@ tasks:
                     & databricks fs cp --overwrite "$($file.FullName)" "$destination"
                 }
             }
+
+# Deworkload Testing tasks
+  deworkload:Unit:Testing:
+    context: powershell-python
+    description: Deworkload Unit Testing
+    command:
+       - |
+          $pythonVersion=$env:PYTHON_VERSION
+          $github_token=$env:GITHUB_TOKEN
+          $self_repo_dir=$env:PYPROJECT_LOCATION
+          $test_unit_path=$env:UNIT_TESTING_LOCATION
+          $junit_path=$env:JUNIT_LOCATION
+          Write-Output "PYTHON_VERSION:$pythonVersion"
+          Write-Output "GITHUB_TOKEN:$github_token"
+          Write-Output "PYPROJECT_LOCATION:$self_repo_dir"
+          Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
+          Write-Output "JUNIT_LOCATION:$junit_path
+            "
+
+          python3 -V
+          pip -V
+          pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+          Write-Output "**********Debug:Poetry Install**********
+          "
+          cd $self_repo_dir
+          poetry install
+          Write-Output "**********Debug:Running Unit Tests**********
+          "
+          cd $self_repo_dir
+          python3 -V
+          python3 -m pytest $test_unit_path
+          Copy-Item -Path /app/test-output.xml -Destination ../
+          Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
+
+
+
+
+  #poetry
+          #   echo "$(Get-Location)/opt/hostedtoolcache/Python/$pythonVersion/x64/bin"
+          # echo $github_token | gh auth login --with-token
+          # echo "##[set-env name=PYTHON_VERSION]$pythonVersion"
+          # Write-Output "**********Debug:Set Python Version*************
+          #  "
+
+          #           apt-get update
+          # apt-get install -y python3.10 python3-pip
+
+          #           Write-Output "**********Debug:Publish Test Results**********
+          # "
+          # Publish-TestResults -TestResultsFiles **/*.xml -SearchFolder $junit_path
