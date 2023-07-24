@@ -43,6 +43,7 @@ transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, r
 stacks-azure-data
 ├── build           # Deployment pipeline configuration for building and deploying the core infrastructure
 ├── de_build        # Deployment pipeline configuration for building and deploying data engineering resources
+├── de_templates    # Data engineering workload templates, including data pipelines, tests and deployment configuration
 ├── de_workloads    # Data engineering workload resources, including data pipelines, tests and deployment configuration
 │   ├── data_processing         # Data processing and transformation workloads
 │   ├── ingest                  # Data ingestion workloads

@@ -1,0 +1,23 @@
+{
+    "gx_directory_path": "/dbfs/great_expectations/",
+    "dataset_name": "name_of_the_dataset",
+    "datasource_config": [
+        {
+            "datasource_name": "data_asset_name__eg_table_or_file_name",
+            "datasource_type": "spark_readable_source_system_type",
+            "data_location": "path_to_the_datafile_or_fully_qualified_table_name",
+            "expectation_suite_name": "expectation_suite_name",
+            "validation_config": [
+                {
+                    "column_name": "name_of_the_validated_column",
+                    "expectations": [
+                        {
+                            "expectation_type": "name_of_the_GX_expectation_class",
+                            "expectation_kwargs": {}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
