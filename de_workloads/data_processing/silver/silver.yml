@@ -303,7 +303,7 @@ stages:
                   displayName: "Publish Test Results"
                   inputs:
                     testResultsFiles: "**/*.xml"
-                    searchFolder: ./app #$(junit_path)
+                    searchFolder: $(System.DefaultWorkingDirectory) #$(junit_path)
                   condition: succeededOrFailed()
 
 
