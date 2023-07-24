@@ -72,7 +72,7 @@ stages:
             workingDirectory: '$(self_repo_pysparkle_dir)/pysparkle'
           - bash: |
               mv $(self_repo_pysparkle_dir)/dist/*.whl $(self_repo_pysparkle_dir)/dist/pysparkle-latest-py3-none-any.whl
-              displayName: Rename pyspark wheel file
+            displayName: 'Rename Pyspark wheel package to latest'
           - task: CopyFiles@2
             displayName: Copy Whl
             inputs:
