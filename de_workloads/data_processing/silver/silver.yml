@@ -155,12 +155,12 @@ stages:
                       echo "Cleaning workspace..."
                       sudo rm -rf $(Build.SourcesDirectory)/*
 
-                - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-                  parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
-                - script: dir
-                  displayName: List  Workspace
-                  workingDirectory: '$(System.DefaultWorkingDirectory)'
+                # - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                #   parameters:
+                #     TaskctlVersion: ${{ variables.TaskctlVersion }}
+                # - script: dir
+                #   displayName: List  Workspace
+                #   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
                 # Publish Config files
                 # - task: AzureCLI@2
@@ -248,18 +248,18 @@ stages:
 
                   displayName: Set Python Version
                 
-                # - task: Bash@3
-                #   displayName: "TaskCTL: deworkloadTesting"
-                #   inputs:
-                #     targetType: inline
-                #     script: taskctl deworkloadTesting
-                #   env:
-                #     # Dotnet Build
-                #     GITHUB_TOKEN: "$(github_token)"
-                #     PYTHON_VERSION: "$(pythonVersion)"
-                #     PYPROJECT_LOCATION: "./"    #$(self_repo_dir)
-                #     UNIT_TESTING_LOCATION: "./de_workloads/data_processing/silver/tests/unit/"
-                #     JUNIT_LOCATION: "$(junit_path)"
+                - task: Bash@3
+                  displayName: "TaskCTL: deworkloadTesting"
+                  inputs:
+                    targetType: inline
+                    script: taskctl deworkloadTesting
+                  env:
+                    # Dotnet Build
+                    GITHUB_TOKEN: "$(github_token)"
+                    PYTHON_VERSION: "$(pythonVersion)"
+                    PYPROJECT_LOCATION: "./"    #$(self_repo_dir)
+                    UNIT_TESTING_LOCATION: "./de_workloads/data_processing/silver/tests/unit/"
+                    JUNIT_LOCATION: "$(junit_path)"
 
                 # - task: UsePythonVersion@0
                 #   inputs:
