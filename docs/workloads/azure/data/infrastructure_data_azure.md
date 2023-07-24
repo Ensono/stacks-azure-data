@@ -52,7 +52,7 @@ There are two subfolders in this directory:
     * Azure Data Lake Storage
     * Key Vault
     * SQL Database
-    * Databricks UI
+    * Databricks Workspace
     * Databricks Browser Authentication Page
 10. **Role assignments** that assign ADF managed identity roles to access the resources linked by
    the private endpoints.
@@ -75,18 +75,20 @@ The following diagram shows network configuration in all three environments:
 
 ### Databricks secure cluster connectivity
 
-Stacks Azure Data Platform uses VNet injection to deploy Databricks to a custom virtual network.
+Stacks Azure Data Platform uses VNet injection to deploy Databricks into a custom virtual network.
 
-In most scenarios, we would recommend that Azure Databricks is deployed in a fully secure manner
-using secure cluster connectivity and disabling public workspace access. This means that Databricks
+In most scenarios, we recommend that Azure Databricks is deployed in a fully secure manner, using
+secure cluster connectivity and disabling public workspace access. This means that Databricks
 can only be accessed over a private endpoint from within the private network. This also means that
 projects would need to have networking prerequisites such as ExpressRoute or VPNs in order to access
 the workspace. If this is not possible, then a virtual machine will need to be set up within the
 transit subnet. Users will then need to RDP into the VM and access the workspace via that.
 
-Within the default Stacks deployment, Databricks is provisioned with VNet injection while leaving
-the workspace UI open. This is to improve developer experience in case there is no networking/VPN
-set up properly configured in the target subscription.
+Even without public IPs and with the data plane deployed into our VNETs, there is still the option
+to toggle access to the Workspace UI via public networks. The default configuration disallows access
+to the Databricks workspace over the public internet in production environments, while leaving it
+open in development environments. This approach enhances the developer experience in case there is
+no properly configured networking/VPN set up in the target subscription.
 
 Enabling public workspace access only opens access to the UI via public internet. Access is still
 restricted based on the IAM policy.
