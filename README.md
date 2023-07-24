@@ -16,11 +16,14 @@ Key elements of the solution include:
 * Infrastructure as code (IaC) for all infrastructure components (Terraform & ARM Templates);
 * Azure Data Factory (ADF) resources and a sample ingest pipeline that transfers data from a sample
 source into a landing (Bronze) data lake zone;
-* Sample data processing pipelines named Silver and Gold. These are responsible for data
-transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
+* Sample data processing pipelines named Silver and Gold. These are responsible for data transformations from
+'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
 * Data Quality framework using Great Expectations;
 * Deployment pipelines to enable CI/CD and DataOps for all components;
 * Automated tests to ensure quality assurance and operational efficiency.
+* [Datastacks](datastacks/README.md) - a library and CLI built to accelerate the development of data engineering
+workloads in the data platform;
+* [Pysparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark;
 
 ### High-level architecture
 
@@ -42,6 +45,7 @@ transformations from 'Bronze to Silver' layer and from 'Silver to Gold' layer, r
 ```md
 stacks-azure-data
 ├── build           # Deployment pipeline configuration for building and deploying the core infrastructure
+├── datastacks      # Python library and CLI to accelerate the development of data engineering workloads
 ├── de_build        # Deployment pipeline configuration for building and deploying data engineering resources
 ├── de_templates    # Data engineering workload templates, including data pipelines, tests and deployment configuration
 ├── de_workloads    # Data engineering workload resources, including data pipelines, tests and deployment configuration
