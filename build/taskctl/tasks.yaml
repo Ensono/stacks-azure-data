@@ -146,8 +146,9 @@ tasks:
           $pythonVersion=$env:PYTHON_VERSION
           $github_token=$env:GITHUB_TOKEN
           $self_repo_dir=$env:PYPROJECT_LOCATION
-          $test_unit_path=$env:UNIT_TESTING_LOCATION
+          $test_unit_path=$env:UNIT_TEST_LOCATION
           $junit_path=$env:JUNIT_LOCATION
+          $test_end_to_end_path=$env:E2E_TEST_LOCATION
           Write-Output "PYTHON_VERSION:$pythonVersion"
           Write-Output "GITHUB_TOKEN:$github_token"
           Write-Output "PYPROJECT_LOCATION:$self_repo_dir"
@@ -157,6 +158,8 @@ tasks:
 
           python3 -V
           pip -V
+           Write-Output "**********Debug: Install tool**********
+          "
           pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
           Write-Output "**********Debug:Poetry Install**********
           "
@@ -168,8 +171,11 @@ tasks:
           python3 -V
           python3 -m pytest $test_unit_path
           Copy-Item -Path /app/test-output.xml -Destination ../
-          
 
+          Write-Output "**********Debug:Running e2e Tests**********
+          "         
+          poetry run behave $test_end_to_end_path  --junit --junit-directory ./test_results
+          Get-ChildItem -Path .\test_results -Recurse
 
 
 
