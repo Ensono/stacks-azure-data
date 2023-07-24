@@ -167,8 +167,8 @@ tasks:
           cd $self_repo_dir
           python3 -V
           python3 -m pytest $test_unit_path
-          Copy-Item -Path /app/test-output.xml -Destination ../
-          Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
+          Copy-Item -Path /app/test-output.xml -Destination ../de_workloads/data_processing/silver/junit/
+          
 
 
 
@@ -186,3 +186,4 @@ tasks:
           #           Write-Output "**********Debug:Publish Test Results**********
           # "
           # Publish-TestResults -TestResultsFiles **/*.xml -SearchFolder $junit_path
+          # Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
