@@ -155,12 +155,12 @@ stages:
                       echo "Cleaning workspace..."
                       sudo rm -rf $(Build.SourcesDirectory)/*
 
-                # - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-                #   parameters:
-                #     TaskctlVersion: ${{ variables.TaskctlVersion }}
-                # - script: dir
-                #   displayName: List  Workspace
-                #   workingDirectory: '$(System.DefaultWorkingDirectory)'
+                - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                  parameters:
+                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+                - script: dir
+                  displayName: List  Workspace
+                  workingDirectory: '$(System.DefaultWorkingDirectory)'
 
                 # Publish Config files
                 # - task: AzureCLI@2
