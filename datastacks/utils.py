@@ -1,5 +1,5 @@
 from enum import Enum
-from jinja2 import Environment, FileSystemLoader, Undefined
+from jinja2 import Environment, FileSystemLoader
 import yaml
 from pathlib import Path
 
@@ -14,8 +14,8 @@ def render_template_components(config: dict, template_source_path: str, target_d
         target_dir: Directory to render templates into
     """
     Path(target_dir).mkdir(parents=True, exist_ok=True)
-    templateLoader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
-    templateEnv = Environment(loader=templateLoader, autoescape=True)
+    template_loader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
+    templateEnv = Environment(loader=template_loader, autoescape=True)
 
     template_list = templateEnv.list_templates(extensions='.jinja')
     for temp in template_list:
