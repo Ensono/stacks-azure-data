@@ -93,6 +93,10 @@ no properly configured networking/VPN set up in the target subscription.
 Enabling public workspace access only opens access to the UI via public internet. Access is still
 restricted based on the IAM policy.
 
+The following diagram depicts the Databricks network configuration.
+
+![network_databricks.png](images/network_databricks.png)
+
 ## Deployment
 
 Azure DevOps pipelines for building and deploying the core infrastructure are configured in the
