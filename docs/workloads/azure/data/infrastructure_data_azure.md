@@ -96,8 +96,3 @@ restricted based on the IAM policy.
 The following diagram depicts the Databricks network configuration.
 
 ![network_databricks.png](images/network_databricks.png)
-
-## Deployment
-
-Azure DevOps pipelines for building and deploying the core infrastructure are configured in the
-[build](https://github.com/amido/stacks-azure-data/tree/main/build) folder.
