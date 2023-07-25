@@ -153,10 +153,10 @@ tasks:
           Write-Output "======================== Running Unit Tests ======================== "
           cd $working_dir
           python3 -m pytest $test_unit_path
-          Copy-Item -Path /app/test-output.xml -Destination ../
+          Start-Sleep -Seconds 30
           Write-Output "======================== End Unit Tests ======================== "
           Write-Output " "
-          Start-Sleep -Seconds 30
+          
 
           Write-Output "======================== Running e2e Tests ======================== "         
           poetry run behave $test_end_to_end_path  --junit --junit-directory $junit_path
