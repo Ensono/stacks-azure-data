@@ -143,11 +143,6 @@ tasks:
     description: Deworkload Unit Testing
     command:
        - |
-          $working_dir=$env:WORKING_DIRECTORY
-          $test_unit_path=$env:UNIT_TEST_LOCATION
-          $junit_path=$env:JUNIT_LOCATION
-          $test_end_to_end_path=$env:E2E_TEST_LOCATION
-
           cd $env:WORKING_DIRECTORY
           poetry install
           Write-Output "======================== Running Unit Tests ======================== "
@@ -156,7 +151,6 @@ tasks:
           Start-Sleep -Seconds 30
           Write-Output "======================== End Unit Tests ======================== "
           Write-Output " "
-          
 
           Write-Output "======================== Running e2e Tests ======================== "         
           poetry run behave $env:E2E_TEST_LOCATION  --junit --junit-directory $env:JUNIT_LOCATION
@@ -184,4 +178,8 @@ tasks:
           # Write-Output "PYPROJECT_LOCATION:$working_dir"
           # Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
           # Write-Output "JUNIT_LOCATION:$junit_path
-          #   "
+          # #   "
+          #           $working_dir=$env:WORKING_DIRECTORY
+          # $test_unit_path=$env:UNIT_TEST_LOCATION
+          # $junit_path=$env:JUNIT_LOCATION
+          # $test_end_to_end_path=$env:E2E_TEST_LOCATION

@@ -278,7 +278,6 @@ stages:
                     targetType: inline
                     script: taskctl deworkloadTesting
                   env:
-                    # Dotnet Build
                     WORKING_DIRECTORY: "./"    
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"
                     E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
