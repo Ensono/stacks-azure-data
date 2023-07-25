@@ -158,13 +158,13 @@ tasks:
 
           python3 -V
           pip -V
-           Write-Output "**********Debug: Install tool**********
-          "
-          
+
           Write-Output "**********Debug:Poetry Install**********
           "
           cd $self_repo_dir
+          Get-ChildItem -Path .\
           poetry install
+
           Write-Output "**********Debug:Running Unit Tests**********
           "
           cd $self_repo_dir
