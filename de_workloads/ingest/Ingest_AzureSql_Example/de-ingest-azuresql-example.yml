@@ -288,8 +288,8 @@ stages:
                     GITHUB_TOKEN: "$(github_token)"
                     PYTHON_VERSION: "$(pythonVersion)"
                     PYPROJECT_LOCATION: "./"    #$(self_repo_dir)
-                    UNIT_TEST_LOCATION: "./de_workloads/data_processing/silver/tests/unit/"
-                    E2E_TEST_LOCATION: "./de_workloads/data_processing/silver/tests/end_to_end/features/"
+                    UNIT_TEST_LOCATION: "./de_workloads/ingest/Ingest_AzureSql_Example/tests/unit/"
+                    E2E_TEST_LOCATION: "./de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/"
                     JUNIT_LOCATION: "$(junit_path)"
                     AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
                     AZURE_RESOURCE_GROUP_NAME: $(resource_group)
