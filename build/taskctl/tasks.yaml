@@ -139,7 +139,7 @@ tasks:
 
 # Deworkload Testing tasks
   deworkload:Unit:Testing:
-    context: powershell-python
+    context: powershell
     description: Deworkload Unit Testing
     command:
        - |
