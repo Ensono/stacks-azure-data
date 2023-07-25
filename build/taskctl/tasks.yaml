@@ -143,37 +143,20 @@ tasks:
     description: Deworkload Unit Testing
     command:
        - |
-          $pythonVersion=$env:PYTHON_VERSION
-          $github_token=$env:GITHUB_TOKEN
-          $self_repo_dir=$env:PYPROJECT_LOCATION
+          $self_repo_dir=$env:WORKING_DIRECTORY
           $test_unit_path=$env:UNIT_TEST_LOCATION
           $junit_path=$env:JUNIT_LOCATION
           $test_end_to_end_path=$env:E2E_TEST_LOCATION
-          Write-Output "PYTHON_VERSION:$pythonVersion"
-          Write-Output "GITHUB_TOKEN:$github_token"
-          Write-Output "PYPROJECT_LOCATION:$self_repo_dir"
-          Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
-          Write-Output "JUNIT_LOCATION:$junit_path
-            "
 
-          python3 -V
-          pip -V
-
-          Write-Output "**********Debug:Poetry Install**********
-          "
           cd $self_repo_dir
-          Get-ChildItem -Path .\
           poetry install
-
-          Write-Output "**********Debug:Running Unit Tests**********
-          "
+          Write-Output "======================== Running Unit Tests ======================== "
           cd $self_repo_dir
-          python3 -V
           python3 -m pytest $test_unit_path
           Copy-Item -Path /app/test-output.xml -Destination ../
+          Write-Output "======================== End Unit Tests ======================== "
 
-          Write-Output "**********Debug:Running e2e Tests**********
-          "         
+          Write-Output "======================== Running e2e Tests ======================== "         
           poetry run behave $test_end_to_end_path  --junit --junit-directory ./test_results
           Get-ChildItem -Path .\test_results -Recurse
 
@@ -194,3 +177,9 @@ tasks:
           # Publish-TestResults -TestResultsFiles **/*.xml -SearchFolder $junit_path
           # Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
           #pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+          #           Write-Output "PYTHON_VERSION:$pythonVersion"
+          # Write-Output "GITHUB_TOKEN:$github_token"
+          # Write-Output "PYPROJECT_LOCATION:$self_repo_dir"
+          # Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
+          # Write-Output "JUNIT_LOCATION:$junit_path
+          #   "

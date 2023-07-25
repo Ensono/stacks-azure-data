@@ -285,9 +285,7 @@ stages:
                     script: taskctl deworkloadTesting
                   env:
                     # Dotnet Build
-                    GITHUB_TOKEN: "$(github_token)"
-                    PYTHON_VERSION: "$(pythonVersion)"
-                    PYPROJECT_LOCATION: "./"    #$(self_repo_dir)
+                    WORKING_DIRECTORY: "./"    #$(self_repo_dir)
                     UNIT_TEST_LOCATION: "./de_workloads/ingest/Ingest_AzureSql_Example/tests/unit/"
                     E2E_TEST_LOCATION: "./de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/"
                     JUNIT_LOCATION: "$(junit_path)"
@@ -300,6 +298,10 @@ stages:
                     AZURE_CLIENT_SECRET: $(azure-client-secret)
                     AZURE_TENANT_ID: $(azure-tenant-id)
 
+                - script: dir
+                  displayName: List  Workspace
+                  workingDirectory: '$(System.DefaultWorkingDirectory)'
+                  
   #############################################################
   # Deploy to Prod
   #############################################################
