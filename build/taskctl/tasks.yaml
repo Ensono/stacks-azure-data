@@ -148,18 +148,18 @@ tasks:
           $junit_path=$env:JUNIT_LOCATION
           $test_end_to_end_path=$env:E2E_TEST_LOCATION
 
-          cd $working_dir
+          cd $env:WORKING_DIRECTORY
           poetry install
           Write-Output "======================== Running Unit Tests ======================== "
-          cd $working_dir
-          python3 -m pytest $test_unit_path
+          cd $env:WORKING_DIRECTORY
+          python3 -m pytest $env:UNIT_TEST_LOCATION
           Start-Sleep -Seconds 30
           Write-Output "======================== End Unit Tests ======================== "
           Write-Output " "
           
 
           Write-Output "======================== Running e2e Tests ======================== "         
-          poetry run behave $test_end_to_end_path  --junit --junit-directory $junit_path
+          poetry run behave $env:E2E_TEST_LOCATION  --junit --junit-directory $env:JUNIT_LOCATION
 
 
 
