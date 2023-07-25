@@ -2,7 +2,7 @@
 # - pipeline: Ingest_<dataset_name>
 # - dataset: ds_<dataset_name>
 # - linked service: ls_<dataset_name>
-dataset_name: AzureSql_Example
+dataset_name: AzureSql_Generated_Example
 pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
 data_source_type: azure_sql
 

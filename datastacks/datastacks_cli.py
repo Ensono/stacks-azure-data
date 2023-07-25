@@ -23,10 +23,8 @@ def generate():
 @click.option("--data-quality/--no-data-quality", "-dq/-ndq", default=False, help="Flag to determine whether to include data quality in template")
 def ingest(config, data_quality):
     """Generate new ingest pipeline"""
-    if data_quality:
-        template_source_folder = "Ingest_SourceType_SourceName_DQ"
-    else:
-        template_source_folder = "Ingest_SourceType_SourceName"
+
+    template_source_folder = "Ingest_SourceType_SourceName"
     
     click.echo("Reading config from provided path...")
     with open(config, "r") as file:
@@ -36,10 +34,14 @@ def ingest(config, data_quality):
     click.echo("Successfully read config file.\n")
 
     template_source_path = f"de_templates/ingest/{template_source_folder}/"
-    target_dir = f"de_workloads/ingest/ingest_{config.common.dataset_name}"
+    target_dir = f"de_workloads/ingest/Ingest_{config.dataset_name}"
 
-    click.echo(f"Generating workload components for pipeline ingest_{config.common.dataset_name}...")
+    click.echo(f"Generating workload components for pipeline ingest_{config.dataset_name}...")
     render_template_components(config, template_source_path, target_dir)
+    if data_quality:
+        template_source_folder = "Ingest_SourceType_SourceName_DQ"
+        template_source_path = f"de_templates/ingest/{template_source_folder}/"
+        render_template_components(config, template_source_path, target_dir)
     click.echo(f"Successfully generated workload components: {target_dir}")
 
 

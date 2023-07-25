@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
-class Common(BaseModel):
+class IngestConfig(BaseModel):
     dataset_name: str = Field(description="Dataset name, used to derive pipeline and linked service names.")
     pipeline_description: str = Field(description="Description of the pipeline to be created.")
     data_source_type: str = Field(description="Datasource type eg. azure_sql.")
@@ -20,19 +20,6 @@ class Common(BaseModel):
     window_start_default: Optional[date] = Field(description="Date to set as start of default time window. Defaults to 2020-01-01")
     window_end_default: Optional[date] = Field(description="Date to set as end of default time window. Defaults to 2020-01-31")
 
-
-class IngestConfig(BaseModel):
-    common: Common
     bronze_container: str = Field(description="Name of container for Bronze data")
-
-
-class SilverConfig(BaseModel):
-    common: Common
-    bronze_container: str = Field(description="Name of container for Bronze data")
-    silver_container: Optional[str] = Field(description="Name of container for Silver data")
-
-
-class GoldConfig(BaseModel):
-    common: Common
     silver_container: Optional[str] = Field(description="Name of container for Silver data")
     gold_container: Optional[str] = Field(description="Name of container for Gold data")
