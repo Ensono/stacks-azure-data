@@ -271,12 +271,7 @@ stages:
                 #     AZURE_CLIENT_SECRET: $(azure-client-secret)
                 #     AZURE_TENANT_ID: $(azure-tenant-id)
 
-                # - task: PublishTestResults@2
-                #   displayName: "Publish Test Results"
-                #   inputs:
-                #     testResultsFiles: "**/*.xml"
-                #     searchFolder: $(junit_path)
-                #   condition: succeededOrFailed()
+
 
                 - task: Bash@3
                   displayName: "TaskCTL: deworkloadTesting"
@@ -304,7 +299,14 @@ stages:
 
                 - script: dir
                   displayName: List  Workspace
-                  workingDirectory: '$(System.DefaultWorkingDirectory)/test_results'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/de_workloads/ingest/Ingest_AzureSql_Example/junit'
+
+                - task: PublishTestResults@2
+                  displayName: "Publish Test Results"
+                  inputs:
+                    testResultsFiles: "**/*.xml"
+                    searchFolder: $(junit_path)
+                  condition: succeededOrFailed()
 
   #############################################################
   # Deploy to Prod
