@@ -160,7 +160,7 @@ tasks:
           pip -V
            Write-Output "**********Debug: Install tool**********
           "
-          pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
+          
           Write-Output "**********Debug:Poetry Install**********
           "
           cd $self_repo_dir
@@ -193,3 +193,4 @@ tasks:
           # "
           # Publish-TestResults -TestResultsFiles **/*.xml -SearchFolder $junit_path
           # Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
+          #pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
