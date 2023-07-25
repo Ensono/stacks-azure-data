@@ -301,7 +301,11 @@ stages:
                 - script: dir
                   displayName: List  Workspace
                   workingDirectory: '$(System.DefaultWorkingDirectory)'
-                  
+
+                - script: dir
+                  displayName: List  Workspace
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/test_results'
+
   #############################################################
   # Deploy to Prod
   #############################################################

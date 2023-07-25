@@ -138,27 +138,29 @@ tasks:
             }
 
 # Deworkload Testing tasks
-  deworkload:Unit:Testing:
+  deworkload:Testing:
     context: powershell
     description: Deworkload Unit Testing
     command:
        - |
-          $self_repo_dir=$env:WORKING_DIRECTORY
+          $working_dir=$env:WORKING_DIRECTORY
           $test_unit_path=$env:UNIT_TEST_LOCATION
           $junit_path=$env:JUNIT_LOCATION
           $test_end_to_end_path=$env:E2E_TEST_LOCATION
 
-          cd $self_repo_dir
+          cd $working_dir
           poetry install
           Write-Output "======================== Running Unit Tests ======================== "
-          cd $self_repo_dir
+          cd $working_dir
           python3 -m pytest $test_unit_path
           Copy-Item -Path /app/test-output.xml -Destination ../
           Write-Output "======================== End Unit Tests ======================== "
+          Write-Output " "
+          Start-Sleep -Seconds 30
 
           Write-Output "======================== Running e2e Tests ======================== "         
           poetry run behave $test_end_to_end_path  --junit --junit-directory ./test_results
-          Get-ChildItem -Path .\test_results -Recurse
+
 
 
 
@@ -179,7 +181,7 @@ tasks:
           #pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
           #           Write-Output "PYTHON_VERSION:$pythonVersion"
           # Write-Output "GITHUB_TOKEN:$github_token"
-          # Write-Output "PYPROJECT_LOCATION:$self_repo_dir"
+          # Write-Output "PYPROJECT_LOCATION:$working_dir"
           # Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
           # Write-Output "JUNIT_LOCATION:$junit_path
           #   "

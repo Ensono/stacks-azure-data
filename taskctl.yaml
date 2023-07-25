@@ -46,4 +46,4 @@ pipelines:
       depends_on: databricks:createdir
 
   deworkloadTesting:
-    - task: deworkload:Unit:Testing
+    - task: deworkload:Testing
