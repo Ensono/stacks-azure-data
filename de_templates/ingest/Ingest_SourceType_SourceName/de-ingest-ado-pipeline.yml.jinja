@@ -200,7 +200,7 @@ stages:
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
-                    TF_VAR_linked_service_connectionstring: "$(sql_connection)"
+                    TF_VAR_linked_service_connectionstring: "$({{ data_source_connection_string_variable_name }})"
 
       #   # Start Testing
       - deployment: Test_NonPROD
@@ -347,7 +347,7 @@ stages:
                     TF_VAR_data_factory_resource_group_name: $(resource_group)
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
-                    TF_VAR_linked_service_connectionstring: "$(sql_connection)"
+                    TF_VAR_linked_service_connectionstring: "$({{ data_source_connection_string_variable_name }})"
 
   - stage: Release
     dependsOn:
