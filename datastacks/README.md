@@ -39,47 +39,45 @@ datastacks generate ingest --config-path="de_templates/test_config_ingest.yaml" 
 In order to generate a new data engineering workload the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the [de_templates](../de_templates/test_config_ingest.yaml) folder.
 
 ```yaml
-# `dataset_name` parameter is used to determine names of the following ADF resources:
-pipeline: Ingest_test
-# - dataset: ds_<dataset_name>
-# - linked service: ls_<dataset_name>
-dataset_name: AzureSql_Example
-pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
-data_source_type: azure_sql
-
-key_vault_linked_service_name: ls_KeyVault
-data_source_password_key_vault_secret_name: sql-password
-
-
-# Azure DevOps configurations
-
-ado_variable_groups_nonprod:
-  - amido-stacks-de-pipeline-nonprod
-  - amido-stacks-infra-credentials-nonprod
-  - stacks-credentials-nonprod-kv
-
-ado_variable_groups_prod:
-  - amido-stacks-de-pipeline-prod
-  - amido-stacks-infra-credentials-prod
-  - stacks-credentials-prod-kv
-
-
 # Datalake containers
 
 bronze_container: raw
 silver_container: staging
 gold_container: curated
 
+# `dataset_name` parameter is used to determine names of the following ADF resources:
+# - pipeline: Ingest_{{ dataset_name }}
+# - dataset: ds_<dataset_name>
+# - linked service: ls_<dataset_name>
+common:
+  dataset_name: AzureSql_Example_Generated
+  pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
+  data_source_type: azure_sql
 
-#######################
-# Optional parameters #
-#######################
+  key_vault_linked_service_name: ls_KeyVault
+  data_source_password_key_vault_secret_name: sql-password
 
-# Deployment mode for terraform; if not set, the default is Incremental
-default_arm_deployment_mode: Incremental
+  # Azure DevOps configurations
 
-# Workload config; if not set, the default values are 2020-01-01 and 2020-01-31 resp.
-# These are used to set the default time window in the pipeline and in the corresponding e2e tests
-window_start_default: 2020-01-01
-window_end_default: 2020-01-31
+  ado_variable_groups_nonprod:
+    - amido-stacks-de-pipeline-nonprod
+    - amido-stacks-infra-credentials-nonprod
+    - stacks-credentials-nonprod-kv
+
+  ado_variable_groups_prod:
+    - amido-stacks-de-pipeline-prod
+    - amido-stacks-infra-credentials-prod
+    - stacks-credentials-prod-kv
+
+  #######################
+  # Optional parameters #
+  #######################
+
+  # Deployment mode for terraform; if not set, the default is Incremental
+  default_arm_deployment_mode: Incremental
+
+  # Workload config; if not set, the default values are 2020-01-01 and 2020-01-31 resp.
+  # These are used to set the default time window in the pipeline and in the corresponding e2e tests
+  window_start_default: 2020-01-01
+  window_end_default: 2020-01-31
 ```

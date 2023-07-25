@@ -15,11 +15,11 @@ def render_template_components(config: dict, template_source_path: str, target_d
     """
     Path(target_dir).mkdir(parents=True, exist_ok=True)
     template_loader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
-    templateEnv = Environment(loader=template_loader, autoescape=True)
+    template_env = Environment(loader=template_loader, autoescape=True)
 
-    template_list = templateEnv.list_templates(extensions='.jinja')
+    template_list = template_env.list_templates(extensions='.jinja')
     for temp in template_list:
-        template = templateEnv.get_template(temp)
+        template = template_env.get_template(temp)
         template_filepath = Path(template.filename.split(template_source_path,1)[1])
         template_path = template_filepath.parent
         template_filename = template_filepath.stem
