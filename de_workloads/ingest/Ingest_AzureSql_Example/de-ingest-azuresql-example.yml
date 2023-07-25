@@ -72,6 +72,8 @@ stages:
               script: |
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
+                sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
