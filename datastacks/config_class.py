@@ -19,6 +19,9 @@ class IngestConfig(BaseModel):
     data_source_password_key_vault_secret_name: str = Field(
         description="Secret name of the data source password."
     )
+    data_source_connection_string_variable_name: str = Field(
+        description="Variable name for the connection string."
+    )
 
     ado_variable_groups_nonprod: List[str] = Field(
         description="List of required variable groups in non production environment."
