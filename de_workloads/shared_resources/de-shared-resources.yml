@@ -29,12 +29,12 @@ variables:
     value: "$(self_repo_dir)/de_workloads/$(job)"
   - name: self_repo_adf_dir
     value: "$(self_repo_job_dir)/data_factory"
-  - name: test_unit_path
-    value: "$(self_repo_job_dir)/tests/unit/"
-  - name: test_end_to_end_path
-    value: "$(self_repo_job_dir)/tests/end_to_end/features/"
-  - name: junit_path
-    value: "$(self_repo_job_dir)/junit/"
+  - name: test_unit_src
+    value: "de_workloads/$(jobtype)/$(job)/tests/unit/"
+  - name: test_end_to_end_src
+    value: "de_workloads/$(jobtype)/$(job)/tests/end_to_end/features/"
+  - name: junit_src
+    value: "de_workloads/$(jobtype)/$(job)/junit"
   - name: self_repo_sparkjob_dir
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
@@ -62,6 +62,8 @@ stages:
               script: |
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
+                sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
           - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -132,6 +134,16 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
+                      sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                      sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+
                 - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -220,39 +232,16 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: AzureCLI@2
+                - task: Bash@3
+                  displayName: "TaskCTL: deworkloadTesting"
                   inputs:
-                    # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "Stacks.Pipeline.Builds"
-                    ScriptType: "bash"
-                    scriptLocation: "inlineScript"
-                    inlineScript: az account show
-
-                - task: UsePythonVersion@0
-                  inputs:
-                    versionSpec: "$(pythonVersion)"
-                    githubToken: "$(github_token)"
-                    addToPath: true
-
-                  displayName: Set Python Version
-
-                - bash: |
-                    pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
-                  displayName: "Install Pipeline Tools"
-                - bash: |
-                    poetry install
-                  displayName: "Running poetry install"
-                  workingDirectory: "$(self_repo_dir)"
-                - bash: |
-                    python -m pytest $(test_unit_path)
-                  displayName: "Running py test"
-                  workingDirectory: "$(self_repo_dir)"
-
-                - bash: |
-                    poetry run behave $(test_end_to_end_path)  --junit --junit-directory $(junit_path)
-                  displayName: "Running e2e Test"
-                  workingDirectory: "$(self_repo_dir)"
+                    targetType: inline
+                    script: taskctl deworkloadTesting
                   env:
+                    WORKING_DIRECTORY: "./"    
+                    UNIT_TEST_LOCATION: "./$(test_unit_src)"
+                    E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
+                    JUNIT_LOCATION: "./$(junit_src)"
                     AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
                     AZURE_RESOURCE_GROUP_NAME: $(resource_group)
                     AZURE_DATA_FACTORY_NAME: $(datafactoryname)
@@ -266,7 +255,7 @@ stages:
                   displayName: "Publish Test Results"
                   inputs:
                     testResultsFiles: "**/*.xml"
-                    searchFolder: $(junit_path)
+                    searchFolder: '$(System.DefaultWorkingDirectory)/$(junit_src)'
                   condition: succeededOrFailed()
 
   #############################################################
@@ -302,6 +291,8 @@ stages:
                     script: |
                       echo "Cleaning workspace..."
                       sudo rm -rf $(Build.SourcesDirectory)/*
+                      sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                      sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
 
                 - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
@@ -405,6 +396,8 @@ stages:
               script: |
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
+                sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
