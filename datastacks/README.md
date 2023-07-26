@@ -7,7 +7,7 @@ Datastacks is a utility built to support various functions within the Ensono Sta
 * [Setup project environment](../README.md#developing-the-solution)
 ```bash
 # Initiate Datastacks using poetry:
-poetry run datastack
+poetry run datastacks
 
 # Run Datastacks from the command line
 datastacks --help
