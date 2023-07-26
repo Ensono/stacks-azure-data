@@ -147,7 +147,7 @@ tasks:
           poetry install
           Write-Output "======================== Running Unit Tests ======================== "
           cd $env:WORKING_DIRECTORY
-          python3 -m pytest $env:UNIT_TEST_LOCATION
+          python3 -m pytest $env:UNIT_TEST_LOCATION 
           Start-Sleep -Seconds 30
           Write-Output "======================== End Unit Tests ======================== "
           Write-Output " "
