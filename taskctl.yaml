@@ -44,3 +44,6 @@ pipelines:
       depends_on: databricks:connect
     - task: databricks:upload
       depends_on: databricks:createdir
+
+  deworkloadTesting:
+    - task: deworkload:Testing
