@@ -15,7 +15,7 @@ In Stacks Azure Data Platform all resources are created using the application-ty
 Credentials for the service principal are stored in Azure Pipelines variable groups.
 
 Both the service principal and the configured variable groups are the prerequisites for deploying
-our Platform to Azure. For details please check the [Requirements](requirements_data_azure.md) page.
+our platform to Azure. For details please check the [Requirements](requirements_data_azure.md) page.
 
 For internal communication between Azure services, Stacks Data Platform uses managed identities,
 which are created automatically within our CI/CD deployments. For instance, Azure Data Factory
