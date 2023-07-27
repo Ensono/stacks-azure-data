@@ -28,10 +28,10 @@ Datastacks can be used to generate all the resources required for a new data eng
 
 ```bash
 # Generate resources for an ingest pipeline
-datastacks generate ingest --config-path="de_templates/test_config_ingest.yaml"
+datastacks generate ingest --config="de_templates/test_config_ingest.yaml"
 
 # Generate resources for an ingest pipeline, with added Data Quality steps
-datastacks generate ingest --config-path="de_templates/test_config_ingest.yaml" --data-quality
+datastacks generate ingest --config="de_templates/test_config_ingest.yaml" --data-quality
 ```
 
 ### Required config file

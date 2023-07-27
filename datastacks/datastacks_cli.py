@@ -31,7 +31,7 @@ def generate():
 )
 def ingest(config, data_quality):
     """Generate new ingest pipeline"""
-    generate_pipeline(config, data_quality, INGEST_TEMPLATE_FOLDER, "ingest")
+    generate_pipeline(config, data_quality, INGEST_TEMPLATE_FOLDER, "Ingest")
 
 
 if __name__ == "__main__":
