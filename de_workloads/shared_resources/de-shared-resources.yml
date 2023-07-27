@@ -30,9 +30,9 @@ variables:
   - name: self_repo_adf_dir
     value: "$(self_repo_job_dir)/data_factory"
   - name: test_unit_src
-    value: "de_workloads/$(jobtype)/$(job)/tests/unit/"
+    value: "de_workloads/$(job)/tests/unit/"
   - name: test_end_to_end_src
-    value: "de_workloads/$(jobtype)/$(job)/tests/end_to_end/features/"
+    value: "de_workloads/$(job)/tests/end_to_end/features/"
   - name: junit_src
     value: "de_workloads/$(jobtype)/$(job)/junit"
   - name: self_repo_sparkjob_dir
