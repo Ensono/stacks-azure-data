@@ -14,11 +14,11 @@ keywords:
   - adf
 ---
 
-Stacks Azure Data Platform has two main purposes:
+Stacks Azure Data Platform serves two primary functions:
 
-* It provides a working example of a complete Data Platform, and
-* It enables you to customize the initial solution by generating new data pipelines from
-configurable templates and deploying them to the blueprint data platform.
+* It offers a practical example of a fully integrated Data Platform.
+* It allows users to personalize the initial solution. This is achieved by generating new data
+pipelines from configurable templates and deploying them to the predefined blueprint data platform.
 
 ## Architecture of the deployed solution
 
