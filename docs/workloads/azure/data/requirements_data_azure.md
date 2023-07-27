@@ -12,8 +12,9 @@ keywords:
 ## Local development
 
 * Python 3.9+
-* Poetry https://python-poetry.org/docs/
-* (Windows users) A Linux distribution, e.g. WSL2 https://docs.microsoft.com/en-us/windows/wsl/install
+* [Poetry](https://python-poetry.org/docs/)
+* (Windows users) A Linux distribution, e.g. [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install)
+* Java 8/11/17 as in the [Spark documentation](https://spark.apache.org/docs/latest/)
 
 ## Azure
 
@@ -27,13 +28,23 @@ Our blueprint solution expects the following [variable groups](https://learn.mic
 to exist in your Azure DevOps project's Pipelines Library:
 
 * Nonprod Environment:
-  * amido-stacks-de-pipeline-nonprod
-  * amido-stacks-infra-credentials-nonprod
-  * stacks-credentials-nonprod-kv
+    * amido-stacks-de-pipeline-nonprod
+    * amido-stacks-infra-credentials-nonprod
+    * stacks-credentials-nonprod-kv
 * Prod Environment:
-  * amido-stacks-de-pipeline-prod
-  * amido-stacks-infra-credentials-prod
-  * stacks-credentials-prod-kv
+    * amido-stacks-de-pipeline-prod
+    * amido-stacks-infra-credentials-prod
+    * stacks-credentials-prod-kv
+
+These variable group names can be arbitrarily adjusted when generating new pipelines from our
+templates. Name(s) of your project's variable groups are expected to be provided in the
+configuration file, which is passed to the Datastacks CLI.
+
+Although variable group names are configurable, we still expect the specific variable names
+to exist in these groups.
+
+TaskctlVersion
+domain
 
 Please see [Azure DevOps Pipelines](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops)
 for details on using Azure Pipelines in Stacks.
