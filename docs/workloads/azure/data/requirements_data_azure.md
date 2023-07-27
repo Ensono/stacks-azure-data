@@ -18,9 +18,10 @@ keywords:
 
 ## Azure
 
-* Azure subscription - for deploying the solution into
-* Azure service principal - needs permissions to deploy and configure all required resources into the target subscription
-* Azure DevOps project - for running CI/CD pipelines and storing project variables
+* Azure subscription – for deploying the solution into
+* Azure service principal (Application) – needs permissions to deploy and configure all required
+resources into the target subscription
+* Azure DevOps project – for running CI/CD pipelines and storing project variables
 
 ### Azure Pipelines variable groups
 
@@ -43,8 +44,7 @@ configuration file, which is passed to the Datastacks CLI.
 Although variable group names are configurable, we still expect the specific variable names
 to exist in these groups.
 
-TaskctlVersion
-domain
+**TODO: list required variables in particular groups**
 
 Please see [Azure DevOps Pipelines](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops)
-for details on using Azure Pipelines in Stacks.
+for general information on using Azure Pipelines in Stacks.
