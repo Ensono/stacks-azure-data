@@ -6,7 +6,7 @@ resource "azurerm_data_factory_linked_custom_service" "ls_{{ dataset_name }}" {
     name = var.integration_runtime_name
   }
   type                 = "{{ linked_service_type }}"
-  description          = "{{ data_source_type | upper }} linked service."
+  description          = "{{ data_source_type.AZURE_SQL.value | upper }} linked service."
   type_properties_json = <<JSON
 {
   "connectionString": "${var.linked_service_connectionstring}",

@@ -1,7 +1,7 @@
 {% set pipeline_name = 'Ingest_' ~ dataset_name -%}
 {
     "data_source_name": "{{ pipeline_name }}",
-    "data_source_type": "{{ data_source_type }}",
+    "data_source_type": "{{ data_source_type.AZURE_SQL.value }}",
     "enabled": true,
     "ingest_entities": [
         {

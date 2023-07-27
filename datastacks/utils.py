@@ -39,8 +39,8 @@ def render_template_components(
     template_env = Environment(loader=template_loader, autoescape=True)
 
     template_list = template_env.list_templates(extensions=".jinja")
-    for temp in template_list:
-        template = template_env.get_template(temp)
+    for template in template_list:
+        template = template_env.get_template(template)
         template_filepath = Path(template.filename.split(template_source_path, 1)[1])
         template_path = template_filepath.parent
         template_filename = template_filepath.stem
@@ -54,13 +54,14 @@ def generate_pipeline(
     config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str
 ) -> str:
     """Reads in config from given file, renders templates for new pipeline,
-        writes out to new path, and returns the target directory it wrote out to.
+    writes out to new path, and returns the target directory it wrote out to.
+    If directory already exists it asks for user input to confirm overwrite.
 
     Args:
         config_path: Path to config file containing templating params
         dq_flag: Flag indicating whether to include data quality components or not
-        template_source_folder: Name of the folder within the template directory which
-            contains the templates to be rendered
+        template_source_folder: Name of the folder within the template directory
+            containing the templates to be rendered
         stage_name: Name of the pipeline stage eg. Ingest
 
     Returns:
@@ -75,6 +76,16 @@ def generate_pipeline(
 
     template_source_path = f"de_templates/{stage_name}/{template_source_folder}/"
     target_dir = generate_target_dir(stage_name, config.dataset_name)
+
+    if Path(f"{target_dir}").exists():
+        click.echo(f"Target Directory {target_dir} already exists. Any files which are duplicated in the template will be overwritten.")
+        if not click.confirm("Do you want to continue?"):
+            click.echo("Terminating process.")
+            return target_dir
+        else:
+            click.echo("Continuing with overwrite.")
+    else:
+        click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
     click.echo(
         f"Generating workload components for pipeline {stage_name}_{config.dataset_name}..."
