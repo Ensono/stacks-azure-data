@@ -34,8 +34,8 @@ def test_render_template_components(tmp_path):
 
     render_template_components(config, template_source_path, target_dir)
 
-    for p in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{p}").exists()
+    for file_path in EXPECTED_FILE_LIST:
+        assert Path(f"{target_dir}/{file_path}").exists()
 
 
 @patch("datastacks.utils.generate_target_dir")
@@ -46,8 +46,8 @@ def test_generate_pipeline_no_dq(mock_target_dir, tmp_path):
 
     target_dir = generate_pipeline(config_path, False, template_source_folder, "ingest")
 
-    for p in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{p}").exists()
+    for file_path in EXPECTED_FILE_LIST:
+        assert Path(f"{target_dir}/{file_path}").exists()
 
 
 @patch("datastacks.utils.generate_target_dir")
@@ -61,8 +61,8 @@ def test_generate_pipeline_dq(mock_target_dir, tmp_path):
 
     EXPECTED_FILE_LIST.extend(EXPECTED_DQ_FILE_LIST)
 
-    for p in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{p}").exists()
+    for file_path in EXPECTED_FILE_LIST:
+        assert Path(f"{target_dir}/{file_path}").exists()
 
     rmtree(target_dir)
 

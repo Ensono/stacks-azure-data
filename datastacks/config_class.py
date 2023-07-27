@@ -5,7 +5,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class data_source_types(Enum):
+class DataSourceTypes(Enum):
     AZURE_SQL = "azure_sql"
 
 
@@ -16,7 +16,7 @@ class IngestConfig(BaseModel):
     pipeline_description: str = Field(
         description="Description of the pipeline to be created."
     )
-    data_source_type: data_source_types = Field(
+    data_source_type: DataSourceTypes = Field(
         description="Datasource type, at present this must be azure_sql."
     )
 
