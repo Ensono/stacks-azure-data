@@ -161,32 +161,3 @@ tasks:
           } else {
               Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
           }
-
-
-
-  #poetry
-          #   echo "$(Get-Location)/opt/hostedtoolcache/Python/$pythonVersion/x64/bin"
-          # echo $github_token | gh auth login --with-token
-          # echo "##[set-env name=PYTHON_VERSION]$pythonVersion"
-          # Write-Output "**********Debug:Set Python Version*************
-          #  "
-
-          #           apt-get update
-          # apt-get install -y python3.10 python3-pip
-
-          #           Write-Output "**********Debug:Publish Test Results**********
-          # "
-          # Publish-TestResults -TestResultsFiles **/*.xml -SearchFolder $junit_path
-          # Copy-Item -Path /app/test-output.xml -Destination ../$junit_path
-          #pip install pytest pylint pylint-exit pytest-azurepipelines pytest-cov poetry
-          #           Write-Output "PYTHON_VERSION:$pythonVersion"
-          # Write-Output "GITHUB_TOKEN:$github_token"
-          # Write-Output "PYPROJECT_LOCATION:$working_dir"
-          # Write-Output "UNIT_TESTING_LOCATION:$test_unit_path"
-          # Write-Output "JUNIT_LOCATION:$junit_path
-          # #   "
-          #           $working_dir=$env:WORKING_DIRECTORY
-          # $test_unit_path=$env:UNIT_TEST_LOCATION
-          # $junit_path=$env:JUNIT_LOCATION
-          # $test_end_to_end_path=$env:E2E_TEST_LOCATION
-                    # poetry run behave $env:E2E_TEST_LOCATION  --junit --junit-directory $env:JUNIT_LOCATION
