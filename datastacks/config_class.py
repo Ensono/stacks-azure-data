@@ -16,7 +16,9 @@ class IngestConfig(BaseModel):
     pipeline_description: str = Field(
         description="Description of the pipeline to be created."
     )
-    data_source_type: data_source_types = Field(description="Datasource type, at present this must be azure_sql.")
+    data_source_type: data_source_types = Field(
+        description="Datasource type, at present this must be azure_sql."
+    )
 
     key_vault_linked_service_name: str = Field(
         description="Name of the keyvault service to connect to."
