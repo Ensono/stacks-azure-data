@@ -11,8 +11,8 @@ keywords:
   - managed identity
 ---
 
-In Stacks Azure Data Platform all resources are created using the application-type Azure AD service principal.
-Credentials for the service principal are stored in Azure Pipelines variable groups.
+In Stacks Azure Data Platform all resources are created using the application-type Azure AD service
+principal. Credentials for the service principal are stored in Azure Pipelines variable groups.
 
 Both the service principal and the configured variable groups are the prerequisites for deploying
 our platform to Azure. For details please check the [Requirements](requirements_data_azure.md) page.
