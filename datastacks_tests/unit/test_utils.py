@@ -11,7 +11,7 @@ def test_render_template_components():
     config_dict = {
         "dataset_name": "test_dataset",
         "pipeline_description": "Pipeline for testing",
-        "data_source_type": "test_data_source",
+        "data_source_type": "azure_sql",
         "key_vault_linked_service_name": "test_keyvault",
         "data_source_password_key_vault_secret_name": "test_password",
         "data_source_connection_string_variable_name": "test_connection_string",

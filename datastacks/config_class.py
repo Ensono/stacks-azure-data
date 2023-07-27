@@ -1,7 +1,12 @@
 from datetime import date
-from typing import List, Optional
+from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel, Field
+
+
+class data_source_types(Enum):
+    AZURE_SQL = "azure_sql"
 
 
 class IngestConfig(BaseModel):
@@ -11,7 +16,7 @@ class IngestConfig(BaseModel):
     pipeline_description: str = Field(
         description="Description of the pipeline to be created."
     )
-    data_source_type: str = Field(description="Datasource type eg. azure_sql.")
+    data_source_type: data_source_types = Field(description="Datasource type, at present this must be azure_sql.")
 
     key_vault_linked_service_name: str = Field(
         description="Name of the keyvault service to connect to."
@@ -23,10 +28,10 @@ class IngestConfig(BaseModel):
         description="Variable name for the connection string."
     )
 
-    ado_variable_groups_nonprod: List[str] = Field(
+    ado_variable_groups_nonprod: list[str] = Field(
         description="List of required variable groups in non production environment."
     )
-    ado_variable_groups_prod: List[str] = Field(
+    ado_variable_groups_prod: list[str] = Field(
         description="List of required variable groups in production environment."
     )
 
