@@ -7,6 +7,20 @@ from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 
 
+def generate_target_dir(stage_name: str, dataset_name: str) -> str:
+    """Uses stage name and name of the dataset to generate the target directory to write to.
+
+    Args:
+        stage_name: Name of the pipeline stage eg. Ingest
+        dataset_name: Name of the dataset being processed
+
+    Returns:
+        Path to render template into
+    """
+    target_dir = f"de_workloads/{stage_name}/{stage_name}_{dataset_name}"
+    return target_dir
+
+
 def render_template_components(
     config: BaseModel, template_source_path: str, target_dir: str
 ) -> None:
@@ -60,7 +74,7 @@ def generate_pipeline(
     click.echo("Successfully read config file.\n")
 
     template_source_path = f"de_templates/{stage_name}/{template_source_folder}/"
-    target_dir = f"de_workloads/{stage_name}/{stage_name}_{config.dataset_name}"
+    target_dir = generate_target_dir(stage_name, config.dataset_name)
 
     click.echo(
         f"Generating workload components for pipeline {stage_name}_{config.dataset_name}..."
