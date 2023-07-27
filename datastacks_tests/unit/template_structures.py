@@ -27,5 +27,5 @@ EXPECTED_DQ_FILE_LIST = [
     "spark_jobs/__init__.py",
     "spark_jobs/ingest_dq.py",
     "de-ingest-ado-pipeline.yml",
-    "README.md"
+    "README.md",
 ]

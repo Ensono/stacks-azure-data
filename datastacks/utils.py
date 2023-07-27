@@ -41,14 +41,14 @@ def generate_pipeline(
 ) -> str:
     """Reads in config from given file, renders templates for new pipeline,
         writes out to new path, and returns the target directory it wrote out to.
- 
+
     Args:
         config_path: Path to config file containing templating params
         dq_flag: Flag indicating whether to include data quality components or not
         template_source_folder: Name of the folder within the template directory which
             contains the templates to be rendered
         stage_name: Name of the pipeline stage eg. Ingest
-    
+
     Returns:
         Path to rendered template
     """
