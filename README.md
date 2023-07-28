@@ -32,13 +32,13 @@ workloads in the data platform;
 ### Infrastructure deployed
 
 * Resource Group
-* Azure SQL Database
 * Key Vault
 * Azure Data Lake Storage Gen2
 * Azure Blob Storage
-* Databricks Workspace
 * Azure Data Factory
 * Log Analytics Workspace
+* Databricks Workspace (optional)
+* Azure SQL Database (optional)
 
 ## Repository structure
 
