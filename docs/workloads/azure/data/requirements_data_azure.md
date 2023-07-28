@@ -28,23 +28,57 @@ resources into the target subscription
 Our blueprint solution expects the following [variable groups](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&tabs=yaml)
 to exist in your Azure DevOps project's Pipelines Library:
 
-* Nonprod Environment:
-    * amido-stacks-de-pipeline-nonprod
-    * amido-stacks-infra-credentials-nonprod
-    * stacks-credentials-nonprod-kv
-* Prod Environment:
-    * amido-stacks-de-pipeline-prod
-    * amido-stacks-infra-credentials-prod
-    * stacks-credentials-prod-kv
+* amido-stacks-de-pipeline-{env}
+* amido-stacks-euw-de-{env}-network
+* stacks-credentials-{env}-kv
 
-These variable group names can be arbitrarily adjusted when generating new pipelines from our
-templates. Name(s) of your project's variable groups are expected to be provided in the
-configuration file, which is passed to the Datastacks CLI.
+Where {env} can be either `nonprod` or `prod`.
 
-Although variable group names are configurable, we still expect the specific variable names
-to exist in these groups.
+Please expand the following lists to see the required variables.
 
-**TODO: list required variables in particular groups**
+<details>
+  <summary>amido-stacks-de-pipeline-{env}</summary>
+
+  * ADLS_DataLake_URL: Azure Data Lake Storage Gen2 URL
+  * azure_subscription_id
+  * azure-client-secret
+  * blob_adls_storage: Azure Data Lake Storage Gen2 name
+  * blob_configStorage: Blob storage name
+  * Blob_ConfigStore_serviceEndpoint: Blob service URL
+  * databricksHost: Databricks UI URL
+  * databricksWorkspaceResourceId
+  * datafactoryname
+  * github_token
+  * integration_runtime_name
+  * KeyVault_baseURL: Vault URI
+  * keyvault_name: Key Vault name
+  * location: Azure region
+  * pe_subnet_prefix: Subnet CIDR, e.g. ["10.3.1.0/24"]
+  * private_subnet_prefix: Subnet CIDR, e.g. ["10.3.1.0/24"]
+  * public_subnet_prefix: Subnet CIDR, e.g. ["10.3.1.0/24"]
+  * resource_group: Name of the resource group
+  * sql_connection: Connection string to Azure SQL database
+
+</details>
+
+<details>
+  <summary>amido-stacks-euw-de-{env}-network</summary>
+
+  * pe_resource_group_name: Name of the resource group to provision private VNet to
+  * pe_vnet_name: Private VNet name
+  * pe_subnet_name: Name of the subnet to provision private endpoints into
+
+</details>
+
+<details>
+  <summary>stacks-credentials-{env}-kv</summary>
+
+  * azure-client-id
+  * azure-client-secret
+  * azure-subscription-id
+  * azure-tenant-id
+
+</details>
 
 Please see [Azure DevOps Pipelines](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops)
 for general information on using Azure Pipelines in Stacks.
