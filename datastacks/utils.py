@@ -17,7 +17,7 @@ def generate_target_dir(stage_name: str, dataset_name: str) -> str:
     Returns:
         Path to render template into
     """
-    target_dir = f"de_workloads/{stage_name.lower()}/{stage_name.capitalize()}_{dataset_name.capitalize()}"
+    target_dir = f"de_workloads/{stage_name.lower()}/{stage_name.capitalize()}_{dataset_name}"
     return target_dir
 
 
