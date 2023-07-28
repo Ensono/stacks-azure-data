@@ -24,9 +24,9 @@ It assumes all prerequisites are in place, including:
 
 This process will deploy the following resources into the project:
  * Azure Data Factory resources (defined in Terraform / ARM)
-  - Linked service
-  - Dataset
-  - Pipeline
+   - Linked service
+   - Dataset
+   - Pipeline
  * Data ingest config files (JSON)
  * Azure DevOps CI/CD pipeline (YAML)
  * (optional) Spark jobs for data quality tests (Python)
