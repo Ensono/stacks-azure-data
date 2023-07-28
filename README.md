@@ -20,10 +20,10 @@ source into a landing (Bronze) data lake zone;
 'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
 * Data Quality framework using Great Expectations;
 * Deployment pipelines to enable CI/CD and DataOps for all components;
-* Automated tests to ensure quality assurance and operational efficiency.
+* Automated tests to ensure quality assurance and operational efficiency;
 * [Datastacks](datastacks/README.md) - a library and CLI built to accelerate the development of data engineering
 workloads in the data platform;
-* [Pysparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark;
+* [Pysparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark.
 
 ### High-level architecture
 
