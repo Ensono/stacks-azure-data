@@ -1,5 +1,5 @@
 {% set pipeline_name = 'Ingest_' ~ dataset_name -%}
-{% set source_type = 'AzureSqlSource' if data_source_type == 'azure_sql' else '' -%}
+{% set source_type = 'AzureSqlSource' if data_source_type.value == 'azure_sql' else '' -%}
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -61,7 +61,7 @@
                             "isSequential": false,
                             "activities": [
                                 {
-                                    "name": "{{ data_source_type | upper }}_to_ADLS",
+                                    "name": "{{ data_source_type.value | upper }}_to_ADLS",
                                     "type": "Copy",
                                     "dependsOn": [
                                         {
