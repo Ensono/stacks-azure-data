@@ -16,9 +16,8 @@ keywords:
 
 Stacks Azure Data Platform serves two primary functions:
 
-* It offers a practical example of a fully integrated Data Platform.
-* It allows users to personalize the initial solution. This is achieved by generating new data
-pipelines from configurable templates and deploying them to the predefined blueprint data platform.
+* Deployment of a fully integrated, modern Azure Data Platform.
+* A framework for generating new data engineering workloads from configurable templates, and deploying them to the Data Platform.
 
 ## Architecture of the deployed solution
 
