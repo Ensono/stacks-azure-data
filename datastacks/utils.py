@@ -21,11 +21,10 @@ def generate_target_dir(stage_name: str, dataset_name: str) -> str:
     return target_dir
 
 
-def render_template_components(
-    config: BaseModel, template_source_path: str, target_dir: str
-) -> None:
+def render_template_components(config: BaseModel, template_source_path: str, target_dir: str) -> None:
     """Renders all templates within a given path with provided config, and saves results into a new target path,
-    while maintaining folder structure and removing jinja file extensions, any existing files with the same name are overwritten.
+    while maintaining folder structure and removing jinja file extensions, any existing files with the same name
+    are overwritten.
 
     Args:
         config: Pydantic model of config containing required templating params
@@ -33,9 +32,7 @@ def render_template_components(
         target_dir: Directory to render templates into
     """
     Path(target_dir).mkdir(parents=True, exist_ok=True)
-    template_loader = FileSystemLoader(
-        searchpath=str(Path(template_source_path).absolute())
-    )
+    template_loader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
     template_env = Environment(loader=template_loader, autoescape=True)
 
     template_list = template_env.list_templates(extensions=".jinja")
@@ -45,14 +42,10 @@ def render_template_components(
         template_path = template_filepath.parent
         template_filename = template_filepath.stem
         Path(target_dir / template_path).mkdir(parents=True, exist_ok=True)
-        template.stream(config).dump(
-            f"{target_dir}/{template_path}/{template_filename}"
-        )
+        template.stream(config).dump(f"{target_dir}/{template_path}/{template_filename}")
 
 
-def generate_pipeline(
-    config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str
-) -> str:
+def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str) -> str:
     """Reads in config from given file, renders templates for new pipeline,
     writes out to new path, and returns the target directory it wrote out to.
     If directory already exists it asks for user input to confirm overwrite.
@@ -79,7 +72,8 @@ def generate_pipeline(
 
     if Path(f"{target_dir}").exists():
         click.echo(
-            f"Target Directory {target_dir} already exists. Any files which are duplicated in the template will be overwritten."
+            f"Target Directory {target_dir} already exists.
+            Any files which are duplicated in the template will be overwritten."
         )
         if not click.confirm("Do you want to continue?"):
             click.echo("Terminating process.")
@@ -89,9 +83,7 @@ def generate_pipeline(
     else:
         click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
-    click.echo(
-        f"Generating workload components for pipeline {stage_name}_{config.dataset_name}..."
-    )
+    click.echo(f"Generating workload components for pipeline {stage_name}_{config.dataset_name}...")
     render_template_components(config, template_source_path, target_dir)
     if dq_flag:
         template_source_folder = f"{template_source_folder}_DQ"
