@@ -43,7 +43,7 @@ def test_render_template_components(tmp_path):
 @patch("datastacks.utils.generate_target_dir")
 def test_generate_pipeline_no_dq(mock_target_dir, mock_confirm, tmp_path):
     mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = "Y"
+    mock_confirm.return_value = True
     config_path = "datastacks_tests/unit/test_config.yml"
     template_source_folder = INGEST_TEMPLATE_FOLDER
 
@@ -57,7 +57,7 @@ def test_generate_pipeline_no_dq(mock_target_dir, mock_confirm, tmp_path):
 @patch("datastacks.utils.generate_target_dir")
 def test_generate_pipeline_dq(mock_target_dir, mock_confirm, tmp_path):
     mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = "Y"
+    mock_confirm.return_value = True
     config_path = "datastacks_tests/unit/test_config.yml"
     template_source_folder = INGEST_TEMPLATE_FOLDER
 
@@ -71,8 +71,12 @@ def test_generate_pipeline_dq(mock_target_dir, mock_confirm, tmp_path):
 
 
 @patch("datastacks.utils.click.confirm")
-def test_generate_pipeline_new_path(mock_confirm):
+@patch("datastacks.utils.generate_target_dir")
+def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path_factory):
+    path_tmp = tmp_path_factory.mktemp("temp_path")
+    mock_target_dir.return_value = path_tmp
     mock_confirm.return_value = False
+    rmtree(path_tmp)
 
     config_path = "datastacks_tests/unit/test_config.yml"
     template_source_folder = INGEST_TEMPLATE_FOLDER
