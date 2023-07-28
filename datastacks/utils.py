@@ -60,6 +60,8 @@ def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: s
     Returns:
         Path to rendered template
     """
+    stage_name = stage_name.capitalize()
+
     click.echo("Reading config from provided path...")
     with open(config_path, "r") as file:
         config_dict = yaml.safe_load(file)
@@ -67,8 +69,9 @@ def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: s
 
     click.echo("Successfully read config file.\n")
 
+    dataset_name = config.dataset_name.lower()
     template_source_path = f"de_templates/{stage_name}/{template_source_folder}/"
-    target_dir = generate_target_dir(stage_name, config.dataset_name)
+    target_dir = generate_target_dir(stage_name, dataset_name)
 
     if Path(f"{target_dir}").exists():
         click.echo(
@@ -83,7 +86,7 @@ def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: s
     else:
         click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
-    click.echo(f"Generating workload components for pipeline {stage_name}_{config.dataset_name}...")
+    click.echo(f"Generating workload components for pipeline {stage_name}_{dataset_name}...")
     render_template_components(config, template_source_path, target_dir)
     if dq_flag:
         template_source_folder = f"{template_source_folder}_DQ"
