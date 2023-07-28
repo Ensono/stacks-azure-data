@@ -100,7 +100,7 @@ Once reviewed, commit the resources and push the branch to the remote project re
 
 ## Deploy new workload in non-prod environment
 
-The generated workload will contain a YAML file containing a template Azure DevOps CI/CD pipeline for the workload, named `de-ingest-ado-pipeline.yaml`. Go to the Azure DevOps project Pipelines for the platform, and add a new pipeline, based on this file in your feature branch.
+The generated workload will contain a YAML file containing a template Azure DevOps CI/CD pipeline for the workload, named `de-ingest-ado-pipeline.yaml`. Go to the Azure DevOps project Pipelines for the platform, and add a new pipeline based upon this file in your feature branch.
 
 Running this pipeline in Azure DevOps will deploy the artifacts into the non-prod environment and run tests. If successful, the generated resources will now be available in the non-prod Stacks environment.
 
@@ -112,3 +112,5 @@ Continue to make any further amendments required to the new workload - for examp
 ## Deploy new workload in further environments
 
 It is recommended in any Stacks data platform, that processes for deploying and releasing to further should be agreed and documented - ensuring sufficient review and quality assurance of any new workloads. The template CI/CD pipelines provided are based upon two platform environments (non-prod and prod) - but these may be amended depending upon the specific requirements of your project.
+
+In the example pipeline templates, deployment to the prod environment would occur following merging of the new workload into the `main` branch, and manual approval of the release step in the pipeline.
