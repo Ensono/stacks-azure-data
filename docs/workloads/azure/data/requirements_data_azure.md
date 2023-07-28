@@ -28,16 +28,16 @@ resources into the target subscription
 Our blueprint solution expects the following [variable groups](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/variable-groups?view=azure-devops&tabs=yaml)
 to exist in your Azure DevOps project's Pipelines Library:
 
-* amido-stacks-de-pipeline-{env}
-* amido-stacks-euw-de-{env}-network
-* stacks-credentials-{env}-kv
+* amido-stacks-de-pipeline-_env_
+* amido-stacks-euw-de-_env_-network
+* stacks-credentials-_env_-kv
 
-Where {env} can be either `nonprod` or `prod`.
+Where _env_ can be either `nonprod` or `prod`.
 
 Please expand the following lists to see the required variables.
 
 <details>
-  <summary>amido-stacks-de-pipeline-{env}</summary>
+  <summary>amido-stacks-de-pipeline-env</summary>
 
   * ADLS_DataLake_URL: Azure Data Lake Storage Gen2 URL
   * azure_subscription_id
@@ -62,7 +62,7 @@ Please expand the following lists to see the required variables.
 </details>
 
 <details>
-  <summary>amido-stacks-euw-de-{env}-network</summary>
+  <summary>amido-stacks-euw-de-env-network</summary>
 
   * pe_resource_group_name: Name of the resource group to provision private VNet to
   * pe_vnet_name: Private VNet name
@@ -71,7 +71,7 @@ Please expand the following lists to see the required variables.
 </details>
 
 <details>
-  <summary>stacks-credentials-{env}-kv</summary>
+  <summary>stacks-credentials-env-kv</summary>
 
   * azure-client-id
   * azure-client-secret
