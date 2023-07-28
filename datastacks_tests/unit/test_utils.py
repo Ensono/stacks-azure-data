@@ -86,8 +86,6 @@ def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path_fact
     for file_path in EXPECTED_FILE_LIST:
         assert Path(f"{target_dir}/{file_path}").exists()
 
-    rmtree(target_dir)
-
 
 @patch("datastacks.utils.click.confirm")
 @patch("datastacks.utils.generate_target_dir")
