@@ -163,4 +163,4 @@ def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
 
 
 def test_generate_target_dir():
-    assert generate_target_dir("a", "b") == "de_workloads/a/a_b"
+    assert generate_target_dir("a", "b") == "de_workloads/a/A_B"
