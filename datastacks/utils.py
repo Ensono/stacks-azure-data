@@ -78,7 +78,9 @@ def generate_pipeline(
     target_dir = generate_target_dir(stage_name, config.dataset_name)
 
     if Path(f"{target_dir}").exists():
-        click.echo(f"Target Directory {target_dir} already exists. Any files which are duplicated in the template will be overwritten.")
+        click.echo(
+            f"Target Directory {target_dir} already exists. Any files which are duplicated in the template will be overwritten."
+        )
         if not click.confirm("Do you want to continue?"):
             click.echo("Terminating process.")
             return target_dir
