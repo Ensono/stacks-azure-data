@@ -87,10 +87,10 @@ Use the Datastacks CLI to generate the artifacts for the new workload, using the
 # Initiate Datastacks using poetry:
 poetry run datastacks
 
-# Generate resources for an ingest pipeline (without data Quality steps)
+# Generate resources for an ingest pipeline (without Data Quality steps)
 datastacks generate ingest --config="path_to_config_file/my_config.yaml"
 
-# Generate resources for an ingest pipeline with added Data Quality steps
+# Generate resources for an ingest pipeline (with added Data Quality steps)
 datastacks generate ingest --config="path_to_config_file/my_config.yaml" --data-quality
 ```
 
@@ -111,6 +111,6 @@ Continue to make any further amendments required to the new workload - for examp
 
 ## Deploy new workload in further environments
 
-It is recommended in any Stacks data platform, that processes for deploying and releasing to further should be agreed and documented - ensuring sufficient review and quality assurance of any new workloads. The template CI/CD pipelines provided are based upon two platform environments (non-prod and prod) - but these may be amended depending upon the specific requirements of your project.
+It is recommended in any Stacks data platform that processes for deploying and releasing to further should be agreed and documented, ensuring sufficient review and quality assurance of any new workloads. The template CI/CD pipelines provided are based upon two platform environments (non-prod and prod) - but these may be amended depending upon the specific requirements of your project and organisation.
 
 In the example pipeline templates, deployment to the prod environment would occur following merging of the new workload into the `main` branch, and manual approval of the release step in the pipeline.
