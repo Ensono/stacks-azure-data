@@ -32,6 +32,11 @@ variables:
     value: '$(self_repo_dir)/pysparkle/tests/unit/'
   - name: junit_path
     value: '$(self_repo_dir)/pysparkle/junit/'
+  - name: dbfs_destination  #update job name
+    value: 'dbfs:/FileStore/jars'
+  - name: self_repo_spark_src  
+    value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
+
 pool:
   name: $(agentpool_name)
 stages:
@@ -65,6 +70,9 @@ stages:
               poetry build
             displayName: Build Project
             workingDirectory: '$(self_repo_pysparkle_dir)/pysparkle'
+          - bash: |
+              mv $(self_repo_pysparkle_dir)/dist/*.whl $(self_repo_pysparkle_dir)/dist/pysparkle-latest-py3-none-any.whl
+            displayName: 'Rename Pyspark wheel package to latest'
           - task: CopyFiles@2
             displayName: Copy Whl
             inputs:
@@ -76,6 +84,7 @@ stages:
             inputs:
               ArtifactName: pysparklewheel
               PathtoPublish: '$(Build.ArtifactStagingDirectory)/pysparklewheel'
+              
 
 #############################################################
 # Deploy to non Prod
@@ -111,15 +120,26 @@ stages:
                     SecretsFilter: '*'
                     RunAsPreJob: false
                 displayName: 'Get Keyvault Secrets' 
-              - script: |
-                          echo "$(databricks-host)
-                          $(databricks-token)" | databricks configure --token
-                displayName: Configure Databricks-cli
-              - script: |
-                        echo Destination is /FileStore/jars
-                        echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                        databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
-                displayName: Upload whl
+ #             - script: |
+ #                         echo "$(databricks-host)
+ #                         $(databricks-token)" | databricks configure --token
+#                 displayName: Configure Databricks-cli
+#               - script: |
+#                         echo Destination is /FileStore/jars
+#                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
+#                         databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
+#                 displayName: Upload whl
+              - task: Bash@3
+                displayName: "TaskCTL: Databricks"
+                inputs:
+                    targetType: inline
+                    script: taskctl databricks
+                env:
+                    # Dotnet Build
+                    DATABRICKS_HOST: "$(databricks-host)"
+                    DATABRICKS_TOKEN: "$(databricks-token)"
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_SOURCE_LOCATION: "./pysparklewheel/"
 
 
   #############################################################
