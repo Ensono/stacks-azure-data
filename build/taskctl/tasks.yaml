@@ -136,3 +136,28 @@ tasks:
                     & databricks fs cp --overwrite "$($file.FullName)" "$destination"
                 }
             }
+
+# Deworkload Testing tasks
+  deworkload:Testing:
+    context: powershell
+    description: Deworkload Unit Testing
+    command:
+       - |
+          cd $env:WORKING_DIRECTORY
+          poetry install
+          Write-Output "======================== Running Unit Tests ======================== "
+          cd $env:WORKING_DIRECTORY
+          python3 -m pytest $env:UNIT_TEST_LOCATION 
+          Start-Sleep -Seconds 30
+          Write-Output "======================== End Unit Tests ======================== "
+          Write-Output " "
+
+          Write-Output "======================== Running e2e Tests ======================== "         
+          $e2eTestLocation = $env:E2E_TEST_LOCATION
+          if (Test-Path $e2eTestLocation -PathType Container) {
+
+              $junitLocation = $env:JUNIT_LOCATION
+              poetry run behave $e2eTestLocation --junit --junit-directory $junitLocation
+          } else {
+              Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
+          }
