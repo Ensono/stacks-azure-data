@@ -7,6 +7,8 @@ variables:
     value: stacks-azure-data
   - name: company
     value: amido
+  - name: service_connection
+    value: Stacks.Pipeline.Builds
 
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here

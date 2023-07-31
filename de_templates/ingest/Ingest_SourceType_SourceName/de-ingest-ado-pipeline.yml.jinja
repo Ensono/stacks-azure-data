@@ -157,8 +157,7 @@ stages:
                 # Publish Config files
                 - task: AzureCLI@2
                   inputs:
-                    # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     scriptType: "pscore"
                     scriptLocation: "inlineScript"
                     inlineScript: "az storage blob upload-batch `
@@ -169,7 +168,7 @@ stages:
 
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false
@@ -215,8 +214,7 @@ stages:
               steps:
                 - task: AzureCLI@2
                   inputs:
-                    # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     ScriptType: "bash"
                     scriptLocation: "inlineScript"
                     inlineScript: az account show
@@ -304,8 +302,7 @@ stages:
                 # Publish Config files
                 - task: AzureCLI@2
                   inputs:
-                    # TODO: Remove hardcoded reference to subscription
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     scriptType: "pscore"
                     scriptLocation: "inlineScript"
                     inlineScript: "az storage blob upload-batch `
@@ -316,7 +313,7 @@ stages:
 
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false
