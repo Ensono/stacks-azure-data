@@ -17,7 +17,7 @@ keywords:
 ---
 
 This section provides an overview of generating a new ETL ingest pipeline / data engineering workload and deploying it into a Stacks Data Platform, using the [Datastacks](../etl_pipelines/datastacks.md) utility.
-This aligns to the workflow shown in the [deployment architecture](../architecture/deployment_arch_data_azure.md#data-engineering-workloads) section.
+This aligns to the workflow shown in the [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section.
 It assumes all prerequisites are in place, including:
 * A [deployed Stacks data platform](core_data_platform_deployment_azure.md)
 * [Development environment set up](dev_quickstart_data_azure.md)

@@ -34,7 +34,7 @@ python datastacks/datastacks_cli.py --help
 
 Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) directory.
 
-The [deployment architecture](../architecture/deployment_arch_data_azure.md#data-engineering-workloads) section shows the workflow for using Datastacks to generate a new workload.
+The [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section shows the workflow for using Datastacks to generate a new workload.
 See [ETL Pipeline Deployment](../getting_started/etl_pipelines_deployment_azure.md) for a step-by-step guide on deploying a new workload using Datastacks.
 
 ### Commands
