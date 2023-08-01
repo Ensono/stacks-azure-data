@@ -1,12 +1,13 @@
 # Spark common utilities
 import logging
+from typing import Any
 
 from pyspark.sql import SparkSession
 
 logger = logging.getLogger(__name__)
 
 
-def create_spark_session(app_name: str) -> SparkSession:
+def create_spark_session(app_name: str, spark_config: dict[str, Any] = None) -> SparkSession:
     """Creates a SparkSession with the specified application name or retrieves one that already exists.
 
     The SparkSession is configured to include Hadoop Azure and Delta Lake packages. If a SparkSession is already active,
@@ -14,6 +15,7 @@ def create_spark_session(app_name: str) -> SparkSession:
 
     Args:
         app_name: Name of the Spark application.
+        spark_config: A dictionary with additional Spark configuration options to set.
 
     Returns:
         Spark session with Delta Lake as the catalog implementation.
@@ -22,19 +24,23 @@ def create_spark_session(app_name: str) -> SparkSession:
     spark = SparkSession.getActiveSession()
     if not spark:
         logger.info("Creating Spark session...")
-        spark = (
-            SparkSession.builder.appName(app_name)
-            .config(
-                "spark.jars.packages",
-                ("org.apache.hadoop:hadoop-azure:3.3.4," "io.delta:delta-core_2.12:2.4.0"),
-            )
-            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-            .config(
-                "spark.sql.catalog.spark_catalog",
-                "org.apache.spark.sql.delta.catalog.DeltaCatalog",
-            )
-            .getOrCreate()
-        )
+
+        config = {
+            "spark.jars.packages": "org.apache.hadoop:hadoop-azure:3.3.4,io.delta:delta-core_2.12:2.4.0",
+            "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+            "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        }
+
+        if spark_config:
+            config.update(spark_config)
+
+        spark_builder = SparkSession.builder.appName(app_name)
+
+        for key, value in config.items():
+            spark_builder = spark_builder.config(key, value)
+
+        spark = spark_builder.getOrCreate()
+
         logger.info("Spark session created.")
 
     return spark

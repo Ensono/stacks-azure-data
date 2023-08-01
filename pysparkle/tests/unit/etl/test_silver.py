@@ -21,8 +21,10 @@ from tests.unit.conftest import TEST_CSV_DIR
 def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns, tmp_path):
     def side_effect(container, file_name):
         if container == BRONZE_CONTAINER:
+            # fixed path for test input files
             return f"{TEST_CSV_DIR}/{file_name}"
         else:
+            # temporary path for any test outputs
             return f"{tmp_path}/{file_name}"
 
     mock_get_adls_file_url.side_effect = side_effect
