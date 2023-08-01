@@ -1,10 +1,25 @@
-# Datastacks
+---
+id: datastacks
+title: Datastacks overview
+sidebar_label: Datastacks
+hide_title: false
+hide_table_of_contents: false
+description: Overview of the Datastacks utility
+keywords:
+  - data
+  - python
+  - etl
+  - cli
+  - azure
+  - template
+---
 
 Datastacks is a utility built to support various functions within the Ensono Stacks Data Platform. The library and its associated CLI is intended to assist developers working within a deployed Stacks Data Platform, supporting common tasks such as generating new data engineering workloads and running Spark jobs.
 
-### Using the Datastacks CLI
+## Using the Datastacks CLI
 
-* [Setup project environment](../README.md#developing-the-solution)
+* [Setup project environment](../getting_started/dev_quickstart_data_azure.md)
+
 ```bash
 # Initiate Datastacks using poetry:
 poetry run datastacks
@@ -18,11 +33,16 @@ python datastacks/datastacks_cli.py --help
 
 ## Generating data workloads
 
-Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](../de_templates) directory.
+Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) directory.
 
-- **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
+The [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section shows the workflow for using Datastacks to generate a new workload.
+See [ETL Pipeline Deployment](../getting_started/etl_pipelines_deployment_azure.md) for a step-by-step guide on deploying a new workload using Datastacks.
 
-  - **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline.
+### Commands
+
+* **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
+
+    * **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline.
 
 ### Examples
 
@@ -36,7 +56,8 @@ datastacks generate ingest --config="de_templates/test_config_ingest.yaml" --dat
 
 ### Required config file
 
-In order to generate a new data engineering workload the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the [de_templates](../de_templates/test_config_ingest.yaml) folder.
+In order to generate a new data engineering workload the Datastacks CLI takes a path to a config file. This config file should be a yaml file and have the below format. A sample config file is included in the [de_templates](https://github.com/amido/stacks-azure-data/tree/main/de_templates) folder.
+
 
 ```yaml
 # `dataset_name` parameter is used to determine names of the following ADF resources:
