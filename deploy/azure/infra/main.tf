@@ -46,6 +46,7 @@ module "adf" {
   repository_name                 = var.repository_name
   root_folder                     = var.root_folder
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
+  tenant_id                       = data.azurerm_client_config.current.tenant_id
 }
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
@@ -196,6 +197,8 @@ module "adls_default" {
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = var.sa_public_network_access_enabled
+  dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
+  blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
 
 }
 

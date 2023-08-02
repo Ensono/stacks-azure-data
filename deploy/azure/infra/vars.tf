@@ -425,6 +425,17 @@ variable "dns_zone_name" {
   type        = list(string)
 }
 
+variable "dfs_private_zone" {
+  type        = string
+  default     = "privatelink.dfs.core.windows.net"
+  description = "Resource ID of the DFS Private DNS Zone"
+}
+
+variable "blob_private_zone" {
+  type        = string
+  default     = "privatelink.blob.core.windows.net"
+  description = "Resource ID of the Blob Private DNS Zone"
+}
 
 variable "dns_zone_resource_group" {
   type        = string

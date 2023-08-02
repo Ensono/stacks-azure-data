@@ -23,3 +23,13 @@ data "azurerm_virtual_network" "prod" {
   name                = var.prod_network_spoke
   resource_group_name = var.prod_vnet_resource_group_name
 }
+
+data "azurerm_private_dns_zone" "dfs_private_zone" {
+  name                = var.dfs_private_zone
+  resource_group_name = var.dns_zone_resource_group
+}
+
+data "azurerm_private_dns_zone" "blob_private_zone" {
+  name                = var.blob_private_zone
+  resource_group_name = var.dns_zone_resource_group
+}
