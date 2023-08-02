@@ -454,12 +454,6 @@ variable "dns_zone_resource_group" {
   default     = "amido-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
-
-variable "dns_zone_resource_group" {
-  type        = string
-  default     = "amido-stacks-euw-de-hub-network"
-  description = "The Resource Group for the Private DNS Zone."
-}
 variable "dev_vnet_resource_group_name" {
   type        = string
   default     = "amido-stacks-euw-de-nonprod-network"
