@@ -216,11 +216,11 @@
                     },
                     "window_end": {
                         "type": "string",
-                        "defaultValue": "2020-01-31"
+                        "defaultValue": "2010-01-31"
                     },
                     "window_start": {
                         "type": "string",
-                        "defaultValue": "2020-01-01"
+                        "defaultValue": "2010-01-01"
                     },
                     "correlation_id": {
                         "type": "string"
