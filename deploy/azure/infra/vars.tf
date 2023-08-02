@@ -437,12 +437,29 @@ variable "blob_private_zone" {
   description = "Resource ID of the Blob Private DNS Zone"
 }
 
+variable "kv_private_zone" {
+  type        = string
+  default     = "privatelink.vaultcore.azure.net"
+  description = "Resource ID of the KV Private DNS Zone"
+}
+
+variable "sql_private_zone" {
+  type        = string
+  default     = "privatelink.database.windows.net"
+  description = "Resource ID of the Sql Private DNS Zone"
+}
+
 variable "dns_zone_resource_group" {
   type        = string
   default     = "amido-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
 
+variable "dns_zone_resource_group" {
+  type        = string
+  default     = "amido-stacks-euw-de-hub-network"
+  description = "The Resource Group for the Private DNS Zone."
+}
 variable "dev_vnet_resource_group_name" {
   type        = string
   default     = "amido-stacks-euw-de-nonprod-network"

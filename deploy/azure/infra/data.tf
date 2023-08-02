@@ -33,3 +33,13 @@ data "azurerm_private_dns_zone" "blob_private_zone" {
   name                = var.blob_private_zone
   resource_group_name = var.dns_zone_resource_group
 }
+
+data "azurerm_private_dns_zone" "kv_private_dns_zone" {
+  name                = var.kv_private_zone
+  resource_group_name = var.dns_zone_resource_group
+}
+
+data "azurerm_private_dns_zone" "sql_private_dns_zone" {
+  name                = var.sql_private_zone
+  resource_group_name = var.dns_zone_resource_group
+}

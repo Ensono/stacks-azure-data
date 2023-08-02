@@ -33,6 +33,8 @@ module "kv_default" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
+  kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
+
 }
 
 # module call for ADF
