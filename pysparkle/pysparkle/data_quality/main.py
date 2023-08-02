@@ -1,7 +1,5 @@
 import logging
 
-from pyspark.sql import SparkSession
-
 from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.config import Config
 from pysparkle.data_quality.utils import (
@@ -9,6 +7,7 @@ from pysparkle.data_quality.utils import (
     create_datasource_context,
     execute_validations,
 )
+from pysparkle.pyspark_utils import create_spark_session
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
 from pysparkle.utils import substitute_env_vars
 
@@ -22,7 +21,7 @@ def data_quality_main(config_path):
     dq_conf = Config.parse_obj(dq_conf_dict)
     logger.info(f"Running Data Quality processing for dataset: {dq_conf.dataset_name}...")
 
-    spark = SparkSession.builder.appName(f"DataQuality-{dq_conf.dataset_name}").getOrCreate()
+    spark = create_spark_session(f"DataQuality-{dq_conf.dataset_name}")
 
     set_spark_properties(spark)
 
@@ -33,9 +32,7 @@ def data_quality_main(config_path):
         data_location = substitute_env_vars(datasource.data_location)
         df = source_type(data_location)
 
-        gx_context = create_datasource_context(
-            datasource.datasource_name, dq_conf.gx_directory_path
-        )
+        gx_context = create_datasource_context(datasource.datasource_name, dq_conf.gx_directory_path)
 
         gx_context = add_expectation_suite(gx_context, datasource)
 
