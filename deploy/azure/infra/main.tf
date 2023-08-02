@@ -201,7 +201,7 @@ module "adls_default" {
   public_network_access_enabled = var.sa_public_network_access_enabled
   dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
   blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
-  azure_object_id               = data.azurerm_client_config.current.client_id
+  azure_object_id               = data.azurerm_client_config.current.object_id
 
 }
 
