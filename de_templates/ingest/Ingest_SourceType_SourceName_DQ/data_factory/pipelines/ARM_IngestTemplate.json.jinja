@@ -161,12 +161,12 @@
                                             "referenceName": "ds_dp_DataLake_Parquet",
                                             "type": "DatasetReference",
                                             "parameters": {
-                                                "path": {
-                                                    "value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}/@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
+                                                "filename": {
+                                                    "value": "@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}.parquet",
                                                     "type": "Expression"
                                                 },
-                                                "filename": {
-                                                    "value": "@{item()['display_name']}.parquet",
+                                                "path": {
+                                                    "value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
                                                     "type": "Expression"
                                                 }
                                             }
