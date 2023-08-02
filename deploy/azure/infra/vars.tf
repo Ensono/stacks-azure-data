@@ -227,7 +227,7 @@ variable "kv_secrets" {
 }
 
 variable "azure_client_secret" {
-  type        = list(string)
+  type        = string
   description = "A client secret that was generated for the App Registration."
   sensitive   = true
 }
