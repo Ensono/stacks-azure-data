@@ -255,6 +255,24 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id = module.kv_default.id
 }
 
+resource "azurerm_key_vault_secret" "service-principal-secret" {
+  name         = "service-principal-secret"
+  value        = var.azure_client_secret
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "azure-client-id" {
+  name         = "azure-client-id"
+  value        = data.azurerm_client_config.current.client_id
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "azure-client-id" {
+  name         = "azure-tenant-id"
+  value        = data.azurerm_client_config.current.tenant_id
+  key_vault_id = module.kv_default.id
+}
+
 module "adb" {
   source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/new-secure-databricks"
   resource_namer                           = module.default_label.id

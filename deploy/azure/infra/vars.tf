@@ -226,6 +226,12 @@ variable "kv_secrets" {
   default     = ["secret1", "secret2", "secret3"]
 }
 
+variable "azure_client_secret" {
+  type        = list(string)
+  description = "A client secret that was generated for the App Registration."
+  sensitive   = true
+}
+
 
 variable "contributor_object_ids" {
   description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
