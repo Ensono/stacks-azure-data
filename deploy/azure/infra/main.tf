@@ -267,7 +267,7 @@ resource "azurerm_key_vault_secret" "azure-client-id" {
   key_vault_id = module.kv_default.id
 }
 
-resource "azurerm_key_vault_secret" "azure-client-id" {
+resource "azurerm_key_vault_secret" "azure-tenant-id" {
   name         = "azure-tenant-id"
   value        = data.azurerm_client_config.current.tenant_id
   key_vault_id = module.kv_default.id
