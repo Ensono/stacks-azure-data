@@ -58,14 +58,16 @@ def read_datasource(spark: SparkSession, data_location: str, datasource_type: st
         datasource_type: Source system type that Spark can read from, e.g. delta, table, parquet, json, csv.
 
     Returns:
-        DataFrame: The dataframe loaded from the datasource.
+        The dataframe loaded from the datasource.
 
     Examples:
         If the data is stored in a file, you should provide the complete path to the file, e.g.:
+
         >>> read_datasource(spark, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
         >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*", "parquet")
 
         For tables with metadata managed by a data catalog, you should provide the database schema and the table name:
+
         >>> read_datasource(spark, "staging.movies_metadata", "table")
 
     """
