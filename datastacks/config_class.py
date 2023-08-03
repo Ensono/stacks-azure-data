@@ -2,7 +2,7 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class DataSourceType(Enum):
@@ -10,6 +10,8 @@ class DataSourceType(Enum):
 
 
 class IngestConfig(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
     dataset_name: str = Field(description="Dataset name, used to derive pipeline and linked service names.")
     pipeline_description: str = Field(description="Description of the pipeline to be created.")
     data_source_type: DataSourceType = Field(description="Datasource type, at present this must be azure_sql.")
@@ -28,16 +30,16 @@ class IngestConfig(BaseModel):
     )
 
     default_arm_deployment_mode: Optional[str] = Field(
-        description="Deployment mode for terraform; if not set, the default is Incremental"
+        default=None, description="Deployment mode for terraform; if not set, the default is Incremental"
     )
 
     window_start_default: Optional[date] = Field(
-        description="Date to set as start of default time window. Defaults to 2020-01-01"
+        default=None, description="Date to set as start of default time window. Defaults to 2020-01-01"
     )
     window_end_default: Optional[date] = Field(
-        description="Date to set as end of default time window. Defaults to 2020-01-31"
+        default=None, description="Date to set as end of default time window. Defaults to 2020-01-31"
     )
 
     bronze_container: str = Field(description="Name of container for Bronze data")
-    silver_container: Optional[str] = Field(description="Name of container for Silver data")
-    gold_container: Optional[str] = Field(description="Name of container for Gold data")
+    silver_container: Optional[str] = Field(default=None, description="Name of container for Silver data")
+    gold_container: Optional[str] = Field(default=None, description="Name of container for Gold data")
