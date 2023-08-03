@@ -98,8 +98,7 @@ def load_json_from_blob(container: str, file_path: str) -> dict:
         >>> load_json_from_blob("mycontainer", "mydirectory/mydata.json")
 
     """
-    blob_account = os.getenv(ENV_NAME_BLOB_ACCOUNT)
-    blob_url = f"https://{blob_account}.dfs.core.windows.net"
+    blob_url = get_blob_url()
     blob_service_client = BlobServiceClient(account_url=blob_url, credential=DefaultAzureCredential())
     blob_client = blob_service_client.get_blob_client(container, file_path)
 
@@ -119,3 +118,15 @@ def get_adls_file_url(container: str, file_name: str) -> str:
     """
     adls_account = os.getenv(ENV_NAME_ADLS_ACCOUNT)
     return f"abfss://{container}@{adls_account}.dfs.core.windows.net/{file_name}"
+
+
+def get_blob_url() -> str:
+    """Constructs the URL for a Blob storage account on Azure.
+
+    The name of the Blob storage account is acquired from an environment variable.
+
+    Returns:
+        The URL for the Blob service.
+    """
+    blob_account = os.getenv(ENV_NAME_BLOB_ACCOUNT)
+    return f"https://{blob_account}.blob.core.windows.net"

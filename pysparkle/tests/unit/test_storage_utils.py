@@ -13,6 +13,7 @@ from pysparkle.storage_utils import (
     check_env,
     get_adls_directory_contents,
     get_adls_file_url,
+    get_blob_url,
     load_json_from_blob,
     set_spark_properties,
 )
@@ -85,3 +86,10 @@ def test_get_adls_file_url():
     expected_url = "abfss://mycontainer@myadlsaccount.dfs.core.windows.net/myfolder/myfile.txt"
 
     assert get_adls_file_url(container, file_name) == expected_url
+
+
+def test_get_blob_url(monkeypatch):
+    monkeypatch.setenv(ENV_NAME_BLOB_ACCOUNT, "testaccount")
+
+    expected_url = "https://testaccount.blob.core.windows.net"
+    assert get_blob_url() == expected_url
