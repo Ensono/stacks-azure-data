@@ -169,11 +169,11 @@
                                             "type": "DatasetReference",
                                             "parameters": {
                                                 "filename": {
-                                                    "value": "@{variables('correlation_id')}.parquet",
+                                                    "value": "@{variables('run_id')}.parquet",
                                                     "type": "Expression"
                                                 },
                                                 "path": {
-                                                    "value": "@{pipeline().parameters.data_source_name}@{if(variables('automated_test_flag'), concat('/automated_tests/', pipeline().parameters.correlation_id), '')}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
+                                                    "value": "@{pipeline().parameters.data_source_name}@{if(variables('automated_test_flag'), concat('/automated_tests/', pipeline().parameters.run_id), '')}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
                                                     "type": "Expression"
                                                 }
                                             }
@@ -211,7 +211,7 @@
                         }
                     },
                     {
-                        "name": "correlation_id",
+                        "name": "run_id",
                         "type": "SetVariable",
                         "dependsOn": [],
                         "policy": {
@@ -220,9 +220,9 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "variableName": "correlation_id",
+                            "variableName": "run_id",
                             "value": {
-                                "value": "@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
+                                "value": "@{if(empty(pipeline().parameters.run_id), pipeline().RunId, pipeline().parameters.run_id)}",
                                 "type": "Expression"
                             }
                         }
@@ -232,7 +232,7 @@
                         "type": "SetVariable",
                         "dependsOn": [
                             {
-                                "activity": "correlation_id",
+                                "activity": "run_id",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -246,7 +246,7 @@
                         "typeProperties": {
                             "variableName": "automated_test_flag",
                             "value": {
-                                "value": "@startswith(variables('correlation_id'), pipeline().parameters.automated_test_prefix)",
+                                "value": "@startswith(variables('run_id'), pipeline().parameters.automated_test_prefix)",
                                 "type": "Expression"
                             }
                         }
@@ -290,7 +290,7 @@
                     "cancelAfter": {}
                 },
                 "parameters": {
-                    "correlation_id": {
+                    "run_id": {
                         "type": "string"
                     },
                     "data_source_name": {
@@ -311,7 +311,7 @@
                     }
                 },
                 "variables": {
-                    "correlation_id": {
+                    "run_id": {
                         "type": "String"
                     },
                     "automated_test_flag": {

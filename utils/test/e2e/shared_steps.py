@@ -31,9 +31,9 @@ adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
 def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
     context.start_time = datetime.now()
     parameters = json.loads(parameters)
-    correlation_id = f"{AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX}_{uuid.uuid4()}"
-    context.correlation_id = correlation_id
-    parameters.update({"correlation_id": correlation_id})
+    run_id = f"{AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX}_{uuid.uuid4()}"
+    context.run_id = run_id
+    parameters.update({"run_id": run_id})
 
     run_response = create_adf_pipeline_run(
         adf_client,
@@ -70,7 +70,7 @@ def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
 )
 def check_all_files_present_in_adls(context, output_files, container_name, directory_name):
     expected_files_list = json.loads(output_files)
-    test_directory_name = f"{directory_name}/automated_tests/{context.correlation_id}"
+    test_directory_name = f"{directory_name}/automated_tests/{context.run_id}"
     assert all_files_present_in_adls(adls_client, container_name, test_directory_name, expected_files_list)
 
 
