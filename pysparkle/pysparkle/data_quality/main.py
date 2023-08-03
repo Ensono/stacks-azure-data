@@ -28,9 +28,13 @@ def data_quality_main(config_path):
     for datasource in dq_conf.datasource_config:
         logger.info(f"Checking DQ for datasource: {datasource.datasource_name}...")
 
-        source_type = getattr(spark.read, datasource.datasource_type)
         data_location = substitute_env_vars(datasource.data_location)
-        df = source_type(data_location)
+
+        if datasource.datasource_type.lower() == "delta":
+            df = spark.read.format("delta").load(data_location)
+        else:
+            source_type = getattr(spark.read, datasource.datasource_type)
+            df = source_type(data_location)
 
         gx_context = create_datasource_context(datasource.datasource_name, dq_conf.gx_directory_path)
 
