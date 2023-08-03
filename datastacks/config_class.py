@@ -2,7 +2,7 @@ from datetime import date
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class DataSourceType(Enum):
@@ -10,7 +10,8 @@ class DataSourceType(Enum):
 
 
 class IngestConfig(BaseModel):
-    model_config = ConfigDict(use_enum_values=True)
+    class Config:
+        use_enum_values = True
 
     dataset_name: str = Field(description="Dataset name, used to derive pipeline and linked service names.")
     pipeline_description: str = Field(description="Description of the pipeline to be created.")

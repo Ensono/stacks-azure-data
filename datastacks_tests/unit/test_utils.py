@@ -27,7 +27,7 @@ def test_render_template_components(tmp_path):
         "ado_variable_groups_prod": ["prod_group"],
         "bronze_container": "test_raw",
     }
-    config = IngestConfig.model_validate(config_dict)
+    config = IngestConfig.parse_obj(config_dict)
 
     template_source_path = "de_templates/ingest/Ingest_SourceType_SourceName/"
     target_dir = f"{tmp_path}/test_render"

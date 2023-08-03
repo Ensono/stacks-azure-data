@@ -63,7 +63,7 @@ def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: s
     click.echo("Reading config from provided path...")
     with open(config_path, "r") as file:
         config_dict = yaml.safe_load(file)
-    config = IngestConfig.model_validate(config_dict)
+    config = IngestConfig.parse_obj(config_dict)
 
     click.echo("Successfully read config file.\n")
 
