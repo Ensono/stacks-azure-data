@@ -7,9 +7,8 @@ from pysparkle.data_quality.utils import (
     create_datasource_context,
     execute_validations,
 )
-from pysparkle.pyspark_utils import create_spark_session
+from pysparkle.pyspark_utils import create_spark_session, read_datasource
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
-from pysparkle.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
@@ -28,16 +27,9 @@ def data_quality_main(config_path):
     for datasource in dq_conf.datasource_config:
         logger.info(f"Checking DQ for datasource: {datasource.datasource_name}...")
 
-        data_location = substitute_env_vars(datasource.data_location)
-
-        if datasource.datasource_type.lower() == "delta":
-            df = spark.read.format("delta").load(data_location)
-        else:
-            source_type = getattr(spark.read, datasource.datasource_type)
-            df = source_type(data_location)
+        df = read_datasource(spark, datasource.data_location, datasource.datasource_type)
 
         gx_context = create_datasource_context(datasource.datasource_name, dq_conf.gx_directory_path)
-
         gx_context = add_expectation_suite(gx_context, datasource)
 
         results = execute_validations(gx_context, datasource, df)

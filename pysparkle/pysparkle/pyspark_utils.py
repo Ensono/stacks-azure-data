@@ -2,7 +2,9 @@
 import logging
 from typing import Any
 
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
+
+from pysparkle.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +46,36 @@ def create_spark_session(app_name: str, spark_config: dict[str, Any] = None) -> 
         logger.info("Spark session created.")
 
     return spark
+
+
+def read_datasource(spark: SparkSession, data_location: str, datasource_type: str) -> DataFrame:
+    """Reads the data from the given location and returns it as a dataframe.
+
+    Args:
+        spark: Spark session.
+        data_location: Location of the given data asset. It can either be a path to the data file or a fully qualified
+            table name, depending on the datasource type.
+        datasource_type: Source system type that Spark can read from, e.g. delta, table, parquet, json, csv.
+
+    Returns:
+        DataFrame: The dataframe loaded from the datasource.
+
+    Examples:
+        If the data is stored in a file, you should provide the complete path to the file, e.g.:
+        >>> read_datasource(spark, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
+        >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*", "parquet")
+
+        For tables with metadata managed by a data catalog, you should provide the database schema and the table name:
+        >>> read_datasource(spark, "staging.movies_metadata", "table")
+
+    """
+    data_location = substitute_env_vars(data_location)
+
+    if datasource_type.lower() == "delta":
+        return spark.read.format("delta").load(data_location)
+    else:
+        source_type = getattr(spark.read, datasource_type)
+        return source_type(data_location)
 
 
 def ensure_database_exists(spark: SparkSession, schema: str) -> None:
