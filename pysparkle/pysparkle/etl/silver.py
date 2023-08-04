@@ -28,7 +28,7 @@ def save_files_as_delta_tables(
         spark: Spark session.
         input_files: List of file paths within the bronze container to be converted into Delta tables.
         datasource_type: Source format that Spark can read from, e.g. delta, table, parquet, json, csv.
-        spark_read_options: Optional dictionary of options to pass to the DataFrameReader.
+        spark_read_options: Options to pass to the DataFrameReader.
     """
     logger.info("Saving input files as delta tables...")
     for file in input_files:
