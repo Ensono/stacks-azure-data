@@ -379,7 +379,7 @@ stages:
       - Build_Stage
       - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
+    # variables:
       # - group: amido-stacks-infra-credentials-nonprod
       # - name: version_number
       #   value: "$(version_major).$(version_minor).$(version_revision)"
