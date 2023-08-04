@@ -31,9 +31,9 @@ adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
 def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
     context.start_time = datetime.now()
     parameters = json.loads(parameters)
-    run_id = f"{AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX}_{uuid.uuid4()}"
-    context.run_id = run_id
-    parameters.update({"run_id": run_id})
+    test_run_id = f"{AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX}_{uuid.uuid4()}"
+    context.test_run_id = test_run_id
+    parameters.update({"run_id": test_run_id})
 
     run_response = create_adf_pipeline_run(
         adf_client,
@@ -42,7 +42,7 @@ def trigger_adf_pipeline(context, pipeline_name: str, parameters: str):
         pipeline_name,
         parameters=parameters,
     )
-    context.run_id = run_response.run_id
+    context.adf_run_id = run_response.run_id
 
 
 @step("I poll the pipeline every {seconds} seconds until it has completed")
@@ -52,7 +52,7 @@ def poll_adf_pipeline(context, seconds: str):
             adf_client,
             AZURE_RESOURCE_GROUP_NAME,
             AZURE_DATA_FACTORY_NAME,
-            context.run_id,
+            context.adf_run_id,
         ),
         step=int(seconds),
         timeout=300,
@@ -61,7 +61,9 @@ def poll_adf_pipeline(context, seconds: str):
 
 @step("the ADF pipeline {pipeline_name} has finished with state {state}")
 def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
-    pipeline_run = get_adf_pipeline_run(adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, context.run_id)
+    pipeline_run = get_adf_pipeline_run(
+        adf_client, AZURE_RESOURCE_GROUP_NAME, AZURE_DATA_FACTORY_NAME, context.adf_run_id
+    )
     assert pipeline_run.status == state
 
 
@@ -70,7 +72,7 @@ def pipeline_has_finished_with_state(context, pipeline_name: str, state: str):
 )
 def check_all_files_present_in_adls(context, output_files, container_name, directory_name):
     expected_files_list = json.loads(output_files)
-    test_directory_name = f"{directory_name}/automated_tests/{context.run_id}"
+    test_directory_name = f"{directory_name}/automated_tests/{context.test_run_id}"
     assert all_files_present_in_adls(adls_client, container_name, test_directory_name, expected_files_list)
 
 
