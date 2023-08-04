@@ -1,4 +1,4 @@
-{% set linked_service_type = 'AzureSqlDatabase' if data_source_type.value == 'azure_sql' else '' -%}
+{% set linked_service_type = 'AzureSqlDatabase' if data_source_type == 'azure_sql' else '' -%}
 resource "azurerm_data_factory_linked_custom_service" "ls_{{ dataset_name }}" {
   name            = "ls_{{ dataset_name }}"
   data_factory_id = data.azurerm_data_factory.factory.id
@@ -6,7 +6,7 @@ resource "azurerm_data_factory_linked_custom_service" "ls_{{ dataset_name }}" {
     name = var.integration_runtime_name
   }
   type                 = "{{ linked_service_type }}"
-  description          = "{{ data_source_type.value | upper }} linked service."
+  description          = "{{ data_source_type | upper }} linked service."
   type_properties_json = <<JSON
 {
   "connectionString": "${var.linked_service_connectionstring}",

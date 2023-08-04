@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datastacks"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Andy Durkan <andy.durkan@ensono.com>"]
 readme = "README.md"
