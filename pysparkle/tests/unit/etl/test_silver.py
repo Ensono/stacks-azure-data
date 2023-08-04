@@ -29,7 +29,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
 
     mock_get_adls_file_url.side_effect = side_effect
 
-    save_files_as_delta_tables(spark, csv_files)
+    save_files_as_delta_tables(spark, csv_files, "csv")
 
     for i, csv_file in enumerate(csv_files):
         filename_with_no_extension = Path(csv_file).stem

@@ -35,13 +35,18 @@ def substitute_env_vars(input_str: str) -> str:
     return input_str
 
 
-def filter_csv_files(paths: list[str]) -> list[str]:
-    """Returns paths with the `.csv` extension.
+def filter_files_by_extension(paths: list[str], extension: str) -> list[str]:
+    """Returns paths with the given extension.
 
     Args:
         paths: List of file paths.
+        extension: File extension to filter by. Dot is not necessary, e.g. you can pass "csv".
 
     Returns:
-        A list of file paths that end with the `.csv` extension.
+        A list of file paths that end with the given extension.
+
     """
-    return [path for path in paths if path.endswith(".csv")]
+    if not extension.startswith("."):
+        extension = f".{extension}"
+
+    return [path for path in paths if path.endswith(extension)]

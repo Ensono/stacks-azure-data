@@ -1,6 +1,6 @@
 # Spark common utilities
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from pyspark.sql import DataFrame, SparkSession
 
@@ -48,7 +48,9 @@ def create_spark_session(app_name: str, spark_config: dict[str, Any] = None) -> 
     return spark
 
 
-def read_datasource(spark: SparkSession, data_location: str, datasource_type: str) -> DataFrame:
+def read_datasource(
+    spark: SparkSession, data_location: str, datasource_type: str, options: Optional[dict[str, Any]] = None
+) -> DataFrame:
     """Reads the data from the given location and returns it as a dataframe.
 
     Args:
@@ -56,6 +58,7 @@ def read_datasource(spark: SparkSession, data_location: str, datasource_type: st
         data_location: Location of the given data asset. It can either be a path to the data file or a fully qualified
             table name, depending on the datasource type.
         datasource_type: Source system type that Spark can read from, e.g. delta, table, parquet, json, csv.
+        options: Optional dictionary of options to pass to the DataFrameReader.
 
     Returns:
         The dataframe loaded from the datasource.
@@ -64,7 +67,10 @@ def read_datasource(spark: SparkSession, data_location: str, datasource_type: st
         If the data is stored in a file, you should provide the complete path to the file, e.g.:
 
         >>> read_datasource(spark, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
-        >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*", "parquet")
+        >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*",
+        ...     "parquet", {"mergeSchema": "true"})
+        >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder",
+        ...     "csv", {"inferSchema": "true", "delimiter": ","})
 
         For tables with metadata managed by a data catalog, you should provide the database schema and the table name:
 
@@ -73,11 +79,30 @@ def read_datasource(spark: SparkSession, data_location: str, datasource_type: st
     """
     data_location = substitute_env_vars(data_location)
 
+    if options is None:
+        options = {}
+
     if datasource_type.lower() == "delta":
-        return spark.read.format("delta").load(data_location)
+        return spark.read.options(**options).format("delta").load(data_location)
     else:
-        source_type = getattr(spark.read, datasource_type)
+        source_type = getattr(spark.read.options(**options), datasource_type)
         return source_type(data_location)
+
+
+def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str) -> None:
+    """Saves a Spark DataFrame as a Delta table at a specified location, overwriting any existing data.
+
+    Args:
+        dataframe: Spark DataFrame to save as a Delta table.
+        output_filepath: The location to write the Delta table.
+
+    Example:
+        >>> save_dataframe_as_delta(dataframe, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable")
+
+    """
+    logger.info(f"Saving delta table {output_filepath}...")
+    dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+    logger.info("Table saved.")
 
 
 def ensure_database_exists(spark: SparkSession, schema: str) -> None:
