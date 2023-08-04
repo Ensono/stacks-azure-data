@@ -1,5 +1,6 @@
 # Spark common utilities
 import logging
+import os
 from typing import Any, Optional
 
 from pyspark.sql import DataFrame, SparkSession
@@ -100,9 +101,10 @@ def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str) -> None:
         >>> save_dataframe_as_delta(dataframe, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable")
 
     """
-    logger.info(f"Saving delta table {output_filepath}...")
+    table_name = os.path.basename(output_filepath)
+    logger.info(f"Saving delta table {table_name}...")
     dataframe.write.format("delta").mode("overwrite").save(output_filepath)
-    logger.info("Table saved.")
+    logger.info(f"Saved: {output_filepath}.")
 
 
 def ensure_database_exists(spark: SparkSession, schema: str) -> None:
