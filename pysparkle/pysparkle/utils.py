@@ -33,3 +33,20 @@ def substitute_env_vars(input_str: str) -> str:
             input_str = input_str.replace("{" + placeholder + "}", env_var_value)
 
     return input_str
+
+
+def filter_files_by_extension(paths: list[str], extension: str) -> list[str]:
+    """Returns paths with the given extension.
+
+    Args:
+        paths: List of file paths.
+        extension: File extension to filter by. Dot is not necessary, e.g. you can pass "csv".
+
+    Returns:
+        A list of file paths that end with the given extension.
+
+    """
+    if not extension.startswith("."):
+        extension = f".{extension}"
+
+    return [path for path in paths if path.endswith(extension)]

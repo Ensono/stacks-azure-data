@@ -3,8 +3,9 @@ import uuid
 from pathlib import Path
 from unittest.mock import MagicMock, PropertyMock, patch
 
-from pyspark.sql import SparkSession
 from pytest import fixture
+
+from pysparkle.pyspark_utils import create_spark_session
 
 TEST_DATA_DIR = Path(__file__).parent.resolve() / "data"
 TEST_CSV_DIR = TEST_DATA_DIR / "movies_dataset"
@@ -14,17 +15,9 @@ TEST_CSV_DIR = TEST_DATA_DIR / "movies_dataset"
 def spark(tmp_path_factory):
     """Spark session fixture with a temporary directory as a Spark warehouse."""
     temp_dir = tmp_path_factory.mktemp("spark-warehouse")
-    spark = (
-        SparkSession.builder.master("local")
-        .appName("pysparkle-test")
-        .config("spark.jars.packages", "io.delta:delta-core_2.12:2.4.0")
-        .config("spark.sql.warehouse.dir", temp_dir)
-        .config(
-            "spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog"
-        )
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .getOrCreate()
-    )
+    spark_config = {"spark.sql.warehouse.dir": temp_dir}
+    spark = create_spark_session("pysparkle-test", spark_config)
+
     yield spark
 
     spark.stop()
@@ -38,9 +31,7 @@ def mock_adls_client():
             type(mock_path).name = PropertyMock(return_value=filename)
         mock_file_system_client = MagicMock()
         mock_file_system_client.get_paths.return_value = mock_paths
-        mock_DataLakeServiceClient.return_value.get_file_system_client.return_value = (
-            mock_file_system_client
-        )
+        mock_DataLakeServiceClient.return_value.get_file_system_client.return_value = mock_file_system_client
         yield mock_DataLakeServiceClient
 
 

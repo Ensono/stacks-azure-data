@@ -1,82 +1,55 @@
 # Bronze to Silver transformations.
 import logging
 from pathlib import Path
+from typing import Any, Optional
 
 from pyspark.sql import SparkSession
 
-from pysparkle.storage_utils import (
-    check_env,
-    get_adls_file_url,
-    get_adls_directory_contents,
-    set_spark_properties,
-)
 from pysparkle.config import BRONZE_CONTAINER, SILVER_CONTAINER
+from pysparkle.pyspark_utils import create_spark_session, read_datasource, save_dataframe_as_delta
+from pysparkle.storage_utils import check_env, get_adls_directory_contents, get_adls_file_url, set_spark_properties
+from pysparkle.utils import filter_files_by_extension
 
 logger = logging.getLogger(__name__)
 
 
-def filter_csv_files(paths: list[str]) -> list[str]:
-    """Returns paths with the `.csv` extension.
+def save_files_as_delta_tables(
+    spark: SparkSession,
+    input_files: list[str],
+    datasource_type: str,
+    spark_read_options: Optional[dict[str, Any]] = None,
+) -> None:
+    """Saves multiple data files as Delta tables.
 
-    Args:
-        paths: List of file paths.
-
-    Returns:
-        A list of file paths that end with the `.csv` extension.
-    """
-    return [path for path in paths if path.endswith(".csv")]
-
-
-def ensure_database_exists(spark: SparkSession, schema: str) -> None:
-    """Ensures that a specific database exists in the Spark session, creating it if necessary.
-
-    Args:
-        spark: Spark session.
-        schema: The name of the database/schema to ensure existence of.
-    """
-    if not spark.catalog.databaseExists(schema):
-        spark.sql(f"CREATE DATABASE IF NOT EXISTS {schema}")
-        logger.info(f"Database {schema} has been created.")
-
-
-def save_files_as_delta_tables(spark: SparkSession, csv_files: list[str]) -> None:
-    """Saves multiple CSV files as Delta tables in a specified schema.
-
-    The function reads CSV files from a bronze container and writes them as Delta tables
+    The function reads input files in a given format from a bronze container and writes them as Delta tables
     into a silver container.
 
     Args:
         spark: Spark session.
-        csv_files: List of CSV files to be converted into Delta tables.
+        input_files: List of file paths within the bronze container to be converted into Delta tables.
+        datasource_type: Source format that Spark can read from, e.g. delta, table, parquet, json, csv.
+        spark_read_options: Options to pass to the DataFrameReader.
     """
-
-    def to_delta(csv_file: str) -> None:
-        filepath = get_adls_file_url(BRONZE_CONTAINER, csv_file)
+    logger.info("Saving input files as delta tables...")
+    for file in input_files:
+        filepath = get_adls_file_url(BRONZE_CONTAINER, file)
+        df = read_datasource(spark, filepath, datasource_type, spark_read_options)
         filename_with_no_extension = Path(filepath).stem
-        df = (
-            spark.read.option("header", "true")
-            .option("inferSchema", "true")
-            .option("delimiter", ",")
-            .csv(filepath)
-        )
-        table_name = f"{SILVER_CONTAINER}.{filename_with_no_extension}"
-        df.write.format("delta").mode("overwrite").saveAsTable(table_name)
-        logger.info(f"Table {table_name} saved.")
-
-    logger.info("Saving CSV files as delta tables...")
-    ensure_database_exists(spark, SILVER_CONTAINER)
-    for file in csv_files:
-        to_delta(file)
+        output_filepath = get_adls_file_url(SILVER_CONTAINER, filename_with_no_extension)
+        save_dataframe_as_delta(df, output_filepath)
 
 
 def silver_main(dataset_name):
     logger.info("Running Silver processing...")
-    spark = SparkSession.builder.appName("Silver").getOrCreate()
-
     check_env()
+
+    spark = create_spark_session("Silver")
+
+    datasource_type = "csv"
     set_spark_properties(spark)
     input_paths = get_adls_directory_contents(BRONZE_CONTAINER, dataset_name)
-    csv_files = filter_csv_files(input_paths)
-    save_files_as_delta_tables(spark, csv_files)
+    input_paths = filter_files_by_extension(input_paths, extension=datasource_type)
+    spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
+    save_files_as_delta_tables(spark, input_paths, datasource_type, spark_read_options)
 
     logger.info("Finished: Silver processing.")

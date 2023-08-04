@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysparkle"
-version = "0.1.3"
+version = "0.1.4"
 description = "PySpark data transformer"
 authors = ["ensono.com"]
 readme = "README.md"
