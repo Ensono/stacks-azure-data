@@ -51,7 +51,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
     ],
 )
 @patch("pysparkle.etl.silver.get_adls_file_url")
-def test_save_files_as_delta_tables_diff_formats(
+def test_save_files_as_delta_tables_different_formats(
     mock_get_adls_file_url, spark, tmp_path, file_format, write_options, read_options
 ):
     def side_effect(container, file_name):
