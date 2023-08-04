@@ -1,15 +1,15 @@
 {
     "gx_directory_path": "/dbfs/great_expectations/",
-    "dataset_name": "SalesLT",
+    "dataset_name": "movies.keywords",
     "datasource_config": [
         {
-            "datasource_name": "SalesLT.Product",
+            "datasource_name": "movies.keywords",
             "datasource_type": "parquet",
-            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/example_azuresql_1/SalesLT.Product/v1/*/*/*",
-            "expectation_suite_name": "SalesLT_product_suite",
+            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.keywords/v1/*/*/*",
+            "expectation_suite_name": "movies.keywords_suite",
             "validation_config": [
                 {
-                    "column_name": "ProductID",
+                    "column_name": "id",
                     "expectations": [
                         {
                             "expectation_type": "expect_column_values_to_not_be_null",

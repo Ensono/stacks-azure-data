@@ -50,6 +50,12 @@
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
+                            },
+                            {
+                                "activity": "automated_test_flag",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
                             }
                         ],
                         "userProperties": [],
@@ -100,7 +106,7 @@
                                                 {
                                                     "name": "meta_ingestion_run_id",
                                                     "value": {
-                                                        "value": "@pipeline().RunId",
+                                                        "value": "@variables('run_id')",
                                                         "type": "Expression"
                                                     }
                                                 }
@@ -161,12 +167,12 @@
                                             "referenceName": "ds_dp_DataLake_Parquet",
                                             "type": "DatasetReference",
                                             "parameters": {
-                                                "path": {
-                                                    "value": "@{pipeline().parameters.data_source_name}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/@{pipeline().parameters.window_start}/@{if(empty(pipeline().parameters.correlation_id), pipeline().RunId, pipeline().parameters.correlation_id)}",
+                                                "filename": {
+                                                    "value": "@{variables('run_id')}.parquet",
                                                     "type": "Expression"
                                                 },
-                                                "filename": {
-                                                    "value": "@{item()['display_name']}.parquet",
+                                                "path": {
+                                                    "value": "@{pipeline().parameters.data_source_name}@{if(variables('automated_test_flag'), concat('/automated_tests/', variables('run_id')), '')}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
                                                     "type": "Expression"
                                                 }
                                             }
@@ -201,6 +207,47 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    {
+                        "name": "run_id",
+                        "type": "SetVariable",
+                        "dependsOn": [],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "run_id",
+                            "value": {
+                                "value": "@{if(empty(pipeline().parameters.run_id), pipeline().RunId, pipeline().parameters.run_id)}",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "automated_test_flag",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "run_id",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "automated_test_flag",
+                            "value": {
+                                "value": "@startswith(variables('run_id'), pipeline().parameters.automated_test_prefix)",
+                                "type": "Expression"
+                            }
                         }
                     },
                     {
@@ -242,6 +289,9 @@
                     "cancelAfter": {}
                 },
                 "parameters": {
+                    "run_id": {
+                        "type": "string"
+                    },
                     "data_source_name": {
                         "type": "string",
                         "defaultValue": "{{ pipeline_name }}"
@@ -254,8 +304,17 @@
                         "type": "string",
                         "defaultValue": "{{ window_start_default | default('2020-01-01') }}"
                     },
-                    "correlation_id": {
-                        "type": "string"
+                    "automated_test_prefix": {
+                        "type": "string",
+                        "defaultValue": "automated_test_"
+                    }
+                },
+                "variables": {
+                    "run_id": {
+                        "type": "String"
+                    },
+                    "automated_test_flag": {
+                        "type": "Boolean"
                     }
                 },
                 "folder": {
