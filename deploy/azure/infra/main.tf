@@ -33,6 +33,8 @@ module "kv_default" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
+  kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
+
 }
 
 # module call for ADF
@@ -46,6 +48,7 @@ module "adf" {
   repository_name                 = var.repository_name
   root_folder                     = var.root_folder
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
+  tenant_id                       = data.azurerm_client_config.current.tenant_id
 }
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
@@ -196,6 +199,9 @@ module "adls_default" {
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = var.sa_public_network_access_enabled
+  dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
+  blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
+  azure_object_id               = data.azurerm_client_config.current.object_id
 
 }
 
@@ -252,6 +258,24 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   for_each     = toset(var.sql_db_names)
   name         = "connect-sql-password-${each.key}"
   value        = module.sql.sql_sa_password
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "service-principal-secret" {
+  name         = "service-principal-secret"
+  value        = var.azure_client_secret
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "azure-client-id" {
+  name         = "azure-client-id"
+  value        = data.azurerm_client_config.current.client_id
+  key_vault_id = module.kv_default.id
+}
+
+resource "azurerm_key_vault_secret" "azure-tenant-id" {
+  name         = "azure-tenant-id"
+  value        = data.azurerm_client_config.current.tenant_id
   key_vault_id = module.kv_default.id
 }
 

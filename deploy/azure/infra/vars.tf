@@ -226,6 +226,12 @@ variable "kv_secrets" {
   default     = ["secret1", "secret2", "secret3"]
 }
 
+variable "azure_client_secret" {
+  type        = string
+  description = "A client secret that was generated for the App Registration."
+  sensitive   = true
+}
+
 
 variable "contributor_object_ids" {
   description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
@@ -419,13 +425,35 @@ variable "dns_zone_name" {
   type        = list(string)
 }
 
+variable "dfs_private_zone" {
+  type        = string
+  default     = "privatelink.dfs.core.windows.net"
+  description = "Resource ID of the DFS Private DNS Zone"
+}
+
+variable "blob_private_zone" {
+  type        = string
+  default     = "privatelink.blob.core.windows.net"
+  description = "Resource ID of the Blob Private DNS Zone"
+}
+
+variable "kv_private_zone" {
+  type        = string
+  default     = "privatelink.vaultcore.azure.net"
+  description = "Resource ID of the KV Private DNS Zone"
+}
+
+variable "sql_private_zone" {
+  type        = string
+  default     = "privatelink.database.windows.net"
+  description = "Resource ID of the Sql Private DNS Zone"
+}
 
 variable "dns_zone_resource_group" {
   type        = string
   default     = "amido-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
-
 variable "dev_vnet_resource_group_name" {
   type        = string
   default     = "amido-stacks-euw-de-nonprod-network"
