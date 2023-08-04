@@ -21,7 +21,8 @@ When deploying a Stacks data platform, you may optionally include deployment an 
 
 The database can be populated with any dataset you wish for developing and testing Stacks.
 
-The examples contained in the [getting started](../getting_started/) documentation are based around populating the sample database with data from [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset). These CSV files were loaded into the following tables in the example database:
+The examples contained in the Getting Started documentation are based around populating the sample database with data from [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset). These CSV files were loaded into the following tables in the example database:
+
 * `movies.credits`
 * `movies.keywords`
 * `movies.links`

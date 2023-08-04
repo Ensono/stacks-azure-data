@@ -38,14 +38,18 @@ This process will deploy the following resources into the project:
 
 ## Data source pre-requisites
 
-Details required for connecting to the data source will need to be stored securely (i.e. not in the source code) and to be referenced dynamically by the deployment pipeline. This approach also allows for different versions of the data source to be used in different environments (for example non-prod / prod versions). The examples below require the following details to be set for the Azure SQL sample database in each environment.
+Details required for connecting to the data source will need to be stored securely (i.e. not in the source code) and to be referenced dynamically by the deployment pipeline. This approach also allows for different versions of the data source to be used in different environments (for example non-prod / prod versions). The examples below require the following details to be set for the Azure SQL sample database in each environment:
 
 ### Azure DevOps variable
+
 Azure DevOps variables will be accessed dynamically during deployments so is used for details needed to create the linked service in Data Factory.
+
 * `sql_connection`: connection string for the database, for example `Data Source=amidostacksdeveuwdesql.database.windows.net;Initial Catalog=exampledb;User ID=user;Integrated Security=False;Encrypt=True;Connection Timeout=30;`
 
 ### Key Vault secret
+
 The password will need to be accessed dynamically by Data Factory on each connection, therefore should be stored in the Key Vault linked to the factory.
+
 * `sql-password`: password to use with the connection string
 
 ## Step 1: Create feature branch
@@ -151,7 +155,7 @@ Configuration of the data that the workload will ingest from the source is speci
 
 The end-to-end tests are designed to run the ingest pipeline in a controlled fashion to ensure it functions as expected. Open the test feature file for the workload (`tests/end_to_end/features/azure_data_ingest.feature`) and update the parameters to reflect the data entities expected to be ingested. In our example, we will use the entities specified in the config file above, i.e.:
 
-```
+```python
 |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.links", "movies.movies_metadata", "movies.ratings_small"]|
 ```
 
