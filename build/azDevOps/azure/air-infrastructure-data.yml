@@ -73,7 +73,6 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: amido-stacks-euw-de-nonprod-network
       - group: amido-stacks-de-pipeline-nonprod
@@ -143,9 +142,9 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
-                    TF_VAR_public_subnet_name: "amido-stacks-euw-de-nonprod-db-public"
-                    TF_VAR_private_subnet_name: "amido-stacks-euw-de-nonprod-db-private"
-                    TF_VAR_pe_subnet_name: "amido-stacks-euw-de-nonprod-pe"
+                    TF_VAR_public_subnet_name: $(databricks_public_subnet_name)
+                    TF_VAR_private_subnet_name: $(databricks_private_subnet_name)
+                    TF_VAR_pe_subnet_name: $(private_endpoint_subnet_name)
                     TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
                     TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
                     TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
@@ -158,7 +157,6 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
       - group: amido-stacks-euw-de-prod-network
       - group: amido-stacks-de-pipeline-prod
@@ -252,8 +250,8 @@ stages:
       - Build
       - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
-      - group: amido-stacks-infra-credentials-nonprod
+    # variables:
+    #   - group: amido-stacks-infra-credentials-nonprod
       # - name: version_number
       #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
