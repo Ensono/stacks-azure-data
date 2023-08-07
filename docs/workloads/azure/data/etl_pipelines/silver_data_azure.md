@@ -45,7 +45,7 @@ It contains just one step - Python Databricks, configured to run a simple script
 which is an entrypoint to the PySparkle library. PySparkle is attached to a cluster by pointing
 to its location in DBFS.
 
-Contents of `dbfs:/FileStore/scripts/silver.py`:
+Contents of `dbfs:/FileStore/scripts/silver/silver.py`:
 
 ```python
 from pysparkle.pysparkle_cli import cli

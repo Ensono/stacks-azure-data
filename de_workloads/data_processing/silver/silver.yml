@@ -41,7 +41,7 @@ variables:
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
     value: "de_workloads/$(jobtype)/$(job)/data_factory"
-  - name: self_repo_spark_src  
+  - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
   - name: self_repo_blob_config
     value: "$(self_repo_job_dir)/config"
@@ -50,7 +50,7 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
   - name: dbfs_destination  #update job name
-    value: 'dbfs:/FileStore/scripts'
+    value: 'dbfs:/FileStore/scripts/silver'
 
 
 pool:
@@ -230,7 +230,7 @@ stages:
                     targetType: inline
                     script: taskctl deworkloadTesting
                   env:
-                    WORKING_DIRECTORY: "./"    
+                    WORKING_DIRECTORY: "./"
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"
                     E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
                     JUNIT_LOCATION: "./$(junit_src)"
