@@ -4,8 +4,8 @@
     "datasource_config": [
         {
             "datasource_name": "movies_metadata",
-            "datasource_type": "table",
-            "data_location": "staging.movies_metadata",
+            "datasource_type": "delta",
+            "data_location": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/movies_metadata",
             "expectation_suite_name": "movies_metadata_suite",
             "validation_config": [
                 {
