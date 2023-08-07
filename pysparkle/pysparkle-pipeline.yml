@@ -43,8 +43,7 @@ stages:
   - stage: Build_Stage
     variables:
       - group: amido-stacks-de-pipeline-nonprod
-      - name: version_number
-        value: $(version_major).$(version_minor).$(version_revision)
+
     jobs:
       - job: Build_Pysparkle
         displayName: Build_Pysparkle
@@ -92,9 +91,6 @@ stages:
   - stage: Deploy_NonPROD_Stage
     variables:
         - group: amido-stacks-de-pipeline-nonprod
-        - group: amido-stacks-infra-credentials-nonprod
-        - name: version_number
-          value: "$(version_major).$(version_minor).$(version_revision)"
     dependsOn: Build_Stage
     jobs:
       - deployment: Deploy_NonPROD
@@ -152,8 +148,6 @@ stages:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
         - group: amido-stacks-de-pipeline-prod
-        - name: version_number
-          value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - deployment: Deploy_PRDO
         displayName: 'Deploy To PROD'
@@ -193,10 +187,6 @@ stages:
         - Build_Stage
         - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
-        - group: amido-stacks-infra-credentials-nonprod
-        # - name: version_number
-        #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
         - job: CreateGitHubRelease
           pool:

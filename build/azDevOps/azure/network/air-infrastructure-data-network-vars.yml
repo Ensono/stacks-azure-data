@@ -11,7 +11,6 @@ variables:
     value: stacks-azure-data-ingest
   - name: self_generic_name
     value: stacks-infrastructure
-  - group: amido-stacks-webapp
 
   - name: cloud_providers
     value: "azure"
@@ -85,7 +84,6 @@ variables:
   # Static definition within Influx Config
   - name: DASHBOARD_MEASUREMENT
     value: deployment
-  - group: amido-stacks-influx-credentials-prod
   # yamllint disable rule:comments-indentation
     # Group should contain:
       # DASHBOARD_INFLUX_ORG

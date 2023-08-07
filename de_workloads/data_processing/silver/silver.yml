@@ -59,9 +59,7 @@ pool:
 stages:
   - stage: Build_Stage
     variables:
-      - group: amido-stacks-de-pipeline-nonprod
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
+      - group: stacks-credentials-nonprod-kv
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -127,10 +125,7 @@ stages:
   - stage: Deploy_NonPROD_Stage
     variables:
       - group: amido-stacks-de-pipeline-nonprod
-      - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: dev
     dependsOn: Build_Stage
@@ -239,7 +234,7 @@ stages:
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"
                     E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
                     JUNIT_LOCATION: "./$(junit_src)"
-                    AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    AZURE_SUBSCRIPTION_ID: $(azure-subscription-id)
                     AZURE_RESOURCE_GROUP_NAME: $(resource_group)
                     AZURE_DATA_FACTORY_NAME: $(datafactoryname)
                     AZURE_REGION_NAME: $(region)
@@ -266,8 +261,6 @@ stages:
     variables:
       - group: amido-stacks-de-pipeline-prod
       - group: stacks-credentials-prod-kv
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: prod
     jobs:
@@ -359,10 +352,6 @@ stages:
       - Build_Stage
       - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
-      - group: amido-stacks-infra-credentials-nonprod
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
