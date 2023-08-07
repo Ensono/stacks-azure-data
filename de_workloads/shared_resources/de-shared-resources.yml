@@ -49,8 +49,6 @@ stages:
   - stage: Build_Stage
     variables:
       - group: stacks-credentials-nonprod-kv
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -117,8 +115,6 @@ stages:
     variables:
       - group: amido-stacks-de-pipeline-nonprod
       - group: stacks-credentials-nonprod-kv
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: dev
     dependsOn: Build_Stage
@@ -268,8 +264,6 @@ stages:
     variables:
       - group: amido-stacks-de-pipeline-prod
       - group: stacks-credentials-prod-kv
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: prod
     jobs:
@@ -379,10 +373,6 @@ stages:
       - Build_Stage
       - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    # variables:
-      # - group: amido-stacks-infra-credentials-nonprod
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
