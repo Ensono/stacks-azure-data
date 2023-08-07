@@ -25,8 +25,8 @@ The naming convention for the data pipelines originates in Databricks' Medallion
 structured data transformation layers:
 
 * [Data Ingestion](ingest_data_azure.md): The initial stage of data collection.
-* [Silver Pipeline](silver_data_azure.md): Intermediate processing and transformation stage.
-* Gold Pipeline: The refined and processed data ready for analytics.
+* [Silver Pipeline](silver_data_azure.md): Conformance, cleansing and data quality processing stage.
+* Gold Pipeline: Involves data aggregations, refinement and enrichment, producing datasets optimized for analytics.
 
 ### ETL utilities
 
