@@ -12,7 +12,7 @@ keywords:
   - testing
 ---
 
-When deploying a Stacks data platform, you may optionally include deployment an Azure SQL database. This database is intended to be used for experimenting and testing ingest processes with the Stacks data platform. The database will be deployed into the same resource groups as the core data platform resources, for example:
+When deploying a Stacks data platform, you may optionally include an Azure SQL database. This database is intended to be used for experimenting and testing ingest processes with the Stacks data platform. The database will be deployed into the same resource groups as the core data platform resources, named for example:
 
 * **SQL server name:** amidostacksdeveuwdesql.database.windows.net
 * **SQL database name:** sqldbtest
