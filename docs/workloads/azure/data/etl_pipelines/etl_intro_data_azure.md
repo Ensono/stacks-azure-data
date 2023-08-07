@@ -38,8 +38,8 @@ This section also introduces several auxiliary utilities to complement the main 
 
 ## Dataset
 
-The platform leverages [The Movies Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset) from Kaggle,
-which contains metadata and ratings for approximately 45,000 movies released on or before July 2017.
+The platform leverages [The Movies Dataset](../getting_started/example_data_source.md#example-dataset), which contains
+metadata and ratings for approximately 45,000 movies released on or before July 2017.
 
 **The Movies Dataset** contains a number of CSV files and includes values of different types, including nested datatypes
 and arrays, which give us enough complexity for transformations.
