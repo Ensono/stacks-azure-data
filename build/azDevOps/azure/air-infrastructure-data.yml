@@ -250,10 +250,6 @@ stages:
       - Build
       - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    # variables:
-    #   - group: amido-stacks-infra-credentials-nonprod
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
