@@ -1,0 +1,62 @@
+name: "$(Build.SourceBranchName)-init"
+
+#trigger:
+#- main #collaboration branch
+#- none
+
+pr:
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+      - datastacks/*
+      - datastacks/datastacks-pipeline.yml
+trigger:
+  branches:
+    include:
+      - 'main'
+  paths:
+    include:
+      - datastacks/*
+      - datastacks/datastacks-pipeline.yml
+variables:
+  - template: ../de_build/job-pipeline-vars.yml
+  - template: ../de_build/air-data-testing-vars.yml
+  - template: ../build/version-data-vars.yml
+  - name: self_repo_datastacks_dir
+    value: $(self_repo_dir)/datastacks
+  - name: pythonVersion
+    value: '3.10.10'
+
+pool:
+  name: $(agentpool_name)
+stages:
+  - stage: Build_Stage
+    variables:
+      - group: amido-stacks-de-pipeline-nonprod
+
+    jobs:
+      - job: Build_Pysparkle
+        displayName: Build_Pysparkle
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+              githubToken: $(github_token)
+              addToPath: true
+            displayName: Set Python Version
+          - bash: |
+              pip install pylint pylint-exit pytest-cov poetry
+            displayName: Install Pipeline Tools
+          - bash: |
+              poetry install 
+            displayName: Install Dependencies
+            workingDirectory: $(self_repo_dir)
+          - bash: |
+              poetry run pytest -rf -v tests -k unit
+            displayName: 'Run Unit Tests'
+            workingDirectory:  '$(self_repo_pysparkle_dir)'          
+
+              
+
