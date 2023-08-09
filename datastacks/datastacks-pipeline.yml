@@ -1,9 +1,5 @@
 name: "$(Build.SourceBranchName)-init"
 
-#trigger:
-#- main #collaboration branch
-#- none
-
 pr:
   branches:
     include:
@@ -56,7 +52,4 @@ stages:
           - bash: |
               poetry run pytest -rf -v datastacks/tests -k unit
             displayName: 'Run Unit Tests'
-            workingDirectory:  '$(self_repo_dir)'          
-
-              
-
+            workingDirectory:  '$(self_repo_dir)'
