@@ -1,0 +1,14 @@
+paths:
+  - datastacks
+  - de_workloads
+  - pysparkle
+  - utils
+exclude: .*/tests # regex
+verbose: 3 # int (0-4)
+skip_magic: True # Boolean
+skip_file_doc: False # Boolean
+skip_init: True # Boolean
+skip_class_def: False # Boolean
+skip_private: True # Boolean
+accept_empty: True # Boolean
+fail_under: 80 # int
