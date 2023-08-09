@@ -271,7 +271,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/ingest_dq.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ/ingest_dq.py",
                             "parameters": [],
                             "libraries": [
                                 {

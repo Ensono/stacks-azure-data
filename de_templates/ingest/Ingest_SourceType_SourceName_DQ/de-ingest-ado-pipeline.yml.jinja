@@ -47,7 +47,7 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
   - name: dbfs_destination
-    value: 'dbfs:/FileStore/scripts'
+    value: 'dbfs:/FileStore/scripts/{{ pipeline_name }}'
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 

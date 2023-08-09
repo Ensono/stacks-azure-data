@@ -48,8 +48,8 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
   - name: dbfs_destination  #update job name
-    value: 'dbfs:/FileStore/scripts'
-  - name: self_repo_spark_src  
+    value: 'dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ'
+  - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 
 pool:
@@ -229,7 +229,7 @@ stages:
                     targetType: inline
                     script: taskctl deworkloadTesting
                   env:
-                    WORKING_DIRECTORY: "./"    
+                    WORKING_DIRECTORY: "./"
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"
                     E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
                     JUNIT_LOCATION: "./$(junit_src)"
