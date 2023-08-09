@@ -2,7 +2,7 @@ import click
 import yaml
 
 from pydantic import BaseModel
-from datastacks.config_class import IngestConfig
+from datastacks.datastacks.config_class import IngestConfig
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 

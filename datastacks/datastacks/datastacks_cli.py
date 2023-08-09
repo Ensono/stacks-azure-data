@@ -3,9 +3,9 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from datastacks.logger import setup_logger
-from datastacks.utils import generate_pipeline
-from datastacks.config import INGEST_TEMPLATE_FOLDER
+from datastacks.datastacks.logger import setup_logger
+from datastacks.datastacks.utils import generate_pipeline
+from datastacks.datastacks.config import INGEST_TEMPLATE_FOLDER
 
 
 @click.group()
