@@ -1,15 +1,17 @@
 [tool.poetry]
 name = "datastacks"
-version = "0.1.1"
+version = "0.2.1"
 description = ""
 authors = ["Andy Durkan <andy.durkan@ensono.com>"]
 readme = "README.md"
 
+packages = [
+    { include = "datastacks/datastacks" },
+]
+
 [tool.poetry.dependencies]
 python = "^3.9"
-pytest = "^7.2.2"
 jsonschema = "^4.17.3"
-behave = "^1.2.6"
 azure-identity = "^1.12.0"
 azure-mgmt-datafactory = "^3.1.0"
 azure-storage-file-datalake = "^12.11.0"
@@ -21,9 +23,11 @@ pyyaml = "^6.0.1"
 pydantic = "^1.10.9"
 
 [tool.poetry.scripts]
-datastacks = "datastacks.datastacks_cli:cli"
+datastacks = "datastacks.datastacks.datastacks_cli:cli"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^7.2.2"
+behave = "^1.2.6"
 black = "^23.1.0"
 pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
