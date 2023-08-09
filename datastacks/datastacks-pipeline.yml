@@ -56,7 +56,7 @@ stages:
           - bash: |
               poetry run pytest -rf -v tests -k unit
             displayName: 'Run Unit Tests'
-            workingDirectory:  '$(self_repo_pysparkle_dir)'          
+            workingDirectory:  '$(self_repo_datastacks_dir)'          
 
               
 
