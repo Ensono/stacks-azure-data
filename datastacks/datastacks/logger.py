@@ -8,8 +8,8 @@ def setup_logger(name: str = "", log_level: int = logging.INFO):
     Set up a colored logger with customizable log level and formatting.
 
     Args:
-        name (str, optional): The name of the logger. Defaults to an empty string.
-        log_level (int, optional): The desired log level for the logger. Should be one of the constants
+        name: The name of the logger. Defaults to an empty string.
+        log_level: The desired log level for the logger. Should be one of the constants
             defined in the 'logging' module (e.g., logging.DEBUG, logging.INFO). Defaults to logging.INFO.
 
     Returns:
