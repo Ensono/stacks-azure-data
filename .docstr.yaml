@@ -6,7 +6,7 @@ paths:
 exclude: .*/tests # regex
 verbose: 3 # int (0-4)
 skip_magic: True # Boolean
-skip_file_doc: False # Boolean
+skip_file_doc: True # Boolean
 skip_init: True # Boolean
 skip_class_def: False # Boolean
 skip_private: True # Boolean
