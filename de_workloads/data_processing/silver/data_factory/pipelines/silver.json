@@ -31,7 +31,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/silver.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/silver/silver.py",
                             "parameters": [],
                             "libraries": [
                                 {
