@@ -37,8 +37,8 @@ stages:
       - group: amido-stacks-de-pipeline-nonprod
 
     jobs:
-      - job: Build_Pysparkle
-        displayName: Build_Pysparkle
+      - job: Build
+        displayName: Build
         steps:
           - task: UsePythonVersion@0
             inputs:
