@@ -6,22 +6,16 @@ from pydantic import BaseModel, Field
 
 
 class DataSourceType(Enum):
-    """
-    Enum containing supported data source types.
-    """
+    """Enum containing supported data source types."""
 
     AZURE_SQL = "azure_sql"
 
 
 class IngestConfig(BaseModel):
-    """
-    Pydantic definitions for data ingest workload generation config.
-    """
+    """Pydantic definitions for data ingest workload generation config."""
 
     class Config:
-        """
-        Configuration for Pydantic model.
-        """
+        """Configuration for Pydantic model."""
 
         use_enum_values = True
 
