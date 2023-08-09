@@ -34,7 +34,7 @@ variables:
     value: '$(self_repo_dir)/pysparkle/junit/'
   - name: dbfs_destination  #update job name
     value: 'dbfs:/FileStore/jars'
-  - name: self_repo_spark_src  
+  - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 
 pool:
@@ -58,13 +58,13 @@ stages:
               pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
           - bash: |
-              poetry install 
+              poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_pysparkle_dir)
           - bash: |
               poetry run pytest -rf -v tests -k unit
             displayName: 'Run Unit Tests'
-            workingDirectory:  '$(self_repo_pysparkle_dir)'          
+            workingDirectory:  '$(self_repo_pysparkle_dir)'
           - bash: |
               poetry build
             displayName: Build Project
@@ -83,7 +83,7 @@ stages:
             inputs:
               ArtifactName: pysparklewheel
               PathtoPublish: '$(Build.ArtifactStagingDirectory)/pysparklewheel'
-              
+
 
 #############################################################
 # Deploy to non Prod
@@ -100,7 +100,7 @@ stages:
           name: $(agentpool_name)
         strategy:
           runOnce:
-            deploy:  
+            deploy:
               steps:
               - task: DownloadPipelineArtifact@2
                 displayName: Download Build Artifacts
@@ -115,7 +115,7 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get Keyvault Secrets' 
+                displayName: 'Get Keyvault Secrets'
  #             - script: |
  #                         echo "$(databricks-host)
  #                         $(databricks-token)" | databricks configure --token
@@ -142,7 +142,7 @@ stages:
   # Deploy to Prod
   #############################################################
   - stage: Deploy_Prod_Stage
-    dependsOn: 
+    dependsOn:
       - Build_Stage
       - Deploy_NonPROD_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -156,7 +156,7 @@ stages:
           name: $(agentpool_name)
         strategy:
           runOnce:
-            deploy:  
+            deploy:
               steps:
               - task: DownloadPipelineArtifact@2
                 displayName: Download Build Artifacts
@@ -171,7 +171,7 @@ stages:
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: '*'
                     RunAsPreJob: false
-                displayName: 'Get Keyvault Secrets'            
+                displayName: 'Get Keyvault Secrets'
               - script: |
                           echo "$(databricks-host)
                           $(databricks-token)" | databricks configure --token

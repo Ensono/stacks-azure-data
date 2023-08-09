@@ -36,7 +36,7 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug 
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
@@ -93,7 +93,7 @@ tasks:
           $env:DATABRICKS_HOST
           $env:DATABRICKS_TOKEN
           "@
-          Write-Output $args | & databricks configure --token 
+          Write-Output $args | & databricks configure --token
           Write-Output "`nDebug:Databricks workspace list:"
           & databricks workspace list
 
@@ -119,12 +119,12 @@ tasks:
     context: powershell
     description: Upload Spark Jobs or Whl to DBFS
     command:
-      # - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug 
-        - |    
+      # - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
+        - |
            Write-Output "
            Upload Spark Jobs or Whl to DBFS"
            $destinationPath=$env:DATABRICKS_DBFS_LOCATION
-           $databricks_source_path=$env:DATABRICKS_SOURCE_LOCATION        
+           $databricks_source_path=$env:DATABRICKS_SOURCE_LOCATION
            Write-Output "DBFS destination is $destinationPath"
            Write-Output "DBFS Source File location is $databricks_source_path"
 
@@ -147,12 +147,12 @@ tasks:
           poetry install
           Write-Output "======================== Running Unit Tests ======================== "
           cd $env:WORKING_DIRECTORY
-          python3 -m pytest $env:UNIT_TEST_LOCATION 
+          python3 -m pytest $env:UNIT_TEST_LOCATION
           Start-Sleep -Seconds 30
           Write-Output "======================== End Unit Tests ======================== "
           Write-Output " "
 
-          Write-Output "======================== Running e2e Tests ======================== "         
+          Write-Output "======================== Running e2e Tests ======================== "
           $e2eTestLocation = $env:E2E_TEST_LOCATION
           if (Test-Path $e2eTestLocation -PathType Container) {
 

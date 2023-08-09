@@ -27,9 +27,7 @@ def filter_directory_paths_adls(
     return output_directory_paths
 
 
-def delete_directories_adls(
-    adls_client: DataLakeServiceClient, container_name: str, directory_paths: list
-):
+def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: str, directory_paths: list):
     """
     Deletes a list of directories from ADLS.
 

@@ -46,7 +46,7 @@ stages:
               pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
           - bash: |
-              poetry install 
+              poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
           - bash: |
