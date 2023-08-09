@@ -3,7 +3,7 @@ name: "$(Build.SourceBranchName)-init"
 pr:
   branches:
     include:
-    - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/*
@@ -13,7 +13,7 @@ pr:
 trigger:
   branches:
     include:
-      - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/*
@@ -30,18 +30,17 @@ stages:
     jobs:
       - job: Validate
         pool:
-         # vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
           name: $(agentpool_name)
 
         steps:
-
           - task: Bash@3
-            displayName: 'Clean Workspace'
+            displayName: "Clean Workspace"
             inputs:
-              targetType: 'inline'
+              targetType: "inline"
               script: |
-                      echo "Cleaning workspace..."
-                      sudo rm -rf $(Build.SourcesDirectory)/*
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
           - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -93,12 +92,12 @@ stages:
             deploy:
               steps:
                 - task: Bash@3
-                  displayName: 'Clean Workspace'
+                  displayName: "Clean Workspace"
                   inputs:
-                    targetType: 'inline'
+                    targetType: "inline"
                     script: |
-                       echo "Cleaning workspace..."
-                       sudo rm -rf $(Build.SourcesDirectory)/*
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -126,7 +125,7 @@ stages:
                     TF_STATE_KEY: $(tf_state_key)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)" # Deployment Specific Configuration
                     # Deployment Specific Configuration
                     TF_VAR_core_environment: $(core_environment)
                     TF_VAR_name_component: $(component)
@@ -177,14 +176,13 @@ stages:
           runOnce:
             deploy:
               steps:
-
                 - task: Bash@3
-                  displayName: 'Clean Workspace'
+                  displayName: "Clean Workspace"
                   inputs:
-                    targetType: 'inline'
+                    targetType: "inline"
                     script: |
-                       echo "Cleaning workspace..."
-                       sudo rm -rf $(Build.SourcesDirectory)/*
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
 
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
@@ -214,7 +212,7 @@ stages:
                     TF_STATE_KEY: $(tf_state_key)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)" # Deployment Specific Configuration
                     # Deployment Specific Configuration
                     TF_VAR_core_environment: $(core_environment)
                     TF_VAR_name_component: $(component)
@@ -242,8 +240,6 @@ stages:
                     TF_VAR_link_dns_prod_spoke_network: true
                     TF_VAR_azure_client_secret: $(azure-client-secret)
 
-
-
   - stage: Release
     dependsOn:
       - Build
@@ -256,12 +252,12 @@ stages:
           name: $(agentpool_name)
         steps:
           - task: Bash@3
-            displayName: 'Clean Workspace'
+            displayName: "Clean Workspace"
             inputs:
-              targetType: 'inline'
+              targetType: "inline"
               script: |
-                 echo "Cleaning workspace..."
-                 sudo rm -rf $(Build.SourcesDirectory)/*
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
@@ -319,9 +315,9 @@ stages:
               gitHubConnection: $(github_release_service_connection)
               repositoryName: $(github_org)/$(self_repo)
               tag: v${newVersion}
-              releaseNotesSource: 'inline'
+              releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"
-              tagSource: 'gitTag'
-              changeLogCompareToRelease: 'lastFullRelease'
-              changeLogType: 'commitBased'
+              tagSource: "gitTag"
+              changeLogCompareToRelease: "lastFullRelease"
+              changeLogType: "commitBased"
             condition: eq(variables['ShouldCreateRelease'], 'true')

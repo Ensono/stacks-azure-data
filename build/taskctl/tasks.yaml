@@ -1,5 +1,4 @@
 tasks:
-
   buildnumber:
     context: powershell
     description: Update the build number
@@ -41,7 +40,7 @@ tasks:
     context: powershell
     description: Apply Terraform Plan
     command:
-    #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
+      #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
       - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
 
   publish:github:
@@ -82,82 +81,82 @@ tasks:
     variables:
       sleep: 30
 
-# Databricks tasks
+  # Databricks tasks
   databricks:connect:
     context: powershell
     description: Configure databricks-cli
     command:
-       - |
-          Write-Output "`nConfigure databricks-cli"
-          $args = @"
-          $env:DATABRICKS_HOST
-          $env:DATABRICKS_TOKEN
-          "@
-          Write-Output $args | & databricks configure --token
-          Write-Output "`nDebug:Databricks workspace list:"
-          & databricks workspace list
+      - |
+        Write-Output "`nConfigure databricks-cli"
+        $args = @"
+        $env:DATABRICKS_HOST
+        $env:DATABRICKS_TOKEN
+        "@
+        Write-Output $args | & databricks configure --token
+        Write-Output "`nDebug:Databricks workspace list:"
+        & databricks workspace list
 
   databricks:createdir:
     context: powershell
     description: Create DBFS Dir If Not Exists
     command:
-       - |
-          Write-Output "
-          Create DBFS Dir If Not Exists"
-          $destinationPath=$env:DATABRICKS_DBFS_LOCATION
-          Write-Output "Required DBFS destination is $destinationPath"
-          $folderExists = $(databricks fs ls $destinationPath 2>&1)
-          if ($folderExists -like "*No file or directory exists*") {
-              Write-Output "Required DBFS directory doesnot Exists.Creating Now"
-              # $(databricks fs mkdirs $destinationPath)
-          }
-          else {
-              Write-Output "Required DBFS directory Exists"
-          }
+      - |
+        Write-Output "
+        Create DBFS Dir If Not Exists"
+        $destinationPath=$env:DATABRICKS_DBFS_LOCATION
+        Write-Output "Required DBFS destination is $destinationPath"
+        $folderExists = $(databricks fs ls $destinationPath 2>&1)
+        if ($folderExists -like "*No file or directory exists*") {
+            Write-Output "Required DBFS directory doesnot Exists.Creating Now"
+            # $(databricks fs mkdirs $destinationPath)
+        }
+        else {
+            Write-Output "Required DBFS directory Exists"
+        }
 
   databricks:upload:
     context: powershell
     description: Upload Spark Jobs or Whl to DBFS
     command:
       # - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
-        - |
-           Write-Output "
-           Upload Spark Jobs or Whl to DBFS"
-           $destinationPath=$env:DATABRICKS_DBFS_LOCATION
-           $databricks_source_path=$env:DATABRICKS_SOURCE_LOCATION
-           Write-Output "DBFS destination is $destinationPath"
-           Write-Output "DBFS Source File location is $databricks_source_path"
+      - |
+        Write-Output "
+        Upload Spark Jobs or Whl to DBFS"
+        $destinationPath=$env:DATABRICKS_DBFS_LOCATION
+        $databricks_source_path=$env:DATABRICKS_SOURCE_LOCATION
+        Write-Output "DBFS destination is $destinationPath"
+        Write-Output "DBFS Source File location is $databricks_source_path"
 
-            $files = Get-ChildItem -Path $databricks_source_path
-            foreach ($file in $files) {
-                if ($file -is [System.IO.FileInfo]) {
-                    Write-Output  $file.Name
-                    $destination = "$destinationPath/$($file.Name)"
-                    & databricks fs cp --overwrite "$($file.FullName)" "$destination"
-                }
-            }
+         $files = Get-ChildItem -Path $databricks_source_path
+         foreach ($file in $files) {
+             if ($file -is [System.IO.FileInfo]) {
+                 Write-Output  $file.Name
+                 $destination = "$destinationPath/$($file.Name)"
+                 & databricks fs cp --overwrite "$($file.FullName)" "$destination"
+             }
+         }
 
-# Deworkload Testing tasks
+  # Deworkload Testing tasks
   deworkload:Testing:
     context: powershell
     description: Deworkload Unit Testing
     command:
-       - |
-          cd $env:WORKING_DIRECTORY
-          poetry install
-          Write-Output "======================== Running Unit Tests ======================== "
-          cd $env:WORKING_DIRECTORY
-          python3 -m pytest $env:UNIT_TEST_LOCATION
-          Start-Sleep -Seconds 30
-          Write-Output "======================== End Unit Tests ======================== "
-          Write-Output " "
+      - |
+        cd $env:WORKING_DIRECTORY
+        poetry install
+        Write-Output "======================== Running Unit Tests ======================== "
+        cd $env:WORKING_DIRECTORY
+        python3 -m pytest $env:UNIT_TEST_LOCATION
+        Start-Sleep -Seconds 30
+        Write-Output "======================== End Unit Tests ======================== "
+        Write-Output " "
 
-          Write-Output "======================== Running e2e Tests ======================== "
-          $e2eTestLocation = $env:E2E_TEST_LOCATION
-          if (Test-Path $e2eTestLocation -PathType Container) {
+        Write-Output "======================== Running e2e Tests ======================== "
+        $e2eTestLocation = $env:E2E_TEST_LOCATION
+        if (Test-Path $e2eTestLocation -PathType Container) {
 
-              $junitLocation = $env:JUNIT_LOCATION
-              poetry run behave $e2eTestLocation --junit --junit-directory $junitLocation
-          } else {
-              Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
-          }
+            $junitLocation = $env:JUNIT_LOCATION
+            poetry run behave $e2eTestLocation --junit --junit-directory $junitLocation
+        } else {
+            Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
+        }

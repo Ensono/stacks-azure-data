@@ -3,7 +3,7 @@ name: "$(Build.SourceBranchName)-init"
 pr:
   branches:
     include:
-    - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/azure/network/*
@@ -12,7 +12,7 @@ pr:
 trigger:
   branches:
     include:
-      - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/azure/network/*
@@ -101,7 +101,7 @@ stages:
                     TF_STATE_KEY: $(tf_state_key)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)" # Deployment Specific Configuration
                     # Deployment Specific Configuration
                     TF_VAR_core_environment: $(core_environment)
                     TF_VAR_name_component: $(component)

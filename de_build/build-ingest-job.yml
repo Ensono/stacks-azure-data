@@ -6,72 +6,72 @@ parameters:
 
 jobs:
   - job: Build_Ingest_Job
-    displayName: 'Build_Ingest_Job'
+    displayName: "Build_Ingest_Job"
 
     steps:
+      - task: CopyFiles@2
+        displayName: "Copy PreandPostDeploymnet File"
+        inputs:
+          SourceFolder: "$(self_repo_dir)/de_build/adf/"
+          Contents: "*.ps1"
+          TargetFolder: "$(Build.ArtifactStagingDirectory)/ArmTemplates"
 
-    - task: CopyFiles@2
-      displayName: 'Copy PreandPostDeploymnet File'
-      inputs:
-        SourceFolder: '$(self_repo_dir)/de_build/adf/'
-        Contents: '*.ps1'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+      - task: CopyFiles@2
+        displayName: "Copy ARM Files "
+        inputs:
+          SourceFolder: "$(self_repo_adf_dir)/"
+          Contents: "*"
+          TargetFolder: "$(Build.ArtifactStagingDirectory)/ArmTemplates"
 
-    - task: CopyFiles@2
-      displayName: 'Copy ARM Files '
-      inputs:
-        SourceFolder: '$(self_repo_adf_dir)/'
-        Contents: '*'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+      - script: |
+          mkdir $(Pipeline.Workspace)/ARM_TTK_Download
+          curl -L -o $(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip https://aka.ms/arm-ttk-latest
+        displayName: "Download ARM TTK"
 
-    - script: |
-        mkdir $(Pipeline.Workspace)/ARM_TTK_Download
-        curl -L -o $(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip https://aka.ms/arm-ttk-latest
-      displayName: 'Download ARM TTK'
+      - script: |
+          ls $(Pipeline.Workspace)/ARM_TTK_Download
+        displayName: "Verify: Check downloaded files"
 
-    - script: |
-        ls $(Pipeline.Workspace)/ARM_TTK_Download
-      displayName: 'Verify: Check downloaded files'
+      - task: ExtractFiles@1
+        displayName: "Extract ARM TTK"
+        inputs:
+          archiveFilePatterns: "$(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip"
+          destinationFolder: "$(Pipeline.Workspace)/ARM_TTK"
 
-    - task: ExtractFiles@1
-      displayName: 'Extract ARM TTK'
-      inputs:
-        archiveFilePatterns: '$(Pipeline.Workspace)/ARM_TTK_Download/arm-ttk.zip'
-        destinationFolder: '$(Pipeline.Workspace)/ARM_TTK'
+      # - script: |
+      #     ls $(Pipeline.Workspace)/ARM_TTK
+      #   displayName: 'List ARM TTK'
 
-    # - script: |
-    #     ls $(Pipeline.Workspace)/ARM_TTK
-    #   displayName: 'List ARM TTK'
+      - pwsh: |
+          Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
+          $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
+          $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
+          $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices")
+          $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
+          $testOutput = $testOutputParameters + $testOutputtemplate
+          $testOutput
 
-    - pwsh: |
-        Import-Module $(Pipeline.Workspace)/ARM_TTK/arm-ttk/arm-ttk.psd1 -Verbose
-        $templatePath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateForFactory.json"
-        $templateParametersPath = "$(Build.ArtifactStagingDirectory)/ArmTemplates/ARMTemplateParametersForFactory.json"
-        $testOutputtemplate = @(Test-AzTemplate -TemplatePath "$templatePath" -Skip "DeploymentTemplate-Schema-Is-Correct", "Template-Should-Not-Contain-Blanks","Variables-Must-Be-Referenced" ,"DeploymentTemplate-Must-Not-Contain-Hardcoded-Uri","DependsOn-Best-Practices")
-        $testOutputParameters = @(Test-AzTemplate -TemplatePath "$templateParametersPath" )
-        $testOutput = $testOutputParameters + $testOutputtemplate
-        $testOutput
+          if ($testOutput | ? {$_.Errors }) {
+              exit 1
+          } else {
+              Write-Host "##vso[task.setvariable variable=result.best.practice]$true"
+              exit 0
+          }
+        errorActionPreference: continue
+        failOnStderr: true
+        displayName: "Run Best Practices Tests"
+        continueOnError:
+          true
 
-        if ($testOutput | ? {$_.Errors }) {
-            exit 1
-        } else {
-            Write-Host "##vso[task.setvariable variable=result.best.practice]$true"
-            exit 0
-        }
-      errorActionPreference: continue
-      failOnStderr: true
-      displayName: 'Run Best Practices Tests'
-      continueOnError: true
+          # Publish the artifact
+      # - task: PublishBuildArtifacts@1
+      #   displayName: 'Publish Artifact: ConfigFiles'
+      #   inputs:
+      #     ArtifactName: ConfigFiles
+      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
 
-        # Publish the artifact
-    # - task: PublishBuildArtifacts@1
-    #   displayName: 'Publish Artifact: ConfigFiles'
-    #   inputs:
-    #     ArtifactName: ConfigFiles
-    #     PathtoPublish: '$(Build.ArtifactStagingDirectory)/ConfigFiles'
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: ArmTemplates'
-      inputs:
-        ArtifactName: ArmTemplates
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/ArmTemplates'
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Artifact: ArmTemplates"
+        inputs:
+          ArtifactName: ArmTemplates
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)/ArmTemplates"
