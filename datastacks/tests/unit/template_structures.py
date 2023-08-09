@@ -24,7 +24,6 @@ EXPECTED_FILE_LIST = [
 EXPECTED_DQ_FILE_LIST = [
     "config/data_quality/ingest_dq.json",
     "data_factory/pipelines/ARM_IngestTemplate.json",
-    "spark_jobs/__init__.py",
     "spark_jobs/ingest_dq.py",
     "de-ingest-ado-pipeline.yml",
     "README.md",
