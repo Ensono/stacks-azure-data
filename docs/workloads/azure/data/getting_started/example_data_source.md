@@ -21,7 +21,9 @@ When deploying a Stacks data platform, you may optionally include an Azure SQL d
 
 The database can be populated with any dataset you wish for developing and testing Stacks.
 
-The examples contained in the Getting Started documentation are based around populating the sample database with data from [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset). These CSV files were loaded into the following tables in the example database:
+The examples contained in the Getting Started documentation are based around populating the sample database with data
+from [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset), which contains metadata and ratings for approximately 45,000 movies released
+on or before July 2017. These CSV files were loaded into the following tables in the example database:
 
 * `movies.credits`
 * `movies.keywords`
