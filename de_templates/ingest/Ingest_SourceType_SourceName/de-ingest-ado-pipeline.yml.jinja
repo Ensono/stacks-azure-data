@@ -60,8 +60,6 @@ stages:
       {%- for group in ado_variable_groups_nonprod %}
       - group: {{ group }}
       {%- endfor %}
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -126,8 +124,6 @@ stages:
       {%- for group in ado_variable_groups_nonprod %}
       - group: {{ group }}
       {%- endfor %}
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: dev
     dependsOn: Build_Stage
@@ -244,7 +240,7 @@ stages:
                   displayName: "Running e2e Test"
                   workingDirectory: "$(self_repo_dir)"
                   env:
-                    AZURE_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    AZURE_SUBSCRIPTION_ID: $(azure-subscription-id)
                     AZURE_RESOURCE_GROUP_NAME: $(resource_group)
                     AZURE_DATA_FACTORY_NAME: $(datafactoryname)
                     AZURE_REGION_NAME: $(region)
@@ -272,8 +268,6 @@ stages:
       {%- for group in ado_variable_groups_prod %}
       - group: {{ group }}
       {%- endfor %}
-      - name: version_number
-        value: "$(version_major).$(version_minor).$(version_revision)"
       - name: Environment.ShortName
         value: prod
     jobs:
@@ -351,12 +345,6 @@ stages:
       - Build_Stage
       - Deploy_Prod_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
-    {%- for group in ado_variable_groups_nonprod %}
-      - group: {{ group }}
-    {%- endfor %}
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
