@@ -6,11 +6,23 @@ from pydantic import BaseModel, Field
 
 
 class DataSourceType(Enum):
+    """
+    Enum containing supported data source types.
+    """
+
     AZURE_SQL = "azure_sql"
 
 
 class IngestConfig(BaseModel):
+    """
+    Pydantic definitions for data ingest workload generation config.
+    """
+
     class Config:
+        """
+        Configuration for Pydantic model.
+        """
+
         use_enum_values = True
 
     dataset_name: str = Field(description="Dataset name, used to derive pipeline and linked service names.")
