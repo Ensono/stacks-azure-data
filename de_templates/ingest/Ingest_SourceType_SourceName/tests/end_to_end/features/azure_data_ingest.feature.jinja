@@ -12,4 +12,4 @@ Feature:Azure Data Ingest
 
     Examples: Output files
     |parameters|output_files|
-    |{"window_start" : "{{ window_start_default | default('2020-01-01') }}", "window_end": "{{ window_end_default | default('2020-01-31') }}"}|["db_schema.table_name_1.parquet", "db_schema.table_name_2.parquet", "db_schema.table_name_3.parquet"]|
+    |{"window_start" : "{{ window_start_default }}", "window_end": "{{ window_end_default }}"}|["db_schema.table_name_1.parquet", "db_schema.table_name_2.parquet", "db_schema.table_name_3.parquet"]|
