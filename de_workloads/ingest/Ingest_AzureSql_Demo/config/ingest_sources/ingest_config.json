@@ -5,10 +5,10 @@
     "ingest_entities": [
         {
             "version": 1,
-            "display_name": "SalesLT.Product",
+            "display_name": "db_schema.table_name_1",
             "enabled": true,
-            "schema": "SalesLT",
-            "table": "Product",
+            "schema": "db_schema",
+            "table": "table_name_1",
             "columns": "*",
             "load_type": "full",
             "delta_date_column": null,
@@ -16,25 +16,25 @@
         },
         {
             "version": 1,
-            "display_name": "SalesLT.SalesOrderHeader",
+            "display_name": "db_schema.table_name_2",
             "enabled": true,
-            "schema": "SalesLT",
-            "table": "SalesOrderHeader",
-            "columns": "SalesOrderID, RevisionNumber, OrderDate, DueDate, ShipDate, Status, OnlineOrderFlag, SalesOrderNumber, PurchaseOrderNumber, AccountNumber, CustomerID, ShipToAddressID, BillToAddressID, ShipMethod, CreditCardApprovalCode, SubTotal, TaxAmt, Freight, TotalDue, Comment, rowguid, ModifiedDate",
+            "schema": "db_schema",
+            "table": "table_name_2",
+            "columns": "ColumnName_1, ColumnName_2, ColumnName_3",
             "load_type": "delta",
-            "delta_date_column": "ModifiedDate",
-            "delta_upsert_key": "SalesOrderID"
+            "delta_date_column": "ColumnName_3",
+            "delta_upsert_key": "ColumnName_1"
         },
         {
             "version": 1,
-            "display_name": "SalesLT.SalesOrderDetailID",
+            "display_name": "db_schema.table_name_3",
             "enabled": true,
-            "schema": "SalesLT",
-            "table": "SalesOrderDetail",
-            "columns": "SalesOrderID, SalesOrderDetailID, OrderQty, ProductID, UnitPrice, UnitPriceDiscount, LineTotal, rowguid, ModifiedDate",
+            "schema": "db_schema",
+            "table": "table_name_3",
+            "columns": "ColumnName_1, ColumnName_2, ColumnName_3, ColumnName_4, ColumnName_5",
             "load_type": "delta",
-            "delta_date_column": "ModifiedDate",
-            "delta_upsert_key": "SalesOrderID, SalesOrderDetailID"
+            "delta_date_column": "ColumnName_3",
+            "delta_upsert_key": "ColumnName_1, ColumnName_2"
         }
     ]
 }
