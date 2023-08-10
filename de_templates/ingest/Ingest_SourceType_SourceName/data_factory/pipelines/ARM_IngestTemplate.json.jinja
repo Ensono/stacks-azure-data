@@ -37,10 +37,7 @@
                                     "value": "ingest/@{pipeline().parameters.data_source_name}/ingest_sources",
                                     "type": "Expression"
                                 },
-                                "config_file": {
-                                    "value": "@{pipeline().parameters.data_source_name}.json",
-                                    "type": "Expression"
-                                }
+                                "config_file": "ingest_config.json"
                             }
                         }
                     },
