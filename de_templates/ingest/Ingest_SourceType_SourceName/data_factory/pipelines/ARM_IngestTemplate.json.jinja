@@ -37,7 +37,10 @@
                                     "value": "ingest/@{pipeline().parameters.data_source_name}/ingest_sources",
                                     "type": "Expression"
                                 },
-                                "config_file": "ingest_config.json"
+                                "config_file": {
+                                    "value": "@{pipeline().parameters.data_source_name}.json",
+                                    "type": "Expression"
+                                }
                             }
                         }
                     },
@@ -205,8 +208,11 @@
                                             }
                                         }
                                     }
-                                },
-                                {
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "run_id",
                         "type": "SetVariable",
                         "dependsOn": [],
@@ -247,9 +253,6 @@
                             }
                         }
                     }
-                            ]
-                        }
-                    }
                 ],
                 "policy": {
                     "elapsedTimeMetric": {},
@@ -265,11 +268,11 @@
                     },
                     "window_end": {
                         "type": "string",
-                        "defaultValue": "{{ window_end_default | default('2020-01-31') }}"
+                        "defaultValue": "{{ window_end_default | default('2010-01-31') }}"
                     },
                     "window_start": {
                         "type": "string",
-                        "defaultValue": "{{ window_start_default | default('2020-01-01') }}"
+                        "defaultValue": "{{ window_start_default | default('2010-01-01') }}"
                     },
                     "automated_test_prefix": {
                         "type": "string",
