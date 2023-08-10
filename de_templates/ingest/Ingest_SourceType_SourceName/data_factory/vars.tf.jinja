@@ -27,5 +27,5 @@ variable "key_vault_linked_service_name" {
 variable "arm_deployment_mode" {
   type        = string
   description = "Deployment mode for any ARM resources"
-  default     = "{{ default_arm_deployment_mode | default('Incremental') }}"
+  default     = "{{ default_arm_deployment_mode }}"
 }

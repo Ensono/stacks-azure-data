@@ -205,8 +205,11 @@
                                             }
                                         }
                                     }
-                                },
-                                {
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "run_id",
                         "type": "SetVariable",
                         "dependsOn": [],
@@ -247,9 +250,6 @@
                             }
                         }
                     }
-                            ]
-                        }
-                    }
                 ],
                 "policy": {
                     "elapsedTimeMetric": {},
@@ -265,11 +265,11 @@
                     },
                     "window_end": {
                         "type": "string",
-                        "defaultValue": "{{ window_end_default | default('2020-01-31') }}"
+                        "defaultValue": "{{ window_end_default }}"
                     },
                     "window_start": {
                         "type": "string",
-                        "defaultValue": "{{ window_start_default | default('2020-01-01') }}"
+                        "defaultValue": "{{ window_start_default }}"
                     },
                     "automated_test_prefix": {
                         "type": "string",

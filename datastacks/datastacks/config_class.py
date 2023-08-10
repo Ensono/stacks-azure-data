@@ -31,14 +31,14 @@ class IngestConfig(BaseModel):
     )
 
     default_arm_deployment_mode: Optional[str] = Field(
-        default=None, description="Deployment mode for terraform; if not set, the default is Incremental"
+        default="Incremental", description="Deployment mode for terraform."
     )
 
     window_start_default: Optional[date] = Field(
-        default=None, description="Date to set as start of default time window. Defaults to 2020-01-01"
+        default="2010-01-01", description="Date to set as start of default time window."
     )
     window_end_default: Optional[date] = Field(
-        default=None, description="Date to set as end of default time window. Defaults to 2020-01-31"
+        default="2010-01-31", description="Date to set as end of default time window."
     )
 
     bronze_container: str = Field(description="Name of container for Bronze data")
