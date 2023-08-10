@@ -5,36 +5,47 @@
     "ingest_entities": [
         {
             "version": 1,
-            "display_name": "db_schema.table_name_1",
+            "display_name": "movies.keywords",
             "enabled": true,
-            "schema": "db_schema",
-            "table": "table_name_1",
-            "columns": "*",
+            "schema": "movies",
+            "table": "keywords",
+            "columns": "[id], [keywords]",
             "load_type": "full",
             "delta_date_column": null,
             "delta_upsert_key": null
         },
         {
             "version": 1,
-            "display_name": "db_schema.table_name_2",
+            "display_name": "movies.links",
             "enabled": true,
-            "schema": "db_schema",
-            "table": "table_name_2",
-            "columns": "ColumnName_1, ColumnName_2, ColumnName_3",
-            "load_type": "delta",
-            "delta_date_column": "ColumnName_3",
-            "delta_upsert_key": "ColumnName_1"
+            "schema": "movies",
+            "table": "links",
+            "columns": "[movieId], [imdbId], [tmdbId]",
+            "load_type": "full",
+            "delta_date_column": null,
+            "delta_upsert_key": null
         },
         {
             "version": 1,
-            "display_name": "db_schema.table_name_3",
+            "display_name": "movies.movies_metadata",
             "enabled": true,
-            "schema": "db_schema",
-            "table": "table_name_3",
-            "columns": "ColumnName_1, ColumnName_2, ColumnName_3, ColumnName_4, ColumnName_5",
+            "schema": "movies",
+            "table": "movies_metadata",
+            "columns": "[adult], [belongs_to_collection], [budget], [genres], [homepage], [id], [imdb_id], [original_language], [original_title], [overview], [popularity], [poster_path], [production_companies], [production_countries], [release_date], [revenue], [runtime], [spoken_languages], [status], [tagline], [title], [video], [vote_average], [vote_count]",
+            "load_type": "full",
+            "delta_date_column": null,
+            "delta_upsert_key": null
+        },
+        {
+            "version": 1,
+            "display_name": "movies.ratings_small",
+            "enabled": true,
+            "schema": "movies",
+            "table": "ratings_small",
+            "columns": "[userId], [movieId], [rating], [timestamp]",
             "load_type": "delta",
-            "delta_date_column": "ColumnName_3",
-            "delta_upsert_key": "ColumnName_1, ColumnName_2"
+            "delta_date_column": "DATEADD(SECOND,[timestamp],'1970-01-01')",
+            "delta_upsert_key": "[userId], [movieId]"
         }
     ]
 }
