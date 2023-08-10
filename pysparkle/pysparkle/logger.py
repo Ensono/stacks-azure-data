@@ -3,7 +3,7 @@ import logging
 import colorlog
 
 
-def setup_logger(name: str = "", log_level: int = logging.INFO):
+def setup_logger(name: str = "", log_level: int = logging.INFO) -> logging.Logger:
     """
     Set up a colored logger with customizable log level and formatting.
 
@@ -13,7 +13,7 @@ def setup_logger(name: str = "", log_level: int = logging.INFO):
             defined in the 'logging' module (e.g., logging.DEBUG, logging.INFO). Defaults to logging.INFO.
 
     Returns:
-        logging.Logger: A configured logger instance ready to use.
+        A configured logger instance ready to use.
     """
     formatter = colorlog.ColoredFormatter(
         fmt="%(log_color)s%(asctime)s %(levelname)s%(reset)s%(blue)s %(name)s: %(message)s",
