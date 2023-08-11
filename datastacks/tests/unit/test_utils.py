@@ -5,14 +5,17 @@ from unittest.mock import patch
 
 import pytest
 
-from datastacks.datastacks.config import INGEST_TEMPLATE_FOLDER
-from datastacks.datastacks.config_class import IngestConfig
-from datastacks.datastacks.utils import (
+from datastacks.config import INGEST_TEMPLATE_FOLDER
+from datastacks.config_class import IngestConfig
+from datastacks.utils import (
     generate_pipeline,
     generate_target_dir,
     render_template_components,
 )
-from datastacks.tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
+from tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
+
+
+# from datastacks.tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
 
 
 def test_render_template_components(tmp_path):
@@ -41,8 +44,8 @@ def test_render_template_components(tmp_path):
 @pytest.mark.parametrize(
     "dq,expected_files", [(False, EXPECTED_FILE_LIST), (True, EXPECTED_FILE_LIST + EXPECTED_DQ_FILE_LIST)]
 )
-@patch("datastacks.datastacks.utils.click.confirm")
-@patch("datastacks.datastacks.utils.generate_target_dir")
+@patch("datastacks.utils.click.confirm")
+@patch("datastacks.utils.generate_target_dir")
 def test_generate_pipeline(mock_target_dir, mock_confirm, tmp_path, dq, expected_files):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
@@ -55,8 +58,8 @@ def test_generate_pipeline(mock_target_dir, mock_confirm, tmp_path, dq, expected
         assert Path(f"{target_dir}/{file_path}").exists()
 
 
-@patch("datastacks.datastacks.utils.click.confirm")
-@patch("datastacks.datastacks.utils.generate_target_dir")
+@patch("datastacks.utils.click.confirm")
+@patch("datastacks.utils.generate_target_dir")
 def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = False
@@ -74,8 +77,8 @@ def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path):
 @pytest.mark.parametrize(
     "overwrite_confirm,expected_desc", [(False, "Pipeline for testing"), (True, "Pipeline for testing overwritten")]
 )
-@patch("datastacks.datastacks.utils.click.confirm")
-@patch("datastacks.datastacks.utils.generate_target_dir")
+@patch("datastacks.utils.click.confirm")
+@patch("datastacks.utils.generate_target_dir")
 def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, overwrite_confirm, expected_desc):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
@@ -101,8 +104,8 @@ def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, ov
     assert arm_template_dict["resources"][0]["properties"]["description"] == expected_desc
 
 
-@patch("datastacks.datastacks.utils.click.confirm")
-@patch("datastacks.datastacks.utils.generate_target_dir")
+@patch("datastacks.utils.click.confirm")
+@patch("datastacks.utils.generate_target_dir")
 def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
