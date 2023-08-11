@@ -76,7 +76,7 @@ def poll_adf_pipeline(context: Context, seconds: str):
 
 
 @step("the ADF pipeline {pipeline_name} has finished with state {state}")
-def pipeline_has_finished_with_state(context: Context, state: str):
+def pipeline_has_finished_with_state(context: Context, pipeline_name: str, state: str):
     """
     Check if the Azure Data Factory pipeline has finished with the expected state.
 
