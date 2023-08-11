@@ -26,10 +26,6 @@ repos:
     hooks:
       - id: black
         language_version: python3.10
-  - repo: https://github.com/HunterMcGushion/docstr_coverage
-    rev: v2.2.0
-    hooks:
-      - id: docstr-coverage
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.3.0
     hooks:
