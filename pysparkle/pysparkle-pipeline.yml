@@ -48,6 +48,16 @@ stages:
       - job: Build_Pysparkle
         displayName: Build_Pysparkle
         steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
+          - template: ../build/azDevOps/templates/air-infrastructure-data-setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
           - task: UsePythonVersion@0
             inputs:
               versionSpec: $(pythonVersion)
@@ -108,11 +118,6 @@ stages:
                 - script: dir
                   displayName: List Artifact in Workspace
                   workingDirectory: "$(System.DefaultWorkingDirectory)/pysparklewheel"
-                - task: Bash@3
-                  displayName: "TaskCTL: Setup"
-                  inputs:
-                    targetType: inline
-                    script: taskctl setup
                 - task: AzureKeyVault@2
                   inputs:
                     azureSubscription: "Stacks.Pipeline.Builds"
