@@ -44,3 +44,13 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "INFO"
+
+[tool.black]
+    line-length = 120
+    target-version = ['py310']
+    exclude = '''
+    /(
+        \.git
+      | \.venv
+    )/
+    '''
