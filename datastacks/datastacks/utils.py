@@ -33,7 +33,7 @@ def render_template_components(config: BaseModel, template_source_path: str, tar
     """
     Path(target_dir).mkdir(parents=True, exist_ok=True)
     template_loader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
-    template_env = Environment(loader=template_loader, autoescape=True)
+    template_env = Environment(loader=template_loader, autoescape=True, keep_trailing_newline=True)
 
     template_list = template_env.list_templates(extensions=".jinja")
     for template in template_list:

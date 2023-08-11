@@ -35,3 +35,13 @@ flake8 = "^6.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+    line-length = 120
+    target-version = ['py310']
+    exclude = '''
+    /(
+        \.git
+      | \.venv
+    )/
+    '''
