@@ -27,7 +27,6 @@ stacks-azure-data
 ├── docs            # Documentation
 ├── pysparkle       # Python library built to streamline data processing; packaged and uploaded to DBFS
 ├── utils           # Python utilities package used across solution for local testing
-├── .docstr.yaml    # Configuration for docstring coverage checks
 ├── .pre-commit-config.yaml         # Configuration for pre-commit hooks
 ├── Makefile        # Includes commands for environment setup
 ├── pyproject.toml  # Project dependencies
