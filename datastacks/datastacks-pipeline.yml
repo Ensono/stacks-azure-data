@@ -20,8 +20,8 @@ variables:
   - template: ../de_build/job-pipeline-vars.yml
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
-  - name: self_repo_datastacks_dir
-    value: $(self_repo_dir)/datastacks
+  - template: ../build/version-data-vars.yml
+  - template: ../build/version-data-vars.yml
   - name: pythonVersion
     value: "3.10.10"
 
