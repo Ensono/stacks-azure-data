@@ -30,3 +30,7 @@ repos:
     rev: v2.2.0
     hooks:
       - id: docstr-coverage
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle

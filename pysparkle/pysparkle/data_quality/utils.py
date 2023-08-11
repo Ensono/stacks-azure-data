@@ -1,6 +1,5 @@
-"""
-Data_quality utility functions to set up validations
-"""
+"""Data quality utility functions to set up validations"""
+
 import great_expectations as gx
 from great_expectations.core.batch import RuntimeBatchRequest
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
@@ -19,8 +18,7 @@ from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
 
 
 def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:
-    """
-    Given a string containing the datasource name, this function generates a data context instance
+    """Given a string containing the datasource name, this function generates a data context instance.
 
     Args:
         datasource_name: Name of the datasource to be validated
@@ -119,8 +117,7 @@ def execute_validations(
     dq_conf: DatasourceConfig,
     df: DataFrame,
 ) -> ExpectationSuiteValidationResult:
-    """
-    Given a Great Expectations data context, the relevant config, and a dataframe containing the
+    """Given a Great Expectations data context, the relevant config, and a dataframe containing the
     data to be validated, this function runs the validations and returns the result.
 
     Args:
