@@ -15,9 +15,6 @@ from datastacks.utils import (
 from tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
 
 
-# from datastacks.tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
-
-
 def test_render_template_components(tmp_path):
     config_dict = {
         "dataset_name": "test_dataset",
