@@ -10,12 +10,14 @@ def filter_directory_paths_adls(
     """
     Filters an ADLS container directory for directories containing a given substring.
 
-    :param adls_client:               DataLakeServiceClient
-    :param container_name:            Container / file system
-    :param directory_path:            Directory
-    :param directory_substring:      String to be found in directory
-    :return:
-        list of directory paths containing the sub_directory prefix
+    Args:
+        adls_client: DataLakeServiceClient
+        container_name: Container / file system
+        directory_path: Directory
+        directory_substring: String to be found in directory
+
+    Returns:
+        List of directory paths containing the sub_directory prefix
     """
     adls_fs_client = adls_client.get_file_system_client(container_name)
     output_directory_paths = []
@@ -27,17 +29,14 @@ def filter_directory_paths_adls(
     return output_directory_paths
 
 
-def delete_directories_adls(
-    adls_client: DataLakeServiceClient, container_name: str, directory_paths: list
-):
+def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: str, directory_paths: list):
     """
     Deletes a list of directories from ADLS.
 
-    :param adls_client:     DataLakeServiceClient
-    :param container_name:  Container / file system
-    :param directory_paths: list of directories to delete
-    :return:
-        None
+    Args:
+        adls_client: DataLakeServiceClient
+        container_name: Container / file system
+        directory_paths: List of directories to delete
     """
     for directory_path in directory_paths:
         print(f"ATTEMPTING TO DELETE DIRECTORY: {directory_path}")
@@ -48,11 +47,10 @@ def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, di
     """
     Deletes an ADLS directory.
 
-    :param adls_client:     DataLakeServiceClient
-    :param container_name:  Container / File System
-    :param directory_path:  A directory path
-    :return:
-        None
+    Args:
+        adls_client: DataLakeServiceClient
+        container_name: Container / File System
+        directory_path: A directory path
     """
     adls_directory_client = adls_client.get_directory_client(container_name, directory_path)
     if adls_directory_client.exists():
@@ -70,12 +68,14 @@ def all_files_present_in_adls(
     """
     Asserts all files in a given list are present in the specified container and directory.
 
-    :param adls_client:     DataLakeServiceClient
-    :param container_name:  Container / File System
-    :param directory_name:  Directory Name
-    :param expected_files:  List of Expected Files
-    :return:
-        bool
+    Args:
+        adls_client: DataLakeServiceClient
+        container_name: Container / File System
+        directory_name: Directory Name
+        expected_files: List of Expected Files
+
+    Returns:
+        Boolean reflecting whether all files are present
     """
     adls_fs_client = adls_client.get_file_system_client(container_name)
     actual_paths = adls_fs_client.get_paths(directory_name)

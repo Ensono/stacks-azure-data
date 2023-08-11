@@ -1,6 +1,7 @@
 import pytest
 
-from pysparkle.data_quality.utils import *
+from great_expectations.core.expectation_suite import ExpectationSuite
+from pysparkle.data_quality.utils import add_expectations_for_columns, add_expectation_suite, execute_validations
 
 
 def test_create_datasource_context(dq_config, datasource_context):

@@ -106,9 +106,7 @@ def add_expectation_suite(
         Data context with expectations suite added.
     """
 
-    expectation_suite = context.add_or_update_expectation_suite(
-        expectation_suite_name=dq_conf.expectation_suite_name
-    )
+    expectation_suite = context.add_or_update_expectation_suite(expectation_suite_name=dq_conf.expectation_suite_name)
 
     expectation_suite = add_expectations_for_columns(expectation_suite, dq_conf.validation_config)
     context.update_expectation_suite(expectation_suite)

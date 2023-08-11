@@ -12,13 +12,15 @@ def create_adf_pipeline_run(
     """
     Triggers an ADF pipeline.
 
-    :param adf_client:              DataFactoryManagementClient
-    :param resource_group_name:     Resource Group Name
-    :param data_factory_name:       Data Factory Name
-    :param pipeline_name:           Pipeline Name
-    :param parameters:              Dictionary of parameters to pass in
-    :return:
-        CreateRunResponse
+    Args:
+        adf_client: DataFactoryManagementClient
+        resource_group_name: Resource Group Name
+        data_factory_name: Data Factory Name
+        pipeline_name: Pipeline Name
+        parameters:Dictionary of parameters to pass in
+
+    Returns:
+        ADF run response
     """
     response = adf_client.pipelines.create_run(
         resource_group_name, data_factory_name, pipeline_name, parameters=parameters
@@ -33,13 +35,16 @@ def get_adf_pipeline_run(
     run_id: str,
 ) -> PipelineRun:
     """
-    Gets a data factory pipeline
-    :param adf_client:
-    :param resource_group_name:
-    :param data_factory_name:
-    :param run_id:
-    :return:
-        PipelineRun
+    Gets information on a Data Factory pipeline run
+
+    Args:
+        adf_client: DataFactoryManagementClient
+        resource_group_name: Resource Group Name
+        data_factory_name: Data Factory Name
+        run_id: Data Factory pipeline run ID
+
+    Returns:
+        Data Factory pipeline run information
     """
     return adf_client.pipeline_runs.get(
         resource_group_name=resource_group_name,
@@ -57,12 +62,14 @@ def check_adf_pipeline_in_complete_state(
     """
     Gets the pipeline run. Returns True if pipeline in completed state or False if pipeline not in complete state.
 
-    :param adf_client:              DataFactoryManagementClient
-    :param resource_group_name:     Resource Group Name
-    :param data_factory_name:       Data Factory Name
-    :param run_id:                  Pipeline run ID
-    :return:
-        bool
+    Args:
+        adf_client: DataFactoryManagementClient
+        resource_group_name: Resource Group Name
+        data_factory_name: Data Factory Name
+        run_id: Data Factory pipeline run ID
+
+    Returns:
+        Boolean reflecting completion state
     """
     pipeline_run = adf_client.pipeline_runs.get(
         resource_group_name=resource_group_name, factory_name=data_factory_name, run_id=run_id

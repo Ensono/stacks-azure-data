@@ -3,7 +3,7 @@ name: "$(Build.SourceBranchName)-init"
 pr:
   branches:
     include:
-    - 'main'
+      - "main"
   paths:
     include:
       - datastacks/*
@@ -11,7 +11,7 @@ pr:
 trigger:
   branches:
     include:
-      - 'main'
+      - "main"
   paths:
     include:
       - datastacks/*
@@ -23,7 +23,7 @@ variables:
   - name: self_repo_datastacks_dir
     value: $(self_repo_dir)/datastacks
   - name: pythonVersion
-    value: '3.10.10'
+    value: "3.10.10"
 
 pool:
   name: $(agentpool_name)
@@ -46,10 +46,10 @@ stages:
               pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
           - bash: |
-              poetry install 
+              poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
           - bash: |
               poetry run pytest -rf -v datastacks/tests -k unit
-            displayName: 'Run Unit Tests'
-            workingDirectory: '$(self_repo_dir)'
+            displayName: "Run Unit Tests"
+            workingDirectory: "$(self_repo_dir)"
