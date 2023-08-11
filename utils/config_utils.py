@@ -10,7 +10,7 @@ def config_uniqueness_check(config_list: list[dict], unique_key: str):
 
     Args:
         config_list: List of dictionaries containing config
-        unique key: Key to check for uniqueness
+        unique_key: Key to check for uniqueness
     """
     key_counter = Counter(i[unique_key] for i in config_list)
     duplicates = [key for key, count in key_counter.items() if count > 1]

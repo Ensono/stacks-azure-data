@@ -79,6 +79,7 @@ def pipeline_has_finished_with_state(context: Context, pipeline_name: str, state
 
     Args:
         context: Behave context object.
+        pipeline_name: Name of the pipeline.
         state: The expected state of the pipeline.
     """
     pipeline_run = get_adf_pipeline_run(

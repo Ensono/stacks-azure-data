@@ -13,6 +13,7 @@ from pysparkle.logger import setup_logger
 @click.group()
 @click.option("--log-level", "-l", type=LogLevel(), default=logging.INFO)
 def cli(log_level):
+    """Pysparkle CLI."""
     setup_logger("pysparkle", log_level)
 
 
@@ -21,7 +22,6 @@ def cli(log_level):
 def silver(dataset_name):
     """Bronze to Silver processing.
 
-    \b
     Requires the following environment variables to be set:
     - AZURE_TENANT_ID - Directory ID for Azure Active Directory application,
     - AZURE_CLIENT_ID - Application ID for Azure Active Directory application,

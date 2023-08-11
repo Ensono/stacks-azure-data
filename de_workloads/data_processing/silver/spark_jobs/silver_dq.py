@@ -2,6 +2,7 @@ from pysparkle.pysparkle_cli import cli
 
 
 def call_pysparkle_entrypoint():
+    """Execute data quality activity in Pysparkle."""
     cli(
         [
             "data-quality",
