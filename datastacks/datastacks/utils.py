@@ -22,7 +22,9 @@ def generate_target_dir(stage_name: str, dataset_name: str) -> str:
 
 
 def render_template_components(config: BaseModel, template_source_path: str, target_dir: str) -> None:
-    """Renders all templates within a given path with provided config, and saves results into a new target path,
+    """Renders all template components using the provided config.
+
+    Renders all templates within a given path with provided config, and saves results into a new target path,
     while maintaining folder structure and removing jinja file extensions, any existing files with the same name
     are overwritten.
 
@@ -46,9 +48,10 @@ def render_template_components(config: BaseModel, template_source_path: str, tar
 
 
 def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str) -> str:
-    """Reads in config from given file, renders templates for new pipeline,
-    writes out to new path, and returns the target directory it wrote out to.
-    If directory already exists it asks for user input to confirm overwrite.
+    """Generate a data pipeline workload into the project.
+
+    Reads in config from given file, renders templates for new pipeline, writes out to new path, and returns the
+    target directory it wrote out to. If directory already exists it asks for user input to confirm overwrite.
 
     Args:
         config_path: Path to config file containing templating params

@@ -12,6 +12,12 @@ from utils.azure.adls import filter_directory_paths_adls, delete_directories_adl
 
 @fixture
 def azure_adls_clean_up(context: Context, ingest_directory_name: str):
+    """Delete test directories in ADLS.
+
+    Args:
+        context: Behave context object.
+        ingest_directory_name: Name of the ADLS directory to delete.
+    """
     credential = DefaultAzureCredential()
     adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
     print("BEFORE SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA")

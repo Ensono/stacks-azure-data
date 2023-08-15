@@ -9,8 +9,7 @@ def create_adf_pipeline_run(
     pipeline_name: str,
     parameters: dict,
 ) -> CreateRunResponse:
-    """
-    Triggers an ADF pipeline.
+    """Triggers an ADF pipeline.
 
     Args:
         adf_client: DataFactoryManagementClient
@@ -34,8 +33,7 @@ def get_adf_pipeline_run(
     data_factory_name: str,
     run_id: str,
 ) -> PipelineRun:
-    """
-    Gets information on a Data Factory pipeline run
+    """Gets information on a Data Factory pipeline run.
 
     Args:
         adf_client: DataFactoryManagementClient
@@ -59,8 +57,7 @@ def check_adf_pipeline_in_complete_state(
     data_factory_name: str,
     run_id: str,
 ) -> bool:
-    """
-    Gets the pipeline run. Returns True if pipeline in completed state or False if pipeline not in complete state.
+    """Gets the pipeline run. Returns True if pipeline in completed state or False if pipeline not in complete state.
 
     Args:
         adf_client: DataFactoryManagementClient

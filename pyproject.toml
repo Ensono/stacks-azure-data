@@ -45,3 +45,13 @@ build-backend = "poetry.core.masonry.api"
       | \.venv
     )/
     '''
+
+[tool.flake8]
+max-line-length = "120"
+exclude = ".venv,.git"
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D100,D101,D104"
+match = "(?!test_).*\\.py"
+match_dir = "^(?!(tests)).*"

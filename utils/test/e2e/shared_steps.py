@@ -30,8 +30,7 @@ adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
 
 @given("the ADF pipeline {pipeline_name} has been triggered with {parameters}")
 def trigger_adf_pipeline(context: Context, pipeline_name: str, parameters: str):
-    """
-    Trigger an Azure Data Factory pipeline with the provided parameters.
+    """Trigger an Azure Data Factory pipeline with the provided parameters.
 
     Args:
         context: Behave context object.
@@ -56,8 +55,7 @@ def trigger_adf_pipeline(context: Context, pipeline_name: str, parameters: str):
 
 @step("I poll the pipeline every {seconds} seconds until it has completed")
 def poll_adf_pipeline(context: Context, seconds: str):
-    """
-    Poll the Azure Data Factory pipeline until it completes or times out.
+    """Poll the Azure Data Factory pipeline until it completes or times out.
 
     Args:
         context: Behave context object.
@@ -77,11 +75,11 @@ def poll_adf_pipeline(context: Context, seconds: str):
 
 @step("the ADF pipeline {pipeline_name} has finished with state {state}")
 def pipeline_has_finished_with_state(context: Context, pipeline_name: str, state: str):
-    """
-    Check if the Azure Data Factory pipeline has finished with the expected state.
+    """Check if the Azure Data Factory pipeline has finished with the expected state.
 
     Args:
         context: Behave context object.
+        pipeline_name: Name of the pipeline.
         state: The expected state of the pipeline.
     """
     pipeline_run = get_adf_pipeline_run(
@@ -94,8 +92,7 @@ def pipeline_has_finished_with_state(context: Context, pipeline_name: str, state
     "the files {output_files} are present in the ADLS container {container_name} in the directory " "{directory_name}"
 )
 def check_all_files_present_in_adls(context: Context, output_files: str, container_name: str, directory_name: str):
-    """
-    Check if all the specified files are present in the specified ADLS container and directory.
+    """Check if all the specified files are present in the specified ADLS container and directory.
 
     Args:
         context: Behave context object.
@@ -110,8 +107,7 @@ def check_all_files_present_in_adls(context: Context, output_files: str, contain
 
 @step("the ADF pipeline completed in less than {seconds} seconds")
 def check_adf_pipeline_completion_time(context: Context, seconds: str):
-    """
-    Check if the Azure Data Factory pipeline completed within the specified time.
+    """Check if the Azure Data Factory pipeline completed within the specified time.
 
     Args:
         context: Behave context object.
