@@ -60,6 +60,12 @@ variable "dataset_name" {
   default     = "ds_ex_AzureSql_ExampleSource"
 }
 
+variable "trigger_name" {
+  type        = string
+  description = "Name of Data Factory pipeline trigger (tumbling window type)"
+  default     = "trg_AzureSql_ExampleSource"
+}
+
 variable "include_data_quality" {
   type        = bool
   description = "Include data quality step in pipeline"
