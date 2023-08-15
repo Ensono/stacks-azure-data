@@ -10,7 +10,7 @@ resource "azurerm_data_factory_trigger_tumbling_window" "trigger_Ingest_AzureSql
   activated       = false
 
   pipeline {
-    name = "pipeline_Ingest_AzureSql_Example"
+    name = "Ingest_AzureSql_Example"
     parameters = {
       window_start = "@{formatDateTime(trigger().outputs.windowStartTime,'yyyy-MM-dd')}",
       window_end   = "@{formatDateTime(trigger().outputs.windowEndTime,'yyyy-MM-dd')}"
