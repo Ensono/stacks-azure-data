@@ -7,8 +7,7 @@ def filter_directory_paths_adls(
     directory_path: str,
     directory_substring: str,
 ) -> list:
-    """
-    Filters an ADLS container directory for directories containing a given substring.
+    """Filters an ADLS container directory for directories containing a given substring.
 
     Args:
         adls_client: DataLakeServiceClient
@@ -30,8 +29,7 @@ def filter_directory_paths_adls(
 
 
 def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: str, directory_paths: list):
-    """
-    Deletes a list of directories from ADLS.
+    """Deletes a list of directories from ADLS.
 
     Args:
         adls_client: DataLakeServiceClient
@@ -44,8 +42,7 @@ def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: 
 
 
 def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, directory_path: str):
-    """
-    Deletes an ADLS directory.
+    """Deletes an ADLS directory.
 
     Args:
         adls_client: DataLakeServiceClient
@@ -65,8 +62,7 @@ def all_files_present_in_adls(
     directory_name: str,
     expected_files: list,
 ) -> bool:
-    """
-    Asserts all files in a given list are present in the specified container and directory.
+    """Asserts all files in a given list are present in the specified container and directory.
 
     Args:
         adls_client: DataLakeServiceClient
