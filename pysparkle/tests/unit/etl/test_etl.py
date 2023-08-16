@@ -2,10 +2,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from tests.unit.conftest import BRONZE_CONTAINER, SILVER_CONTAINER, TEST_CSV_DIR
 
-from pysparkle.config import DEFAULT_BRONZE_CONTAINER, DEFAULT_SILVER_CONTAINER
 from pysparkle.etl.etl import save_files_as_delta_tables
-from tests.unit.conftest import TEST_CSV_DIR
 
 
 @pytest.mark.parametrize(
@@ -20,7 +19,7 @@ from tests.unit.conftest import TEST_CSV_DIR
 @patch("pysparkle.etl.etl.get_adls_file_url")
 def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns, tmp_path):
     def side_effect(container, file_name):
-        if container == DEFAULT_BRONZE_CONTAINER:
+        if container == BRONZE_CONTAINER:
             # fixed path for test input files
             return f"{TEST_CSV_DIR}/{file_name}"
         else:
@@ -30,11 +29,11 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
     mock_get_adls_file_url.side_effect = side_effect
 
     spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
-    save_files_as_delta_tables(spark, csv_files, "csv", spark_read_options)
+    save_files_as_delta_tables(spark, csv_files, "csv", spark_read_options, BRONZE_CONTAINER, SILVER_CONTAINER)
 
     for i, csv_file in enumerate(csv_files):
         filename_with_no_extension = Path(csv_file).stem
-        expected_filepath = side_effect(DEFAULT_SILVER_CONTAINER, filename_with_no_extension)
+        expected_filepath = side_effect(SILVER_CONTAINER, filename_with_no_extension)
         df = spark.read.format("delta").load(expected_filepath)
         assert df is not None
         assert df.count() > 0
@@ -55,7 +54,7 @@ def test_save_files_as_delta_tables_different_formats(
     mock_get_adls_file_url, spark, tmp_path, file_format, write_options, read_options
 ):
     def side_effect(container, file_name):
-        if container == DEFAULT_BRONZE_CONTAINER:
+        if container == BRONZE_CONTAINER:
             return f"{tmp_path}/{file_name}.{file_format}"
         else:
             return f"{tmp_path}/{file_name}"
@@ -68,13 +67,13 @@ def test_save_files_as_delta_tables_different_formats(
     test_files = ["testfile1", "testfile2"]
 
     for file in test_files:
-        filepath = side_effect(DEFAULT_BRONZE_CONTAINER, file)
+        filepath = side_effect(BRONZE_CONTAINER, file)
         df.write.options(**write_options).format(file_format).save(filepath)
 
-    save_files_as_delta_tables(spark, test_files, file_format, read_options)
+    save_files_as_delta_tables(spark, test_files, file_format, read_options, BRONZE_CONTAINER, SILVER_CONTAINER)
 
     for file in test_files:
-        expected_filepath = side_effect(DEFAULT_SILVER_CONTAINER, file)
+        expected_filepath = side_effect(SILVER_CONTAINER, file)
         df_read = spark.read.format("delta").load(expected_filepath)
         assert df_read.count() == len(sample_data)  # same number of rows
         assert df_read.columns == ["Name", "Score"]  # same column names

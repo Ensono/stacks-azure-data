@@ -1,17 +1,8 @@
-from pysparkle.pysparkle_cli import cli
+from pysparkle.data_quality.main import data_quality_main
 
 
-def call_pysparkle_entrypoint():
-    """Execute data quality activity in Pysparkle."""
-    cli(
-        [
-            "data-quality",
-            "--config-path",
-            "data_processing/silver/data_quality/silver_dq.json",
-        ],
-        standalone_mode=False,
-    )
+CONFIG_CONTAINER = "config"
 
 
 if __name__ == "__main__":
-    call_pysparkle_entrypoint()
+    data_quality_main(config_path="data_processing/silver/data_quality/silver_dq.json", container_name=CONFIG_CONTAINER)

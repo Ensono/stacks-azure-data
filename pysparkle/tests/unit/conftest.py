@@ -9,6 +9,8 @@ from pysparkle.pyspark_utils import get_spark_session
 
 TEST_DATA_DIR = Path(__file__).parent.resolve() / "data"
 TEST_CSV_DIR = TEST_DATA_DIR / "movies_dataset"
+BRONZE_CONTAINER = "bronze"
+SILVER_CONTAINER = "silver"
 
 
 @fixture(scope="session")

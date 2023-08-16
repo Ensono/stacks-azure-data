@@ -16,9 +16,9 @@ def save_files_as_delta_tables(
     spark: SparkSession,
     input_files: list[str],
     datasource_type: str,
+    spark_read_options: Optional[dict[str, Any]] = None,
     bronze_container: str = DEFAULT_BRONZE_CONTAINER,
     silver_container: str = DEFAULT_SILVER_CONTAINER,
-    spark_read_options: Optional[dict[str, Any]] = None,
 ) -> None:
     """Saves multiple data files as Delta tables.
 
