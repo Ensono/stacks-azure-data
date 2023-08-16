@@ -9,7 +9,6 @@ from pysparkle.utils import filter_files_by_extension
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
 
-
 logger_library = "pysparkle"
 logger = logging.getLogger(logger_library)
 
