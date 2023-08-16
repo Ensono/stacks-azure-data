@@ -6,11 +6,12 @@ from pathlib import Path
 
 
 def config_uniqueness_check(config_list: list[dict], unique_key: str):
-    """Checks dictionaries within the list and returns true if the unique_key provided is actually unique.
+    """
+    Checks dictionaries within the list and returns true if the unique_key provided is actually unique
 
     Args:
         config_list: List of dictionaries containing config
-        unique_key: Key to check for uniqueness
+        unique key: Key to check for uniqueness
     """
     key_counter = Counter(i[unique_key] for i in config_list)
     duplicates = [key for key, count in key_counter.items() if count > 1]
@@ -21,7 +22,8 @@ def config_uniqueness_check(config_list: list[dict], unique_key: str):
 
 
 def load_config_as_dict(path: str) -> dict:
-    """Gets the contents of the required JSON resource and converts to a dictionary.
+    """
+    Gets the contents of the required JSON resource and converts to a dictionary
 
     Args:
         path: Path of the required resource (e.g 'folder1/resource1.json')
@@ -34,7 +36,8 @@ def load_config_as_dict(path: str) -> dict:
 
 
 def load_configs_as_list(path: str) -> list[dict]:
-    """Gets all JSON config files within the given path.
+    """
+    Gets all JSON config files within the given path
 
     Args:
         path: Path of the required resources folder within the config folder (e.g 'folder1')

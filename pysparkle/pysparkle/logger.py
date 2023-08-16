@@ -4,7 +4,8 @@ import colorlog
 
 
 def setup_logger(name: str = "", log_level: int = logging.INFO) -> logging.Logger:
-    """Set up a colored logger with customizable log level and formatting.
+    """
+    Set up a colored logger with customizable log level and formatting.
 
     Args:
         name: The name of the logger. Defaults to an empty string.

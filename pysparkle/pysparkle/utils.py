@@ -16,7 +16,8 @@ def find_placeholders(input_str: str) -> list[str]:
 
 
 def substitute_env_vars(input_str: str) -> str:
-    """Replaces placeholders in the form {PLACEHOLDER} with corresponding environment variable values.
+    """
+    Replaces placeholders in the form {PLACEHOLDER} with corresponding environment variable values.
 
     Args:
         input_str: The input string possibly containing placeholders.
