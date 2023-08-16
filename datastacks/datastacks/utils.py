@@ -11,7 +11,7 @@ def generate_target_dir(stage_name: str, dataset_name: str) -> str:
     """Uses stage name and name of the dataset to generate the target directory to write to.
 
     Args:
-        stage_name: Name of the pipeline stage eg. Ingest
+        stage_name: Name of the pipeline stage e.g. Ingest
         dataset_name: Name of the dataset being processed
 
     Returns:
