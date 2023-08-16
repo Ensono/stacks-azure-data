@@ -1,26 +1,36 @@
 import logging
 
-from pysparkle.config import CONFIG_CONTAINER
+from pysparkle.config import DEFAULT_CONFIG_CONTAINER
 from pysparkle.data_quality.config import Config
 from pysparkle.data_quality.utils import (
     add_expectation_suite,
     create_datasource_context,
     execute_validations,
 )
-from pysparkle.pyspark_utils import create_spark_session, read_datasource
+from pysparkle.pyspark_utils import get_spark_session, read_datasource
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
 
 logger = logging.getLogger(__name__)
 
 
-def data_quality_main(config_path):
+def data_quality_main(config_path: str, container_name: str = DEFAULT_CONFIG_CONTAINER):
+    """Executes data quality checks based on the provided configuration.
+
+    Args:
+        config_path: Path to a JSON config inside an Azure Blob container.
+        container_name: Name of the container for storing configurations.
+
+    Raises:
+        EnvironmentError: if any of the required environment variables for ADLS access are not set.
+
+    """
     check_env()
 
-    dq_conf_dict = load_json_from_blob(CONFIG_CONTAINER, config_path)
+    dq_conf_dict = load_json_from_blob(container_name, config_path)
     dq_conf = Config.parse_obj(dq_conf_dict)
     logger.info(f"Running Data Quality processing for dataset: {dq_conf.dataset_name}...")
 
-    spark = create_spark_session(f"DataQuality-{dq_conf.dataset_name}")
+    spark = get_spark_session(f"DataQuality-{dq_conf.dataset_name}")
 
     set_spark_properties(spark)
 

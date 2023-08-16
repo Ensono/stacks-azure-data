@@ -39,6 +39,9 @@ behave = "^1.2.6"
 black = "^23.1.0"
 pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
+flake8-docstrings = "^1.7.0"
+pydocstyle = "^6.3.0"
+tomli = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -65,5 +68,5 @@ exclude = ".venv,.git"
 [tool.pydocstyle]
 convention = "google"
 add-ignore = "D100,D101,D104"
-match = "(?!test_).*\\.py"
+match = "(?!test_|conftest).*\\.py"
 match_dir = "^(?!(tests)).*"

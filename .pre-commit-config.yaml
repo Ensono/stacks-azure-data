@@ -30,3 +30,5 @@ repos:
     rev: 6.3.0
     hooks:
       - id: pydocstyle
+        args: ["--config=pyproject.toml"]
+        additional_dependencies: ['tomli>=2.0.1']
