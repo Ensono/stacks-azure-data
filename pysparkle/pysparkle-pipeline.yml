@@ -24,8 +24,6 @@ variables:
   - template: ../de_build/job-pipeline-vars.yml
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
-  - name: self_repo_pysparkle_dir
-    value: $(self_repo_dir)/pysparkle
   - name: pythonVersion
     value: "3.10.10"
   - name: test_unit_path
@@ -70,22 +68,22 @@ stages:
           - bash: |
               poetry install
             displayName: Install Dependencies
-            workingDirectory: $(self_repo_pysparkle_dir)
+            workingDirectory: $(self_repo_dir)
           - bash: |
-              poetry run pytest -rf -v tests -k unit
+              poetry run pytest -rf -v pysparkle/tests -k unit
             displayName: "Run Unit Tests"
-            workingDirectory: "$(self_repo_pysparkle_dir)"
+            workingDirectory: "$(self_repo_dir)"
           - bash: |
               poetry build
             displayName: Build Project
-            workingDirectory: "$(self_repo_pysparkle_dir)/pysparkle"
+            workingDirectory: "$(self_repo_dir)"
           - bash: |
-              mv $(self_repo_pysparkle_dir)/dist/*.whl $(self_repo_pysparkle_dir)/dist/pysparkle-latest-py3-none-any.whl
+              mv $(self_repo_dir)/dist/*.whl $(self_repo_dir)/dist/pysparkle-latest-py3-none-any.whl
             displayName: "Rename Pyspark wheel package to latest"
           - task: CopyFiles@2
             displayName: Copy Whl
             inputs:
-              SourceFolder: "$(self_repo_pysparkle_dir)/dist/"
+              SourceFolder: "$(self_repo_dir)/dist/"
               Contents: "*.whl"
               TargetFolder: "$(Build.ArtifactStagingDirectory)/pysparklewheel"
           - task: PublishBuildArtifacts@1

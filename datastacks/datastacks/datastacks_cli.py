@@ -1,11 +1,16 @@
+"""
+Datastacks CLI Module.
+
+This module provides command-line interfaces to generate and manage data workloads within the Stacks Data Platform.
+"""
 import logging
 
 import click
 from click_loglevel import LogLevel
 
-from datastacks.datastacks.logger import setup_logger
-from datastacks.datastacks.utils import generate_pipeline
-from datastacks.datastacks.config import INGEST_TEMPLATE_FOLDER
+from pysparkle.logger import setup_logger
+from datastacks.utils import generate_pipeline
+from datastacks.config import INGEST_TEMPLATE_FOLDER
 
 
 @click.group()

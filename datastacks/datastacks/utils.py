@@ -1,18 +1,24 @@
+"""
+Data Workload Generation Utilities.
+
+This module provides utility functions to automate the generation of data pipelines and workloads. It facilitates
+rendering templates based on the provided config, and writing out the rendered templates to the specified directories.
+"""
 import click
 import yaml
 
 from pydantic import BaseModel
-from datastacks.datastacks.config_class import IngestConfig
+from datastacks.config_class import IngestConfig
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 
 
 def generate_target_dir(stage_name: str, dataset_name: str) -> str:
-    """Uses stage name and name of the dataset to generate the target directory to write to.
+    """Generate the target directory to write to using stage name and name of the dataset.
 
     Args:
-        stage_name: Name of the pipeline stage eg. Ingest
-        dataset_name: Name of the dataset being processed
+        stage_name: Name of the pipeline stage, e.g. Ingest.
+        dataset_name: Name of the dataset being processed.
 
     Returns:
         Path to render template into
@@ -22,7 +28,7 @@ def generate_target_dir(stage_name: str, dataset_name: str) -> str:
 
 
 def render_template_components(config: BaseModel, template_source_path: str, target_dir: str) -> None:
-    """Renders all template components using the provided config.
+    """Render all template components using the provided config.
 
     Renders all templates within a given path with provided config, and saves results into a new target path,
     while maintaining folder structure and removing jinja file extensions, any existing files with the same name
