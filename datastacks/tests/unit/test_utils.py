@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from datastacks.config import INGEST_TEMPLATE_FOLDER
-from datastacks.config_class import IngestConfig
+from datastacks.config import IngestConfig
 from datastacks.utils import (
     generate_pipeline,
     generate_target_dir,

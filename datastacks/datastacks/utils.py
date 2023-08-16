@@ -1,5 +1,4 @@
-"""
-Data Workload Generation Utilities.
+"""Data Workload Generation Utilities.
 
 This module provides utility functions to automate the generation of data pipelines and workloads. It facilitates
 rendering templates based on the provided config, and writing out the rendered templates to the specified directories.
@@ -8,7 +7,7 @@ import click
 import yaml
 
 from pydantic import BaseModel
-from datastacks.config_class import IngestConfig
+from datastacks.config import IngestConfig
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 
