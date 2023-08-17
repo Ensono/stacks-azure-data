@@ -39,4 +39,4 @@ def silver_main(dataset_name: str) -> None:
 
 if __name__ == "__main__":
     setup_logger(name=logger_library, log_level=logging.INFO)
-    silver_main(dataset_name="movies_dataset_subset")
+    silver_main(dataset_name="movies_dataset")
