@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 def generate_target_dir(stage_name: str, dataset_name: str) -> str:
-    """Generate the target directory to write to using stage name and name of the dataset.
+    """Generate the target directory name using stage name and name of the dataset.
 
     Args:
         stage_name: Name of the pipeline stage, e.g. Ingest.
