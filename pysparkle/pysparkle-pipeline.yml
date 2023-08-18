@@ -78,7 +78,7 @@ stages:
             displayName: Build Project
             workingDirectory: "$(self_repo_dir)"
           - bash: |
-              mv $(self_repo_dir)/dist/*.whl $(self_repo_dir)/dist/pysparkle-latest-py3-none-any.whl
+              mv $(self_repo_dir)/dist/*.whl $(self_repo_dir)/dist/datastacks-latest-py3-none-any.whl
             displayName: "Rename Pyspark wheel package to latest"
           - task: CopyFiles@2
             displayName: Copy Whl
@@ -130,7 +130,7 @@ stages:
                 #               - script: |
                 #                         echo Destination is /FileStore/jars
                 #                         echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                #                         databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
+                #                         databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl
                 #                 displayName: Upload whl
                 - task: Bash@3
                   displayName: "TaskCTL: Databricks"
@@ -185,7 +185,7 @@ stages:
                 - script: |
                     echo Destination is /FileStore/jars
                     echo Source is $(System.DefaultWorkingDirectory)/pysparklewheel/
-                    databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl
+                    databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/pysparklewheel/*.whl dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl
                   displayName: Upload whl
 
   - stage: Release

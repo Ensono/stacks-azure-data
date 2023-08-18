@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pysparkle"
+name = "datastacks"
 version = "0.3.0"
 description = "A tool for generating data pipelines, featuring utilities for data transformations."
 authors = [
