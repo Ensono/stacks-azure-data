@@ -29,7 +29,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
     mock_get_adls_file_url.side_effect = side_effect
 
     spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
-    save_files_as_delta_tables(spark, csv_files, "csv", spark_read_options, BRONZE_CONTAINER, SILVER_CONTAINER)
+    save_files_as_delta_tables(spark, csv_files, "csv", BRONZE_CONTAINER, SILVER_CONTAINER, spark_read_options)
 
     for i, csv_file in enumerate(csv_files):
         filename_with_no_extension = Path(csv_file).stem
@@ -70,7 +70,7 @@ def test_save_files_as_delta_tables_different_formats(
         filepath = side_effect(BRONZE_CONTAINER, file)
         df.write.options(**write_options).format(file_format).save(filepath)
 
-    save_files_as_delta_tables(spark, test_files, file_format, read_options, BRONZE_CONTAINER, SILVER_CONTAINER)
+    save_files_as_delta_tables(spark, test_files, file_format, BRONZE_CONTAINER, SILVER_CONTAINER, read_options)
 
     for file in test_files:
         expected_filepath = side_effect(SILVER_CONTAINER, file)

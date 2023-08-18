@@ -52,7 +52,7 @@ def ingest(config, data_quality):
     show_default=True,
     help="Name of the container for storing configurations.",
 )
-def run_dq(config_path, container):
+def dq(config_path, container):
     """Perform data quality check."""
     data_quality_main(config_path, container)
 

@@ -5,7 +5,6 @@ from typing import Any, Optional
 
 from pyspark.sql import SparkSession
 
-from pysparkle.config import DEFAULT_BRONZE_CONTAINER, DEFAULT_SILVER_CONTAINER
 from pysparkle.pyspark_utils import get_spark_session, read_datasource, save_dataframe_as_delta
 from pysparkle.storage_utils import check_env, get_adls_file_url, set_spark_properties
 
@@ -16,9 +15,9 @@ def save_files_as_delta_tables(
     spark: SparkSession,
     input_files: list[str],
     datasource_type: str,
+    source_container: str,
+    target_container: str,
     spark_read_options: Optional[dict[str, Any]] = None,
-    bronze_container: str = DEFAULT_BRONZE_CONTAINER,
-    silver_container: str = DEFAULT_SILVER_CONTAINER,
 ) -> None:
     """Saves multiple data files as Delta tables.
 
@@ -29,16 +28,16 @@ def save_files_as_delta_tables(
         spark: Spark session.
         input_files: List of file paths within the bronze container to be converted into Delta tables.
         datasource_type: Source format that Spark can read from, e.g. delta, table, parquet, json, csv.
-        bronze_container: Name of the bronze layer container.
-        silver_container: Name of the silver layer container.
+        source_container: Name of the source container in ADLS.
+        target_container: Name of the destination container in ADLS.
         spark_read_options: Options to pass to the DataFrameReader.
     """
     logger.info("Saving input files as delta tables...")
     for file in input_files:
-        filepath = get_adls_file_url(bronze_container, file)
+        filepath = get_adls_file_url(source_container, file)
         df = read_datasource(spark, filepath, datasource_type, spark_read_options)
         filename_with_no_extension = Path(filepath).stem
-        output_filepath = get_adls_file_url(silver_container, filename_with_no_extension)
+        output_filepath = get_adls_file_url(target_container, filename_with_no_extension)
         save_dataframe_as_delta(df, output_filepath)
 
 

@@ -625,14 +625,14 @@ files = [
 
 [[package]]
 name = "click"
-version = "8.1.6"
+version = "8.1.7"
 description = "Composable command line interface toolkit"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "click-8.1.6-py3-none-any.whl", hash = "sha256:fa244bb30b3b5ee2cae3da8f55c9e5e0c0e86093306301fb418eb9dc40fbded5"},
-    {file = "click-8.1.6.tar.gz", hash = "sha256:48ee849951919527a045bfe3bf7baa8a959c423134e1a5b98c05c20ba75a1cbd"},
+    {file = "click-8.1.7-py3-none-any.whl", hash = "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28"},
+    {file = "click-8.1.7.tar.gz", hash = "sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de"},
 ]
 
 [package.dependencies]
@@ -933,14 +933,14 @@ files = [
 
 [[package]]
 name = "great-expectations"
-version = "0.17.9"
+version = "0.17.11"
 description = "Always know what to expect from your data."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "great_expectations-0.17.9-py3-none-any.whl", hash = "sha256:a2a315265c8478d9aab649dcd941822575822bbf55c065b9d7a5f1cac001250e"},
-    {file = "great_expectations-0.17.9.tar.gz", hash = "sha256:70534d6ccbbe77e1375cc2a450a807c34d15f373e45aad90525d2d37e4337bb2"},
+    {file = "great_expectations-0.17.11-py3-none-any.whl", hash = "sha256:9a64edd2e6488a5e30592d6ff894d5d5b73481f7e3edf60cdb5ac69addbae99e"},
+    {file = "great_expectations-0.17.11.tar.gz", hash = "sha256:484106cd2cd5e2ad19a13ced3283eafa6855822b2bbfed0df545674e6cfac6ea"},
 ]
 
 [package.dependencies]
@@ -1002,7 +1002,7 @@ s3 = ["boto3 (>=1.17.106)"]
 snowflake = ["snowflake-connector-python (>2.9.0)", "snowflake-connector-python (>=2.5.0)", "snowflake-sqlalchemy (>=1.2.3)", "sqlalchemy (<2.0.0)"]
 spark = ["pyspark (>=2.3.2)"]
 teradata = ["sqlalchemy (<2.0.0)", "teradatasqlalchemy (==17.0.0.5)"]
-test = ["adr-tools-python (==1.0.3)", "black[jupyter] (==23.3.0)", "boto3 (>=1.17.106)", "docstring-parser (==0.15)", "feather-format (>=0.4.1)", "flaky (>=3.7.0)", "flask (>=1.0.0)", "freezegun (>=0.3.15)", "invoke (>=2.0.0)", "ipykernel (<=6.17.1)", "moto (>=2.0.0,<3.0.0)", "mypy (==1.4.1)", "nbconvert (>=5)", "pika (==1.3.1)", "pre-commit (>=2.21.0)", "pyarrow", "pyfakefs (>=4.5.1)", "pytest (>=6.2.0)", "pytest-benchmark (>=3.4.1)", "pytest-cov (>=2.8.1)", "pytest-icdiff (>=0.6)", "pytest-mock (>=3.8.2)", "pytest-order (>=0.9.5)", "pytest-random-order (>=1.0.4)", "pytest-timeout (>=2.1.0)", "pytest-xdist (>=3.3.1)", "requirements-parser (>=0.2.0)", "responses (>=0.23.1)", "ruff (==0.0.280)", "snapshottest (==0.6.0)", "sqlalchemy (>=1.4.0)", "tomli (>=2.0.1)"]
+test = ["adr-tools-python (==1.0.3)", "black[jupyter] (==23.3.0)", "boto3 (>=1.17.106)", "docstring-parser (==0.15)", "feather-format (>=0.4.1)", "flaky (>=3.7.0)", "flask (>=1.0.0)", "freezegun (>=0.3.15)", "invoke (>=2.0.0)", "ipykernel (<=6.17.1)", "moto (>=2.0.0,<3.0.0)", "mypy (==1.4.1)", "nbconvert (>=5)", "pika (==1.3.1)", "pre-commit (>=2.21.0)", "pyarrow", "pyfakefs (>=4.5.1)", "pytest (>=6.2.0)", "pytest-benchmark (>=3.4.1)", "pytest-cov (>=2.8.1)", "pytest-icdiff (>=0.6)", "pytest-mock (>=3.8.2)", "pytest-order (>=0.9.5)", "pytest-random-order (>=1.0.4)", "pytest-timeout (>=2.1.0)", "pytest-xdist (>=3.3.1)", "requirements-parser (>=0.2.0)", "responses (>=0.23.1)", "ruff (==0.0.284)", "snapshottest (==0.6.0)", "sqlalchemy (>=1.4.0)", "tomli (>=2.0.1)"]
 trino = ["sqlalchemy (>=1.4.0)", "trino (>=0.310.0,!=0.316.0)"]
 vertica = ["sqlalchemy (>=1.4.0)", "sqlalchemy-vertica-python (>=0.5.10)"]
 
@@ -1405,14 +1405,14 @@ jupyter-server = ">=1.1.2"
 
 [[package]]
 name = "jupyter-server"
-version = "2.7.1"
+version = "2.7.2"
 description = "The backend—i.e. core services, APIs, and REST endpoints—to Jupyter web applications."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "jupyter_server-2.7.1-py3-none-any.whl", hash = "sha256:59838bf20759354e2b4222fed702948a934cb21a503e21cd5b03706a456391d9"},
-    {file = "jupyter_server-2.7.1.tar.gz", hash = "sha256:76b4ae0b568c331acc9aa904fc4a1194ef9bdefa69f232deb3f3cae802528c05"},
+    {file = "jupyter_server-2.7.2-py3-none-any.whl", hash = "sha256:98a375347b580e837e7016007c24680a4261ed8ad7cd35196ac087d229f48e5a"},
+    {file = "jupyter_server-2.7.2.tar.gz", hash = "sha256:d64fb4e593907290e5df916e3c9399c15ab2cd7bdb71cbcd1d36452dbfb30523"},
 ]
 
 [package.dependencies]
@@ -3465,4 +3465,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "423b3cda6bfadbc306a84bc4068168f6ae9201fc5d5790e8800b2ada79c5134d"
+content-hash = "98ce678e9ac324a7afa71600163bc383212c2ebe978b56fc717dd18be3b51e27"

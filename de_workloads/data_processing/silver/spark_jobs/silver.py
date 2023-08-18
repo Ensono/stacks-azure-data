@@ -13,7 +13,7 @@ logger_library = "pysparkle"
 logger = logging.getLogger(logger_library)
 
 
-def silver_main(dataset_name: str) -> None:
+def etl_main(dataset_name: str) -> None:
     """Execute the Silver processing for a given dataset.
 
     This function assumes that datasets in the bronze container are in CSV format and uses specific Spark read options.
@@ -31,7 +31,7 @@ def silver_main(dataset_name: str) -> None:
     input_paths = filter_files_by_extension(input_paths, extension=datasource_type)
     spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
     save_files_as_delta_tables(
-        spark, input_paths, datasource_type, spark_read_options, BRONZE_CONTAINER, SILVER_CONTAINER
+        spark, input_paths, datasource_type, BRONZE_CONTAINER, SILVER_CONTAINER, spark_read_options
     )
 
     logger.info("Finished: Silver processing.")
@@ -39,4 +39,4 @@ def silver_main(dataset_name: str) -> None:
 
 if __name__ == "__main__":
     setup_logger(name=logger_library, log_level=logging.INFO)
-    silver_main(dataset_name="movies_dataset")
+    etl_main(dataset_name="movies_dataset")
