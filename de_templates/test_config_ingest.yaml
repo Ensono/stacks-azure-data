@@ -40,3 +40,21 @@ default_arm_deployment_mode: Incremental
 # These are used to set the default time window in the pipeline and in the corresponding e2e tests
 window_start_default: 2010-01-01
 window_end_default: 2010-01-31
+
+# Trigger config; if not set, the default values are 2010-01-01T00:00:00Z and 2011-12-31T23:59:59Z resp.
+# These are used to set the default start and end times for the pipeline trigger.
+trigger_start_default: 2010-01-01T00:00:00Z
+trigger_end_default: 2011-12-31T23:59:59Z
+
+# Trigger config; if not set, the default is 1
+# This is used as the interval for the trigger, and should be an integer.
+trigger_interval: 1
+
+# Trigger config; if not set, the default is Month
+# This is used to declare the unit of time for the frequency of the triggers rolling window. One from Minute, Hour, Day, Week or Month.
+trigger_frequency: Month
+
+# Trigger config; if not set, the default is 2 hours
+# The delay between the trigger creating runs
+trigger_delay: 02:00:00
+
