@@ -33,6 +33,7 @@ def test_check_env():
     check_env()
 
 
+@patch.dict("os.environ", {}, clear=True)
 def test_check_env_raises():
     with pytest.raises(EnvironmentError):
         check_env()
