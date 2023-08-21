@@ -1,0 +1,63 @@
+parameters:
+  pythonVersion: ''
+  githubToken: ''
+  workingDirectory: './'
+  unitTestLocation: './$(test_unit_src)'
+  e2eTestLocation: './$(test_end_to_end_src)'
+  junitLocation: './$(junit_src)'
+  azureSubscriptionId: ''
+  azureResourceGroupName: ''
+  azureDataFactoryName: ''
+  azureRegionName: ''
+  azureStorageAccountName: ''
+  azureClientId: ''
+  azureClientSecret: ''
+  azureTenantId: ''
+
+steps:
+  - task: UsePythonVersion@0
+    displayName: Set Python Version
+    inputs:
+      versionSpec: ${{ parameters.pythonVersion }}
+      githubToken: ${{ parameters.githubToken }}
+      addToPath: true
+
+  - task: Bash@3
+    displayName: "DE Workload Testing"
+    inputs:
+      targetType: inline
+      script: |
+        cd "${{ parameters.workingDirectory }}"
+        pip install pylint pylint-exit pytest-cov poetry
+        poetry install
+        echo "======================== Running Unit Tests ======================== "
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+        echo "========================= End Unit Tests ========================= "
+        echo ""
+
+        echo "======================== Running E2E Tests ======================== "
+        if [ -d "${{ parameters.e2eTestLocation }}" ]; then
+          poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "${{ parameters.junitLocation }}"
+        else
+          echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
+        fi
+    env:
+      WORKING_DIRECTORY: ${{ parameters.workingDirectory }}
+      UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
+      E2E_TEST_LOCATION: ${{ parameters.e2eTestLocation }}
+      JUNIT_LOCATION: ${{ parameters.junitLocation }}
+      AZURE_SUBSCRIPTION_ID: ${{ parameters.azureSubscriptionId }}
+      AZURE_RESOURCE_GROUP_NAME: ${{ parameters.azureResourceGroupName }}
+      AZURE_DATA_FACTORY_NAME: ${{ parameters.azureDataFactoryName }}
+      AZURE_REGION_NAME: ${{ parameters.azureRegionName }}
+      AZURE_STORAGE_ACCOUNT_NAME: ${{ parameters.azureStorageAccountName }}
+      AZURE_CLIENT_ID: ${{ parameters.azureClientId }}
+      AZURE_CLIENT_SECRET: ${{ parameters.azureClientSecret }}
+      AZURE_TENANT_ID: ${{ parameters.azureTenantId }}
+
+  - task: PublishTestResults@2
+    displayName: "Publish Test Results"
+    inputs:
+      testResultsFiles: "**/*.xml"
+      searchFolder: '$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}'
+    condition: succeededOrFailed()

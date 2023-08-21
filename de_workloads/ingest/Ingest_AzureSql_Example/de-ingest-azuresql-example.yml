@@ -223,52 +223,22 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: UsePythonVersion@0
-                  inputs:
-                    versionSpec: $(pythonVersion)
+                - template: ../../../de_build/de-workload-testing.yml
+                  parameters:
+                    pythonVersion: $(pythonVersion)
                     githubToken: $(github_token)
-                    addToPath: true
-                  displayName: Set Python Version
-                - task: Bash@3
-                  displayName: "DE Workload Testing"
-                  inputs:
-                    targetType: inline
-                    script: |
-                      cd "$WORKING_DIRECTORY"
-                      pip install pylint pylint-exit pytest-cov poetry
-                      poetry install
-                      Write-Output "======================== Running Unit Tests ======================== "
-                      poetry run pytest -rf -v "$UNIT_TEST_LOCATION"
-                      echo "========================= End Unit Tests ========================= "
-                      echo ""
-
-                      echo "======================== Running E2E Tests ======================== "
-                      $e2eTestLocation = $E2E_TEST_LOCATION
-                      if [ -d "$E2E_TEST_LOCATION" ]; then
-                        poetry run behave "$E2E_TEST_LOCATION" --junit --junit-directory "$JUNIT_LOCATION"
-                      else
-                        echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$E2E_TEST_LOCATION' does not exist."
-                      fi
-                  env:
-                    WORKING_DIRECTORY: "./"
-                    UNIT_TEST_LOCATION: "./$(test_unit_src)"
-                    E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
-                    JUNIT_LOCATION: "./$(junit_src)"
-                    AZURE_SUBSCRIPTION_ID: $(azure-subscription-id)
-                    AZURE_RESOURCE_GROUP_NAME: $(resource_group)
-                    AZURE_DATA_FACTORY_NAME: $(datafactoryname)
-                    AZURE_REGION_NAME: $(region)
-                    AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
-                    AZURE_CLIENT_ID: $(azure-client-id)
-                    AZURE_CLIENT_SECRET: $(azure-client-secret)
-                    AZURE_TENANT_ID: $(azure-tenant-id)
-
-                - task: PublishTestResults@2
-                  displayName: "Publish Test Results"
-                  inputs:
-                    testResultsFiles: "**/*.xml"
-                    searchFolder: '$(System.DefaultWorkingDirectory)/$(junit_src)'
-                  condition: succeededOrFailed()
+                    workingDirectory: './'
+                    unitTestLocation: './$(test_unit_src)'
+                    e2eTestLocation: './$(test_end_to_end_src)'
+                    junitLocation: './$(junit_src)'
+                    azureSubscriptionId: $(azure-subscription-id)
+                    azureResourceGroupName: $(resource_group)
+                    azureDataFactoryName: $(datafactoryname)
+                    azureRegionName: $(region)
+                    azureStorageAccountName: $(blob_adls_storage)
+                    azureClientId: $(azure-client-id)
+                    azureClientSecret: $(azure-client-secret)
+                    azureTenantId: $(azure-tenant-id)
 
   #############################################################
   # Deploy to Prod
