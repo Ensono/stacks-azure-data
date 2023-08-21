@@ -223,28 +223,32 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: UsePythonVersion@0
+                  inputs:
+                    versionSpec: $(pythonVersion)
+                    githubToken: $(github_token)
+                    addToPath: true
+                  displayName: Set Python Version
                 - task: Bash@3
                   displayName: "TaskCTL: deworkloadTesting"
                   inputs:
                     targetType: inline
                     script: |
-                      cd $env:WORKING_DIRECTORY
+                      cd $WORKING_DIRECTORY
+                      pip install pylint pylint-exit pytest-cov poetry
                       poetry install
                       Write-Output "======================== Running Unit Tests ======================== "
-                      cd $env:WORKING_DIRECTORY
-                      python3 -m pytest $env:UNIT_TEST_LOCATION
-                      Start-Sleep -Seconds 30
-                      Write-Output "======================== End Unit Tests ======================== "
-                      Write-Output " "
+                      python3 -m pytest $UNIT_TEST_LOCATION
+                      echo "======================== End Unit Tests ======================== "
+                      echo " "
 
-                      Write-Output "======================== Running e2e Tests ======================== "
-                      $e2eTestLocation = $env:E2E_TEST_LOCATION
-                      if (Test-Path $e2eTestLocation -PathType Container) {
-                        $junitLocation = $env:JUNIT_LOCATION
-                        poetry run behave $e2eTestLocation --junit --junit-directory $junitLocation
-                      } else {
-                          Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
-                      }
+                      echo "======================== Running e2e Tests ======================== "
+                      $e2eTestLocation = $E2E_TEST_LOCATION
+                      if [ -d "$E2E_TEST_LOCATION" ]; then
+                        poetry run behave "$E2E_TEST_LOCATION" --junit --junit-directory "$JUNIT_LOCATION"
+                      else
+                        echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$E2E_TEST_LOCATION' does not exist."
+                      fi
                   env:
                     WORKING_DIRECTORY: "./"
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"
