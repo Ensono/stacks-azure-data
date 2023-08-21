@@ -2,10 +2,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from tests.unit.conftest import BRONZE_CONTAINER, SILVER_CONTAINER, TEST_CSV_DIR
 
-from pysparkle.config import BRONZE_CONTAINER, SILVER_CONTAINER
-from pysparkle.etl.silver import save_files_as_delta_tables
-from tests.unit.conftest import TEST_CSV_DIR
+from pysparkle.etl.etl import save_files_as_delta_tables
 
 
 @pytest.mark.parametrize(
@@ -17,7 +16,7 @@ from tests.unit.conftest import TEST_CSV_DIR
         ),
     ],
 )
-@patch("pysparkle.etl.silver.get_adls_file_url")
+@patch("pysparkle.etl.etl.get_adls_file_url")
 def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns, tmp_path):
     def side_effect(container, file_name):
         if container == BRONZE_CONTAINER:
@@ -30,7 +29,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
     mock_get_adls_file_url.side_effect = side_effect
 
     spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
-    save_files_as_delta_tables(spark, csv_files, "csv", spark_read_options)
+    save_files_as_delta_tables(spark, csv_files, "csv", BRONZE_CONTAINER, SILVER_CONTAINER, spark_read_options)
 
     for i, csv_file in enumerate(csv_files):
         filename_with_no_extension = Path(csv_file).stem
@@ -50,7 +49,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
         ("delta", {}, {}),
     ],
 )
-@patch("pysparkle.etl.silver.get_adls_file_url")
+@patch("pysparkle.etl.etl.get_adls_file_url")
 def test_save_files_as_delta_tables_different_formats(
     mock_get_adls_file_url, spark, tmp_path, file_format, write_options, read_options
 ):
@@ -71,7 +70,7 @@ def test_save_files_as_delta_tables_different_formats(
         filepath = side_effect(BRONZE_CONTAINER, file)
         df.write.options(**write_options).format(file_format).save(filepath)
 
-    save_files_as_delta_tables(spark, test_files, file_format, read_options)
+    save_files_as_delta_tables(spark, test_files, file_format, BRONZE_CONTAINER, SILVER_CONTAINER, read_options)
 
     for file in test_files:
         expected_filepath = side_effect(SILVER_CONTAINER, file)
