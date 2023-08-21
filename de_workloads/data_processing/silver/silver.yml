@@ -225,10 +225,25 @@ stages:
             deploy:
               steps:
                 - task: Bash@3
-                  displayName: "TaskCTL: deworkloadTesting"
+                  displayName: "DE Workload Testing"
                   inputs:
                     targetType: inline
-                    script: taskctl deworkloadTesting
+                    script: |
+                      cd "$WORKING_DIRECTORY"
+                      pip install pylint pylint-exit pytest-cov poetry
+                      poetry install
+                      Write-Output "======================== Running Unit Tests ======================== "
+                      poetry run pytest -rf -v "$UNIT_TEST_LOCATION"
+                      echo "========================= End Unit Tests ========================= "
+                      echo ""
+
+                      echo "======================== Running E2E Tests ======================== "
+                      $e2eTestLocation = $E2E_TEST_LOCATION
+                      if [ -d "$E2E_TEST_LOCATION" ]; then
+                        poetry run behave "$E2E_TEST_LOCATION" --junit --junit-directory "$JUNIT_LOCATION"
+                      else
+                        echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$E2E_TEST_LOCATION' does not exist."
+                      fi
                   env:
                     WORKING_DIRECTORY: "./"
                     UNIT_TEST_LOCATION: "./$(test_unit_src)"

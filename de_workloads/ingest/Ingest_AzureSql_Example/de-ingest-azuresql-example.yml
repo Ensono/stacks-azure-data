@@ -230,19 +230,19 @@ stages:
                     addToPath: true
                   displayName: Set Python Version
                 - task: Bash@3
-                  displayName: "TaskCTL: deworkloadTesting"
+                  displayName: "DE Workload Testing"
                   inputs:
                     targetType: inline
                     script: |
-                      cd $WORKING_DIRECTORY
+                      cd "$WORKING_DIRECTORY"
                       pip install pylint pylint-exit pytest-cov poetry
                       poetry install
                       Write-Output "======================== Running Unit Tests ======================== "
-                      python3 -m pytest $UNIT_TEST_LOCATION
-                      echo "======================== End Unit Tests ======================== "
-                      echo " "
+                      poetry run pytest -rf -v "$UNIT_TEST_LOCATION"
+                      echo "========================= End Unit Tests ========================= "
+                      echo ""
 
-                      echo "======================== Running e2e Tests ======================== "
+                      echo "======================== Running E2E Tests ======================== "
                       $e2eTestLocation = $E2E_TEST_LOCATION
                       if [ -d "$E2E_TEST_LOCATION" ]; then
                         poetry run behave "$E2E_TEST_LOCATION" --junit --junit-directory "$JUNIT_LOCATION"
