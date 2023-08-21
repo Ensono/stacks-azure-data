@@ -1,18 +1,24 @@
 [tool.poetry]
 name = "datastacks"
-version = "0.2.1"
-description = ""
-authors = ["Andy Durkan <andy.durkan@ensono.com>"]
+version = "0.3.0"
+description = "A tool for generating data pipelines, featuring utilities for data transformations."
+authors = [
+    "Andy Durkan <andy.durkan@ensono.com>",
+    "Paulina Motyl <paulina.motyl@ensono.com>",
+]
 readme = "README.md"
 
 packages = [
-    { include = "datastacks/datastacks" },
+    { include = "pysparkle", from = "pysparkle" },
+    { include = "datastacks", from = "datastacks" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+click = "^8.1.7"
+pyspark = "^3.4.0"
 jsonschema = "^4.17.3"
-azure-identity = "^1.12.0"
+azure-identity = "^1.13.0"
 azure-mgmt-datafactory = "^3.1.0"
 azure-storage-file-datalake = "^12.11.0"
 click-loglevel = "^0.4.0.post1"
@@ -20,21 +26,29 @@ colorlog = "^6.7.0"
 polling2 = "^0.5.0"
 jinja2 = "^3.1.2"
 pyyaml = "^6.0.1"
-pydantic = "^1.10.9"
+great-expectations = "^0.17.11"
+pydantic = "^1.10.12"
 
 [tool.poetry.scripts]
-datastacks = "datastacks.datastacks.datastacks_cli:cli"
+datastacks = "datastacks.datastacks_cli:cli"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2.2"
+pytest = "^7.3.1"
 behave = "^1.2.6"
 black = "^23.1.0"
 pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
+flake8-docstrings = "^1.7.0"
+pydocstyle = "^6.3.0"
+tomli = "^2.0.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
 
 [tool.black]
     line-length = 120
@@ -53,5 +67,5 @@ exclude = ".venv,.git"
 [tool.pydocstyle]
 convention = "google"
 add-ignore = "D100,D101,D104"
-match = "(?!test_).*\\.py"
+match = "(?!test_|conftest).*\\.py"
 match_dir = "^(?!(tests)).*"

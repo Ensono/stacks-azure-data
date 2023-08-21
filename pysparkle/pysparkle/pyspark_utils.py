@@ -10,7 +10,7 @@ from pysparkle.utils import substitute_env_vars
 logger = logging.getLogger(__name__)
 
 
-def create_spark_session(app_name: str, spark_config: dict[str, Any] = None) -> SparkSession:
+def get_spark_session(app_name: str, spark_config: dict[str, Any] = None) -> SparkSession:
     """Creates a SparkSession with the specified application name or retrieves one that already exists.
 
     The SparkSession is configured to include Hadoop Azure and Delta Lake packages. If a SparkSession is already active,

@@ -87,7 +87,7 @@ Example setup for running PySparkle from ADF.
                     ],
                     "libraries": [
                         {
-                            "whl": "dbfs:/FileStore/jars/pysparkle-latest-py3-none-any.whl"
+                            "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
                         }
                     ]
                 },
