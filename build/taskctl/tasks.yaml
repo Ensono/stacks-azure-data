@@ -138,7 +138,7 @@ tasks:
 
   # Deworkload Testing tasks
   deworkload:Testing:
-#    context: powershell
+    context: powershell
     description: Deworkload Unit Testing
     command:
       - |
