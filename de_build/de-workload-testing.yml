@@ -31,7 +31,7 @@ steps:
         pip install pylint pylint-exit pytest-cov poetry
         poetry install
         echo "======================== Running Unit Tests ======================== "
-        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+        python3 -m pytest -rf -v "${{ parameters.unitTestLocation }}"
         echo "========================= End Unit Tests ========================= "
         echo ""
 
