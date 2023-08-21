@@ -28,6 +28,7 @@ steps:
       targetType: inline
       script: |
         cd "${{ parameters.workingDirectory }}"
+        pip install --upgrade pip
         pip install pylint pylint-exit pytest-cov poetry
         poetry install
         echo "======================== Running Unit Tests ======================== "
