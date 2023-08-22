@@ -78,7 +78,7 @@ stages:
           - script: pip install --upgrade pre-commit
             displayName: install pre-commit
           - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
-            displayName: run linting checks 
+            displayName: run linting checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
