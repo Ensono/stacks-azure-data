@@ -2,6 +2,7 @@
 import json
 import logging
 import os
+from typing import Optional
 
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
@@ -63,12 +64,13 @@ def set_spark_properties(spark: SparkSession) -> None:
     )
 
 
-def get_adls_directory_contents(container: str, path: str) -> list[str]:
+def get_adls_directory_contents(container: str, path: str, recursive: Optional[bool] = True) -> list[str]:
     """Gets the contents of a specified directory in an Azure Data Lake Storage container.
 
     Args:
         container: The name of the container in the ADLS account.
         path: The directory path within the container for which to list contents.
+        recursive: If True, lists contents of all subdirectories recursively.
 
     Returns:
         A list of paths for the files and subdirectories within the specified container.
@@ -78,9 +80,9 @@ def get_adls_directory_contents(container: str, path: str) -> list[str]:
     adls_client = DataLakeServiceClient(account_url=adls_url, credential=DefaultAzureCredential())
     file_system_client = adls_client.get_file_system_client(file_system=container)
 
-    paths = file_system_client.get_paths(path=path)
+    paths = file_system_client.get_paths(path=path, recursive=recursive)
     paths = [path.name for path in paths]
-    logger.info(f"ADLS directory contents: {paths}")
+    logger.debug(f"ADLS directory contents: {paths}")
     return paths
 
 
