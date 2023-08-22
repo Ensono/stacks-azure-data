@@ -1,5 +1,5 @@
 resource "azurerm_data_factory_trigger_tumbling_window" "trigger_Ingest_AzureSql_Example" {
-  name            = "trg_AzureSql_ExampleSource"
+  name            = "trigger_Ingest_AzureSql_Example"
   data_factory_id = data.azurerm_data_factory.factory.id
   start_time      = "2010-01-01T00:00:00Z"
   end_time        = "2011-12-31T23:59:59Z"
