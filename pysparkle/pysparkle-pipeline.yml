@@ -46,6 +46,10 @@ stages:
       - job: Build_Pysparkle
         displayName: Build_Pysparkle
         steps:
+          - script: pip install --upgrade pre-commit
+            displayName: install pre-commit
+          - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
+            displayName: run linting checks
           - task: Bash@3
             displayName: "Clean Workspace"
             inputs:
