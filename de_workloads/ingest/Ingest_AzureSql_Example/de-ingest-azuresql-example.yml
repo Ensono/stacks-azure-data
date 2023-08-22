@@ -75,7 +75,7 @@ stages:
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-          - script: python -m pip install --upgrade pre-commit
+          - script: pip install --upgrade pre-commit
             displayName: install pre-commit
           - script: pre-commit run --all-files --show-diff-on-failure
             displayName: run pre-commit
