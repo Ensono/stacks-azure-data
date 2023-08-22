@@ -61,10 +61,10 @@ class IngestConfig(BaseModel):
     silver_container: Optional[str] = Field(default=None, description="Name of container for Silver data")
     gold_container: Optional[str] = Field(default=None, description="Name of container for Gold data")
 
-    trigger_start_default: Optional[datetime] = Field(
+    trigger_start: Optional[datetime] = Field(
         default="2010-01-01T00:00:00Z", description="Datetime to set as start time for pipeline trigger."
     )
-    trigger_end_default: Optional[datetime] = Field(
+    trigger_end: Optional[datetime] = Field(
         default="2011-12-31T23:59:59Z", description="Datetime to set as end time for pipeline trigger."
     )
     trigger_frequency: Optional[TriggerFrequency] = Field(
