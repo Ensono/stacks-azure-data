@@ -222,7 +222,7 @@
                         "typeProperties": {
                             "variableName": "run_id",
                             "value": {
-                                "value": "@{if(empty(pipeline().parameters.run_id), pipeline().RunId, pipeline().parameters.run_id)}",
+                                "value": "@{if(or(empty(pipeline().parameters.run_id),equals(pipeline().parameters.run_id, 'auto')), pipeline().RunId, pipeline().parameters.run_id)}",
                                 "type": "Expression"
                             }
                         }
@@ -258,7 +258,8 @@
                 },
                 "parameters": {
                     "run_id": {
-                        "type": "string"
+                        "type": "string",
+                        "defaultValue": "auto"
                     },
                     "data_source_name": {
                         "type": "string",
