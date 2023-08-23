@@ -237,7 +237,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ../../../de_build/de-workload-testing.yml
+                - template: ../../de_build/de-workload-testing.yml
                   parameters:
                     pythonVersion: $(pythonVersion)
                     githubToken: $(github_token)
