@@ -67,7 +67,11 @@ def get_spark_session_for_adls(app_name: str, spark_config: dict[str, Any] = Non
 
 
 def read_latest_rundate_data(
-    spark: SparkSession, container_name: str, datasource_path: str, datasource_type: str
+    spark: SparkSession,
+    container_name: str,
+    datasource_path: str,
+    datasource_type: str,
+    spark_read_options: Optional[dict[str, Any]] = None,
 ) -> DataFrame:
     """Reads the most recent data, based on rundate, from an ADLS location and returns it as a dataframe.
 
@@ -80,6 +84,7 @@ def read_latest_rundate_data(
         container_name: Name of the ADLS container.
         datasource_path: Directory path within the ADLS container where rundate directories are located.
         datasource_type: Source system type that Spark can read from, e.g. delta, table, parquet, json, csv.
+        spark_read_options: Options to pass to the DataFrameReader.
 
     Returns:
         The dataframe loaded from the datasource with the most recent rundate, with metadata columns dropped.
@@ -94,4 +99,4 @@ def read_latest_rundate_data(
     logger.info(f"Processing rundate: {most_recent_rundate}")
     latest_path = datasource_path + dirname_prefix + most_recent_rundate
     dataset_url = get_adls_file_url(container_name, latest_path)
-    return read_datasource(spark, dataset_url, datasource_type).drop(*metadata_columns)
+    return read_datasource(spark, dataset_url, datasource_type, spark_read_options).drop(*metadata_columns)
