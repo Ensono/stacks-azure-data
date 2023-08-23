@@ -75,10 +75,16 @@ stages:
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-          - script: pip install --upgrade pre-commit
-            displayName: install pre-commit
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+              githubToken: $(github_token)
+              addToPath: true
+            displayName: Set Python Version
+          - script: pip install --upgrade pre-commit tomli
+            displayName: Install pre-commit
           - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
-            displayName: run linting checks
+            displayName: Run Linting Checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
