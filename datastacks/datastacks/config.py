@@ -10,16 +10,19 @@ INGEST_TEMPLATE_FOLDER = "Ingest_SourceType_SourceName"
 
 class DataSourceType(Enum):
     """Enum containing supported data source types."""
+
     AZURE_SQL = "azure_sql"
 
 
 class TriggerFrequency(Enum):
     """Enum containing supported trigger frequencies."""
+
     MINUTE = "Minute"
     HOUR = "Hour"
     DAY = "Day"
     WEEK = "Week"
     MONTH = "Month"
+
 
 class IngestConfig(BaseModel):
     """Pydantic definitions for data ingest workload generation config."""
@@ -67,12 +70,8 @@ class IngestConfig(BaseModel):
     trigger_end: Optional[datetime] = Field(
         default="2011-12-31T23:59:59Z", description="Datetime to set as end time for pipeline trigger."
     )
-    trigger_frequency: Optional[TriggerFrequency] = Field(
-        default="Month", description="Frequency for the trigger."
-    )    
-    trigger_interval: Optional[int] = Field(
-        default=1, description="Interval value for the trigger."
-    )
+    trigger_frequency: Optional[TriggerFrequency] = Field(default="Month", description="Frequency for the trigger.")
+    trigger_interval: Optional[int] = Field(default=1, description="Interval value for the trigger.")
     trigger_delay: Optional[str] = Field(
         default="02:00:00", description="Delay between triggered runs, formatted HH:mm:ss"
     )

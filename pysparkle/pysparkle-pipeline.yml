@@ -56,10 +56,6 @@ stages:
           - template: ../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-          - script: pip install --upgrade pre-commit
-            displayName: install pre-commit
-          - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
-            displayName: run linting checks
           - task: UsePythonVersion@0
             inputs:
               versionSpec: $(pythonVersion)
@@ -73,6 +69,10 @@ stages:
               poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
+          - script: pre-commit install
+            displayName: install pre-commit
+          - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
+            displayName: run linting checks
           - bash: |
               poetry run pytest -rf -v pysparkle/tests -k unit
             displayName: "Run Unit Tests"

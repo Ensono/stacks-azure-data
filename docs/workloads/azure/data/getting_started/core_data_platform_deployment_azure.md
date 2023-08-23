@@ -36,7 +36,7 @@ read in using the scaffold command.
 stacks-cli interactive
 ```
 
-The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project. 
+The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project.
 
 | Question                                      | Required value for data project |
 |-----------------------------------------------|---------------------------------|
@@ -82,8 +82,7 @@ Run the  pipeline configured in Step 2
 
 Running this pipeline in Azure DevOps will deploy the artifacts into the non-production (nonprod) environment. If successful, the generated resources will now be available in the nonprod Stacks environment.
 
-## Step 4: Deploy Infrastructure in further environments 
+## Step 4: Deploy Infrastructure in further environments
 
 * Deployment to the non-production (nonprod) environment is triggered on a feature branch when a pull request is open
 * Deployment to the production (prod) environment is triggered on merging to the `main/master` branch, followed by manual approval of the release step.
-
