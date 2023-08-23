@@ -25,7 +25,7 @@ variables:
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
   - name: pythonVersion
-    value: "3.10.10"
+    value: "3.10"
   - name: test_unit_path
     value: "$(self_repo_dir)/pysparkle/tests/unit/"
   - name: junit_path
@@ -71,7 +71,7 @@ stages:
             workingDirectory: $(self_repo_dir)
           - script: pip install --upgrade pre-commit
             displayName: Install pre-commit
-          - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
+          - script: pre-commit run --all-files --show-diff-on-failure
             displayName: Run Linting Checks
           - bash: |
               poetry run pytest -rf -v pysparkle/tests -k unit
