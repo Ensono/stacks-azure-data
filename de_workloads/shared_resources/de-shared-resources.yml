@@ -237,24 +237,22 @@ stages:
           runOnce:
             deploy:
               steps:
-                - task: Bash@3
-                  displayName: "TaskCTL: deworkloadTesting"
-                  inputs:
-                    targetType: inline
-                    script: taskctl deworkloadTesting
-                  env:
-                    WORKING_DIRECTORY: "./"
-                    UNIT_TEST_LOCATION: "./$(test_unit_src)"
-                    E2E_TEST_LOCATION: "./$(test_end_to_end_src)"
-                    JUNIT_LOCATION: "./$(junit_src)"
-                    AZURE_SUBSCRIPTION_ID: $(azure-subscription-id)
-                    AZURE_RESOURCE_GROUP_NAME: $(resource_group)
-                    AZURE_DATA_FACTORY_NAME: $(datafactoryname)
-                    AZURE_REGION_NAME: $(region)
-                    AZURE_STORAGE_ACCOUNT_NAME: $(blob_adls_storage)
-                    AZURE_CLIENT_ID: $(azure-client-id)
-                    AZURE_CLIENT_SECRET: $(azure-client-secret)
-                    AZURE_TENANT_ID: $(azure-tenant-id)
+                - template: ../../../de_build/de-workload-testing.yml
+                  parameters:
+                    pythonVersion: $(pythonVersion)
+                    githubToken: $(github_token)
+                    workingDirectory: './'
+                    unitTestLocation: './$(test_unit_src)'
+                    e2eTestLocation: './$(test_end_to_end_src)'
+                    junitLocation: './$(junit_src)'
+                    azureSubscriptionId: $(azure-subscription-id)
+                    azureResourceGroupName: $(resource_group)
+                    azureDataFactoryName: $(datafactoryname)
+                    azureRegionName: $(region)
+                    azureStorageAccountName: $(blob_adls_storage)
+                    azureClientId: $(azure-client-id)
+                    azureClientSecret: $(azure-client-secret)
+                    azureTenantId: $(azure-tenant-id)
 
                 - task: PublishTestResults@2
                   displayName: "Publish Test Results"
