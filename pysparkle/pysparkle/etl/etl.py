@@ -3,10 +3,11 @@ import logging
 from pathlib import Path
 from typing import Any, Optional
 
-from pyspark.sql import SparkSession
+from dateutil.parser import isoparse
+from pyspark.sql import DataFrame, SparkSession
 
 from pysparkle.pyspark_utils import get_spark_session, read_datasource, save_dataframe_as_delta
-from pysparkle.storage_utils import check_env, get_adls_file_url, set_spark_properties
+from pysparkle.storage_utils import check_env, get_adls_directory_contents, get_adls_file_url, set_spark_properties
 
 logger = logging.getLogger(__name__)
 
@@ -63,3 +64,34 @@ def get_spark_session_for_adls(app_name: str, spark_config: dict[str, Any] = Non
     spark = get_spark_session(app_name, spark_config)
     set_spark_properties(spark)
     return spark
+
+
+def read_latest_rundate_data(
+    spark: SparkSession, container_name: str, datasource_path: str, datasource_type: str
+) -> DataFrame:
+    """Reads the most recent data, based on rundate, from an ADLS location and returns it as a dataframe.
+
+    The function identifies the latest rundate by parsing directory names in the given path and then reads the
+    corresponding data. The rundate directories should follow the format: "rundate=<date_string_in_ISO-8601>",
+    e.g. "rundate=YYYY-MM-DDTHH:MM:SS" or "rundate=YYYY-MM-DDTHHMMSS.FFFFFFZ".
+
+    Args:
+        spark: Spark session.
+        container_name: Name of the ADLS container.
+        datasource_path: Directory path within the ADLS container where rundate directories are located.
+        datasource_type: Source system type that Spark can read from, e.g. delta, table, parquet, json, csv.
+
+    Returns:
+        The dataframe loaded from the datasource with the most recent rundate, with metadata columns dropped.
+
+    """
+    logger.info(f"Reading dataset: {datasource_path}")
+    dirname_prefix = "rundate="
+    metadata_columns = ["meta_ingestion_datetime", "meta_ingestion_pipeline", "meta_ingestion_run_id"]
+    directories = get_adls_directory_contents(container_name, datasource_path, recursive=False)
+    rundates = [directory.split(dirname_prefix)[1] for directory in directories]
+    most_recent_rundate = max(rundates, key=isoparse)
+    logger.info(f"Processing rundate: {most_recent_rundate}")
+    latest_path = datasource_path + dirname_prefix + most_recent_rundate
+    dataset_url = get_adls_file_url(container_name, latest_path)
+    return read_datasource(spark, dataset_url, datasource_type).drop(*metadata_columns)
