@@ -84,7 +84,7 @@ stages:
             displayName: Set Python Version
           - script: pip install --upgrade pre-commit tomli
             displayName: Install pre-commit
-          - script: pre-commit run --all-files --show-diff-on-failure
+          - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
             displayName: Run Linting Checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
