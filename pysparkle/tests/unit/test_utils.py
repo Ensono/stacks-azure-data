@@ -65,6 +65,6 @@ def test_filter_files_by_extension(extension, expected):
         ("", ""),
     ],
 )
-def test_to_snake_case(input_str, expected_output):
+def test_camel_to_snake(input_str, expected_output):
     result = camel_to_snake(input_str)
     assert result == expected_output
