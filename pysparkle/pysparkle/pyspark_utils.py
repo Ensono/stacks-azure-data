@@ -1,7 +1,9 @@
-# Spark common utilities
+"""Spark common utilities."""
 import logging
 import os
 from typing import Any, Optional
+from delta.tables import DeltaTable
+from pyspark.errors import AnalysisException
 
 from pyspark.sql import DataFrame, SparkSession
 
@@ -90,20 +92,52 @@ def read_datasource(
         return source_type(data_location)
 
 
-def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str) -> None:
-    """Saves a Spark DataFrame as a Delta table at a specified location, overwriting any existing data.
+def delta_table_exists(spark: SparkSession, path: str) -> bool:
+    """Checks if the Delta table exists at the specified path."""
+    try:
+        DeltaTable.forPath(spark, path)
+        return True
+    except AnalysisException:
+        return False
+
+
+def save_dataframe_as_delta(
+    spark: SparkSession,
+    dataframe: DataFrame,
+    output_filepath: str,
+    overwrite: bool = True,
+    merge_keys: Optional[list[str]] = None,
+) -> None:
+    """Saves a Spark DataFrame as a Delta table at a specified location.
+
+    This function can either overwrite the entire table or perform an upsert based on specified merge keys.
 
     Args:
-        dataframe: Spark DataFrame to save as a Delta table.
+        spark: Spark session.
+        dataframe: Spark DataFrame to save as the Delta table.
         output_filepath: The location to write the Delta table.
+        overwrite: Flag to determine whether to overwrite the entire table or perform an upsert.
+        merge_keys: List of keys based on which upsert will be performed.
 
     Example:
-        >>> save_dataframe_as_delta(dataframe, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable")
+        >>> output_url = "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable"
+        >>> save_dataframe_as_delta(dataframe, output_url, overwrite=True)
+        >>> save_dataframe_as_delta(dataframe, output_url, overwrite=False, merge_keys=["id", "timestamp"])
 
     """
     table_name = os.path.basename(output_filepath)
     logger.info(f"Saving delta table {table_name}...")
-    dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+
+    if overwrite or not delta_table_exists(spark, output_filepath):
+        dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+    else:
+        delta_table = DeltaTable.forPath(SparkSession.builder.getOrCreate(), output_filepath)
+        merge_condition = " AND ".join([f"target.{key} = source.{key}" for key in merge_keys])
+
+        delta_table.alias("target").merge(
+            dataframe.alias("source"), merge_condition
+        ).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()
+
     logger.info(f"Saved: {output_filepath}.")
 
 

@@ -1,10 +1,12 @@
+import os
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from pyspark.sql import DataFrame
 from tests.unit.conftest import BRONZE_CONTAINER, SILVER_CONTAINER, TEST_CSV_DIR
 
-from pysparkle.etl.etl import save_files_as_delta_tables
+from pysparkle.etl import read_latest_rundate_data, save_files_as_delta_tables, transform_and_save_as_delta
 
 
 @pytest.mark.parametrize(
@@ -16,7 +18,7 @@ from pysparkle.etl.etl import save_files_as_delta_tables
         ),
     ],
 )
-@patch("pysparkle.etl.etl.get_adls_file_url")
+@patch("pysparkle.etl.get_adls_file_url")
 def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, expected_columns, tmp_path):
     def side_effect(container, file_name):
         if container == BRONZE_CONTAINER:
@@ -49,7 +51,7 @@ def test_save_files_as_delta_tables(mock_get_adls_file_url, spark, csv_files, ex
         ("delta", {}, {}),
     ],
 )
-@patch("pysparkle.etl.etl.get_adls_file_url")
+@patch("pysparkle.etl.get_adls_file_url")
 def test_save_files_as_delta_tables_different_formats(
     mock_get_adls_file_url, spark, tmp_path, file_format, write_options, read_options
 ):
@@ -77,3 +79,56 @@ def test_save_files_as_delta_tables_different_formats(
         df_read = spark.read.format("delta").load(expected_filepath)
         assert df_read.count() == len(sample_data)  # same number of rows
         assert df_read.columns == ["Name", "Score"]  # same column names
+
+
+def test_read_latest_rundate_data(spark, tmp_path):
+    def mock_get_adls_directory_contents(*args, **kwargs):
+        return os.listdir(tmp_path)
+
+    def mock_get_adls_file_url(container, path):
+        return path
+
+    rundates = ["2023-04-01T12:34:56Z", "2023-08-18T090129.2247Z", "2023-08-15T130850.3738696Z"]
+    directories = [f"rundate={date}" for date in rundates]
+
+    # Create a Delta table in each directory
+    for idx, dir in enumerate(directories, start=1):
+        data_path = tmp_path / dir
+        data_path.mkdir()
+        data = [(idx, "Alice", dir, "2023-08-24 12:34:56", "pipeline", f"runid{idx}")]
+        df = spark.createDataFrame(
+            data,
+            ["Id", "Name", "Directory", "meta_ingestion_datetime", "meta_ingestion_pipeline", "meta_ingestion_run_id"],
+        )
+        df.write.format("delta").mode("overwrite").save(str(data_path))
+
+    with patch("pysparkle.etl.get_adls_directory_contents", side_effect=mock_get_adls_directory_contents), patch(
+        "pysparkle.etl.get_adls_file_url", side_effect=mock_get_adls_file_url
+    ):
+
+        df = read_latest_rundate_data(spark, "dummy", str(tmp_path), "delta")
+
+        assert df.columns == ["Id", "Name", "Directory"]
+        rows = df.collect()
+        assert len(rows) == 1
+        assert rows[0].Directory == "rundate=2023-08-18T090129.2247Z"
+
+
+def test_transform_and_save_as_delta(spark, tmp_path):
+    input_data = [(1, "Alice"), (2, "Bob")]
+    input_df = spark.createDataFrame(input_data, ["Id", "Name"])
+
+    def mock_transform(df: DataFrame) -> DataFrame:
+        return df.withColumn("NewCol", df.Id + 1)
+
+    output_path = str(tmp_path)
+
+    transform_and_save_as_delta(spark, input_df, mock_transform, output_path)
+
+    saved_df = spark.read.format("delta").load(output_path)
+
+    assert saved_df.columns == ["Id", "Name", "NewCol"]
+    rows = saved_df.collect()
+    assert len(rows) == 2
+    assert rows[0].NewCol == 2
+    assert rows[1].NewCol == 3

@@ -1,4 +1,4 @@
-# Helper functions for PySparkle
+"""Helper functions for PySparkle."""
 import os
 import re
 

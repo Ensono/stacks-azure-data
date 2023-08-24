@@ -197,14 +197,14 @@ files = [
 
 [[package]]
 name = "azure-core"
-version = "1.29.2"
+version = "1.29.3"
 description = "Microsoft Azure Core Library for Python"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "azure-core-1.29.2.zip", hash = "sha256:beb0fe88d1043d8457318e8fb841d9caa648211092eda213c16b376401f3710d"},
-    {file = "azure_core-1.29.2-py3-none-any.whl", hash = "sha256:8e6602f322dc1070caf7e17754beb53b69ffa09df0f4786009a3107e9a00c793"},
+    {file = "azure-core-1.29.3.tar.gz", hash = "sha256:c92700af982e71c8c73de9f4c20da8b3f03ce2c22d13066e4d416b4629c87903"},
+    {file = "azure_core-1.29.3-py3-none-any.whl", hash = "sha256:f8b2910f92b66293d93bd00564924ad20ad48f4a1e150577cf18d1e7d4f9263c"},
 ]
 
 [package.dependencies]
@@ -800,6 +800,22 @@ files = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
+
+[[package]]
+name = "delta-spark"
+version = "2.4.0"
+description = "Python APIs for using Delta Lake with Apache Spark"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "delta-spark-2.4.0.tar.gz", hash = "sha256:ef776e325e80d98e3920cab982c747b094acc46599d62dfcdc9035fb112ba6a9"},
+    {file = "delta_spark-2.4.0-py3-none-any.whl", hash = "sha256:7204142a97ef16367403b020d810d0c37f4ae8275b4997de4056423cf69b3a4b"},
+]
+
+[package.dependencies]
+importlib-metadata = ">=1.0.0"
+pyspark = ">=3.4.0,<3.5.0"
 
 [[package]]
 name = "distlib"
@@ -3465,4 +3481,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "98ce678e9ac324a7afa71600163bc383212c2ebe978b56fc717dd18be3b51e27"
+content-hash = "7301001fc700c2a8978e26311685bf83805136424e952e5db092391a484ec9c7"

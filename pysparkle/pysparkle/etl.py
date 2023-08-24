@@ -1,7 +1,12 @@
-# Bronze to Silver transformations.
+"""ETL Transformation Utilities for Data Pipelines.
+
+This module provides a collection of helper functions tailored for various ETL tasks in data pipelines. Specifically
+designed to simplify complex operations, these functions streamline the transformation process between different data
+layers, such as Bronze-to-Silver or Silver-to-Gold.
+"""
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from dateutil.parser import isoparse
 from pyspark.sql import DataFrame, SparkSession
@@ -22,8 +27,9 @@ def save_files_as_delta_tables(
 ) -> None:
     """Saves multiple data files as Delta tables.
 
-    The function reads input files in a given format from a bronze container and writes them as Delta tables
-    into a silver container.
+    This function reads multiple data files of a specified format from a source container and writes them as Delta
+    tables into a target container. The name of each Delta table is derived from its corresponding input file name,
+    excluding the file extension.
 
     Args:
         spark: Spark session.
@@ -39,7 +45,7 @@ def save_files_as_delta_tables(
         df = read_datasource(spark, filepath, datasource_type, spark_read_options)
         filename_with_no_extension = Path(filepath).stem
         output_filepath = get_adls_file_url(target_container, filename_with_no_extension)
-        save_dataframe_as_delta(df, output_filepath)
+        save_dataframe_as_delta(spark, df, output_filepath)
 
 
 def get_spark_session_for_adls(app_name: str, spark_config: dict[str, Any] = None) -> SparkSession:
@@ -96,7 +102,30 @@ def read_latest_rundate_data(
     directories = get_adls_directory_contents(container_name, datasource_path, recursive=False)
     rundates = [directory.split(dirname_prefix)[1] for directory in directories]
     most_recent_rundate = max(rundates, key=isoparse)
-    logger.info(f"Processing rundate: {most_recent_rundate}")
-    latest_path = datasource_path + dirname_prefix + most_recent_rundate
-    dataset_url = get_adls_file_url(container_name, latest_path)
+    logger.info(f"Latest rundate: {most_recent_rundate}")
+    latest_path = Path(datasource_path) / (dirname_prefix + most_recent_rundate)
+    dataset_url = get_adls_file_url(container_name, str(latest_path))
     return read_datasource(spark, dataset_url, datasource_type, spark_read_options).drop(*metadata_columns)
+
+
+def transform_and_save_as_delta(
+    spark: SparkSession,
+    input_df: DataFrame,
+    transform_func: Callable[[DataFrame], DataFrame],
+    output_filepath: str,
+    overwrite: bool = True,
+    merge_keys: Optional[list[str]] = None,
+) -> None:
+    """Transforms an input dataframe using the provided transformation function and saves the result as a Delta table.
+
+    Args:
+        spark: Spark session.
+        input_df: Data frame to be transformed.
+        transform_func: Transformation function.
+        output_filepath: The location to write the Delta table.
+        overwrite: Flag to determine whether to overwrite the entire table or perform an upsert.
+        merge_keys: List of keys based on which upsert will be performed.
+
+    """
+    transformed_df = transform_func(input_df)
+    save_dataframe_as_delta(spark, transformed_df, output_filepath, overwrite, merge_keys)

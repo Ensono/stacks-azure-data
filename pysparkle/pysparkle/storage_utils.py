@@ -1,4 +1,4 @@
-# Helper functions for interacting with Azure Data Lake Storage and Azure Blob Storage
+"""Helper functions for interacting with Azure Data Lake Storage and Azure Blob Storage."""
 import json
 import logging
 import os
