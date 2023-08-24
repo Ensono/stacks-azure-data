@@ -129,7 +129,7 @@ def save_dataframe_as_delta(
     logger.info(f"Saving delta table {table_name}...")
 
     if overwrite or not delta_table_exists(spark, output_filepath):
-        dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+        dataframe.write.format("delta").option("overwriteSchema", "true").mode("overwrite").save(output_filepath)
     else:
         delta_table = DeltaTable.forPath(SparkSession.builder.getOrCreate(), output_filepath)
         merge_condition = " AND ".join([f"target.{key} = source.{key}" for key in merge_keys])

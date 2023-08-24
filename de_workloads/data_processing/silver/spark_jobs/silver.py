@@ -1,42 +1,139 @@
 import logging
 
-from pysparkle.etl.etl import get_spark_session_for_adls, save_files_as_delta_tables
-from pysparkle.logger import setup_logger
-from pysparkle.storage_utils import get_adls_directory_contents
-from pysparkle.utils import filter_files_by_extension
+from pyspark.sql import DataFrame
+from pyspark.sql.functions import col, explode, from_json
+from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType
 
+from pysparkle.etl import (
+    TableTransformation,
+    get_spark_session_for_adls,
+    read_latest_rundate_data,
+    transform_and_save_as_delta,
+)
+from pysparkle.logger import setup_logger
 
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
+SOURCE_DATA_TYPE = "parquet"
+INPUT_PATH_PATTERN = "Ingest_AzureSql_Example/movies.{table_name}/v1/full/"
+OUTPUT_PATH_PATTERN = "movies/{table_name}"
+
 
 logger_library = "pysparkle"
 logger = logging.getLogger(logger_library)
 
 
-def etl_main(dataset_name: str) -> None:
-    """Execute the Silver processing for a given dataset.
-
-    This function assumes that datasets in the bronze container are in CSV format and uses specific Spark read options.
+def transform_keywords(df: DataFrame) -> DataFrame:
+    """Parse and flatten the keywords column from the input DataFrame.
 
     Args:
-        dataset_name: Name of the dataset to process.
+        df: Input DataFrame containing a 'keywords' column with JSON strings.
+
+    Returns:
+        Flattened DataFrame with 'keyword_id' and 'keyword_name' columns.
 
     """
+    keywords_schema = ArrayType(StructType([StructField("id", IntegerType()), StructField("name", StringType())]))
+
+    df_parsed = df.withColumn("keywords_json", from_json(col("keywords"), keywords_schema))
+
+    df_flattened = (
+        df_parsed.withColumn("keywords", explode(col("keywords_json")))
+        .withColumn("keyword_id", col("keywords").getField("id"))
+        .withColumn("keyword_name", col("keywords").getField("name"))
+        .drop("keywords_json", "keywords")
+    )
+
+    return df_flattened
+
+
+def transform_movies_metadata(df: DataFrame) -> DataFrame:
+    """Transforms a DataFrame containing movies metadata, parsing and flattening nested JSON structures.
+
+    Args:
+        df: The input DataFrame containing movies metadata.
+
+    Returns:
+        A transformed DataFrame with parsed and flattened movie metadata fields.
+
+    """
+    # Define the schemas
+    belongs_to_collection_schema = StructType(
+        [
+            StructField("id", IntegerType()),
+            StructField("name", StringType()),
+            StructField("poster_path", StringType()),
+            StructField("backdrop_path", StringType()),
+        ]
+    )
+
+    genre_schema = ArrayType(StructType([StructField("id", IntegerType()), StructField("name", StringType())]))
+
+    production_companies_schema = ArrayType(
+        StructType([StructField("name", StringType()), StructField("id", IntegerType())])
+    )
+
+    production_countries_schema = ArrayType(
+        StructType([StructField("iso_3166_1", StringType()), StructField("name", StringType())])
+    )
+
+    spoken_languages_schema = ArrayType(
+        StructType([StructField("iso_639_1", StringType()), StructField("name", StringType())])
+    )
+
+    # Convert and flatten
+    df_parsed = (
+        df.withColumn("belongs_to_collection", from_json(col("belongs_to_collection"), belongs_to_collection_schema))
+        .withColumn("genres", from_json(col("genres"), genre_schema))
+        .withColumn("production_companies", from_json(col("production_companies"), production_companies_schema))
+        .withColumn("production_countries", from_json(col("production_countries"), production_countries_schema))
+        .withColumn("spoken_languages", from_json(col("spoken_languages"), spoken_languages_schema))
+    )
+
+    df_exploded = (
+        df_parsed.withColumn("genre", explode(col("genres")))
+        .withColumn("production_company", explode(col("production_companies")))
+        .withColumn("production_country", explode(col("production_countries")))
+        .withColumn("spoken_language", explode(col("spoken_languages")))
+    )
+
+    df_final = (
+        df_exploded.withColumn("genre_id", col("genre.id"))
+        .withColumn("genre_name", col("genre.name"))
+        .withColumn("production_company_name", col("production_company.name"))
+        .withColumn("production_country_iso", col("production_country.iso_3166_1"))
+        .withColumn("spoken_language_iso", col("spoken_language.iso_639_1"))
+        .drop("genre", "production_company", "production_country", "spoken_language")
+    )
+
+    return df_final
+
+
+def etl_main() -> None:
+    """Execute the Silver processing for a given dataset."""
     logger.info("Running Silver processing...")
 
     spark = get_spark_session_for_adls("Silver")
 
-    datasource_type = "csv"
-    input_paths = get_adls_directory_contents(BRONZE_CONTAINER, dataset_name)
-    input_paths = filter_files_by_extension(input_paths, extension=datasource_type)
-    spark_read_options = {"header": "true", "inferSchema": "true", "delimiter": ","}
-    save_files_as_delta_tables(
-        spark, input_paths, datasource_type, BRONZE_CONTAINER, SILVER_CONTAINER, spark_read_options
-    )
+    tables = [
+        TableTransformation("keywords", transform_keywords),
+        TableTransformation("links", lambda df: df),
+        TableTransformation("ratings_small", lambda df: df),
+        TableTransformation("movies_metadata", transform_movies_metadata),
+    ]
+
+    for table in tables:
+        df = read_latest_rundate_data(
+            spark, BRONZE_CONTAINER, INPUT_PATH_PATTERN.format(table_name=table.table_name), datasource_type="parquet"
+        )
+
+        output_path = OUTPUT_PATH_PATTERN.format(table_name=table.table_name)
+
+        transform_and_save_as_delta(spark, df, table.transformation_function, SILVER_CONTAINER, output_path)
 
     logger.info("Finished: Silver processing.")
 
 
 if __name__ == "__main__":
     setup_logger(name=logger_library, log_level=logging.INFO)
-    etl_main(dataset_name="movies_dataset")
+    etl_main()
