@@ -16,7 +16,6 @@ def test_transform_keywords(spark):
 
 
 def test_transform_movies_metadata(spark):
-    # Sample data based on the provided structure
     data = [
         (
             "False",
