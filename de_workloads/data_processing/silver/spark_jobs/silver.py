@@ -11,6 +11,7 @@ from pysparkle.etl import (
     transform_and_save_as_delta,
 )
 from pysparkle.logger import setup_logger
+from pysparkle.pyspark_utils import rename_columns_to_snake_case
 
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
@@ -44,7 +45,7 @@ def transform_keywords(df: DataFrame) -> DataFrame:
         .drop("keywords_json", "keywords")
     )
 
-    return df_flattened
+    return rename_columns_to_snake_case(df_flattened)
 
 
 def transform_movies_metadata(df: DataFrame) -> DataFrame:
@@ -95,6 +96,7 @@ def transform_movies_metadata(df: DataFrame) -> DataFrame:
         .withColumn("production_company", explode(col("production_companies")))
         .withColumn("production_country", explode(col("production_countries")))
         .withColumn("spoken_language", explode(col("spoken_languages")))
+        .drop("genres", "production_companies", "production_countries", "spoken_languages")
     )
 
     df_final = (
@@ -106,7 +108,7 @@ def transform_movies_metadata(df: DataFrame) -> DataFrame:
         .drop("genre", "production_company", "production_country", "spoken_language")
     )
 
-    return df_final
+    return rename_columns_to_snake_case(df_final)
 
 
 def etl_main() -> None:
@@ -117,8 +119,8 @@ def etl_main() -> None:
 
     tables = [
         TableTransformation("keywords", transform_keywords),
-        TableTransformation("links", lambda df: df),
-        TableTransformation("ratings_small", lambda df: df),
+        TableTransformation("links", rename_columns_to_snake_case),
+        TableTransformation("ratings_small", rename_columns_to_snake_case),
         TableTransformation("movies_metadata", transform_movies_metadata),
     ]
 

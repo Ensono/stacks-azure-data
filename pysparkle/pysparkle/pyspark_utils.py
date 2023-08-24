@@ -7,7 +7,7 @@ from pyspark.errors import AnalysisException
 
 from pyspark.sql import DataFrame, SparkSession
 
-from pysparkle.utils import substitute_env_vars
+from pysparkle.utils import camel_to_snake, substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
@@ -151,3 +151,17 @@ def ensure_database_exists(spark: SparkSession, schema: str) -> None:
     if not spark.catalog.databaseExists(schema):
         spark.sql(f"CREATE DATABASE IF NOT EXISTS {schema}")
         logger.info(f"Database {schema} has been created.")
+
+
+def rename_columns_to_snake_case(df: DataFrame) -> DataFrame:
+    """Rename all columns of a DataFrame to snake_case.
+
+    Args:
+        df: A PySpark DataFrame.
+
+    Returns:
+        The DataFrame with columns renamed to snake_case.
+    """
+    for col in df.columns:
+        df = df.withColumnRenamed(col, camel_to_snake(col))
+    return df

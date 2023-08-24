@@ -49,3 +49,17 @@ def filter_files_by_extension(paths: list[str], extension: str) -> list[str]:
         extension = f".{extension}"
 
     return [path for path in paths if path.endswith(extension)]
+
+
+def camel_to_snake(camel_str: str) -> str:
+    """Converts a camelCase string to snake_case.
+
+    Args:
+        camel_str: A string in camelCase format.
+
+    Returns:
+        The string converted to snake_case format.
+
+    """
+    snake_str = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_str)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", snake_str).lower()

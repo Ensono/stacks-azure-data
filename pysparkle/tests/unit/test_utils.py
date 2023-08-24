@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pysparkle.utils import filter_files_by_extension, find_placeholders, substitute_env_vars
+from pysparkle.utils import filter_files_by_extension, find_placeholders, substitute_env_vars, camel_to_snake
 
 TEST_ENV_VARS = {"TEST_VAR1": "value1", "TEST_VAR2": "value2", "ADLS_ACCOUNT": "value3"}
 
@@ -49,3 +49,22 @@ def test_substitute_env_vars():
 def test_filter_files_by_extension(extension, expected):
     paths = ["test1.csv", "test2.txt", "test3.csv", "test4.doc", "test5.pdf", "test6", "test7/csv"]
     assert filter_files_by_extension(paths, extension) == expected
+
+
+@pytest.mark.parametrize(
+    "input_str, expected_output",
+    [
+        ("camelCase", "camel_case"),
+        ("CamelCase", "camel_case"),
+        ("CamelCamelCase", "camel_camel_case"),
+        ("Camel2Camel2Case", "camel2_camel2_case"),
+        ("getHTTPResponseCode", "get_http_response_code"),
+        ("get2HTTP", "get2_http"),
+        ("HTTPResponseCode", "http_response_code"),
+        ("noChange", "no_change"),
+        ("", ""),
+    ],
+)
+def test_to_snake_case(input_str, expected_output):
+    result = camel_to_snake(input_str)
+    assert result == expected_output

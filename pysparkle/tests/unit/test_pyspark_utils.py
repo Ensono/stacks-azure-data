@@ -1,7 +1,13 @@
 import pytest
 from pyspark.sql import Row
 
-from pysparkle.pyspark_utils import delta_table_exists, ensure_database_exists, read_datasource, save_dataframe_as_delta
+from pysparkle.pyspark_utils import (
+    delta_table_exists,
+    ensure_database_exists,
+    read_datasource,
+    rename_columns_to_snake_case,
+    save_dataframe_as_delta,
+)
 
 
 @pytest.mark.parametrize(
@@ -104,3 +110,12 @@ def test_ensure_database_exists(spark, db_schema):
     assert not spark.catalog.databaseExists(db_schema)
     ensure_database_exists(spark, db_schema)
     assert spark.catalog.databaseExists(db_schema)
+
+
+def test_rename_columns_to_snake_case(spark):
+    row = Row("movieId", "imdbId", "tmdbId")
+    test_df = spark.createDataFrame([row(1, 2, 3)])
+
+    renamed_df = rename_columns_to_snake_case(test_df)
+
+    assert renamed_df.columns == ["movie_id", "imdb_id", "tmdb_id"]
