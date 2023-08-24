@@ -121,11 +121,13 @@ def test_transform_and_save_as_delta(spark, tmp_path):
     def mock_transform(df: DataFrame) -> DataFrame:
         return df.withColumn("NewCol", df.Id + 1)
 
-    output_path = str(tmp_path)
+    output_file_name = "test_delta_table"
+    expected_output_path = str(tmp_path / output_file_name)
 
-    transform_and_save_as_delta(spark, input_df, mock_transform, output_path)
+    with patch("pysparkle.etl.get_adls_file_url", return_value=expected_output_path):
+        transform_and_save_as_delta(spark, input_df, mock_transform, str(tmp_path), output_file_name)
 
-    saved_df = spark.read.format("delta").load(output_path)
+    saved_df = spark.read.format("delta").load(expected_output_path)
 
     assert saved_df.columns == ["Id", "Name", "NewCol"]
     rows = saved_df.collect()

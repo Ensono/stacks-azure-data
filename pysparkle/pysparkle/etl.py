@@ -112,7 +112,8 @@ def transform_and_save_as_delta(
     spark: SparkSession,
     input_df: DataFrame,
     transform_func: Callable[[DataFrame], DataFrame],
-    output_filepath: str,
+    target_container: str,
+    output_file_name: str,
     overwrite: bool = True,
     merge_keys: Optional[list[str]] = None,
 ) -> None:
@@ -122,10 +123,12 @@ def transform_and_save_as_delta(
         spark: Spark session.
         input_df: Data frame to be transformed.
         transform_func: Transformation function.
-        output_filepath: The location to write the Delta table.
+        target_container: Name of the destination container in ADLS.
+        output_file_name: The name of the file (including any subdirectories within the container).
         overwrite: Flag to determine whether to overwrite the entire table or perform an upsert.
         merge_keys: List of keys based on which upsert will be performed.
 
     """
     transformed_df = transform_func(input_df)
+    output_filepath = get_adls_file_url(target_container, output_file_name)
     save_dataframe_as_delta(spark, transformed_df, output_filepath, overwrite, merge_keys)
