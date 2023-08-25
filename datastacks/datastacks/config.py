@@ -4,22 +4,26 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from pysparkle.config import DEFAULT_CONFIG_CONTAINER
 
 INGEST_TEMPLATE_FOLDER = "Ingest_SourceType_SourceName"
 
 
 class DataSourceType(Enum):
     """Enum containing supported data source types."""
+
     AZURE_SQL = "azure_sql"
 
 
 class TriggerFrequency(Enum):
     """Enum containing supported trigger frequencies."""
+
     MINUTE = "Minute"
     HOUR = "Hour"
     DAY = "Day"
     WEEK = "Week"
     MONTH = "Month"
+
 
 class IngestConfig(BaseModel):
     """Pydantic definitions for data ingest workload generation config."""
@@ -60,6 +64,9 @@ class IngestConfig(BaseModel):
     bronze_container: str = Field(description="Name of container for Bronze data")
     silver_container: Optional[str] = Field(default=None, description="Name of container for Silver data")
     gold_container: Optional[str] = Field(default=None, description="Name of container for Gold data")
+    config_container: Optional[str] = Field(
+        default=DEFAULT_CONFIG_CONTAINER, description="Name of container for configuration files."
+    )
 
     trigger_start: Optional[datetime] = Field(
         default="2010-01-01T00:00:00Z", description="Datetime to set as start time for pipeline trigger."
@@ -67,12 +74,8 @@ class IngestConfig(BaseModel):
     trigger_end: Optional[datetime] = Field(
         default="2011-12-31T23:59:59Z", description="Datetime to set as end time for pipeline trigger."
     )
-    trigger_frequency: Optional[TriggerFrequency] = Field(
-        default="Month", description="Frequency for the trigger."
-    )    
-    trigger_interval: Optional[int] = Field(
-        default=1, description="Interval value for the trigger."
-    )
+    trigger_frequency: Optional[TriggerFrequency] = Field(default="Month", description="Frequency for the trigger.")
+    trigger_interval: Optional[int] = Field(default=1, description="Interval value for the trigger.")
     trigger_delay: Optional[str] = Field(
         default="02:00:00", description="Delay between triggered runs, formatted HH:mm:ss"
     )
