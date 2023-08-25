@@ -74,8 +74,7 @@ stages:
           - script: pip install --upgrade pre-commit tomli
             displayName: Install pre-commit
           - bash: |
-              PRE_COMMIT_PATH=$(which pre-commit)
-              $PRE_COMMIT_PATH run --all-files --show-diff-on-failure
+              `which pre-commit` run --all-files --show-diff-on-failure
             displayName: Run Linting Checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
