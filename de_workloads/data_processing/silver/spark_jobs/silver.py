@@ -126,7 +126,10 @@ def etl_main() -> None:
 
     for table in tables:
         df = read_latest_rundate_data(
-            spark, BRONZE_CONTAINER, INPUT_PATH_PATTERN.format(table_name=table.table_name), datasource_type="parquet"
+            spark,
+            BRONZE_CONTAINER,
+            INPUT_PATH_PATTERN.format(table_name=table.table_name),
+            datasource_type=SOURCE_DATA_TYPE,
         )
 
         output_path = OUTPUT_PATH_PATTERN.format(table_name=table.table_name)
