@@ -79,7 +79,7 @@ stages:
           - script: pip install --upgrade pre-commit tomli
             displayName: Install pre-commit
           - script: pre-commit run --all-files --show-diff-on-failure
-            displayName: Run Linting Checks    
+            displayName: Run Linting Checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then

@@ -37,7 +37,7 @@ read in using the scaffold command.
 stacks-cli interactive
 ```
 
-The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project. 
+The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project.
 
 | Question                                      | Required value for data project |
 |-----------------------------------------------|---------------------------------|
@@ -77,7 +77,7 @@ YAML file `air-infrastructure-data.yml` should be added as the definition for a 
 
 The `build/azDevOps/azure/network` folder contains a YAML file named `air-infrastructure-data-network.yml` that serves as a template for Azure DevOps CI/CD pipeline for networking and self-hosted agent infrastructure. 
 
-If the client or user does not have their own network and self-hosted agent, they must establish the networking pipeline in Azure DevOps following the procedures outlined above. This setup should be completed before initiating the core infrastructure pipeline. 
+If the client or user does not have their own network and self-hosted agent, they must establish the networking pipeline in Azure DevOps following the procedures outlined above. This setup should be completed before initiating the core infrastructure pipeline.
 
 The `build/azDevOps/azure/network` folder also includes another YAML file called `air-infrastructure-data-network-vars.yml` that contains the variables used in the networking pipeline. These variables must be updated as well as the project requirements.
 
