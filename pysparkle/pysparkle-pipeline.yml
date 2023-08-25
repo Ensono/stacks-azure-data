@@ -71,6 +71,8 @@ stages:
             workingDirectory: $(self_repo_dir)
           - script: pip install --upgrade pre-commit
             displayName: Install pre-commit
+          - script: which pre-commit
+            displayName: Find pre-commit path
           - script: /home/AzDevOps/.local/bin/pre-commit run --all-files --show-diff-on-failure
             displayName: Run Linting Checks
           - bash: |
