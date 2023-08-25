@@ -39,7 +39,7 @@
                     "expectations": [
                         {
                             "expectation_type": "expect_column_values_to_be_in_set",
-                            "expectation_kwargs": {"value_set": ["TRUE", "FALSE"]}
+                            "expectation_kwargs": {"value_set": ["True", "False"]}
                         }
                     ]
                 },
