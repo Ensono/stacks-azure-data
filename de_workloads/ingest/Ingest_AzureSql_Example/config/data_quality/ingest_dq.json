@@ -48,7 +48,7 @@
                     "expectations": [
                         {
                             "expectation_type": "expect_column_values_to_match_regex",
-                            "expectation_kwargs": {"regex": "^tt\d{7}$"}
+                            "expectation_kwargs": {"regex": "^tt\\d{7}$"}
                         }
                     ]
                 }                
