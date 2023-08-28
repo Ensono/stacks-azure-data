@@ -20,8 +20,8 @@ python datastacks/datastacks_cli.py --help
 
 Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](../de_templates) directory.
 
-* **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
-    * **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether to include data quality components in the pipeline.
+- **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
+    - **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether to include data quality components in the pipeline.
 
 ### Examples
 
