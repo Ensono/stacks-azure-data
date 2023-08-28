@@ -21,13 +21,11 @@ python datastacks/datastacks_cli.py --help
 Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](../de_templates) directory.
 
 * **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
-    * **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline.
+    * **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether to include data quality components in the pipeline.
 
 ### Examples
 
 ```bash
-datastacks --help
-
 # Generate resources for an ingest pipeline
 datastacks generate ingest --config="de_templates/test_config_ingest.yaml"
 
@@ -85,14 +83,8 @@ window_end_default: 2010-01-31
 
 Datastacks provides a CLI to conduct data quality checks using [PySparkle](../pysparkle/README.md) library as a backend.
 
-* **`dq`**: Command to perform data quality checks.
-
-### Examples
-
 ```bash
-datastacks dq -h
-datastacks dq
-
+datastacks dq --help
 datastacks dq --config-path "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json" --container config
 ```
 
