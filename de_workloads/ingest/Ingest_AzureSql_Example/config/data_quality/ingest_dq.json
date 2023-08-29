@@ -18,6 +18,41 @@
                     ]
                 }
             ]
+        },
+        {
+            "datasource_name": "movies.movies_metadata",
+            "datasource_type": "parquet",
+            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.movies_metadata/v1/*/*/*",
+            "expectation_suite_name": "movies.movies_metadata_suite",
+            "validation_config": [
+                {
+                    "column_name": "status",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_be_in_set",
+                            "expectation_kwargs": {"value_set": ["Canceled", "In Production", "Planned", "Post Production", "Released", "Rumored"]}
+                        }
+                    ]
+                },
+                {
+                    "column_name": "adult",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_be_in_set",
+                            "expectation_kwargs": {"value_set": ["True", "False"]}
+                        }
+                    ]
+                },
+                {
+                    "column_name": "imdb_id",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_match_regex",
+                            "expectation_kwargs": {"regex": "^tt\\d{7}$"}
+                        }
+                    ]
+                }                
+            ]
         }
     ]
 }
