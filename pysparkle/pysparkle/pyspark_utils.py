@@ -90,12 +90,14 @@ def read_datasource(
         return source_type(data_location)
 
 
-def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str) -> None:
-    """Saves a Spark DataFrame as a Delta table at a specified location, overwriting any existing data.
+def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str, partition: str = None) -> None:
+    """Saves a Spark DataFrame as a Delta table at a specified location, overwriting any existing data if no partition is specified,
+     and writing with a partition otherwise.
 
     Args:
         dataframe: Spark DataFrame to save as a Delta table.
         output_filepath: The location to write the Delta table.
+        partition: Optional column to use to partition the dataset. Defaults to none.
 
     Example:
         >>> save_dataframe_as_delta(dataframe, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable")
@@ -103,7 +105,11 @@ def save_dataframe_as_delta(dataframe: DataFrame, output_filepath: str) -> None:
     """
     table_name = os.path.basename(output_filepath)
     logger.info(f"Saving delta table {table_name}...")
-    dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+    if partition is None:
+        dataframe.write.format("delta").mode("overwrite").save(output_filepath)
+    else:
+        dataframe.write.format("delta").mode("overwrite").save(output_filepath).partitionBy(partition)
+
     logger.info(f"Saved: {output_filepath}.")
 
 

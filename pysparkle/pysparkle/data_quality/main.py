@@ -6,6 +6,7 @@ from pysparkle.data_quality.utils import (
     add_expectation_suite,
     create_datasource_context,
     execute_validations,
+    publish_quality_results_table,
 )
 from pysparkle.pyspark_utils import get_spark_session, read_datasource
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
@@ -42,9 +43,16 @@ def data_quality_main(config_path: str, container_name: str = DEFAULT_CONFIG_CON
         gx_context = create_datasource_context(datasource.datasource_name, dq_conf.gx_directory_path)
         gx_context = add_expectation_suite(gx_context, datasource)
 
-        results = execute_validations(gx_context, datasource, df)
+        validation_result = execute_validations(gx_context, datasource, df)
+        results = validation_result.results
 
-        logger.info(f"DQ check completed for {datasource.datasource_name}. Results:")
-        logger.info(results)
+        data_quality_run_date = validation_result.meta["run_id"].run_time
+
+        failed_validations = publish_quality_results_table(spark, f"{datasource.data_bucket}/data_quality/", datasource.datasource_name, results, data_quality_run_date)
+
+        if not failed_validations.rdd.isEmpty():
+            logger.info(f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed.")
+        else:
+            logger.info(f"Checking {datasource.datasource_name}, All validations passed.")
 
     logger.info("Finished: Data Quality processing.")
