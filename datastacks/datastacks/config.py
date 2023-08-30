@@ -4,8 +4,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-from pysparkle.config import DEFAULT_CONFIG_CONTAINER
-
 INGEST_TEMPLATE_FOLDER = "Ingest_SourceType_SourceName"
 
 
@@ -64,9 +62,6 @@ class IngestConfig(BaseModel):
     bronze_container: str = Field(description="Name of container for Bronze data")
     silver_container: Optional[str] = Field(default=None, description="Name of container for Silver data")
     gold_container: Optional[str] = Field(default=None, description="Name of container for Gold data")
-    config_container: Optional[str] = Field(
-        default=DEFAULT_CONFIG_CONTAINER, description="Name of container for configuration files."
-    )
 
     trigger_start: Optional[datetime] = Field(
         default="2010-01-01T00:00:00Z", description="Datetime to set as start time for pipeline trigger."
