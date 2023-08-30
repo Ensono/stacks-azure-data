@@ -1,7 +1,6 @@
-import os
 import uuid
 from pathlib import Path
-from unittest.mock import MagicMock, PropertyMock, patch
+from unittest.mock import MagicMock, patch
 
 from pytest import fixture
 
@@ -28,11 +27,21 @@ def spark(tmp_path_factory):
 @fixture
 def mock_adls_client():
     with patch("pysparkle.storage_utils.DataLakeServiceClient") as mock_DataLakeServiceClient:
-        mock_paths = [MagicMock(name=file) for file in os.listdir(TEST_CSV_DIR)]
-        for mock_path, filename in zip(mock_paths, os.listdir(TEST_CSV_DIR)):
-            type(mock_path).name = PropertyMock(return_value=filename)
+
+        def get_paths_side_effect(path, recursive=True):
+            test_path = Path(TEST_CSV_DIR)
+            files_and_dirs = test_path.rglob("*") if recursive else test_path.glob("*")
+
+            mock_paths = []
+            for item in files_and_dirs:
+                mock_path = MagicMock(spec_set=["name"])
+                mock_path.name = str(item.relative_to(test_path))
+                mock_paths.append(mock_path)
+
+            return mock_paths
+
         mock_file_system_client = MagicMock()
-        mock_file_system_client.get_paths.return_value = mock_paths
+        mock_file_system_client.get_paths.side_effect = get_paths_side_effect
         mock_DataLakeServiceClient.return_value.get_file_system_client.return_value = mock_file_system_client
         yield mock_DataLakeServiceClient
 

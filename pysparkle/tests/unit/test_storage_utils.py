@@ -1,8 +1,10 @@
 import json
 import os
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from tests.unit.conftest import TEST_CSV_DIR
 
 from pysparkle.storage_utils import (
     ENV_NAME_ADLS_ACCOUNT,
@@ -17,7 +19,6 @@ from pysparkle.storage_utils import (
     load_json_from_blob,
     set_spark_properties,
 )
-from tests.unit.conftest import TEST_CSV_DIR
 
 TEST_ENV_VARS = {
     ENV_NAME_SERVICE_PRINCIPAL_SECRET: "secret",
@@ -69,9 +70,17 @@ def test_set_spark_properties(spark):
     )
 
 
-def test_get_adls_directory_contents(mock_adls_client):
-    paths = get_adls_directory_contents("test_container", "test_path")
-    assert paths == [file for file in os.listdir(TEST_CSV_DIR)]
+@pytest.mark.parametrize("recursive", [True, False])
+def test_get_adls_directory_contents(mock_adls_client, recursive):
+    paths = get_adls_directory_contents("test_container", "test_path", recursive=recursive)
+
+    test_path = Path(TEST_CSV_DIR)
+    if recursive:
+        expected_paths = [str(item.relative_to(test_path)) for item in test_path.rglob("*")]
+    else:
+        expected_paths = [str(item.name) for item in test_path.iterdir()]
+
+    assert sorted(paths) == sorted(expected_paths)
 
 
 def test_load_json_from_blob(mock_blob_client, json_contents):

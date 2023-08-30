@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "datastacks"
-version = "0.3.0"
+version = "0.4.0"
 description = "A tool for generating data pipelines, featuring utilities for data transformations."
 authors = [
     "Andy Durkan <andy.durkan@ensono.com>",
@@ -28,6 +28,7 @@ jinja2 = "^3.1.2"
 pyyaml = "^6.0.1"
 great-expectations = "^0.17.11"
 pydantic = "^1.10.12"
+delta-spark = "^2.4.0"
 
 [tool.poetry.scripts]
 datastacks = "datastacks.datastacks_cli:cli"
