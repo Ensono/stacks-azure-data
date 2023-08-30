@@ -15,22 +15,23 @@ keywords:
 
 This section provides an overview of deploying the shared resources for Stacks Data Platform.
 This aligns to the workflow shown in the [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section.
-Data Plaform shared resources include the ADF resources which are shared in various ADF pipelines.These are as follows:
+The shared resources include Azure Data Factory resources which are shared across pipelines. These are as follows:
 
 * Linked services
-    * ls_Blob_ConfigStore
-    * ls_KeyVault
-    * ls_ADLS_DataLake
-    * ls_Databricks_Small
-    * ls_Blob_ConfigStore
+    * _ls_ADLS_DataLake_ - Connection to the Data Lake
+    * _ls_Blob_ConfigStore_ - Connection to the config storage location
+    * _ls_Databricks_Small_ - Connection to Databricks job cluster (default 2 fixed workers)
+    * _ls_KeyVault_ - Connection to Azure Key Vault
 * Datasets
-    * ds_dp_ConfigStore_Json
-    * ds_dp_DataLake_Parquet
+    * _ds_dp_ConfigStore_Json_ - For reading JSON data from ls_Blob_ConfigStore
+    * _ds_dp_DataLake_Parquet_ - For writing Parquet data to ls_ADLS_DataLake
 * Pipelines
-    * pipeline_Get_Ingest_Config
-    * pipeline_Generate_Ingest_Query
+    * _pipeline_Get_Ingest_Config_ - To retrieve config data for use in a pipeline
+    * _pipeline_Generate_Ingest_Query_ - To generate a query for ingesting data
 
-It assumes all [prerequisites](../requirements_data_azure.md#azure) are in place, including:
+For details of how these resources are used in ingest pipelines, see [data ingestion](../etl_pipelines/ingest_data_azure.md).
+
+This guide assumes all [prerequisites](../requirements_data_azure.md#azure) are in place, including:
 
 * Azure subscription and service principal
 * Azure DevOps project with [Pipelines variable groups](../requirements_data_azure.md#azure-pipelines-variable-groups)
@@ -48,14 +49,14 @@ The `de_build` folder includes YAML file called `job-pipeline-vars` that contain
 
 ## Step 2: Add a shared resources pipeline in Azure DevOps
 
-YAML file containing a template Azure DevOps CI/CD pipeline for building and deploying the shared resources, named `de-shared-resources.yml` is configured in the [de_workloads/shared_resources](https://github.com/amido/stacks-azure-data/tree/main/de_workloads/shared_resources).
+The default shared resources for the Stacks Data Platform are found under [de_workloads/shared_resources](https://github.com/amido/stacks-azure-data/tree/main/de_workloads/shared_resources). This directory contains a YAML file `de-shared-resources.yml` containing a template Azure DevOps CI/CD pipeline for building and deploying the shared resources.
 This YAML file should be added as the definition for a new pipeline in Azure DevOps.
 
 1. Sign-in to your Azure DevOps organization and go to your project
 2. Go to Pipelines, and then select **New pipeline**
 3. Name the new pipeline, e.g. `de-shared-resources`
 4. For the pipeline definition, specify the YAML file in the project repository feature branch (`de-shared-resources.yml`) and save
-5. The new pipeline will require access to any Azure DevOps pipeline variable groups specified in the pipeline YMAL. Under each variable group, go to 'Pipeline permissions' and add the pipeline.
+5. The new pipeline will require access to any Azure DevOps pipeline variable groups specified in the pipeline YAML. Under each variable group, go to 'Pipeline permissions' and add the pipeline.
 
 
 ## Step 3: Deploy shared resources in non-production environment
@@ -64,7 +65,7 @@ Run the pipeline configured in Step 2 to commence the build and deployment proce
 
 Running this pipeline in Azure DevOps will initiate the deployment of artifacts into the non-production (nonprod) environment. It's important to monitor the progress of this deployment to ensure its success. You can track the progress and status of the deployment within the Pipelines section of Azure DevOps.
 
-If successful, the core DE shared reource will now be available in the nonprod Stacks environment. To view these deployed resources, navigate to the [Azure portal](https://portal.azure.com/), and go to your Azure Data Factory UI in the proper resource group. Within the ADF, you'll find the shared resources that were deployed.
+If successful, the core DE shared resources will now be available in the nonprod Stacks environment. To view the deployed resources, navigate to the relevant resource group in the [Azure portal](https://portal.azure.com/). The deployed Data Factory resources can be viewed through the [Data Factory UI](https://adf.azure.com/).
 
 ## Step 4: Deploy shared resources in further environments
 
