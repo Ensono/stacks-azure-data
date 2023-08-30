@@ -2,7 +2,7 @@
 
 Datastacks is a utility built to support various functions within the Ensono Stacks Data Platform. The library and its associated Python-based CLI is intended to assist developers working within a deployed Stacks Data Platform, supporting common tasks such as generating new data engineering workloads and running Spark jobs.
 
-### Using the Datastacks CLI
+## Using the Datastacks CLI
 
 * [Setup project environment](../README.md#developing-the-solution)
 ```bash
@@ -20,9 +20,8 @@ python datastacks/datastacks_cli.py --help
 
 Datastacks can be used to generate all the resources required for a new data engineering workload - for example a data ingest pipeline. This will create all resources required for the workload, based upon templates within the [de_templates](../de_templates) directory.
 
-- **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
-
-  - **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether or not to include data quality components in the pipeline.
+* **`generate`**: This command contains subcommands which generate components for the data platform given a config file.
+    * **`ingest`**: This subcommand utilises the template for ingest data pipelines, and uses a given config file to generate the required code for a new ingest pipeline ready for use. A flag can be included to specify whether to include data quality components in the pipeline.
 
 ### Examples
 
@@ -79,3 +78,17 @@ default_arm_deployment_mode: Incremental
 window_start_default: 2010-01-01
 window_end_default: 2010-01-31
 ```
+
+## Performing data quality checks
+
+Datastacks provides a CLI to conduct data quality checks using the [PySparkle](../pysparkle/README.md) library as a backend.
+
+```bash
+datastacks dq --help
+datastacks dq --config-path "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json" --container config
+```
+
+### Required configuration
+
+For details regarding the required environment settings and the configuration file please read
+[PySparkle](../pysparkle/README.md) and [PySparkle Data Quality](../pysparkle/pysparkle/data_quality/README.md) sections.

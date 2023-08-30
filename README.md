@@ -23,7 +23,7 @@ source into a landing (Bronze) data lake zone;
 * Automated tests to ensure quality assurance and operational efficiency;
 * [Datastacks](datastacks/README.md) - a library and CLI built to accelerate the development of data engineering
 workloads in the data platform;
-* [Pysparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark.
+* [PySparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark.
 
 ### High-level architecture
 
@@ -107,7 +107,7 @@ make test
 
 ### Running E2E Tests
 
-To run E2E tests locally, you will need to login through the Azure CLI:
+To run E2E tests locally, you will need to log in through the Azure CLI:
 
 ```bash
 az login

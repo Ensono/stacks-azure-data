@@ -48,6 +48,6 @@ stages:
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
           - bash: |
-              poetry run pytest -rf -v datastacks/tests -k unit
+              poetry run pytest -rf -v datastacks/tests/unit
             displayName: "Run Unit Tests"
             workingDirectory: "$(self_repo_dir)"
