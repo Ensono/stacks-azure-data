@@ -1,9 +1,9 @@
 import logging
 
+from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
 
-CONFIG_CONTAINER = "config"
 CONFIG_PATH = "data_processing/silver/data_quality/silver_dq.json"
 
 logger_library = "pysparkle"
