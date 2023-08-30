@@ -13,6 +13,7 @@ from pysparkle.etl import (
 from pysparkle.logger import setup_logger
 from pysparkle.pyspark_utils import rename_columns_to_snake_case
 
+WORKLOAD_NAME = "Silver"
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
 SOURCE_DATA_TYPE = "parquet"
@@ -112,10 +113,10 @@ def transform_movies_metadata(df: DataFrame) -> DataFrame:
 
 
 def etl_main() -> None:
-    """Execute the Silver processing for a given dataset."""
-    logger.info("Running Silver processing...")
+    """Execute data processing and transformation jobs."""
+    logger.info(f"Running {WORKLOAD_NAME} processing...")
 
-    spark = get_spark_session_for_adls("Silver")
+    spark = get_spark_session_for_adls(WORKLOAD_NAME)
 
     tables = [
         TableTransformation("keywords", transform_keywords),
@@ -136,7 +137,7 @@ def etl_main() -> None:
 
         transform_and_save_as_delta(spark, df, table.transformation_function, SILVER_CONTAINER, output_path)
 
-    logger.info("Finished: Silver processing.")
+    logger.info(f"Finished: {WORKLOAD_NAME} processing.")
 
 
 if __name__ == "__main__":

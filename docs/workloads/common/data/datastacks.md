@@ -101,7 +101,7 @@ window_end_default: 2010-01-31
 
 ## Performing data quality checks
 
-Datastacks provides a CLI to conduct data quality checks using [PySparkle](pysparkle/pysparkle_quickstart.md) library as a backend.
+Datastacks provides a CLI to conduct data quality checks using the [PySparkle](pysparkle/pysparkle_quickstart.md) library as a backend.
 
 ```bash
 datastacks dq --help

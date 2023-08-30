@@ -154,7 +154,7 @@ def ensure_database_exists(spark: SparkSession, schema: str) -> None:
 
 
 def rename_columns_to_snake_case(df: DataFrame) -> DataFrame:
-    """Rename all columns of a DataFrame to snake_case.
+    """Rename all columns of a DataFrame from camelCase to snake_case.
 
     Args:
         df: A PySpark DataFrame.
