@@ -7,7 +7,7 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from pysparkle.config import DEFAULT_CONFIG_CONTAINER
+from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
 from datastacks.utils import generate_pipeline
@@ -48,7 +48,7 @@ def ingest(config, data_quality):
 @click.option("--config-path", help="Path to a JSON config inside an Azure Blob container.")
 @click.option(
     "--container",
-    default=DEFAULT_CONFIG_CONTAINER,
+    default=CONFIG_CONTAINER,
     show_default=True,
     help="Name of the container for storing configurations.",
 )

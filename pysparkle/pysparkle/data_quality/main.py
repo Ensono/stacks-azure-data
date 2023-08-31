@@ -1,6 +1,6 @@
 import logging
 
-from pysparkle.config import DEFAULT_CONFIG_CONTAINER
+from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.config import Config
 from pysparkle.data_quality.utils import (
     add_expectation_suite,
@@ -14,7 +14,7 @@ from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_pr
 logger = logging.getLogger(__name__)
 
 
-def data_quality_main(config_path: str, container_name: str = DEFAULT_CONFIG_CONTAINER):
+def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
     """Executes data quality checks based on the provided configuration.
 
     Args:

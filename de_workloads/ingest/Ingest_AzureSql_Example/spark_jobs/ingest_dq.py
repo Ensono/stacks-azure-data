@@ -1,9 +1,9 @@
 import logging
 
+from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
 
-CONFIG_CONTAINER = "config"
 CONFIG_PATH = "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json"
 
 logger_library = "pysparkle"

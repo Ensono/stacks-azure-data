@@ -14,13 +14,13 @@ keywords:
   - azure
   - template
 ---
----
 
-This section provides an overview of generating a new [ETL ingest pipeline](../etl_pipelines/ingest_data_azure.md) workload and deploying it into a Stacks Data Platform, using the [Datastacks](../etl_pipelines/datastacks.md) utility.
+This section provides an overview of generating a new [ETL ingest pipeline](../etl_pipelines/ingest_data_azure.md) workload and deploying it into a Stacks Data Platform, using the [Datastacks](../../../common/data/datastacks.md) utility.
 This aligns to the workflow shown in the [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section.
 It assumes all prerequisites are in place, including:
 
 * A [deployed Stacks data platform](core_data_platform_deployment_azure.md)
+* [Deployed shared resources](shared_resources_deployment_azure.md)
 * [Development environment set up](dev_quickstart_data_azure.md)
 * A data source to ingest from. The steps below are based on using the [Azure SQL example data source](example_data_source.md)
 
@@ -153,7 +153,7 @@ Configuration of the data that the workload will ingest from the source is speci
 
 The end-to-end tests are designed to run the ingest pipeline in a controlled fashion to ensure it functions as expected. Open the test feature file for the workload (`tests/end_to_end/features/azure_data_ingest.feature`) and update the parameters to reflect the data entities expected to be ingested. In our example, we will use the entities specified in the config file above, i.e.:
 
-```python
+```gherkin
 |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.links", "movies.movies_metadata", "movies.ratings_small"]|
 ```
 

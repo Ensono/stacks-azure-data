@@ -23,7 +23,6 @@ ado_variable_groups_prod:
 
 
 # Datalake containers
-
 bronze_container: raw
 silver_container: staging
 gold_container: curated

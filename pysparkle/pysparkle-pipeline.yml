@@ -70,7 +70,7 @@ stages:
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
           - bash: |
-              poetry run pytest -rf -v pysparkle/tests -k unit
+              poetry run pytest -rf -v pysparkle/tests/unit
             displayName: "Run Unit Tests"
             workingDirectory: "$(self_repo_dir)"
           - bash: |

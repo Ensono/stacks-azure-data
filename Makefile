@@ -7,7 +7,9 @@ setup_dev_environment:
 
 test:
 	python -m pytest de_workloads/ingest/Ingest_AzureSql_Example/tests/unit
+	python -m pytest de_workloads/data_processing/silver/tests/unit
 	python -m pytest datastacks/tests/unit
+	python -m pytest pysparkle/tests/unit
 
 test_e2e:
 	behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
