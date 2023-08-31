@@ -205,7 +205,7 @@ def publish_quality_results_table(spark: SparkSession, base_path: str, datasourc
 
     data = data.coalesce(1)
 
-    save_dataframe_as_delta(data, f"{base_path}{datasource_name}", partition = data_quality_run_date)
+    save_dataframe_as_delta(spark, data, f"{base_path}{datasource_name}", overwrite=False, merge_keys=["DataQualityRunDate"])
 
     failed_validations = data.filter(data.Success==False)
     return failed_validations
