@@ -286,7 +286,7 @@ module "adb" {
   resource_group_location                  = azurerm_resource_group.default.location
   databricks_sku                           = var.databricks_sku
   resource_tags                            = module.default_label.tags
-  enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
+  enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
   enable_private_network                   = true
