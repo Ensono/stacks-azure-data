@@ -307,6 +307,7 @@ module "adb" {
   create_lb                                = false
   managed_vnet                             = false
   browser_authentication_enabled           = var.browser_authentication_enabled
+  private_dns_zone_id                      = data.azurerm_private_dns_zone.adb_private_dns_zone.id
 
   depends_on = [azurerm_resource_group.default]
 }

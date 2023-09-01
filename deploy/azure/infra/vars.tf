@@ -449,6 +449,12 @@ variable "sql_private_zone" {
   description = "Resource ID of the Sql Private DNS Zone"
 }
 
+variable "adb_private_zone" {
+  type        = string
+  default     = "privatelink.azuredatabricks.net"
+  description = "Resource ID of the ADB Private DNS Zone"
+}
+
 variable "dns_zone_resource_group" {
   type        = string
   default     = "amido-stacks-euw-de-hub-network"
