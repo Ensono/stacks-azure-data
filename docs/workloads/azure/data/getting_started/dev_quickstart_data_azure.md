@@ -1,7 +1,7 @@
 ---
 id: dev_quickstart_data_azure
-title: Development Quickstart
-sidebar_label: 2. Development Quickstart
+title: Local Development Quickstart
+sidebar_label: 2. Local Development Quickstart
 hide_title: false
 hide_table_of_contents: false
 description: Quickstart for local development
@@ -10,7 +10,7 @@ keywords:
   - development
 ---
 
-Please execute the following steps to start working locally with Stacks Azure Data Platform:
+This section covers the steps required to start developing a Stacks Azure Data Platform from your machine:
 
 1. Make sure you have installed the applications from the "Local development" section listed in
 [Requirements](../requirements_data_azure.md).
