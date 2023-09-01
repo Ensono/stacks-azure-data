@@ -294,6 +294,7 @@ module "adb" {
   create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
+  virtual_network_id                       = data.azurerm_virtual_network.dev.id
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
