@@ -301,6 +301,7 @@ module "adb" {
   public_subnet_prefix                     = var.public_subnet_prefix
   private_subnet_prefix                    = var.private_subnet_prefix
   pe_subnet_prefix                         = var.pe_subnet_prefix
+  pe_subnet_id                             = data.azurerm_subnet.pe_subnet.id
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
