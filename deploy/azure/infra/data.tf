@@ -14,6 +14,11 @@ data "azurerm_private_dns_zone" "private_dns" {
 
 */
 
+data "azurerm_virtual_network" "vnet" {
+  name                = var.vnet_name
+  resource_group_name = var.vnet_resource_group_name
+}
+
 data "azurerm_virtual_network" "dev" {
   name                = var.dev_network_spoke
   resource_group_name = var.dev_vnet_resource_group_name
