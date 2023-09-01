@@ -1,7 +1,7 @@
 ---
 id: dev_quickstart_data_azure
 title: Development Quickstart
-sidebar_label: Development Quickstart
+sidebar_label: 2. Development Quickstart
 hide_title: false
 hide_table_of_contents: false
 description: Quickstart for local development
@@ -67,3 +67,7 @@ make test_e2e
 
 ℹ️ The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
 whilst clearing up directories, ensure that you have [Storage Blob Data Contributor](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor) access applied to your Azure Active Directory subscription. You may also be required to configure the [firewall rules](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security) for the storage account to whitelist your IP address.
+
+## Next steps
+
+Once you setup your local development environment, you can continue with the Getting Started tutorial by [deploying the Shared Resources](shared_resources_deployment_azure.md)
