@@ -12,3 +12,15 @@ Feature:Azure Data Ingest
     Examples: Output files
     |parameters|output_files|
     |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.links", "movies.movies_metadata", "movies.ratings_small"]|
+
+
+  Scenario Outline: Data Factory Ingest SQL Database into ADLS with Data Quality
+    Given the ADF pipeline Ingest_AzureSql_Example_DQ has been triggered with <parameters>
+    And I poll the pipeline every 10 seconds until it has completed
+    And the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
+    And the ADF pipeline completed in less than 600 seconds
+    Then the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
+
+    Examples: Output files
+    |parameters|output_files|
+    |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.links", "movies.movies_metadata", "movies.ratings_small", "movies.movies_metadata_dq", "movies.keywords_dq"]|
