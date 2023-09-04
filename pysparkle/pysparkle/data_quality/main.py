@@ -48,7 +48,7 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
 
         data_quality_run_date = validation_result.meta["run_id"].run_time
 
-        failed_validations = publish_quality_results_table(spark, f"{datasource.data_bucket}/data_quality/", datasource.datasource_name, results, data_quality_run_date)
+        failed_validations = publish_quality_results_table(spark, f"{datasource.dq_output_path}", datasource.datasource_name, results, data_quality_run_date)
 
         if not failed_validations.rdd.isEmpty():
             logger.info(f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed.")
