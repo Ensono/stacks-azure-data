@@ -280,7 +280,7 @@ resource "azurerm_key_vault_secret" "azure-tenant-id" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/new-secure-databricks"
+  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location
@@ -294,17 +294,20 @@ module "adb" {
   create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
+  virtual_network_id                       = data.azurerm_virtual_network.vnet.id
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
   public_subnet_prefix                     = var.public_subnet_prefix
   private_subnet_prefix                    = var.private_subnet_prefix
   pe_subnet_prefix                         = var.pe_subnet_prefix
+  pe_subnet_id                             = data.azurerm_subnet.pe_subnet.id
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
   managed_vnet                             = false
   browser_authentication_enabled           = var.browser_authentication_enabled
+  private_dns_zone_id                      = data.azurerm_private_dns_zone.adb_private_dns_zone.id
 
   depends_on = [azurerm_resource_group.default]
 }
