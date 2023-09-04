@@ -149,7 +149,7 @@ def execute_validations(
     return gx_validation_results
 
 
-def publish_quality_results_table(spark: SparkSession, base_path: str, datasource_name: str,
+def publish_quality_results_table(spark: SparkSession, dq_path: str, datasource_name: str,
                               results: list, data_quality_run_date: date) -> DataFrame:
     """
     Given a ValidatorResults object, this function
@@ -157,8 +157,8 @@ def publish_quality_results_table(spark: SparkSession, base_path: str, datasourc
     and datasource in a table and returns any failing validations
 
     Args:
-        spark: Spark instance
-        base_path: Base file path to write the table to
+        spark: Spark session.
+        dq_path: File path to write the results table to
         datasource_name: Name of the datasource to be validated
         results: List containing validator results from great expectations
         data_quality_run_date: Date that the validations were executed
@@ -205,7 +205,7 @@ def publish_quality_results_table(spark: SparkSession, base_path: str, datasourc
 
     data = data.coalesce(1)
 
-    save_dataframe_as_delta(spark, data, f"{base_path}{datasource_name}", overwrite=False, merge_keys=["DataQualityRunDate"])
+    save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["DataQualityRunDate"])
 
     failed_validations = data.filter(data.Success==False)
     return failed_validations
