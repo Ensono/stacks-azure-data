@@ -1,0 +1,29 @@
+{
+    "environments": [
+       {
+            "name": "nonprod",
+            "stage_name": "NonProd",
+            "short_name": "{{ .Project.Cloud.Region }}",
+            "production_equivalent": false,
+            "trigger_from_main_branch": false,
+            "depends_on": [
+                "Build"
+            ]
+       },
+       {
+            "name": "prod",
+            "stage_name": "Prod",
+            "production_equivalent": true,
+            "trigger_from_main_branch": true,
+            "depends_on": [
+                "Build"
+            ]
+       }
+    ],
+    "release": {
+        "create": true,
+        "depends_on": [
+            "Prod"
+        ]
+    }
+}
