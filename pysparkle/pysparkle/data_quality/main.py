@@ -10,6 +10,7 @@ from pysparkle.data_quality.utils import (
 )
 from pysparkle.pyspark_utils import get_spark_session, read_datasource
 from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
+from pysparkle.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,10 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
 
         data_quality_run_date = validation_result.meta["run_id"].run_time
 
-        failed_validations = publish_quality_results_table(spark, f"{datasource.dq_output_path}", datasource.datasource_name, results, data_quality_run_date)
+        dq_output_path = substitute_env_vars(datasource.dq_output_path)
+        failed_validations = publish_quality_results_table(
+            spark, dq_output_path, datasource.datasource_name, results, data_quality_run_date
+        )
 
         if not failed_validations.rdd.isEmpty():
             logger.info(f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed.")
