@@ -1,4 +1,4 @@
-from silver.spark_jobs.silver import transform_keywords, transform_movies_metadata
+from silver_movies_example.spark_jobs.silver import transform_keywords, transform_movies_metadata
 
 
 def test_transform_keywords(spark):

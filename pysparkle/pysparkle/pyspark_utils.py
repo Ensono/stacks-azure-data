@@ -69,7 +69,7 @@ def read_datasource(
     Examples:
         If the data is stored in a file, you should provide the complete path to the file, e.g.:
 
-        >>> read_datasource(spark, "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
+        >>> read_datasource(spark, "abfss://silver_movies_example@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
         >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*",
         ...     "parquet", {"mergeSchema": "true"})
         >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder",
@@ -120,7 +120,7 @@ def save_dataframe_as_delta(
         merge_keys: List of keys based on which upsert will be performed.
 
     Example:
-        >>> output_url = "abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable"
+        >>> output_url = "abfss://silver_movies_example@{ADLS_ACCOUNT}.dfs.core.windows.net/mytable"
         >>> save_dataframe_as_delta(dataframe, output_url, overwrite=True)
         >>> save_dataframe_as_delta(dataframe, output_url, overwrite=False, merge_keys=["id", "timestamp"])
 
