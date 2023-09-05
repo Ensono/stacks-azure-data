@@ -53,9 +53,10 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
         dq_output_path = substitute_env_vars(datasource.dq_output_path)
 
         test_flag = sys.argv[2]
-        if test_flag is True:
+        if test_flag == "True":
             run_id = sys.argv[1]
-            dq_output_path = f"{dq_output_path}automated_tests/automated_test_{run_id}/{datasource.datasource_name}_dq/"
+            test_prefix = sys.argv[3]
+            dq_output_path = f"{dq_output_path}automated_tests/{test_prefix}{run_id}/{datasource.datasource_name}_dq/"
         else:
             dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
 
