@@ -8,6 +8,8 @@ pipeline:
     templates:
       - name: variable
         path: build/azDevOps/azure/air-infrastructure-data-vars-template.yml
+      - name: jinjadata
+        path: build/azDevOps/azure/input.json
 
 setup:
   operations:
