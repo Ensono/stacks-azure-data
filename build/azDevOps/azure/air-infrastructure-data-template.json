@@ -3,7 +3,7 @@
        {
             "name": "nonprod",
             "stage_name": "NonProd",
-            "short_name": "{{ .Project.Cloud.Region }}",
+            "short_name": "{{ .Input.baltest }}",
             "production_equivalent": false,
             "trigger_from_main_branch": false,
             "depends_on": [
