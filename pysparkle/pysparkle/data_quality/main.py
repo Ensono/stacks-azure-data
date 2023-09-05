@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.config import Config
@@ -50,6 +51,14 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
         data_quality_run_date = validation_result.meta["run_id"].run_time
 
         dq_output_path = substitute_env_vars(datasource.dq_output_path)
+
+        test_flag = sys.argv[2]
+        if test_flag is True:
+            run_id = sys.argv[1]
+            dq_output_path = f"{dq_output_path}automated_tests/automated_test_{run_id}/{datasource.datasource_name}_dq/"
+        else:
+            dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
+
         failed_validations = publish_quality_results_table(
             spark, dq_output_path, datasource.datasource_name, results, data_quality_run_date
         )

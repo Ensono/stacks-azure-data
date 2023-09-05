@@ -272,7 +272,10 @@
                         "userProperties": [],
                         "typeProperties": {
                             "pythonFile": "dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ/ingest_dq.py",
-                            "parameters": [],
+                            "parameters": [
+                                "@variables('run_id')",
+                                "@variables('automated_test_flag')",
+                            ],
                             "libraries": [
                                 {
                                     "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
