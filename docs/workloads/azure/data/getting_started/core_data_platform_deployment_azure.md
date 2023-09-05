@@ -103,4 +103,3 @@ The template CI/CD pipelines provided are based upon these two platform environm
 * Deployment to the production (prod) environment is triggered on merging to the `main` branch, followed by manual approval of the release step.
 
 Once core infrastructure resources are deployed in prod environment, values will need adding into the prod variable group to reflect the deployed resources (e.g. `amido-stacks-de-pipeline-prod`). For additional information, see [Pipelines variable groups](../requirements_data_azure.md#azure-pipelines-variable-groups).
-
