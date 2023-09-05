@@ -50,7 +50,7 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
   - name: dbfs_destination
-    value: 'dbfs:/FileStore/scripts/$(jobtype)/$(job)'
+    value: 'dbfs:/FileStore/scripts/$(job)'
 
 
 pool:
