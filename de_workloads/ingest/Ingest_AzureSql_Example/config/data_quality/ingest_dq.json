@@ -6,7 +6,7 @@
             "datasource_name": "movies.keywords",
             "datasource_type": "parquet",
             "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.keywords/v1/*/*/*",
-            "dq_output_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.keywords_dq/",
+            "dq_output_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/",
             "expectation_suite_name": "movies.keywords_suite",
             "validation_config": [
                 {
@@ -53,7 +53,7 @@
                             "expectation_kwargs": {"regex": "^tt\\d{7}$"}
                         }
                     ]
-                }                
+                }
             ]
         }
     ]
