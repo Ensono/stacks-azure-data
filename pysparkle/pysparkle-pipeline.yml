@@ -75,7 +75,7 @@ stages:
               `which pre-commit` run --all-files --show-diff-on-failure
             displayName: Run Linting Checks
           - bash: |
-              poetry run pytest -rf -v pysparkle/tests -k unit
+              poetry run pytest -rf -v pysparkle/tests/unit
             displayName: "Run Unit Tests"
             workingDirectory: "$(self_repo_dir)"
           - bash: |

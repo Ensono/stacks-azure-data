@@ -4,7 +4,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-
 INGEST_TEMPLATE_FOLDER = "Ingest_SourceType_SourceName"
 
 
