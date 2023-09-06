@@ -23,32 +23,6 @@ variables:
   - template: air-infrastructure-data-vars.yml
 
 stages:
-  - stage: Build
-    variables:
-      - group: stacks-credentials-nonprod-kv
-
-    jobs:
-      - job: Validate
-        pool:
-          # vmImage: $(pool_vm_image)
-          name: {{ .Input.Business.Company }}
-
-        steps:
-          - task: Bash@3
-            displayName: "Clean Workspace"
-            inputs:
-              targetType: "inline"
-              script: |
-                echo "Cleaning workspace..."
-                sudo rm -rf $(Build.SourcesDirectory)/*
-          - template: ../templates/air-infrastructure-data-setup.yml
-            parameters:
-              TaskctlVersion: {{`${{ variables.TaskctlVersion }}`}}
-
-          - task: Bash@3
-            displayName: "TaskCTL: Setup"
-            inputs:
-              targetType: inline
-              script: taskctl setup
-            env:
-              DOCKER_IMAGE_TAG: $(version_number)
+  {{ range .Environment }}
+  - stage: {{ range .Name }}
+  {{ end }}
