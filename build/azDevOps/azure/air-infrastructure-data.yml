@@ -75,7 +75,7 @@ stages:
       - group: amido-stacks-euw-de-nonprod-network
       - group: amido-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
-        value: dev
+        value: testtest
       # Available in Terraform Output, but not yet enabled to export as pipeline vars
       - name: dns_base_domain
         value: nonprod.amidostacks.com
