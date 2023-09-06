@@ -35,7 +35,7 @@ variables:
   - name: resource_def_name
     value: $(company)-$(domain)
   - name: component
-    value: core
+    value: de #core
   - name: role
     value: data-infrastructure
 
@@ -89,8 +89,18 @@ variables:
 
   # GitHub infomration
   - name: create_release
-    value: false
+    value:  true #false
   - name: github_release_service_connection
-    value:
+    value: GitHubReleases
   - name: github_org
     value: $(company)
+
+
+  - name: git_integration
+    value: null #github removed github integration with ADF
+  - name: git_integration_prod
+    value: null
+  - name: sql_admin_login
+    value: mssqladmin
+  - name: agentpool_name
+    value: "amido-stacks-core-data-agent-pool"
