@@ -274,8 +274,7 @@
                             "pythonFile": "dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ/ingest_dq.py",
                             "parameters": [
                                 "@variables('run_id')",
-                                "string(@variables('automated_test_flag'))",
-                                "@pipeline().parameters.automated_test_prefix"
+                                "@string(variables('automated_test_flag'))"
                             ],
                             "libraries": [
                                 {
