@@ -11,7 +11,7 @@ Feature:Azure Data Ingest
 
     Examples: Output files
     |parameters|output_files|
-    |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.links", "movies.movies_metadata", "movies.ratings_small", "movies.movies_metadata_dq", "movies.keywords_dq"]|
+    |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["movies.keywords", "movies.keywords_dq", "movies.links", "movies.movies_metadata", "movies.movies_metadata_dq", "movies.ratings_small"]|
 
 
   Scenario Outline: Data Factory Ingest SQL Database into ADLS
