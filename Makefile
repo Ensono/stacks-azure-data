@@ -7,7 +7,7 @@ setup_dev_environment:
 
 test:
 	python -m pytest de_workloads/ingest/Ingest_AzureSql_Example/tests/unit
-	python -m pytest de_workloads/data_processing/silver/tests/unit
+	python -m pytest de_workloads/data_processing/silver_movies_example/tests/unit
 	python -m pytest datastacks/tests/unit
 	python -m pytest pysparkle/tests/unit
 

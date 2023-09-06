@@ -12,7 +12,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), '/Silver_Movies_Example')]",
+            "name": "[concat(parameters('factoryName'), '/silver_movies_example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -31,7 +31,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/silver_movie_example/silver_movie_example.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/silver_movies_example/silver_movies_example.py",
                             "parameters": [],
                             "libraries": [
                                 {
