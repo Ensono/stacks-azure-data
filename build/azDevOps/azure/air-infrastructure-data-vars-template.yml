@@ -2,7 +2,7 @@ variables:
   - name: region
     value: "{{ .Project.Cloud.Region }}"
   - name: company
-    value: "{{ .Input.Environment }}"
+    value: "{{ .Input.Business.Company }}"
   - name: project
     value: "{{ .Project.Name }}"
   - name: domain
