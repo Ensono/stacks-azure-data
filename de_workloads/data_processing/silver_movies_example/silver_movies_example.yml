@@ -22,7 +22,7 @@ variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
   - name: job #update job (module) name
-    value: "silver_movie_example"
+    value: "silver_movies_example"
   - name: jobtype #update job type, the sub-folder of de_workloads
     value: "data_processing"
   - name: include_data_quality # update data quality option
