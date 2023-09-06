@@ -61,7 +61,7 @@ In order to generate a new data engineering workload the Datastacks CLI takes a 
 | --------------------------------------------- | ----------------------------------------------------------------- | --------------- | ------------ | ------------------- | ------------------- |
 | dataset_name | Dataset name, used to derive pipeline and linked service names, e.g. AzureSql_Example. | Yes | String | _n/a_ | AzureSql_Demo |
 | pipeline_description | Description of the pipeline to be created. Will be used for the Data Factory pipeline description. | Yes | String | _n/a_ | "Ingest from demo Azure SQL database using ingest config file." |
-| data_source_type | Data source type. | Yes | String<br />Allowed values[^1]:<br />"azure_sql" | _n/a_ | azure_sql |
+| data_source_type | Data source type. | Yes | String<br /><br />Allowed values[^1]:<br />"azure_sql" | _n/a_ | azure_sql |
 | key_vault_linked_service_name | Name of the Key Vault linked service in Data Factory. | No | String | ls_KeyVault | ls_KeyVault |
 | data_source_password_key_vault_secret_name | Secret name of the data source password in Key Vault. | Yes | String | _n/a_ | sql-password |
 | data_source_connection_string_variable_name | Variable name for the connection string. | Yes | String | _n/a_ | sql_connection |
@@ -75,7 +75,7 @@ In order to generate a new data engineering workload the Datastacks CLI takes a 
 | gold_container | Name of container for Gold data | No | String | curated | curated |
 | trigger_start | Start datetime for Data Factory pipeline trigger. | No | Datetime | _n/a_ | 2010-01-01T00:00:00Z |
 | trigger_end | Datetime to set as end time for pipeline trigger. | No | Datetime | _n/a_ | 2011-12-31T23:59:59Z |
-| trigger_frequency | Frequency for the Data Factory pipeline trigger. | No | String<br />Allowed values:<br />"Minute"<br />"Hour"<br />"Day"<br />"Week"<br />"Month" | "Month" | Month |
+| trigger_frequency | Frequency for the Data Factory pipeline trigger. | No | String<br /><br />Allowed values:<br />"Minute"<br />"Hour"<br />"Day"<br />"Week"<br />"Month" | "Month" | Month |
 | trigger_interval | Interval value for the Data Factory pipeline trigger. | No | Integer | 1 | 1 |
 | trigger_delay | Delay between Data Factory pipeline triggers, formatted HH:mm:ss | No | String | "02:00:00" | 02:00:00 |
 
