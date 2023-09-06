@@ -23,6 +23,6 @@ variables:
   - template: air-infrastructure-data-vars.yml
 
 stages:
-  {{ range .Environment }}
+  {{ range .Input.Environment }}
   - stage: {{ range .Name }}
   {{ end }}
