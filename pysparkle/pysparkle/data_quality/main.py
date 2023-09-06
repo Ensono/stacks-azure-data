@@ -55,13 +55,12 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
         test_flag = sys.argv[2]
         if test_flag == "True":
             run_id = sys.argv[1]
-            test_prefix = sys.argv[3]
-            dq_output_path = f"{dq_output_path}automated_tests/{test_prefix}{run_id}/{datasource.datasource_name}_dq/"
+            full_dq_output_path = f"{dq_output_path}automated_tests/{run_id}/{datasource.datasource_name}_dq/"
         else:
-            dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
+            full_dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
 
         failed_validations = publish_quality_results_table(
-            spark, dq_output_path, datasource.datasource_name, results, data_quality_run_date
+            spark, full_dq_output_path, datasource.datasource_name, results, data_quality_run_date
         )
 
         if not failed_validations.rdd.isEmpty():
