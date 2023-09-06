@@ -14,6 +14,11 @@ data "azurerm_private_dns_zone" "private_dns" {
 
 */
 
+data "azurerm_virtual_network" "vnet" {
+  name                = var.vnet_name
+  resource_group_name = var.vnet_resource_group_name
+}
+
 data "azurerm_virtual_network" "dev" {
   name                = var.dev_network_spoke
   resource_group_name = var.dev_vnet_resource_group_name
@@ -41,5 +46,11 @@ data "azurerm_private_dns_zone" "kv_private_dns_zone" {
 
 data "azurerm_private_dns_zone" "sql_private_dns_zone" {
   name                = var.sql_private_zone
+  resource_group_name = var.dns_zone_resource_group
+}
+
+data "azurerm_private_dns_zone" "adb_private_dns_zone" {
+ # count               = var.enable_private_network ? 1 : 0
+  name                = var.adb_private_zone
   resource_group_name = var.dns_zone_resource_group
 }
