@@ -51,7 +51,7 @@
                             "expectation_kwargs": {"regex": "^tt\\d{7}$"}
                         }
                     ]
-                }                
+                }
             ]
         }
     ]
