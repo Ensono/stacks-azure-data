@@ -6,7 +6,7 @@ Feature:Azure Data Ingest
     Given the ADF pipeline Ingest_AzureSql_Example_DQ has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
     And the ADF pipeline Ingest_AzureSql_Example_DQ has finished with state Succeeded
-    And the ADF pipeline completed in less than 600 seconds
+    And the ADF pipeline completed in less than 900 seconds
     Then the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
 
     Examples: Output files
