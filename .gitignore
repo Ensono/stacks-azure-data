@@ -42,5 +42,8 @@ coverage.xml
 .vscode
 .idea
 
+#Poetry
+poetry.lock
+
 #Build
 dist
