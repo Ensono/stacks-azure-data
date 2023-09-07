@@ -30,6 +30,7 @@ steps:
         echo "================= Creating Poetry Environment ==================== "
         cd "${{ parameters.workingDirectory }}"
         curl -sSL https://install.python-poetry.org | python3 -
+        export PATH="/home/AzDevOps/.local/bin:$PATH"
         poetry self add poetry-dotenv-plugin
         poetry install
         poetry shell
