@@ -42,6 +42,7 @@ steps:
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
+      failOnStderr: true
     env:
       WORKING_DIRECTORY: ${{ parameters.workingDirectory }}
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
