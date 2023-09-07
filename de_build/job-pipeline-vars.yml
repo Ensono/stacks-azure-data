@@ -30,7 +30,7 @@ variables:
   # - name: pool_vm_image
   #   value: ubuntu-20.04
   - name: pythonVersion
-    value: '3.10.10'
+    value: '3.10'
   - name: test_unit_path
     value: 'tests/unit/'
 
