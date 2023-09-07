@@ -484,21 +484,10 @@ variable "prod_network_spoke" {
   default     = "amido-stacks-euw-de-prod"
   description = "The Resource Group for the Private DNS Zone."
 }
-# variable "link_dns_dev_spoke_network" {
-#   type        = bool
-#   default     = false
-#   description = "link DNS zones to dev network"
-# }
-
-# variable "link_dns_prod_spoke_network" {
-#   type        = bool
-#   default     = false
-#   description = "link DNS zones to Prod network"
-# }
 
 variable "link_dns_spoke_network" {
   type        = bool
-  default     = true
+  default     = false
   description = "link DNS zones to network"
 }
 
