@@ -29,6 +29,7 @@ steps:
       script: |
         echo "================= Creating Poetry Environment ==================== "
         cd "${{ parameters.workingDirectory }}"
+        pip install poetry
         poetry install
         poetry self add poetry-dotenv-plugin
         poetry shell
