@@ -39,8 +39,10 @@ Here is the description of the main elements:
           * `"abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*"`.
        * **Table Name**: For tables with metadata managed by a data catalog, you should provide
        the database schema and the table name. For example, `staging.table_name`.
-    4. `expectation_suite_name`: Name of the expectation suite associated with this data source.
-    5. `validation_config`: A list of validation configurations where each configuration contains the following fields:
+    4. `dq_output_path`: Path for the data quality results to be written. Example:
+          * `"abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/"`.
+    5. `expectation_suite_name`: Name of the expectation suite associated with this data source.
+    6. `validation_config`: A list of validation configurations where each configuration contains the following fields:
         1. `column_name`: Name of the validated column.
         2. `expectations`: List of expectations where each expectation has the following fields:
         3. `expectation_type`: Name of the Great Expectations expectation class to use.
