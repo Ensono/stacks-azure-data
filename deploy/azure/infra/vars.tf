@@ -498,7 +498,7 @@ variable "prod_network_spoke" {
 
 variable "link_dns_spoke_network" {
   type        = bool
-  default     = false
+  default     = true
   description = "link DNS zones to network"
 }
 

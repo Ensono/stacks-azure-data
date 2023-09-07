@@ -149,8 +149,7 @@ stages:
                     TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
                     TF_VAR_link_dns_dev_spoke_network: true
                     TF_VAR_azure_client_secret: $(azure-client-secret)
-                    TF_VAR_dev_network_spoke: $(pe_vnet_name)
-                    
+
 
   #   yamllint disable rule:comments-indentation
 
