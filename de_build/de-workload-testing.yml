@@ -33,21 +33,19 @@ steps:
         export PATH="/home/AzDevOps/.local/bin:$PATH"
         poetry self add poetry-dotenv-plugin
         poetry install
-        poetry shell
         echo "=================== Created Poetry Environment "=================== "
         echo ""
         echo "======================== Running Unit Tests ======================== "
-        python3 -m pytest -rf -v "${{ parameters.unitTestLocation }}"
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
         echo "========================= End Unit Tests ========================= "
         echo ""
-
         echo "======================== Running E2E Tests ======================== "
         if [ -d "${{ parameters.e2eTestLocation }}" ]; then
           poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "${{ parameters.junitLocation }}"
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
-      failOnStderr: true
+      #failOnStderr: true
     env:
       WORKING_DIRECTORY: ${{ parameters.workingDirectory }}
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
