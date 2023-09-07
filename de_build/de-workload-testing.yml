@@ -29,8 +29,11 @@ steps:
       script: |
         cd "${{ parameters.workingDirectory }}"
         pip install --upgrade pip
-        pip install pylint pylint-exit pytest-cov poetry
+        pip install pylint pylint-exit pytest-cov
         poetry install
+        poetry self add poetry-dotenv-plugin
+        poetry shell
+        poetry update
         echo "======================== Running Unit Tests ======================== "
         python3 -m pytest -rf -v "${{ parameters.unitTestLocation }}"
         echo "========================= End Unit Tests ========================= "
