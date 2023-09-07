@@ -29,11 +29,10 @@ steps:
       script: |
         echo "================= Creating Poetry Environment ==================== "
         cd "${{ parameters.workingDirectory }}"
-        pip install poetry
-        poetry install
+        curl -sSL https://install.python-poetry.org | python3 -
         poetry self add poetry-dotenv-plugin
+        poetry install
         poetry shell
-        poetry update
         echo "=================== Created Poetry Environment "=================== "
         echo ""
         echo "======================== Running Unit Tests ======================== "
