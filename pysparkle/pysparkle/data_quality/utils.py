@@ -187,33 +187,33 @@ def publish_quality_results_table(
 
     for result in results:
         try:
-            Column = result.expectation_config.kwargs["column"]
+            column_name = result.expectation_config.kwargs["column"]
         except KeyError:
-            Column = result.expectation_config.kwargs["column_A"]
-        Validator = result.expectation_config.expectation_type
+            column_name = result.expectation_config.kwargs["column_A"]
+        validator = result.expectation_config.expectation_type
         try:
-            Value_set = result.expectation_config.kwargs["value_set"]
+            value_set = result.expectation_config.kwargs["value_set"]
         except KeyError:
-            Value_set = None
+            value_set = None
         try:
-            Threshold = result.expectation_config.kwargs["mostly"]
+            threshold = result.expectation_config.kwargs["mostly"]
         except KeyError:
-            Threshold = None
-        Unexpected_count = result.result["unexpected_count"]
-        Unexpected_percent = result.result["unexpected_percent"]
-        Success = result["success"]
+            threshold = None
+        unexpected_count = result.result["unexpected_count"]
+        unexpected_percent = result.result["unexpected_percent"]
+        success = result["success"]
         row = spark.createDataFrame(
             data=[
                 [
                     data_quality_run_date,
                     datasource_name,
-                    Column,
-                    Validator,
-                    Value_set,
-                    Threshold,
-                    Unexpected_count,
-                    Unexpected_percent,
-                    Success,
+                    column_name,
+                    validator,
+                    value_set,
+                    threshold,
+                    unexpected_count,
+                    unexpected_percent,
+                    success,
                 ]
             ],
             schema=dq_results_schema,
@@ -224,5 +224,5 @@ def publish_quality_results_table(
 
     save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
 
-    failed_validations = data.filter(data.success is False)
+    failed_validations = data.filter(data.success == "False")
     return failed_validations
