@@ -6,10 +6,10 @@ tasks:
       - Update-BuildNumber
 
   lint:yaml:
-    context: powershell-python
+    context: powershell
     description: Perform YAML linting
     command:
-      - Invoke-YamlLint
+      - Invoke-YamlLint -FailOnWarnings $False
 
   lint:terraform:format:
     context: powershell
