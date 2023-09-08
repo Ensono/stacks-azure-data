@@ -1,0 +1,68 @@
+name: "$(Build.SourceBranchName)-init"
+
+pr:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+
+trigger:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+variables:
+  - template: air-infrastructure-data-vars.yml
+
+stages:
+  - stage: Build
+    variables:
+      - group: stacks-credentials-nonprod-kv
+
+    jobs:
+      - job: Validate
+        pool:
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
+
+        steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
+          - template: ../templates/air-infrastructure-data-setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Setup"
+            inputs:
+              targetType: inline
+              script: taskctl setup
+            env:
+              DOCKER_IMAGE_TAG: $(version_number)
+
+          - task: Bash@3
+            displayName: "TaskCTL: Lint"
+            inputs:
+              targetType: inline
+              script: taskctl lint
+            env:
+              # Dotnet Build
+              SELF_REPO_SRC: $(self_repo_src)
+              CLOUD_PROVIDER: "$(cloud_provider)"
+              ARM_TENANT_ID: "$(azure-tenant-id)"
+              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
+              ARM_CLIENT_ID: "$(azure-client-id)"
+              ARM_CLIENT_SECRET: "$(azure-client-secret)"
