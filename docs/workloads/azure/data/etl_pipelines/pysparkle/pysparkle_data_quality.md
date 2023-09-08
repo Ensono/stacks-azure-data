@@ -67,12 +67,12 @@ Here's a minimal example of a configuration file:
 {
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "movies_dataset",
+    "dq_output_path": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/",
     "datasource_config": [
         {
             "datasource_name": "movies_metadata",
             "datasource_type": "table",
             "data_location": "staging.movies_metadata",
-            "dq_output_path": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.movies_metadata_dq/",
             "expectation_suite_name": "movies_metadata_suite",
             "validation_config": [
                 {

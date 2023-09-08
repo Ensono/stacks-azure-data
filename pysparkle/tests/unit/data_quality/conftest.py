@@ -11,12 +11,12 @@ def dq_config(tmp_path) -> Config:
     json_config = {
         "gx_directory_path": gx_directory_path,
         "dataset_name": "movies_dataset",
+        "dq_output_path": "abfss://test_db@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/",
         "datasource_config": [
             {
                 "datasource_name": "movies_metadata",
                 "datasource_type": "table",
                 "data_location": "test_db.test_table",
-                "dq_output_path": "abfss://test_db@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/test_table_dq/",
                 "expectation_suite_name": "movies_metadata_suite",
                 "validation_config": [
                     {
