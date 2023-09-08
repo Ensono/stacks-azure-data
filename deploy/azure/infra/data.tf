@@ -19,16 +19,6 @@ data "azurerm_virtual_network" "vnet" {
   resource_group_name = var.vnet_resource_group_name
 }
 
-data "azurerm_virtual_network" "dev" {
-  name                = var.dev_network_spoke
-  resource_group_name = var.dev_vnet_resource_group_name
-}
-
-data "azurerm_virtual_network" "prod" {
-  name                = var.prod_network_spoke
-  resource_group_name = var.prod_vnet_resource_group_name
-}
-
 data "azurerm_private_dns_zone" "dfs_private_zone" {
   name                = var.dfs_private_zone
   resource_group_name = var.dns_zone_resource_group
