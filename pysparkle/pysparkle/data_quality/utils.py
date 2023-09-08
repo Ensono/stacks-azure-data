@@ -224,5 +224,5 @@ def publish_quality_results_table(
 
     save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
 
-    failed_validations = data.filter(data.Success is False)
+    failed_validations = data.filter(data.success is False)
     return failed_validations
