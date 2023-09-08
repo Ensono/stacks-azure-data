@@ -1,6 +1,6 @@
 ---
 id: dev_quickstart_data_azure
-title: Local Development Quickstart
+title: Development Quickstart
 sidebar_label: 2. Local Development Quickstart
 hide_title: false
 hide_table_of_contents: false
@@ -32,7 +32,7 @@ In order to run unit tests, run the following command:
 make test
 ```
 
-### Running E2E Tests
+## Running E2E Tests
 
 To run E2E tests locally, you will need to login through the Azure CLI:
 
@@ -60,7 +60,20 @@ To run the E2E tests run:
 make test_e2e
 ```
 
-### Troubleshooting
+## PySpark Development
+
+When developing with PySpark, there are a number of options of setups for development. We recommend either using a local Spark setup or [Databricks Repos](https://learn.microsoft.com/en-us/azure/databricks/repos/) once Databricks has been deployed.
+
+For local development, you will be able to use the Datastacks package using Poetry but need to remember to add the appropriate environment variables.
+
+For development with Databricks Repos, you will need to:
+- Create a compute cluster
+- Install the Datastacks whl file to the cluster (commonly deployed to dbfs:/FileStore or can be created with poetry build)
+- Add appropriate environment variables (commonly found in the linked service for Databricks in Azure Data Factory under Cluster Spark environment variables) to the cluster
+- Provide appropriate permissions to the user for Azure resources as required
+
+
+## Troubleshooting
 
 ℹ️ If you encounter PATH-related issues with Poetry when running the tests, we recommend installing Poetry using
 [pipx](https://python-poetry.org/docs/#installing-with-pipx) rather than the official installer.
