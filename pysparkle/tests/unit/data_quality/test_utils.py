@@ -134,15 +134,15 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
     data_quality_run_date = date(year=2000, month=1, day=1)
 
     expected_cols = [
-        "DataQualityRunDate",
-        "Datamart",
-        "ColumnName",
-        "Validator",
-        "ValueSet",
-        "Threshold",
-        "FailureCount",
-        "FailurePercent",
-        "Success",
+        "data_quality_run_date",
+        "datasource_name",
+        "column_name",
+        "validator",
+        "value_set",
+        "threshold",
+        "failure_count",
+        "failure_percent",
+        "success",
     ]
     expected_data = [
         (
