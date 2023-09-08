@@ -24,7 +24,6 @@ steps:
 
   - task: Bash@3
     displayName: "Create Poetry Enviroment and Install Packages"
-    workingDirectory: ${{ parameters.workingDirectory }}
     inputs:
       targetType: inline
       script: |
@@ -33,14 +32,15 @@ steps:
         pipx install poetry
         poetry self add poetry-dotenv-plugin
         poetry install
+      workingDirectory: ${{ parameters.workingDirectory }}
 
   - task: Bash@3
     displayName: "Unit Tests"
-    workingDirectory: ${{ parameters.workingDirectory }}
     inputs:
       targetType: inline
       script: |
         poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+      workingDirectory: ${{ parameters.workingDirectory }}
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
 
@@ -55,6 +55,7 @@ steps:
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
+      workingDirectory: ${{ parameters.workingDirectory }}
     env:
       E2E_TEST_LOCATION: ${{ parameters.e2eTestLocation }}
       JUNIT_LOCATION: ${{ parameters.junitLocation }}
