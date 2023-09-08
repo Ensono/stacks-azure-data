@@ -15,7 +15,6 @@ class DatasourceConfig(BaseModel):
     datasource_name: str = Field(description="Data asset name (e.g. table or file name).")
     datasource_type: str = Field(description="Source system type (e.g. table, parquet, csv).")
     data_location: str = Field(description="Path to the given data asset or a fully qualified table name.")
-    dq_output_path: str = Field(description="Path to where data quality results should be written")
     expectation_suite_name: str
     validation_config: list[ValidationConfig]
 
@@ -23,4 +22,5 @@ class DatasourceConfig(BaseModel):
 class Config(BaseModel):
     gx_directory_path: str = Field(description="Path to GX Metadata Store.")
     dataset_name: str
+    dq_output_path: str = Field(description="Path to where data quality results should be written")
     datasource_config: list[DatasourceConfig]

@@ -14,8 +14,7 @@ from great_expectations.data_context.types.base import (
     FilesystemStoreBackendDefaults,
 )
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.types import (StringType, StructField, StructType,
-                               DateType, BooleanType)
+from pyspark.sql.types import StringType, StructField, StructType, DateType, BooleanType
 
 from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
 from pysparkle.pyspark_utils import save_dataframe_as_delta
@@ -149,9 +148,11 @@ def execute_validations(
     return gx_validation_results
 
 
-def publish_quality_results_table(spark: SparkSession, dq_path: str, datasource_name: str,
-                              results: list, data_quality_run_date: date) -> DataFrame:
-    """
+def publish_quality_results_table(
+    spark: SparkSession, dq_path: str, datasource_name: str, results: list, data_quality_run_date: date
+) -> DataFrame:
+    """Publish data quality results to table.
+
     Given a ValidatorResults object, this function
     writes out the validation results for a given date
     and datasource in a table and returns any failing validations
@@ -162,50 +163,66 @@ def publish_quality_results_table(spark: SparkSession, dq_path: str, datasource_
         datasource_name: Name of the datasource to be validated
         results: List containing validator results from great expectations
         data_quality_run_date: Date that the validations were executed
-    
+
     Returns:
         Dataframe containing failed validations
     """
-    columns = StructType(
-        [StructField('DataQualityRunDate', DateType(), True),
-         StructField('Datamart', StringType(), True),
-         StructField('ColumnName', StringType(), True),
-         StructField('Validator', StringType(), True),
-         StructField('ValueSet', StringType(), True),
-         StructField('Threshold', StringType(), True),
-         StructField('FailureCount', StringType(), True),
-         StructField('FailurePercent', StringType(), True),
-         StructField('Success', BooleanType(), True)])
+    dq_results_schema = StructType(
+        [
+            StructField("data_quality_run_date", DateType(), True),
+            StructField("datasource_name", StringType(), True),
+            StructField("column_name", StringType(), True),
+            StructField("validator", StringType(), True),
+            StructField("value_set", StringType(), True),
+            StructField("threshold", StringType(), True),
+            StructField("failure_count", StringType(), True),
+            StructField("failure_percent", StringType(), True),
+            StructField("success", BooleanType(), True),
+        ]
+    )
 
     emp_RDD = spark.sparkContext.emptyRDD()
 
-    data = spark.createDataFrame(data=emp_RDD, schema=columns)
+    data = spark.createDataFrame(data=emp_RDD, schema=dq_results_schema)
 
     for result in results:
         try:
-            Column = result.expectation_config.kwargs['column']
-        except:
-            Column = result.expectation_config.kwargs['column_A']
+            Column = result.expectation_config.kwargs["column"]
+        except KeyError:
+            Column = result.expectation_config.kwargs["column_A"]
         Validator = result.expectation_config.expectation_type
         try:
-            Value_set = result.expectation_config.kwargs['value_set']
-        except: 
+            Value_set = result.expectation_config.kwargs["value_set"]
+        except KeyError:
             Value_set = None
         try:
-            Threshold = result.expectation_config.kwargs['mostly']
-        except:
+            Threshold = result.expectation_config.kwargs["mostly"]
+        except KeyError:
             Threshold = None
         Unexpected_count = result.result["unexpected_count"]
         Unexpected_percent = result.result["unexpected_percent"]
         Success = result["success"]
-        row = spark.createDataFrame(data=[[data_quality_run_date, datasource_name, Column, Validator, Value_set,
-                                          Threshold, Unexpected_count, Unexpected_percent, Success]], 
-                                          schema=columns)
+        row = spark.createDataFrame(
+            data=[
+                [
+                    data_quality_run_date,
+                    datasource_name,
+                    Column,
+                    Validator,
+                    Value_set,
+                    Threshold,
+                    Unexpected_count,
+                    Unexpected_percent,
+                    Success,
+                ]
+            ],
+            schema=dq_results_schema,
+        )
         data = data.union(row)
 
     data = data.coalesce(1)
 
-    save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["DataQualityRunDate"])
+    save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
 
-    failed_validations = data.filter(data.Success==False)
+    failed_validations = data.filter(data.Success is False)
     return failed_validations
