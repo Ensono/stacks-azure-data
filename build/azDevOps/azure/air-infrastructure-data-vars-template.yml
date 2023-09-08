@@ -89,7 +89,7 @@ variables:
 
   # GitHub infomration
   - name: create_release
-    value:  true #false
+    value: true #false
   - name: github_release_service_connection
     value: GitHubReleases
   - name: github_org

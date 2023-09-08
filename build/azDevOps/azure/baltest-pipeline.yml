@@ -66,3 +66,4 @@ stages:
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
+              
