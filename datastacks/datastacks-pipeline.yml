@@ -21,7 +21,7 @@ variables:
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
   - name: pythonVersion
-    value: "3.10.10"
+    value: "3.10"
 
 pool:
   name: $(agentpool_name)
