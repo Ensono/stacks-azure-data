@@ -27,9 +27,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        python -m pip install pipx
-        python -m pipx ensurepath
-        pipx install poetry
+        pip install poetry
         poetry self add poetry-dotenv-plugin
         poetry install
       workingDirectory: '${{ parameters.workingDirectory }}'
