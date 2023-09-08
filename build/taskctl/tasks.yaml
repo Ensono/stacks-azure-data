@@ -6,7 +6,7 @@ tasks:
       - Update-BuildNumber
 
   lint:yaml:
-    context: powershell-python
+    context: powershell
     description: Perform YAML linting
     command:
       - Invoke-YamlLint -FailOnWarnings $False
