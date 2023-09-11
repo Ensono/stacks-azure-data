@@ -12,46 +12,66 @@ keywords:
   - template
 ---
 
-This section provides an overview of generating a new Data Platform project using Stacks.
+This section provides an overview of scaffolding and generating a new Data Platform project using the [Stacks CLI](https://stacks.amido.com/docs/stackscli/about).
 
 It assumes the following [requirements](../requirements_data_azure.md) are in place:
 
 * A [remote git repository](../requirements_data_azure.md#git-repository) for hosting the generated project
 * [Terraform state storage](../requirements_data_azure.md#terraform-state-storage)
 
-## Step 1: Create/Generate Data Platform project using Stacks CLI
+## Step 1: Install the Stacks CLI
 
-The [Stacks CLI](https://stacks.amido.com/docs/stackscli/about) will help you get started with scaffolding your applications and workspaces using Stacks. Through a series of questions the CLI will determine how and what to build for your workspace, helping to accelerate your development process.
+Download and install the [Stacks CLI](https://stacks.amido.com/docs/stackscli/about).
+Please refer to the **Stacks.CLI.Manual** in the latest [stacks-cli release](https://github.com/ensono/stacks-cli/releases) for detailed instructions.
 
-Download and install the `stacks-cli` using [Stacks CLI](https://stacks.amido.com/docs/stackscli/about) page. Please refer to the **Stacks.CLI.Manual** in the latest `stacks-cli` release for detailed instruction.
+## Step 2: Prepare the project config
 
-To construct a Data Platform project, two primary cli commands are required: `stacks-cli interactive` and `stacks-cli scaffold`.
+We will be using the `stacks-cli scaffold` command to generate a new data project. The scaffold command takes a YAML configuration file, defining the project.
 
-The interactive command is designed to ask questions on the command line about the configuration
-required for setting up Ensono Digital Stacks. It will then save this configuration out to a file that can be
-read in using the scaffold command.
+A [sample data project config file](https://github.com/Ensono/stacks-azure-data/blob/feat/6809-stacks-cli-yaml-template/stacks-cli/data-scaffold-example.yml) is provided. Prepare a copy of this file, and update the following entries as required for your new project:
 
-```cmd
-stacks-cli interactive
+| Config field | Example value | Description |
+| ----- | ----- | ----- |
+| directory.working | stacksclitest | Target directory for the scaffolded project |
+| directory.export | "~" | Path to your Stacks CLI installation |
+| business.company | mycompany | Used for resource naming |
+| business.domain | mydomain | Used for environment & Terraform state key naming |
+| project.name | mydataproject | Name of project created & used for resource naming |
+| project.sourcecontrol.type | github | Remote repository type. |
+| project.sourcecontrol.url | https://github.com/adurkan-amido/stacks-data-az-test | Used for setting up the remote repository - see [Git repository](../requirements_data_azure.md#git-repository). |
+| project.cloud.region | ukwest | The Azure region you'll be deploying into. Using the Azure CLI, you can use `az account list-locations -o Table` to see available region names. |
+| terraform.backend.storage | tfstorage | Storage account name for Terraform state - see [Terraform state storage](../requirements_data_azure.md#terraform-state-storage). |
+| terraform.backend.group | tfgroup | Resource group account name for Terraform state. |
+| terraform.backend.container | tfcontainer | Container name account name for Terraform state. |
+
+All other values can be left as they are. For full documentation of all fields in the config file, refer to the Stacks CLI documentation.
+
+## Step 3: Scaffold the project
+
+You will now pass the prepared config file to the Stacks scaffold command, and your project will be generated. Run the following, replacing `./data-scaffold-config.yml` with the path to your config file:
+
+```bash
+stacks-cli scaffold -c ./data-scaffold-config.yml
 ```
 
-The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project.
+If successful, the new project will now be available in the directory provided in the `directory.working` field. Navigate to the generated project's directory and review the contents.
 
-| Question                                      | Required value for data project |
-|-----------------------------------------------|---------------------------------|
-| What framework should be used for the project?| infra                           |
-| Which type of infrastructure is required?     | data                            |
+## Step 4: Push the project to remote repository
 
-The resulting configuration file named `stacks.yml` contains all of the configuration that was used to generate the project,
-which means it can be used to produce the same project stack again.
+Now the project has been generated, it can be pushed to the target remote repository. By default, scaffolded project will be configured to use the remote repo URL that was defined in the config file.
 
-The CLI can be used with a configuration file to generate the Ensono Digital Stacks based projects using `stacks-cli scaffold`.
+```bash
 
-```cmd
-stacks-cli scaffold -c ./stacks.yml
+# Confirm the correct remote repository has been set
+git remote show origin
+
+# If required, set your local branch to main
+git branch -M main
+
+# Push your scaffolded project to the remote repository
+git push -u origin main
+
 ```
-
-Open the project locally and push the generated project to the target remote repository's `main` branch.
 
 ## Next steps
 

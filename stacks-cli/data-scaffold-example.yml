@@ -4,12 +4,12 @@ input:
     format: text
     colour: true
   directory:
-    working: stacksclitest # Target directory
-    export: "~"  # Path to Stacks CLI installation
+    working: stacksclitest # Update: Target directory for the scaffolded project
+    export: "~"  # Update: Path to your Stacks CLI installation
   business:
-    company: mycompany # used for builder github email & TF infra resource naming
-    domain: mydomain  # used for naming environment & tf state key
-    component: none   # not used
+    company: mycompany # Update: Used for resource naming
+    domain: mydomain  # Update: Used for environment & Terraform state key naming
+    component: none
   cloud:
     platform: azure
   network:
@@ -19,22 +19,22 @@ input:
         external: none
   pipeline: azdo
   project:
-    - name: dataproj3 # name of project created & TF infra resource naming
+    - name: dataproj3 Name of project created & used for resource naming
       framework:
         type: infra
         option: data
         version: latest
       sourcecontrol:
         type: github
-        url: https://github.com/adurkan-amido/stacks-data-az-test # needs populating but not used - might setup Git remote
+        url: https://github.com/adurkan-amido/stacks-data-az-test # Update: Used for setting up the remote repository
       cloud:
-        region: ukwest # Azure region: use  az account list-locations -o Table
+        region: ukwest # Update: The Azure region you'll be deploying into
         group: none
   terraform:
     backend:
-      storage: tfstorage # storage account name for terraform state
-      group: tfgroup # resource group account name for terraform state
-      container: tfcontainer # container name account name for terraform state
+      storage: tfstorage # Update: Storage account name for Terraform state
+      group: tfgroup # Update: Resource group account name for Terraform state
+      container: tfcontainer # Update: Container name account name for Terraform state
   options:
     cmdlog: false
     dryrun: false
