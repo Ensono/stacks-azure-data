@@ -11,6 +11,8 @@ keywords:
 
 ## Local development
 
+The following tools are required to develop the Stacks data solution:
+
 * Python 3.9+
 * [Poetry](https://python-poetry.org/docs/)
 * (Windows users) A Linux distribution, e.g. [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install)
@@ -18,13 +20,33 @@ keywords:
 
 See [development quickstart](getting_started/dev_quickstart_data_azure.md) for further details on developing the solution.
 
+## Git repository
 
-## Azure
+A remote Git repository is required for storing and managing a data project's code. When scaffolding a new data project, you will need the HTTPS URL of the repo.
 
-* Azure subscription – for deploying the solution into
-* Azure service principal (Application) – needs permissions to deploy and configure all required
-resources into the target subscription
-* Azure DevOps project – for running CI/CD pipelines and storing project variables
+The examples and quickstart documentation assume that `main` is the primary branch in the repo.
+
+## Azure subscription
+
+In order to deploy a Stacks data platform into Azure, you will need:
+
+* One or more Azure subscriptions – for deploying the solution into
+* Azure service principal (Application) – with permissions to deploy and configure all required
+resources into the target subscription(s)
+
+### Terraform state storage
+
+Deployment of Azure resources in Stacks is done through Terraform. Within your Azure subscription, you must provision a [storage container](https://learn.microsoft.com/en-us/azure/storage/blobs/blob-containers-portal) to hold [Terraform state data](https://developer.hashicorp.com/terraform/language/state). Details regarding this storage are required when you first scaffold the project using the Stacks CLI. Therefore, once you have provisioned the storage container, make note of the following:
+
+* Storage account name
+* Resource group name
+* Container name
+
+## Azure DevOps
+
+CI/CD processes within the Stacks data platform are designed to be run in Azure DevOps Pipelines[^1]. Therefore, it is a requirement to [create a project in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=browser).
+
+[^1]: More general information on [using Azure Pipelines in Stacks](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops) is also available.
 
 ### Azure Pipelines variable groups
 
@@ -94,6 +116,3 @@ Deployment', referring to variables required after the fundamental infrastructur
 | azure-tenant-id       | Project start | Directory ID for Azure Active Directory application   |
 
 </details>
-
-Please see [Azure DevOps Pipelines](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops)
-for general information on using Azure Pipelines in Stacks.

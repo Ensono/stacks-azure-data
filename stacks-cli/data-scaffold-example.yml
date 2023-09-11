@@ -5,7 +5,7 @@ input:
     colour: true
   directory:
     working: stacksclitest # Target directory
-    export: "~"  # Path to directory
+    export: "~"  # Path to Stacks CLI installation
   business:
     company: mycompany # used for builder github email & TF infra resource naming
     domain: mydomain  # used for naming environment & tf state key
