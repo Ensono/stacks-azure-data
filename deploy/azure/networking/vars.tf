@@ -170,7 +170,7 @@ variable "network_details" {
         }
     } },
 
-      "amido-stacks-euw-de-qa-nonprod" = {
+    "amido-stacks-euw-de-qa-nonprod" = {
       name                = "amido-stacks-euw-de-qa-nonprod"
       address_space       = ["10.5.0.0/16"]
       dns_servers         = []
