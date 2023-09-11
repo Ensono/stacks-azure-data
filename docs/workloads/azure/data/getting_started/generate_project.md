@@ -32,11 +32,11 @@ A [sample data project config file](https://github.com/Ensono/stacks-azure-data/
 
 | Config field | Example value | Description |
 | ----- | ----- | ----- |
-| directory.working | stacksclitest | Target directory for the scaffolded project |
-| directory.export | "~" | Path to your Stacks CLI installation |
-| business.company | mycompany | Used for resource naming |
-| business.domain | mydomain | Used for environment & Terraform state key naming |
-| project.name | mydataproject | Name of project created & used for resource naming |
+| directory.working | stacksclitest | Target directory for the scaffolded project. |
+| directory.export | "~" | Path to your Stacks CLI installation. |
+| business.company | mycompany | Used for resource naming. |
+| business.domain | mydomain | Used for environment & Terraform state key naming. |
+| project.name | mydataproject | Name of project created & used for resource naming. |
 | project.sourcecontrol.type | github | Remote repository type. |
 | project.sourcecontrol.url | https://github.com/mycompany/stacks-data-platform | Used for setting up the remote repository - see [Git repository](../requirements_data_azure.md#git-repository). |
 | project.cloud.region | ukwest | The Azure region you'll be deploying into. Using the Azure CLI, you can use `az account list-locations -o Table` to see available region names. |
