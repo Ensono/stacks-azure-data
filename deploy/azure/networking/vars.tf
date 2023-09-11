@@ -168,7 +168,32 @@ variable "network_details" {
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         }
-    } }
+    } },
+
+      "amido-stacks-euw-de-qa-nonprod" = {
+      name                = "amido-stacks-euw-de-qa-nonprod"
+      address_space       = ["10.5.0.0/16"]
+      dns_servers         = []
+      resource_group_name = "amido-stacks-euw-de-qa-nonprod-network"
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "amido-stacks-euw-de-qa-nonprod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-nonprod-pe"
+          sub_address_prefix                            = ["10.5.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "amido-stacks-euw-de-qa-nonprod" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-nonprod"
+          sub_address_prefix                            = ["10.5.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } },
+
   }
 }
 
