@@ -1,12 +1,11 @@
 ---
 id: shared_resources_deployment_azure
 title: Shared Resources Deployment
-sidebar_label: 3. Shared Resources Deployment
+sidebar_label: 4. Shared Resources Deployment
 hide_title: false
 hide_table_of_contents: false
 description: Deployment of common Azure Data Factory resources shared by data pipelines
 keywords:
-  - DE
   - data
   - infrastructure
   - adf

@@ -1,7 +1,7 @@
 ---
 id: core_data_platform_deployment_azure
 title: Infrastructure Deployment
-sidebar_label: 1. Infrastructure Deployment
+sidebar_label: 2. Infrastructure Deployment
 hide_title: false
 hide_table_of_contents: false
 description: Infrastructure deployment
@@ -22,41 +22,7 @@ It assumes the [Azure requirements](../requirements_data_azure.md#azure) are in 
 * Azure DevOps project with [Pipelines variable groups](../requirements_data_azure.md#azure-pipelines-variable-groups).
 * A remote git repository for hosting the generated project (this guide assumes `main` is the primary branch in this repo)
 
-## Step 1: Create/Generate Data Platform project using Stacks CLI
-
-The [Stacks CLI](https://stacks.amido.com/docs/stackscli/about) will help you get started with scaffolding your applications and workspaces using Stacks. Through a series of questions the CLI will determine how and what to build for your workspace, helping to accelerate your development process.
-
-Download and install the `stacks-cli` using [Stacks CLI](https://stacks.amido.com/docs/stackscli/about) page. Please refer to the **Stacks.CLI.Manual** in the latest `stacks-cli` release for detailed instruction.
-
-To construct a Data Platform project, two primary cli commands are required: `stacks-cli interactive` and `stacks-cli scaffold`.
-
-The interactive command is designed to ask questions on the command line about the configuration
-required for setting up Ensono Digital Stacks. It will then save this configuration out to a file that can be
-read in using the scaffold command.
-
-```cmd
-stacks-cli interactive
-```
-
-The majority of the questions are self-explanatory; please refer to the **Stacks.CLI.Manual** for further detail, however the following two will define the type of the target project.
-
-| Question                                      | Required value for data project |
-|-----------------------------------------------|---------------------------------|
-| What framework should be used for the project?| infra                           |
-| Which type of infrastructure is required?     | data                            |
-
-The resulting configuration file named `stacks.yml` contains all of the configuration that was used to generate the project,
-which means it can be used to produce the same project stack again.
-
-The CLI can be used with a configuration file to generate the Ensono Digital Stacks based projects using `stacks-cli scaffold`.
-
-```cmd
-stacks-cli scaffold -c ./stacks.yml
-```
-
-Open the project locally and push the generated project to the target remote repository's `main` branch.
-
-## Step 2: Add Infrastructure pipeline in Azure DevOps
+## Step 1: Add Infrastructure pipeline in Azure DevOps
 
 Open the project locally and create a new feature branch e.g.:
 
@@ -78,7 +44,7 @@ YAML file `air-infrastructure-data.yml` should be added as the definition for a 
 4. For the pipeline definition, specify the YAML file in the project repository feature branch (`air-infrastructure-data.yml`) and save
 5. The new pipeline will require access to any Azure DevOps pipeline variable groups specified in the pipeline YAML. Under each variable group, go to 'Pipeline permissions' and add the pipeline.
 
-## Step 3: Deploy Infrastructure in non-production environment
+## Step 2: Deploy Infrastructure in non-production environment
 
 Run the pipeline configured in Step 2 to commence the build and deployment process.
 
@@ -89,7 +55,7 @@ If successful, the core infrastructure resources will now be available in the no
 
 Once core infrasturcture resources are deployed in nonprod environment, values will need adding into the nonprod variable group to reflect the deployed resources (e.g. `amido-stacks-de-pipeline-nonprod`). For additional information, see [Pipelines variable groups](../requirements_data_azure.md#azure-pipelines-variable-groups).
 
-## Step 4: Deploy Infrastructure in further environments
+## Step 3: Deploy Infrastructure in further environments
 
 By default Stacks provides a framework for managing the platform across two environments - nonprod and prod.
 The template CI/CD pipelines provided are based upon these two platform environments (nonprod and prod) - but these may be amended depending upon the specific requirements of your project and organisation.
