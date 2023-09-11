@@ -80,7 +80,7 @@ variables:
   - name: DASHBOARD_TAGS
     value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
   - name: DASHBOARD_MEASUREMENT
-    value: deployment # Static definition within Influx Config
+    value: deployment  # Static definition within Influx Config
     # Group should contain:
     # DASHBOARD_INFLUX_ORG
     # DASHBOARD_INFLUX_BUCKET

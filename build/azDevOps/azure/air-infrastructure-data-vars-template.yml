@@ -35,7 +35,7 @@ variables:
   - name: resource_def_name
     value: $(company)-$(domain)
   - name: component
-    value: de #core
+    value: de  # core
   - name: role
     value: data-infrastructure
 
@@ -80,7 +80,7 @@ variables:
   - name: DASHBOARD_TAGS
     value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
   - name: DASHBOARD_MEASUREMENT
-    value: deployment # Static definition within Influx Config
+    value: deployment  # Static definition within Influx Config
     # Group should contain:
     # DASHBOARD_INFLUX_ORG
     # DASHBOARD_INFLUX_BUCKET
@@ -89,7 +89,7 @@ variables:
 
   # GitHub infomration
   - name: create_release
-    value: true #false
+    value: true  # false
   - name: github_release_service_connection
     value: GitHubReleases
   - name: github_org
@@ -97,7 +97,7 @@ variables:
 
 
   - name: git_integration
-    value: null #github removed github integration with ADF
+    value: null  # github removed github integration with ADF
   - name: git_integration_prod
     value: null
   - name: sql_admin_login
