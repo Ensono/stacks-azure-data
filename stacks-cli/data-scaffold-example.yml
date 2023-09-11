@@ -26,7 +26,7 @@ input:
         version: latest
       sourcecontrol:
         type: github
-        url: https://github.com/adurkan-amido/stacks-data-az-test # Update: Used for setting up the remote repository
+        url: https://github.com/mycompany/stacks-data-platform # Update: Used for setting up the remote repository
       cloud:
         region: ukwest # Update: The Azure region you'll be deploying into
         group: none
