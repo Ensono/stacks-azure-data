@@ -76,41 +76,6 @@ stages:
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: $(pythonVersion)
-              githubToken: $(github_token)
-              addToPath: true
-            displayName: Set Python Version
-          - script: pip install --upgrade pre-commit tomli
-            displayName: Install pre-commit
-          - bash: |
-              `which pre-commit` run --all-files --show-diff-on-failure
-            displayName: Run Linting Checks
-            env:
-              PRE_COMMIT_HOME: $(self_repo_job_dir)
-          - script: |
-              lastTag=$(git tag --sort=-creatordate | head -n 1)
-              if [[ -z $lastTag ]]; then
-                major=$(version_major)
-                minor=$(version_minor)
-                revision=$(version_revision)
-                echo "Last Tag: NOT Present"
-              else
-                IFS='.' read -ra versionParts <<< "${lastTag#v}"
-                major="${versionParts[0]}"
-                minor="${versionParts[1]}"
-                lastrevision="${versionParts[2]}"
-                revision=$((lastrevision + 1))
-                echo "Last Tag: $lastTag"
-              fi
-              newVersion="${major}.${minor}.${revision}"
-              echo "New Version: $newVersion"
-              echo "##vso[task.setvariable variable=major]$major"
-              echo "##vso[task.setvariable variable=minor]$minor"
-              echo "##vso[task.setvariable variable=revision]$revision"
-              echo "##vso[task.setvariable variable=newVersion]$newVersion"
-            displayName: Determine New Version
           - task: Bash@3
             displayName: "TaskCTL: Setup"
             inputs:
