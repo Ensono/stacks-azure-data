@@ -13,7 +13,7 @@ keywords:
 ---
 
 This section provides an overview of deploying the shared resources for Stacks Data Platform.
-This aligns to the workflow shown in the [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section.
+
 The shared resources include Azure Data Factory resources which are shared across pipelines. These are as follows:
 
 * Linked services

@@ -14,13 +14,13 @@ keywords:
 ---
 
 This section provides an overview of generating a new Data Platform project and deploying core infrastructure for Stacks Data Platform.
-This aligns to the workflow shown in the [deployment architecture](../architecture/architecture_data_azure.md#data-engineering-workloads) section.
-It assumes the [Azure requirements](../requirements_data_azure.md#azure) are in place, including:
 
-* Azure subscription and service principal
-* If you want to provision the infrastructure within a private network, this can be done as part of a [Hub-Spoke network topology](../infrastructure_data_azure#networking). Spoke virtual network and subnet for private endpoints must be provisioned for each environment. The hub network must contain a self-hosted agent. See [Microsoft documentation](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke?tabs=cli) for more details on implementing Hub-spoke network topology in Azure.
-* Azure DevOps project with [Pipelines variable groups](../requirements_data_azure.md#azure-pipelines-variable-groups).
-* A remote git repository for hosting the generated project (this guide assumes `main` is the primary branch in this repo)
+It assumes you have [generated a new data project using Stacks](generate_project.md), and that the following [requirements](../requirements_data_azure.md) are in place:
+
+* [Azure subscription and service principal](../requirements_data_azure.md#azure-subscription)
+    * If you want to provision the infrastructure within a private network, this can be done as part of a [Hub-Spoke network topology](../infrastructure_data_azure#networking). Spoke virtual network and subnet for private endpoints must be provisioned for each environment. The hub network must contain a self-hosted agent. See [Microsoft documentation](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke?tabs=cli) for more details on implementing Hub-spoke network topology in Azure.
+* [Azure DevOps project with Pipelines variable groups](../requirements_data_azure.md#azure-devops).
+
 
 ## Step 1: Add Infrastructure pipeline in Azure DevOps
 

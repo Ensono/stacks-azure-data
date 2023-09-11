@@ -12,8 +12,7 @@ keywords:
 
 This section covers the steps required to start developing a Stacks Azure Data Platform from your machine:
 
-1. Make sure you have installed the applications from the "Local development" section listed in
-[Requirements](../requirements_data_azure.md).
+1. Make sure you have installed the applications in [local development requirements](../requirements_data_azure.md#local-development).
 2. Ensure that Poetry is added to your `$PATH`.
 
 ## Environment setup
