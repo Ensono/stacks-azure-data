@@ -1,0 +1,45 @@
+input:
+  log:
+    level: info
+    format: text
+    colour: true
+  directory:
+    working: stacksclitest # Target directory
+    export: "~"  # Path to directory
+  business:
+    company: mycompany # used for builder github email & TF infra resource naming
+    domain: mydomain  # used for naming environment & tf state key
+    component: none   # not used
+  cloud:
+    platform: azure
+  network:
+    base:
+      domain:
+        internal: none
+        external: none
+  pipeline: azdo
+  project:
+    - name: dataproj3 # name of project created & TF infra resource naming
+      framework:
+        type: infra
+        option: data
+        version: latest
+      sourcecontrol:
+        type: github
+        url: https://github.com/adurkan-amido/stacks-data-az-test # needs populating but not used - might setup Git remote
+      cloud:
+        region: ukwest # Azure region: use  az account list-locations -o Table
+        group: none
+  terraform:
+    backend:
+      storage: tfstorage # storage account name for terraform state
+      group: tfgroup # resource group account name for terraform state
+      container: tfcontainer # container name account name for terraform state
+  options:
+    cmdlog: false
+    dryrun: false
+    nobanner: false
+    nocliversion: false
+  overrides:
+    internal_config: ""
+    ado_variables_path: ""
