@@ -5,40 +5,34 @@ Link to the official documentation:
 
 ## Overview
 
-The Stacks Azure Data Platform solution provides a template for deploying a production-ready data
-platform, including **Azure Data Factory** for data ingestion and orchestration, **Databricks** for
-data processing and **Azure Data Lake Storage Gen2** for data lake storage. The solution's data
-workload naming convention originates from Databricks' Medallion Architecture, a system emphasising
-structured data transformation layers.
+The Stacks Azure Data Platform solution provides
+a framework for accelerating the deployment of a production-ready data platform.
+
+![Stacks Data Overview](docs/workloads/azure/data/images/stacks-data-overview.png)
+
+1. Use the [Stacks CLI](https://stacks.amido.com/docs/stackscli/about) to generate a new data platform project.
+2. Build and deploy the data platform infrastructure into your Azure environment.
+3. Accelerate development of data workloads and ETL pipelines with [Datastacks](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/datastacks).
+
+The Stacks Data Platform utilises tools including **Azure Data Factory** for data
+ingestion and orchestration, **Databricks** for data processing and **Azure Data Lake Storage Gen2**
+for data lake storage. The solution is based around a [medallion architecture](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/etl_intro_data_azure#data-pipelines), with Bronze, Silver and Gold layers for various stages of data preparation.
 
 Key elements of the solution include:
 
-* Infrastructure as code (IaC) for all infrastructure components (Terraform & ARM Templates);
-* Azure Data Factory (ADF) resources and a sample ingest pipeline that transfers data from a sample
-source into a landing (Bronze) data lake zone;
-* Sample data processing pipelines named Silver and Gold. These are responsible for data transformations from
-'Bronze to Silver' layer and from 'Silver to Gold' layer, respectively;
-* Data Quality framework using Great Expectations;
-* Deployment pipelines to enable CI/CD and DataOps for all components;
-* Automated tests to ensure quality assurance and operational efficiency;
-* [Datastacks](datastacks/README.md) - a library and CLI built to accelerate the development of data engineering
-workloads in the data platform;
-* [PySparkle](pysparkle/README.md) - a library built to streamline data processing activities running in Apache Spark.
+* Infrastructure as code (IaC) for all infrastructure components (Terraform).
+* [Datastacks](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/datastacks) - a library and CLI built to accelerate the development of data engineering
+workloads in the data platform based upon templates.
+* [Pysparkle](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/pysparkle/pysparkle_quickstart) - a library built to streamline data processing activities running in Apache Spark.
+* Sample ingest pipeline that transfers data from a source into a landing (Bronze) data lake zone.
+* Sample data processing pipelines performing data transformations from Bronze to Silver and Silver to Gold layers.
+* Data Quality validations.
+* Deployment pipelines to enable CI/CD and DataOps for all components.
+* Automated tests to ensure quality assurance and operational efficiency.
 
 ### High-level architecture
 
-![High-level architecture.png](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
-
-### Infrastructure deployed
-
-* Resource Group
-* Key Vault
-* Azure Data Lake Storage Gen2
-* Azure Blob Storage
-* Azure Data Factory
-* Log Analytics Workspace
-* Databricks Workspace (optional)
-* Azure SQL Database (optional)
+![High-level architecture](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
 
 ## Repository structure
 
@@ -67,76 +61,5 @@ stacks-azure-data
 
 ## Developing the solution
 
-### Pre-requisites
-
-* Python 3.9+
-* [Poetry](https://python-poetry.org/docs/)
-* (Windows users) A Linux distribution, e.g. [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install)
-* Java 8/11/17 as in the [Spark documentation](https://spark.apache.org/docs/latest/)
-
-### Setup Environment
-
-Install the applications listed above, and ensure Poetry is added to your `$PATH`.
-
-A Makefile has been created to assist with setting up the development environment. Run:
-
-```bash
-make setup_dev_environment
-```
-
-#### Poetry basics
-To install packages within Poetry, use (this will add the dependency to `pyproject.toml`):
-
-```bash
-poetry add packagename
-```
-
-To install a package for use only in the dev environment, use:
-
-```bash
-poetry add packagename --group dev
-```
-
-### Running unit tests
-
-In order to run unit tests, run the following command:
-
-```bash
-make test
-```
-
-### Running E2E Tests
-
-To run E2E tests locally, you will need to log in through the Azure CLI:
-
-```bash
-az login
-```
-
-To set the correct subscription run:
-
-```bash
-az account set --subscription <name or id>
-```
-
-To run the E2E tests, you need to set up the following environment variables:
-
-- `AZURE_SUBSCRIPTION_ID`
-- `AZURE_RESOURCE_GROUP_NAME`
-- `AZURE_DATA_FACTORY_NAME`
-- `AZURE_REGION_NAME`
-- `AZURE_STORAGE_ACCOUNT_NAME`
-
-To run the E2E tests run:
-
-```bash
-make test_e2e
-```
-
-### Troubleshooting
-
-ℹ️ If you encounter PATH-related issues with Poetry when running the tests, we recommend installing Poetry using
-[pipx](https://python-poetry.org/docs/#installing-with-pipx) rather than the official installer.
-
-ℹ️ The E2E tests may require additional permissions as we are editing data in ADLS during the E2E tests. If the tests fail
-whilst clearing up directories, ensure that you have [Storage Blob Data Contributor](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor) access applied to your Azure Active Directory subscription. You may also be required to configure the [firewall rules](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security) for the storage account to whitelist your IP address.
+Please refer to the documentation for getting started with developing Stacks:
+[Local Development Quickstart](https://stacks.amido.com/docs/workloads/azure/data/getting_started/dev_quickstart_data_azure).

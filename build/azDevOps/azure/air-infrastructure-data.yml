@@ -102,7 +102,7 @@ stages:
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
                 - bash: |
-                    apt-get install -y jq
+                    sudo apt-get install -y jq
                     ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
                     echo "$ip"
                     echo "##vso[task.setvariable variable=build_agent_ip;]$ip"
