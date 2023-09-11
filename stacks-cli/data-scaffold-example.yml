@@ -4,7 +4,7 @@ input:
     format: text
     colour: true
   directory:
-    working: stacksclitest # Update: Target directory for the scaffolded project
+    working: stacks # Update: Target directory for the scaffolded project
     export: "~"  # Update: Path to your Stacks CLI installation
   business:
     company: mycompany # Update: Used for resource naming
@@ -19,7 +19,7 @@ input:
         external: none
   pipeline: azdo
   project:
-    - name: dataproj3 Name of project created & used for resource naming
+    - name: stacks-data-platform # Update: Name of project created & used for resource naming
       framework:
         type: infra
         option: data
