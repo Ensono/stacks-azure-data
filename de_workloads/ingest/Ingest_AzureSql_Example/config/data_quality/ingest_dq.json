@@ -1,24 +1,8 @@
 {
     "gx_directory_path": "/dbfs/great_expectations/",
-    "dataset_name": "movies.keywords",
+    "dataset_name": "movies",
+    "dq_output_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/",
     "datasource_config": [
-        {
-            "datasource_name": "movies.keywords",
-            "datasource_type": "parquet",
-            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.keywords/v1/*/*/*",
-            "expectation_suite_name": "movies.keywords_suite",
-            "validation_config": [
-                {
-                    "column_name": "id",
-                    "expectations": [
-                        {
-                            "expectation_type": "expect_column_values_to_not_be_null",
-                            "expectation_kwargs": {}
-                        }
-                    ]
-                }
-            ]
-        },
         {
             "datasource_name": "movies.movies_metadata",
             "datasource_type": "parquet",
@@ -49,6 +33,23 @@
                         {
                             "expectation_type": "expect_column_values_to_match_regex",
                             "expectation_kwargs": {"regex": "^tt\\d{7}$"}
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "datasource_name": "movies.keywords",
+            "datasource_type": "parquet",
+            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/movies.keywords/v1/*/*/*",
+            "expectation_suite_name": "movies.keywords_suite",
+            "validation_config": [
+                {
+                    "column_name": "id",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_not_be_null",
+                            "expectation_kwargs": {}
                         }
                     ]
                 }

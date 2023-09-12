@@ -34,7 +34,7 @@ variables:
   - name: test_unit_path
     value: 'tests/unit/'
 
-# GitHub infomration
+  # GitHub information
   - name: create_release
     value: true
   - name: github_release_service_connection

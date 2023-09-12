@@ -69,7 +69,7 @@ def poll_adf_pipeline(context: Context, seconds: str):
             context.adf_run_id,
         ),
         step=int(seconds),
-        timeout=300,
+        timeout=900,
     )
 
 

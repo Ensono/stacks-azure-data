@@ -21,9 +21,9 @@ trigger:
 variables:
   - template: ../../de_build/job-pipeline-vars.yml
   - template: ../../build/version-data-vars.yml
-  - name: job # update job type
+  - name: job  # update job type
     value: "shared_resources"
-  - name: include_databricks_resources # update databricks option
+  - name: include_databricks_resources  # update databricks option
     value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(job)"

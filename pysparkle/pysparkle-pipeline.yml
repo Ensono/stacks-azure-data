@@ -1,8 +1,8 @@
 name: "$(Build.SourceBranchName)-init"
 
-#trigger:
-#- main #collaboration branch
-#- none
+# trigger:
+# - main #collaboration branch
+# - none
 
 pr:
   branches:
@@ -30,7 +30,7 @@ variables:
     value: "$(self_repo_dir)/pysparkle/tests/unit/"
   - name: junit_path
     value: "$(self_repo_dir)/pysparkle/junit/"
-  - name: dbfs_destination #update job name
+  - name: dbfs_destination  # update job name
     value: "dbfs:/FileStore/jars"
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
@@ -156,7 +156,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./pysparklewheel/"
 
   #############################################################
