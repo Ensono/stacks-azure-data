@@ -18,9 +18,11 @@ utilises the capabilities of the [Great Expectations](https://greatexpectations.
 
 ## Usage
 
+To perform data quality checks with PySparkle, you can use the [Datastacks](../datastacks.md) CLI:
+
 ```bash
-pysparkle data-quality --help
-pysparkle data-quality --config-path "data_quality/silver_dq.json"
+datastacks dq --help
+datastacks dq --config-path "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json" --container config
 ```
 
 `config-path` is a Path to a JSON config inside an Azure Blob container. The container name
