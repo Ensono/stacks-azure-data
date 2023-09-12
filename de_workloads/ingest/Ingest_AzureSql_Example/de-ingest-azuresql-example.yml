@@ -21,11 +21,11 @@ trigger:
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job # update job name
+  - name: job  # update job name
     value: "Ingest_AzureSql_Example"
-  - name: jobtype # update job type
+  - name: jobtype  # update job type
     value: "ingest"
-  - name: include_data_quality # update data quality option
+  - name: include_data_quality  # update data quality option
     value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(jobtype)/$(job)"
@@ -47,7 +47,7 @@ variables:
     value: "config/$(jobtype)/$(job)"
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
-  - name: dbfs_destination  #update job name
+  - name: dbfs_destination  # update job name
     value: 'dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ'
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
@@ -194,7 +194,7 @@ stages:
                   env:
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
@@ -225,7 +225,7 @@ stages:
                     TF_VAR_linked_service_connectionstring: "$(sql_connection)"
                     TF_VAR_include_data_quality: "$(include_data_quality)"
 
-      #   # Start Testing
+      # Start Testing
       - deployment: Test_NonPROD
         displayName: "Testing  NonPROD"
         environment: ${{ variables.domain }}-nonprod
@@ -320,7 +320,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
 
