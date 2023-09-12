@@ -9,7 +9,7 @@ input:
   business:
     company: mycompany # Update: Used for resource naming
     domain: mydomain  # Update: Used for environment & Terraform state key naming
-    component: none
+    component: data # Update: Used for resource naming
   cloud:
     platform: azure
   pipeline: azdo
