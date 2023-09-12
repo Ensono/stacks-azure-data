@@ -12,11 +12,6 @@ input:
     component: none
   cloud:
     platform: azure
-  network:
-    base:
-      domain:
-        internal: none
-        external: none
   pipeline: azdo
   project:
     - name: stacks-data-platform # Update: Name of project created & used for resource naming
