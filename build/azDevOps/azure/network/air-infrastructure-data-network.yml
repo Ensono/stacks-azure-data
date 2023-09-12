@@ -9,14 +9,8 @@ pr:
       - build/azDevOps/azure/network/*
       - deploy/azure/networking/*
 
-trigger:
-  branches:
-    include:
-      - "main"
-  paths:
-    include:
-      - build/azDevOps/azure/network/*
-      - deploy/azure/networking/*
+trigger: null
+
 variables:
   - template: air-infrastructure-data-network-vars.yml
 
