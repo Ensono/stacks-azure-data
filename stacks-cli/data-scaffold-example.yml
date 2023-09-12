@@ -29,7 +29,6 @@ input:
         url: https://github.com/mycompany/stacks-data-platform # Update: Used for setting up the remote repository
       cloud:
         region: ukwest # Update: The Azure region you'll be deploying into
-        group: none
   terraform:
     backend:
       storage: tfstorage # Update: Storage account name for Terraform state
