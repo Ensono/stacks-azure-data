@@ -83,7 +83,7 @@ stages:
         value: nonprod
     jobs:
       - deployment: InfraNonProd
-        pool: #"amido-stacks-core-data-agent-pool"
+        pool:  # "amido-stacks-core-data-agent-pool"
           # vmImage: $(pool_vm_image)
           name: $(agentpool_name)
         environment: ${{ variables.domain }}-nonprod
