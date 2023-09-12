@@ -35,7 +35,7 @@ variables:
   - name: resource_def_name
     value: $(company)-$(domain)
   - name: component
-    value: de  # core
+    value: "{{ .Input.Business.Component }}"
   - name: role
     value: data-infrastructure
 
