@@ -11,14 +11,17 @@ keywords:
 
 ## Local development
 
-The following tools are required to develop the Stacks data solution:
+The following tools are recommended for developing while using the Stacks data solution:
 
-* Python 3.9+
-* [Poetry](https://python-poetry.org/docs/)
-* (Windows users) A Linux distribution, e.g. [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install)
-* (Optional: to develop using PySpark locally) Java 8/11/17 as in the [Spark documentation](https://spark.apache.org/docs/latest/)
+| Tool | Notes |
+| ----- | ----- |
+| [Python 3.9+](https://www.python.org/downloads/) |  |
+| [Poetry](https://python-poetry.org/docs/) | Used for Python dependency management in Stacks. |
+| A Linux distribution, e.g. [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install) | Optional: recommended for Windows users developing the solution. |
+| Java 8/11/17 | Optional: Java is required to develop and run tests using PySpark locally - see [Spark documentation](https://spark.apache.org/docs/latest/). |
+| [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) | Optional: Azure CLI allows you to interact with Azure resources locally, including running end-to-end tests. |
 
-See [development quickstart](getting_started/dev_quickstart_data_azure.md) for further details on developing the solution.
+See [development quickstart](getting_started/dev_quickstart_data_azure.md) for further details on getting start with developing the solution.
 
 ## Git repository
 

@@ -27,9 +27,8 @@ make setup_dev_environment
 
 In order to interact with Azure resources when developing, including running end-to-end tests, you must:
 
-1. [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-2. [Sign in to the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli)
-3. Set the following environment variables:
+1. [Sign in to the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli)
+2. Set the following environment variables:
     - `AZURE_SUBSCRIPTION_ID`
     - `AZURE_RESOURCE_GROUP_NAME`
     - `AZURE_DATA_FACTORY_NAME`
