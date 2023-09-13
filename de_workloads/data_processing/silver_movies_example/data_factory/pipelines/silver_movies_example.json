@@ -12,14 +12,14 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), '/silver_dq')]",
+            "name": "[concat(parameters('factoryName'), '/silver_movies_example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
-                "description": "Bronze to Silver data transformation, with data quality checks.",
+                "description": "Bronze to Silver data transformation.",
                 "activities": [
                     {
-                        "name": "Silver",
+                        "name": "silver_movies_example",
                         "type": "DatabricksSparkPython",
                         "dependsOn": [],
                         "policy": {
@@ -31,40 +31,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/silver/silver.py",
-                            "parameters": [],
-                            "libraries": [
-                                {
-                                    "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
-                                }
-                            ]
-                        },
-                        "linkedServiceName": {
-                            "referenceName": "ls_Databricks_Small",
-                            "type": "LinkedServiceReference"
-                        }
-                    },
-                    {
-                        "name": "DataQuality",
-                        "type": "DatabricksSparkPython",
-                        "dependsOn": [
-                            {
-                                "activity": "Silver",
-                                "dependencyConditions": [
-                                    "Succeeded"
-                                ]
-                            }
-                        ],
-                        "policy": {
-                            "timeout": "0.12:00:00",
-                            "retry": 0,
-                            "retryIntervalInSeconds": 30,
-                            "secureOutput": false,
-                            "secureInput": false
-                        },
-                        "userProperties": [],
-                        "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/silver/silver_dq.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/silver_movies_example/silver_movies_example.py",
                             "parameters": [],
                             "libraries": [
                                 {
