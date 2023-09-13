@@ -8,7 +8,7 @@ variables:
   - name: domain
     value: core-data
   - name: cloud_providers
-    value: "azure"
+    value: azure
   # Terraform Configuration
 
   # State configuration
