@@ -13,7 +13,7 @@ test:
 	python -m pytest pysparkle/tests/unit
 
 test_e2e:
-	behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
+	poetry run behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
 
 pre_commit:
 	pre-commit run --all-files
