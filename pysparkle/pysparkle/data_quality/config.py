@@ -22,4 +22,5 @@ class DatasourceConfig(BaseModel):
 class Config(BaseModel):
     gx_directory_path: str = Field(description="Path to GX Metadata Store.")
     dataset_name: str
+    dq_output_path: str = Field(description="Path to where data quality results should be written")
     datasource_config: list[DatasourceConfig]

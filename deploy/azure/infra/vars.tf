@@ -460,40 +460,11 @@ variable "dns_zone_resource_group" {
   default     = "amido-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
-variable "dev_vnet_resource_group_name" {
-  type        = string
-  default     = "amido-stacks-euw-de-nonprod-network"
-  description = "The Resource Group for the Private DNS Zone."
-}
 
-variable "prod_vnet_resource_group_name" {
-  type        = string
-  default     = "amido-stacks-euw-de-prod-network"
-  description = "The Resource Group for the Private DNS Zone."
-}
-
-
-variable "dev_network_spoke" {
-  type        = string
-  default     = "amido-stacks-euw-de-nonprod"
-  description = "The Resource Group for the Private DNS Zone."
-}
-
-variable "prod_network_spoke" {
-  type        = string
-  default     = "amido-stacks-euw-de-prod"
-  description = "The Resource Group for the Private DNS Zone."
-}
-variable "link_dns_dev_spoke_network" {
+variable "link_dns_spoke_network" {
   type        = bool
   default     = false
-  description = "link DNS zones to dev network"
-}
-
-variable "link_dns_prod_spoke_network" {
-  type        = bool
-  default     = false
-  description = "link DNS zones to Prod network"
+  description = "link DNS zones to network"
 }
 
 

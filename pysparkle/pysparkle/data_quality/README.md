@@ -27,7 +27,9 @@ Here is the description of the main elements:
 
 1. `gx_directory_path`: Path to the Great Expectations metadata store.
 2. `dataset_name`: Name of the dataset that is being processed.
-3. `datasource_config`: List of datasource configurations where each configuration contains the following fields:
+3. `dq_output_path`: Path for the data quality results to be written. This will be automatically changed for individual datasources, so is just the path to the top level. Example:
+          * `"abfss://silver@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/"`.
+4. `datasource_config`: List of datasource configurations where each configuration contains the following fields:
     1. `datasource_name`: Name of the data asset, e.g., table or file name.
     2. `datasource_type`: Source system type that Spark can read from, e.g. table, parquet, csv, delta.
     3. `data_location`: Location of the given data asset. It can either be a path to the data file
@@ -54,6 +56,7 @@ Here's a minimal example of a configuration file:
 {
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "movies_dataset",
+    "dq_output_path": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_AzureSql_Example/",
     "datasource_config": [
         {
             "datasource_name": "movies_metadata",

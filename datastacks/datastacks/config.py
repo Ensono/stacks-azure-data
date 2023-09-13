@@ -31,11 +31,17 @@ class IngestConfig(BaseModel):
 
         use_enum_values = True
 
-    dataset_name: str = Field(description="Dataset name, used to derive pipeline and linked service names.")
-    pipeline_description: str = Field(description="Description of the pipeline to be created.")
-    data_source_type: DataSourceType = Field(description="Datasource type, at present this must be azure_sql.")
+    dataset_name: str = Field(
+        description="Dataset name, used to derive pipeline and linked service names, e.g. AzureSql_Example."
+    )
+    pipeline_description: str = Field(
+        description="Description of the pipeline to be created. Will be used for the Data Factory pipeline description."
+    )
+    data_source_type: DataSourceType = Field(description="Data source type.")
 
-    key_vault_linked_service_name: str = Field(description="Name of the Key Vault linked service in Data Factory.")
+    key_vault_linked_service_name: str = Field(
+        default="ls_KeyVault", description="Name of the Key Vault linked service in Data Factory."
+    )
     data_source_password_key_vault_secret_name: str = Field(
         description="Secret name of the data source password in Key Vault."
     )
@@ -53,24 +59,28 @@ class IngestConfig(BaseModel):
     )
 
     window_start_default: Optional[date] = Field(
-        default="2010-01-01", description="Date to set as start of default time window."
+        default="2010-01-01", description="Default window start date in the Data Factory pipeline."
     )
     window_end_default: Optional[date] = Field(
-        default="2010-01-31", description="Date to set as end of default time window."
+        default="2010-01-31", description="Default window end date in the Data Factory pipeline."
     )
 
-    bronze_container: str = Field(description="Name of container for Bronze data")
-    silver_container: Optional[str] = Field(default=None, description="Name of container for Silver data")
-    gold_container: Optional[str] = Field(default=None, description="Name of container for Gold data")
+    bronze_container: str = Field(default="raw", description="Name of container for Bronze data.")
+    silver_container: Optional[str] = Field(default="staging", description="Name of container for Silver data.")
+    gold_container: Optional[str] = Field(default="curated", description="Name of container for Gold data.")
 
     trigger_start: Optional[datetime] = Field(
-        default="2010-01-01T00:00:00Z", description="Datetime to set as start time for pipeline trigger."
+        default="2010-01-01T00:00:00Z", description="Start datetime for Data Factory pipeline trigger."
     )
     trigger_end: Optional[datetime] = Field(
-        default="2011-12-31T23:59:59Z", description="Datetime to set as end time for pipeline trigger."
+        default="2011-12-31T23:59:59Z", description="End datetime for Data Factory pipeline trigger."
     )
-    trigger_frequency: Optional[TriggerFrequency] = Field(default="Month", description="Frequency for the trigger.")
-    trigger_interval: Optional[int] = Field(default=1, description="Interval value for the trigger.")
+    trigger_frequency: Optional[TriggerFrequency] = Field(
+        default="Month", description="Frequency for the Data Factory pipeline trigger."
+    )
+    trigger_interval: Optional[int] = Field(
+        default=1, description="Interval value for the Data Factory pipeline trigger."
+    )
     trigger_delay: Optional[str] = Field(
-        default="02:00:00", description="Delay between triggered runs, formatted HH:mm:ss"
+        default="02:00:00", description="Delay between Data Factory pipeline triggers, formatted HH:mm:ss"
     )

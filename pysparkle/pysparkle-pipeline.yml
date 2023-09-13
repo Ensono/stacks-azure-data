@@ -1,8 +1,8 @@
 name: "$(Build.SourceBranchName)-init"
 
-#trigger:
-#- main #collaboration branch
-#- none
+# trigger:
+# - main #collaboration branch
+# - none
 
 pr:
   branches:
@@ -25,12 +25,12 @@ variables:
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
   - name: pythonVersion
-    value: "3.10.10"
+    value: "3.10"
   - name: test_unit_path
     value: "$(self_repo_dir)/pysparkle/tests/unit/"
   - name: junit_path
     value: "$(self_repo_dir)/pysparkle/junit/"
-  - name: dbfs_destination #update job name
+  - name: dbfs_destination  # update job name
     value: "dbfs:/FileStore/jars"
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
@@ -69,6 +69,11 @@ stages:
               poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
+          - script: pip install --upgrade pre-commit
+            displayName: Install pre-commit
+          - bash: |
+              `which pre-commit` run --all-files --show-diff-on-failure
+            displayName: Run Linting Checks
           - bash: |
               poetry run pytest -rf -v pysparkle/tests/unit
             displayName: "Run Unit Tests"
@@ -151,7 +156,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./pysparklewheel/"
 
   #############################################################

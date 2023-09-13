@@ -30,11 +30,11 @@ variables:
   # - name: pool_vm_image
   #   value: ubuntu-20.04
   - name: pythonVersion
-    value: '3.10.10'
+    value: '3.10'
   - name: test_unit_path
     value: 'tests/unit/'
 
-# GitHub infomration
+  # GitHub information
   - name: create_release
     value: true
   - name: github_release_service_connection
