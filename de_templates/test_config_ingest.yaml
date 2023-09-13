@@ -7,7 +7,7 @@
 # - pipeline: Ingest_<dataset_name>
 # - dataset: ds_<dataset_name>
 # - linked service: ls_<dataset_name>
-dataset_name: AzureSql_Demo
+dataset_name: QA_DLP_Dataset
 pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
 data_source_type: azure_sql
 data_source_password_key_vault_secret_name: sql-password
