@@ -1,4 +1,4 @@
-# Build and deploy pipeline for job Silver
+# Build and deploy pipeline for job silver_movies_example
 
 name: "$(Build.SourceBranchName)-init"
 
@@ -8,7 +8,7 @@ pr:
       - "main"
   paths:
     include:
-      - de_workloads/data_processing/silver/*
+      - de_workloads/data_processing/silver_movies_example/*
 
 trigger:
   branches:
@@ -16,16 +16,16 @@ trigger:
       - "main"
   paths:
     include:
-      - de_workloads/data_processing/silver/*
+      - de_workloads/data_processing/silver_movies_example/*
 
 variables:
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job  # update job name
-    value: "silver"
-  - name: jobtype  # update job name
+  - name: job #update job (module) name
+    value: "silver_movies_example"
+  - name: jobtype #update job type, the sub-folder of de_workloads
     value: "data_processing"
-  - name: include_data_quality  # update data quality option
+  - name: include_data_quality # update data quality option
     value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(jobtype)/$(job)"
@@ -49,8 +49,8 @@ variables:
     value: "config/$(jobtype)/$(job)"
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
-  - name: dbfs_destination  # update job name
-    value: 'dbfs:/FileStore/scripts/silver'
+  - name: dbfs_destination
+    value: 'dbfs:/FileStore/scripts/$(job)'
 
 
 pool:
