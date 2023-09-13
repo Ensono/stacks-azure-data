@@ -31,7 +31,7 @@
             "enabled": true,
             "schema": "SalesLT",
             "table": "ProductModel",
-            "columns": "ProductID, ProductNumber, StandardCost, ListPrice, Weight, ModifiedDate",
+            "columns": "[ProductID], [ProductNumber], [StandardCost], [ListPrice], [Weight], [ModifiedDate]",
             "load_type": "delta",
             "delta_date_column": "ModifiedDate",
             "delta_upsert_key": "ProductID"
