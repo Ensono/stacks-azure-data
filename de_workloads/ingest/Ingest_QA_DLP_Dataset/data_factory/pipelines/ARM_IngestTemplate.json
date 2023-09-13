@@ -269,7 +269,10 @@
                         "userProperties": [],
                         "typeProperties": {
                             "pythonFile": "dbfs:/FileStore/scripts/Ingest_QA_DLP_Dataset/ingest_dq.py",
-                            "parameters": [],
+                            "parameters": [
+                                "@variables('run_id')",
+                                "@string(variables('automated_test_flag'))"
+                            ],
                             "libraries": [
                                 {
                                     "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
