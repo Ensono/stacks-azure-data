@@ -7,7 +7,7 @@ utilises the capabilities of the [Great Expectations](https://greatexpectations.
 
 ```bash
 pysparkle data-quality --help
-pysparkle data-quality --config-path "data_quality/silver_dq.json"
+pysparkle data-quality --config-path "data_quality/silver_movies_example_dq.json"
 ```
 
 `config-path` is a Path to a JSON config inside an Azure Blob container. The container name
