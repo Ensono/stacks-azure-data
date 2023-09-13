@@ -13,7 +13,7 @@ from pysparkle.etl import (
 from pysparkle.logger import setup_logger
 from pysparkle.pyspark_utils import rename_columns_to_snake_case
 
-WORKLOAD_NAME = "Silver"
+WORKLOAD_NAME = "silver_movies_example"
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
 SOURCE_DATA_TYPE = "parquet"
