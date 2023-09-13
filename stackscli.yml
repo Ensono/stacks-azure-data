@@ -4,10 +4,10 @@ pipeline:
       - name: build
         path: build/azDevOps/azure/templates/air-infrastructure-data.yml
       - name: variable
-        path: build/azDevOps/azure/air-infrastructure-data-vars.yml
+        path: build/common-vars.yml
     templates:
       - name: variable
-        path: build/azDevOps/azure/air-infrastructure-data-vars-template.yml
+        path: build/common-vars-template.yml
 
 setup:
   operations:

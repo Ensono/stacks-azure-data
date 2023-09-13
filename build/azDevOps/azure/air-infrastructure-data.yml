@@ -20,6 +20,8 @@ trigger:
       - build/taskctl/*
       - deploy/azure/infra/*
 variables:
+  - template: ../version-data-vars.yml
+  - template: ../common-vars
   - template: air-infrastructure-data-vars.yml
 
 stages:
