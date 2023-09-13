@@ -16,7 +16,7 @@
         },
         {
             "version": 1,
-            "display_name": "SalesLT.Product",
+            "display_name": "SalesLT.ProductModel",
             "enabled": true,
             "schema": "SalesLT",
             "table": "Product",
@@ -27,14 +27,14 @@
         },
         {
             "version": 1,
-            "display_name": "SalesLT.ProductModel",
+            "display_name": "SalesLT.Product",
             "enabled": true,
             "schema": "SalesLT",
             "table": "ProductModel",
-            "columns": "ProductId, ProductNumber, ModifiedDate",
+            "columns": "ProductID, ProductNumber, StandardCost, ListPrice, Weight, ModifiedDate",
             "load_type": "delta",
             "delta_date_column": "ModifiedDate",
-            "delta_upsert_key": "ProductId"
+            "delta_upsert_key": "ProductID"
         },
         {
             "version": 1,
