@@ -37,12 +37,12 @@ variables:
     value: ubuntu-20.04
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
-  
+
   # Service Connections
   - name: service_connection
     value: Stacks.Pipeline.Builds
   - name: github_release_service_connection
     value: GitHubReleases
-  
+
   - name: pythonVersion
     value: "3.10"
