@@ -49,6 +49,7 @@ module "adf" {
   root_folder                     = var.root_folder
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
   tenant_id                       = data.azurerm_client_config.current.tenant_id
+  ir_enable_interactive_authoring = false
 }
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
@@ -218,13 +219,14 @@ resource "azurerm_key_vault_secret" "secrets" {
       value, version
     ]
   }
-  depends_on = [module.kv_default]
+  depends_on = [module.kv_default,azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "sql_password" {
   name         = var.sql_password
   value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 
@@ -252,6 +254,7 @@ resource "azurerm_key_vault_secret" "sql_connect_string" {
   name         = "connect-string-${each.key}"
   value        = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "sql_password_string" {
@@ -259,24 +262,28 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   name         = "connect-sql-password-${each.key}"
   value        = module.sql.sql_sa_password
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "service-principal-secret" {
   name         = "service-principal-secret"
   value        = var.azure_client_secret
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "azure-client-id" {
   name         = "azure-client-id"
   value        = data.azurerm_client_config.current.client_id
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "azure-tenant-id" {
   name         = "azure-tenant-id"
   value        = data.azurerm_client_config.current.tenant_id
   key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 module "adb" {
