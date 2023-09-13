@@ -19,6 +19,7 @@ trigger:
       - de_workloads/data_processing/silver/*
 
 variables:
+  - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
   - name: job  # update job name
