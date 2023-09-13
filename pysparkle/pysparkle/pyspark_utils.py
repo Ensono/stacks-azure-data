@@ -69,7 +69,8 @@ def read_datasource(
     Examples:
         If the data is stored in a file, you should provide the complete path to the file, e.g.:
 
-        >>> read_datasource(spark, "abfss://silver_movies_example@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder", "delta")
+        >>> read_datasource(spark, "abfss://silver_movies_example@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder",
+       ...     "delta")
         >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder/mysubfolder/*",
         ...     "parquet", {"mergeSchema": "true"})
         >>> read_datasource(spark, "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/myfolder",
