@@ -8,7 +8,7 @@ variables:
   - name: domain
     value: "{{ .Input.Business.Domain }}"
   - name: cloud_providers
-    value: "{{ .Cloud.Platform }}"
+    value: "{{ .Input.Cloud.Platform }}"
   # Terraform Configuration
 
   # State configuration
