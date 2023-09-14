@@ -1,9 +1,4 @@
 variables:
-  - name: self_repo
-    value: stacks-azure-data-ingest
-  - name: self_generic_name
-    value: stacks-infrastructure
-
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
