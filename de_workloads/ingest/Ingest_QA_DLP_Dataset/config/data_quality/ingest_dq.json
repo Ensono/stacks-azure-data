@@ -6,7 +6,7 @@
         {
             "datasource_name": "SalesLT.Product",
             "datasource_type": "parquet",
-            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_QA_DLP_Dataset/SalesLT.Product/v1/*/*/*",
+            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/Ingest_QA_DLP_Dataset/SalesLT.Product/v1/*/*/*/*",
             "expectation_suite_name": "saleslt.product_suite",
             "validation_config": [
                 {
