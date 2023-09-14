@@ -134,7 +134,7 @@ stages:
                   workingDirectory: "$(System.DefaultWorkingDirectory)/pysparklewheel"
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false
@@ -199,7 +199,7 @@ stages:
                   workingDirectory: "$(System.DefaultWorkingDirectory)/pysparklewheel"
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false

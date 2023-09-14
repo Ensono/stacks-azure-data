@@ -9,6 +9,8 @@ variables:
     value: "{{ .Input.Business.Domain }}"
   - name: cloud_providers
     value: "{{ .Input.Cloud.Platform }}"
+  - name: component
+    value: "{{ Input.Business.Component }}"
   # Terraform Configuration
 
   # State configuration
@@ -23,12 +25,6 @@ variables:
     value: "{{ .Input.Terraform.Backend.Storage }}"
   - name: tf_state_container
     value: "{{ .Input.Terraform.Backend.Container }}"
-
-  # App Specific Taxonomy
-  - name: component
-    value: de  # core
-  - name: role
-    value: data-infrastructure
 
   # Agent configuration
   - name: TaskctlVersion

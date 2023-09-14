@@ -9,6 +9,8 @@ variables:
     value: core-data
   - name: cloud_providers
     value: azure
+  - name: component
+    value: de
   # Terraform Configuration
 
   # State configuration
@@ -23,12 +25,6 @@ variables:
     value: amidostackstfstate
   - name: tf_state_container
     value: tfstate
-
-  # App Specific Taxonomy
-  - name: component
-    value: de  # core
-  - name: role
-    value: data-infrastructure
 
   # Agent configuration
   - name: TaskctlVersion
