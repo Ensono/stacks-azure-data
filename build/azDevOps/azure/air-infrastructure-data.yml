@@ -23,6 +23,10 @@ variables:
   - template: ../../version-data-vars.yml
   - template: ../../common-vars.yml
   - template: air-infrastructure-data-vars.yml
+  - name: tf_state_key
+    value: $(domain)
+  - name: TF_FILE_LOCATION
+    value: $(self_repo_tf_src)
 
 stages:
   - stage: Build
