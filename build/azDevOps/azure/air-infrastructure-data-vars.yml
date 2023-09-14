@@ -10,22 +10,6 @@ variables:
   - name: sql_admin_login
     value: mssqladmin
 
-  # Terraform Configuration
-
-  # State configuration
-
-  # Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
-  # Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
-  # there are some best practices around this if you are going for feature based environments
-  # - we suggest you create a runtime variable that is dynamically set based on a branch currently running
-  # **`terraform_state_workspace: `**
-  # avoid running anything past dev that is not on master
-  # sample value: company-webapp
-  - name: tf_state_key
-    value: core-data
-  - name: TF_FILE_LOCATION
-    value: $(self_repo_tf_src)
-
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
