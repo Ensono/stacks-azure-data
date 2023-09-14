@@ -62,6 +62,9 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
         else:
             full_dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
 
+        logger.info(f"DQ check completed for {datasource.datasource_name}. Results:")
+        logger.info(results)
+
         failed_validations = publish_quality_results_table(
             spark, full_dq_output_path, datasource.datasource_name, results, data_quality_run_date
         )
