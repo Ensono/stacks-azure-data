@@ -11,4 +11,4 @@ Feature:Azure Data Ingest
 
     Examples: Output files
     |parameters|output_files|
-    |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["db_schema.table_name_1.parquet", "db_schema.table_name_2.parquet", "db_schema.table_name_3.parquet"]|
+    |{"window_start" : "2010-01-01", "window_end": "2010-01-31"}|["SalesLT.Customer", "SalesLT.Product", "SalesLT.ProductModel", "movies.ratings_small"]|
