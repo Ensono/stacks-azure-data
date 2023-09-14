@@ -1,13 +1,6 @@
 name: "$(Build.SourceBranchName)-init"
 
-pr:
-  branches:
-    include:
-      - "main"
-  paths:
-    include:
-      - build/azDevOps/azure/network/*
-      - deploy/azure/networking/*
+pr: none
 
 trigger: none
 
