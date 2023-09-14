@@ -21,6 +21,7 @@ trigger:
       - pysparkle/*
       - pysparkle/pysparkle-pipeline.yml
 variables:
+  - template: ../build/common-vars.yml
   - template: ../de_build/job-pipeline-vars.yml
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
@@ -133,7 +134,7 @@ stages:
                   workingDirectory: "$(System.DefaultWorkingDirectory)/pysparklewheel"
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false
@@ -198,7 +199,7 @@ stages:
                   workingDirectory: "$(System.DefaultWorkingDirectory)/pysparklewheel"
                 - task: AzureKeyVault@2
                   inputs:
-                    azureSubscription: "Stacks.Pipeline.Builds"
+                    azureSubscription: $(service_connection)
                     KeyVaultName: $(keyvault_name)
                     SecretsFilter: "*"
                     RunAsPreJob: false

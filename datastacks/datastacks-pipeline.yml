@@ -17,11 +17,10 @@ trigger:
       - datastacks/*
       - datastacks/datastacks-pipeline.yml
 variables:
+  - template: ../build/common-vars.yml
   - template: ../de_build/job-pipeline-vars.yml
   - template: ../de_build/air-data-testing-vars.yml
   - template: ../build/version-data-vars.yml
-  - name: pythonVersion
-    value: "3.10"
 
 pool:
   name: $(agentpool_name)
