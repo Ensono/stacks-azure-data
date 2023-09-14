@@ -76,6 +76,12 @@ stages:
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: {% raw %}${{ variables.TaskctlVersion }}{% endraw %}
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+              githubToken: $(github_token)
+              addToPath: true
+            displayName: Set Python Version
           - script: pip install --upgrade pre-commit tomli
             displayName: Install pre-commit
           - bash: |
