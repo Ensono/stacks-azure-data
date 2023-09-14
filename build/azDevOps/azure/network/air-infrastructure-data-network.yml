@@ -9,7 +9,7 @@ pr:
       - build/azDevOps/azure/network/*
       - deploy/azure/networking/*
 
-trigger: null
+trigger: none
 
 variables:
   - template: ../../../version-data-vars.yml
