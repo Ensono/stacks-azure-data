@@ -13,7 +13,7 @@ trigger: null
 
 variables:
   - template: ../../../version-data-vars.yml
-  - template: ../../../common-vars
+  - template: ../../../common-vars.yml
   - template: air-infrastructure-data-network-vars.yml
 
 stages:
