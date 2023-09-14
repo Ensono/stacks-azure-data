@@ -12,8 +12,8 @@ pr:
 trigger: null
 
 variables:
-  - template: ../../version-data-vars.yml
-  - template: ../../common-vars
+  - template: ../../../version-data-vars.yml
+  - template: ../../../common-vars
   - template: air-infrastructure-data-network-vars.yml
 
 stages:
