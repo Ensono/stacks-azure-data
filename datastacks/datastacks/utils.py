@@ -4,29 +4,28 @@ This module provides utility functions to automate the generation of data pipeli
 rendering templates based on the provided config, and writing out the rendered templates to the specified directories.
 """
 import click
-import yaml
 
-from pydantic import BaseModel
-from datastacks.config import IngestConfig
+from datastacks.config import WorkloadConfigBaseModel
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
+from typing import Type
 
 
-def generate_target_dir(stage_name: str, dataset_name: str) -> str:
+def generate_target_dir(workload_type: str, dataset_name: str) -> str:
     """Generate the target directory name using stage name and name of the dataset.
 
     Args:
-        stage_name: Name of the pipeline stage, e.g. Ingest.
+        workload_type: Name of the pipeline type, e.g. Ingest or Processing
         dataset_name: Name of the dataset being processed.
 
     Returns:
         Path to render template into
     """
-    target_dir = f"de_workloads/{stage_name.lower()}/{stage_name.capitalize()}_{dataset_name}"
+    target_dir = f"de_workloads/{workload_type.lower()}/{workload_type.capitalize()}_{dataset_name}"
     return target_dir
 
 
-def render_template_components(config: BaseModel, template_source_path: str, target_dir: str) -> None:
+def render_template_components(config: WorkloadConfigBaseModel, template_source_path: str, target_dir: str) -> None:
     """Render all template components using the provided config.
 
     Renders all templates within a given path with provided config, and saves results into a new target path,
@@ -52,31 +51,39 @@ def render_template_components(config: BaseModel, template_source_path: str, tar
         template.stream(config).dump(f"{target_dir}/{template_path}/{template_filename}")
 
 
-def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str) -> str:
+def validate_yaml_config(path: str, WorkloadConfigModel: Type[WorkloadConfigBaseModel]) -> WorkloadConfigBaseModel:
+    """Validates a YAML config with the WorkloadConfigModel provided.
+
+    Reads in config from given file and returns the Pydantic model for the config, validated the structure.
+
+    Args:
+        path: Path to the YAML file containing config
+        WorkloadConfigModel: Pydantic model used to validated config
+    Returns:
+        WorkloadConfigBaseModel of the validated config
+    """
+    click.echo("Reading config from provided path...")
+    config = WorkloadConfigModel.from_yaml(path)
+    click.echo("Successfully read config file.\n")
+    return config
+
+
+def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) -> str:
     """Generate a data pipeline workload into the project.
 
     Reads in config from given file, renders templates for new pipeline, writes out to new path, and returns the
     target directory it wrote out to. If directory already exists it asks for user input to confirm overwrite.
 
     Args:
-        config_path: Path to config file containing templating params
+        validated_config: Pydantic validated model of the config containing templating params
         dq_flag: Flag indicating whether to include data quality components or not
-        template_source_folder: Name of the folder within the template directory
-            containing the templates to be rendered
-        stage_name: Name of the pipeline stage eg. Ingest
-
     Returns:
         Path to rendered template
     """
-    click.echo("Reading config from provided path...")
-    with open(config_path, "r") as file:
-        config_dict = yaml.safe_load(file)
-    config = IngestConfig.parse_obj(config_dict)
-
-    click.echo("Successfully read config file.\n")
-
-    template_source_path = f"de_templates/{stage_name.lower()}/{template_source_folder}/"
-    target_dir = generate_target_dir(stage_name, config.dataset_name)
+    template_source_path = (
+        f"de_templates/{validated_config.workload_type.lower()}/{validated_config.template_source_folder}/"
+    )
+    target_dir = generate_target_dir(validated_config.workload_type, validated_config.dataset_name)
 
     if Path(f"{target_dir}").exists():
         click.echo(
@@ -91,12 +98,15 @@ def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: s
     else:
         click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
-    click.echo(f"Generating workload components for pipeline {stage_name}_{config.dataset_name}...")
-    render_template_components(config, template_source_path, target_dir)
+    click.echo(
+        "Generating workload components for pipeline "
+        f"{validated_config.workload_type}_{validated_config.dataset_name}..."
+    )
+    render_template_components(validated_config, template_source_path, target_dir)
     if dq_flag:
-        template_source_folder = f"{template_source_folder}_DQ"
-        template_source_path = f"de_templates/{stage_name.lower()}/{template_source_folder}/"
-        render_template_components(config, template_source_path, target_dir)
+        template_source_folder = f"{validated_config.template_source_folder}_DQ"
+        template_source_path = f"de_templates/{validated_config.workload_type.lower()}/{template_source_folder}/"
+        render_template_components(validated_config, template_source_path, target_dir)
     click.echo(f"Successfully generated workload components: {target_dir}")
 
     return target_dir

@@ -10,8 +10,8 @@ from click_loglevel import LogLevel
 from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
-from datastacks.utils import generate_pipeline
-from datastacks.config import INGEST_TEMPLATE_FOLDER
+from datastacks.utils import validate_yaml_config, generate_pipeline
+from datastacks.config import IngestWorkloadConfigModel, ProcessingWorkloadConfigModel
 
 
 @click.group()
@@ -40,7 +40,23 @@ def generate():
 )
 def ingest(config, data_quality):
     """Generate new data ingest workload."""
-    generate_pipeline(config, data_quality, INGEST_TEMPLATE_FOLDER, "Ingest")
+    validated_config = validate_yaml_config(config, IngestWorkloadConfigModel)
+    generate_pipeline(validated_config, data_quality)
+
+
+@generate.command()
+@click.help_option("-h", "--help")
+@click.option("--config", "-c", type=str, help="Absolute path to config file on local machine")
+@click.option(
+    "--" "--data-quality/--no-data-quality",
+    "-dq/-ndq",
+    default=False,
+    help="Flag to determine whether to include data quality in template",
+)
+def processing(config, data_quality):
+    """Generate new data processing example workload."""
+    validated_config = validate_yaml_config(config, ProcessingWorkloadConfigModel)
+    generate_pipeline(validated_config, data_quality)
 
 
 @cli.command()
