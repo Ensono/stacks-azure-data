@@ -11,6 +11,8 @@ variables:
     value: azure
   - name: component
     value: de
+  - name: self_repo
+    value: stacks-azure-data-ingest
   # Terraform Configuration
 
   # State configuration
