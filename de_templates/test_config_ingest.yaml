@@ -7,7 +7,7 @@
 # - pipeline: Ingest_<dataset_name>
 # - dataset: ds_<dataset_name>
 # - linked service: ls_<dataset_name>
-dataset_name: QA_DLP_Dataset
+dataset_name: QA_DLP_Dataset_no_dq
 pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
 data_source_type: azure_sql
 data_source_password_key_vault_secret_name: sql-password
@@ -30,9 +30,9 @@ ado_variable_groups_prod:
 
 # Data lake containers
 # Default values are raw, staging, curated - other container names may be specified here if required
-bronze_container: raw
-silver_container: staging
-gold_container: curated
+bronze_container: bronze
+silver_container: silver
+gold_container: gold
 
 # Workload config
 # These are used to set the default time window in the pipeline and in the corresponding e2e tests
