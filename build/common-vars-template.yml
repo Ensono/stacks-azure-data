@@ -10,7 +10,7 @@ variables:
   - name: cloud_providers
     value: "{{ .Input.Cloud.Platform }}"
   - name: component
-    value: "{{ Input.Business.Component }}"
+    value: "{{ .Input.Business.Component }}"
   - name: self_repo
     value: "{{ .Project.Name }}"
   # Terraform Configuration
