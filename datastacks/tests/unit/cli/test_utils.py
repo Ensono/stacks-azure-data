@@ -11,7 +11,7 @@ from datastacks.cli.utils import (
     generate_target_dir,
     render_template_components,
 )
-from datastacks.tests.unit.cli.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
+from tests.unit.cli.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
 
 
 def test_render_template_components(tmp_path):

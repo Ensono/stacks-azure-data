@@ -1,7 +1,7 @@
 {% set pipeline_name = 'Ingest_' ~ dataset_name -%}
 from jsonschema import validate
 
-from utils.config_utils import (
+from datastacks.config_utils import (
     config_uniqueness_check,
     load_config_as_dict,
     load_configs_as_list,

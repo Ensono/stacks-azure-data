@@ -11,7 +11,6 @@ readme = "README.md"
 packages = [
     { include = "pysparkle", from = "pysparkle" },
     { include = "datastacks", from = "datastacks" },
-    { include = "utils" },
 ]
 
 [tool.poetry.dependencies]
