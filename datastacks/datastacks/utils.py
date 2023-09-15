@@ -11,17 +11,17 @@ from pathlib import Path
 from typing import Type
 
 
-def generate_target_dir(workload_type: str, dataset_name: str) -> str:
-    """Generate the target directory name using stage name and name of the dataset.
+def generate_target_dir(workload_type: str, name: str) -> str:
+    """Generate the target directory name using workload_type and name of the dataset.
 
     Args:
         workload_type: Name of the pipeline type, e.g. Ingest or Processing
-        dataset_name: Name of the dataset being processed.
+        name: Either the name of the dataset being processed or the pipeline.
 
     Returns:
         Path to render template into
     """
-    target_dir = f"de_workloads/{workload_type.lower()}/{workload_type.capitalize()}_{dataset_name}"
+    target_dir = f"de_workloads/{workload_type}/{name}"
     return target_dir
 
 
@@ -83,7 +83,7 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
     template_source_path = (
         f"de_templates/{validated_config.workload_type.lower()}/{validated_config.template_source_folder}/"
     )
-    target_dir = generate_target_dir(validated_config.workload_type, validated_config.dataset_name)
+    target_dir = generate_target_dir(validated_config.workload_type, validated_config.name)
 
     if Path(f"{target_dir}").exists():
         click.echo(
@@ -99,13 +99,12 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
         click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
     click.echo(
-        "Generating workload components for pipeline "
-        f"{validated_config.workload_type}_{validated_config.dataset_name}..."
+        "Generating workload components for pipeline " f"{validated_config.workload_type}_{validated_config.name}..."
     )
     render_template_components(validated_config, template_source_path, target_dir)
     if dq_flag:
         template_source_folder = f"{validated_config.template_source_folder}_DQ"
-        template_source_path = f"de_templates/{validated_config.workload_type.lower()}/{template_source_folder}/"
+        template_source_path = f"de_templates/" f"{validated_config.workload_type}/" f"{template_source_folder}/"
         render_template_components(validated_config, template_source_path, target_dir)
     click.echo(f"Successfully generated workload components: {target_dir}")
 
