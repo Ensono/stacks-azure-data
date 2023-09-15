@@ -133,25 +133,15 @@ stages:
                     SecretsFilter: "*"
                     RunAsPreJob: false
                   displayName: "Get Keyvault Secrets"
-                #             - script: |
-                #                         echo "$(databricks-host)
-                #                         $(databricks-token)" | databricks configure --token
-                #                 displayName: Configure Databricks-cli
-                #               - script: |
-                #                         echo Destination is /FileStore/jars
-                #                         echo Source is $(System.DefaultWorkingDirectory)/datastackswheel/
-                #                         databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/datastackswheel/*.whl dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl
-                #                 displayName: Upload whl
                 - task: Bash@3
                   displayName: "TaskCTL: Databricks"
                   inputs:
                     targetType: inline
                     script: taskctl databricks
                   env:
-                    # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"
                     DATABRICKS_SOURCE_LOCATION: "./datastackswheel/"
 
   #############################################################
@@ -198,16 +188,16 @@ stages:
                     SecretsFilter: "*"
                     RunAsPreJob: false
                   displayName: "Get Keyvault Secrets"
-                  # TODO: Check if this should be updated to TaskCTL approach above:
-                - script: |
-                    echo "$(databricks-host)
-                    $(databricks-token)" | databricks configure --token
-                  displayName: Configure Databricks-cli
-                - script: |
-                    echo Destination is /FileStore/jars
-                    echo Source is $(System.DefaultWorkingDirectory)/datastackswheel/
-                    databricks fs cp -r --overwrite $(System.DefaultWorkingDirectory)/datastackswheel/*.whl dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl
-                  displayName: Upload whl
+                - task: Bash@3
+                  displayName: "TaskCTL: Databricks"
+                  inputs:
+                    targetType: inline
+                    script: taskctl databricks
+                  env:
+                    DATABRICKS_HOST: "$(databricks-host)"
+                    DATABRICKS_TOKEN: "$(databricks-token)"
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"
+                    DATABRICKS_SOURCE_LOCATION: "./datastackswheel/"
 
   - stage: Release
     dependsOn:
