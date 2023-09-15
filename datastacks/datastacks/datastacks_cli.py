@@ -48,7 +48,7 @@ def ingest(config, data_quality):
 @click.help_option("-h", "--help")
 @click.option("--config", "-c", type=str, help="Absolute path to config file on local machine")
 @click.option(
-    "--" "--data-quality/--no-data-quality",
+    "--data-quality/--no-data-quality",
     "-dq/-ndq",
     default=False,
     help="Flag to determine whether to include data quality in template",
