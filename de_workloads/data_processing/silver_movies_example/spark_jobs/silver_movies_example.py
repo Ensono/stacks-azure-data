@@ -10,7 +10,7 @@ from datastacks.pyspark.etl import (
     read_latest_rundate_data,
     transform_and_save_as_delta,
 )
-from datastacks.pyspark.logger import setup_logger
+from datastacks.logger import setup_logger
 from datastacks.pyspark.pyspark_utils import rename_columns_to_snake_case
 
 WORKLOAD_NAME = "silver_movies_example"

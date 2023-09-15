@@ -2,7 +2,7 @@ import logging
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.main import data_quality_main
-from datastacks.pyspark.logger import setup_logger
+from datastacks.logger import setup_logger
 
 CONFIG_PATH = "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json"
 

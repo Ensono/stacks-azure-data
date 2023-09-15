@@ -9,7 +9,7 @@ from click_loglevel import LogLevel
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.main import data_quality_main
-from datastacks.pyspark.logger import setup_logger
+from datastacks.logger import setup_logger
 from datastacks.cli.utils import generate_pipeline
 from datastacks.cli.config import INGEST_TEMPLATE_FOLDER
 

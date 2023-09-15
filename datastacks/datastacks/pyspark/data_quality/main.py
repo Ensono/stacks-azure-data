@@ -11,7 +11,7 @@ from datastacks.pyspark.data_quality.utils import (
 )
 from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource
 from datastacks.pyspark.storage_utils import check_env, load_json_from_blob, set_spark_properties
-from datastacks.pyspark.utils import substitute_env_vars
+from datastacks.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 

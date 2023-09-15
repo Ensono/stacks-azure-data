@@ -2,7 +2,7 @@ import logging
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.main import data_quality_main
-from datastacks.pyspark.logger import setup_logger
+from datastacks.logger import setup_logger
 
 CONFIG_PATH = "data_processing/silver_movies_example/data_quality/silver_movies_example_dq.json"
 
