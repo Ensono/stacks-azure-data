@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Optional, ClassVar
+from typing import Optional, Literal
 from pydantic import BaseModel, Field
 import yaml
 from abc import ABC, abstractmethod
@@ -23,20 +23,15 @@ class TriggerFrequency(Enum):
 
 
 class WorkloadConfigBaseModel(BaseModel, ABC):
-    """Based model for shared config."""
+    """Based model for shared config.
 
-    @classmethod
+    Child classes must have workload_type and template_source_folder however abstraction is available with Pydantic
+    """
+
     @property
     @abstractmethod
-    def workload_type(cls):
-        """Forces child classes to have a workload_type."""
-        raise NotImplementedError
-
-    @classmethod
-    @property
-    @abstractmethod
-    def template_source_folder(cls):
-        """Forces child classes to have a template_source_folder."""
+    def name(path):
+        """Forces child classes to have a name, such as the dataset or the pipeline."""
         raise NotImplementedError
 
     class Config:
@@ -50,9 +45,12 @@ class WorkloadConfigBaseModel(BaseModel, ABC):
     ado_variable_groups_prod: list[str] = Field(
         description="List of required variable groups in production environment."
     )
-    bronze_container: str = Field(default="raw", description="Name of container for Bronze data.")
-    silver_container: Optional[str] = Field(default="staging", description="Name of container for Silver data.")
-    gold_container: Optional[str] = Field(default="curated", description="Name of container for Gold data.")
+    pipeline_description: str = Field(
+        description="Description of the pipeline to be created. Will be used for the Data Factory pipeline description."
+    )
+    default_arm_deployment_mode: Optional[str] = Field(
+        default="Incremental", description="Deployment mode for terraform."
+    )
 
     @classmethod
     def from_yaml(cls, config_path):
@@ -71,14 +69,13 @@ class WorkloadConfigBaseModel(BaseModel, ABC):
 class IngestWorkloadConfigModel(WorkloadConfigBaseModel):
     """Pydantic definitions for data ingest workload generation config."""
 
-    workload_type: ClassVar[str] = "Ingest"
-    template_source_folder: ClassVar[str] = "Ingest_SourceType_SourceName"
+    workload_type: Literal["Ingest"] = "Ingest"
+    template_source_folder: Literal["Ingest_SourceType_SourceName"] = "Ingest_SourceType_SourceName"
+
+    bronze_container: str = Field(default="raw", description="Name of container for Bronze data.")
 
     dataset_name: str = Field(
         description="Dataset name, used to derive pipeline and linked service names, e.g. AzureSql_Example."
-    )
-    pipeline_description: str = Field(
-        description="Description of the pipeline to be created. Will be used for the Data Factory pipeline description."
     )
     data_source_type: DataSourceType = Field(description="Data source type.")
 
@@ -89,9 +86,6 @@ class IngestWorkloadConfigModel(WorkloadConfigBaseModel):
         description="Secret name of the data source password in Key Vault."
     )
     data_source_connection_string_variable_name: str = Field(description="Variable name for the connection string.")
-    default_arm_deployment_mode: Optional[str] = Field(
-        default="Incremental", description="Deployment mode for terraform."
-    )
     window_start_default: Optional[date] = Field(
         default="2010-01-01", description="Default window start date in the Data Factory pipeline."
     )
@@ -114,9 +108,21 @@ class IngestWorkloadConfigModel(WorkloadConfigBaseModel):
         default="02:00:00", description="Delay between Data Factory pipeline triggers, formatted HH:mm:ss"
     )
 
+    @property
+    def name(self) -> str:
+        """Returns the dataset name."""
+        return "ingest_" + self.dataset_name
+
 
 class ProcessingWorkloadConfigModel(WorkloadConfigBaseModel):
     """Pydantic definitions for data processing workload generation config."""
 
-    workload_type: ClassVar[str] = "Ingest"
-    template_source_folder: ClassVar[str] = "DataProcessing_SourceName_SinkName_ProcessName"
+    workload_type: Literal["processing"] = "processing"
+    template_source_folder: Literal["processing_template"] = "processing_template"
+
+    pipeline_name: str = Field(description="Name of the pipeline")
+
+    @property
+    def name(self) -> str:
+        """Returns the pipeline name."""
+        return self.pipeline_name
