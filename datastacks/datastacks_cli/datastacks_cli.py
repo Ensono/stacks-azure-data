@@ -10,8 +10,8 @@ from click_loglevel import LogLevel
 from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
-from datastacks.utils import generate_pipeline
-from datastacks.config import INGEST_TEMPLATE_FOLDER
+from datastacks_cli.utils import generate_pipeline
+from datastacks_cli.config import INGEST_TEMPLATE_FOLDER
 
 
 @click.group()
