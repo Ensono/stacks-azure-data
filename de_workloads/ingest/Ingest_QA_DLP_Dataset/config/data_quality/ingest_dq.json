@@ -13,8 +13,8 @@
                     "column_name": "StandardCost",
                     "expectations": [
                         {
-                            "expectation_type": "expect_column_values_to_be_of_type",
-                            "expectation_kwargs": { "type_": "DECIMAL(19,4)" }
+                            "expectation_type": "expect_column_values_to_not_be_null",
+                            "expectation_kwargs": {}
                         }
                     ]
                 },
@@ -22,8 +22,8 @@
                     "column_name": "ListPrice",
                     "expectations": [
                         {
-                            "expectation_type": "expect_column_values_to_be_of_type",
-                            "expectation_kwargs": { "type_": "DECIMAL(19,4)" }
+                            "expectation_type": "expect_column_values_to_not_be_null",
+                            "expectation_kwargs": {}
                         }
                     ]
                 },
@@ -31,8 +31,8 @@
                     "column_name": "Weight",
                     "expectations": [
                         {
-                            "expectation_type": "expect_column_values_to_be_of_type",
-                            "expectation_kwargs": { "type_": "DECIMAL(19,4)" }
+                            "expectation_type": "expect_column_values_to_not_be_null",
+                            "expectation_kwargs": {}
                         }
                     ]
                 }
