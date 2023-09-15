@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from datastacks.pyspark.config import CONFIG_CONTAINER
+from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.config import Config
 from datastacks.pyspark.data_quality.utils import (
     add_expectation_suite,
@@ -16,7 +16,7 @@ from datastacks.pyspark.utils import substitute_env_vars
 logger = logging.getLogger(__name__)
 
 
-def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
+def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_NAME):
     """Executes data quality checks based on the provided configuration.
 
     Args:

@@ -7,7 +7,7 @@ import logging
 import click
 from click_loglevel import LogLevel
 
-from datastacks.pyspark.config import CONFIG_CONTAINER
+from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.main import data_quality_main
 from datastacks.pyspark.logger import setup_logger
 from datastacks.cli.utils import generate_pipeline
@@ -48,7 +48,7 @@ def ingest(config, data_quality):
 @click.option("--config-path", help="Path to a JSON config inside an Azure Blob container.")
 @click.option(
     "--container",
-    default=CONFIG_CONTAINER,
+    default=CONFIG_CONTAINER_NAME,
     show_default=True,
     help="Name of the container for storing configurations.",
 )
