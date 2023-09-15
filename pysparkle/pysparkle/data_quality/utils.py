@@ -187,6 +187,7 @@ def publish_quality_results_table(
     emp_RDD = spark.sparkContext.emptyRDD()
 
     data = spark.createDataFrame(data=emp_RDD, schema=dq_results_schema)
+    failing_expectation = False
 
     for result in results:
         try:
