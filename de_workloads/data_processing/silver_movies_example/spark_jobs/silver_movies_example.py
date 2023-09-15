@@ -4,14 +4,14 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, explode, from_json
 from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType
 
-from pysparkle.etl import (
+from datastacks.pyspark.etl import (
     TableTransformation,
     get_spark_session_for_adls,
     read_latest_rundate_data,
     transform_and_save_as_delta,
 )
-from pysparkle.logger import setup_logger
-from pysparkle.pyspark_utils import rename_columns_to_snake_case
+from datastacks.pyspark.logger import setup_logger
+from datastacks.pyspark.pyspark_utils import rename_columns_to_snake_case
 
 WORKLOAD_NAME = "silver_movies_example"
 BRONZE_CONTAINER = "raw"

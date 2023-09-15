@@ -5,7 +5,7 @@ from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import ExpectationValidationResult
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
 
-from pysparkle.data_quality.utils import (
+from datastacks.pyspark.data_quality.utils import (
     add_expectations_for_columns,
     add_expectation_suite,
     execute_validations,
@@ -160,7 +160,7 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
 
     expected_failure = spark.createDataFrame(data=expected_data, schema=expected_cols)
 
-    mocker.patch("pysparkle.data_quality.utils.save_dataframe_as_delta")
+    mocker.patch("datastacks.pyspark.data_quality.utils.save_dataframe_as_delta")
     failed_validations = publish_quality_results_table(
         spark, base_path, datasource_name, expectation_results, data_quality_run_date
     )

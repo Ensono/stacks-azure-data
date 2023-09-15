@@ -8,7 +8,6 @@ test:
 	poetry run python -m pytest de_workloads/ingest/Ingest_AzureSql_Example/tests/unit
 	poetry run python -m pytest de_workloads/data_processing/silver_movies_example/tests/unit
 	poetry run python -m pytest datastacks/tests/unit
-	poetry run python -m pytest pysparkle/tests/unit
 
 test_e2e:
 	poetry run behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature

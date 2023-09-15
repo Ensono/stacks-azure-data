@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pysparkle.utils import filter_files_by_extension, find_placeholders, substitute_env_vars, camel_to_snake
+from datastacks.pyspark.utils import filter_files_by_extension, find_placeholders, substitute_env_vars, camel_to_snake
 
 TEST_ENV_VARS = {"TEST_VAR1": "value1", "TEST_VAR2": "value2", "ADLS_ACCOUNT": "value3"}
 

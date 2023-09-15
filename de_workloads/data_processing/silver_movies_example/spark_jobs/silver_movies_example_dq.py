@@ -1,8 +1,8 @@
 import logging
 
-from pysparkle.config import CONFIG_CONTAINER
-from pysparkle.data_quality.main import data_quality_main
-from pysparkle.logger import setup_logger
+from datastacks.pyspark.config import CONFIG_CONTAINER
+from datastacks.pyspark.data_quality.main import data_quality_main
+from datastacks.pyspark.logger import setup_logger
 
 CONFIG_PATH = "data_processing/silver_movies_example/data_quality/silver_movies_example_dq.json"
 
