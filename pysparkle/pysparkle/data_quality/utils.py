@@ -1,5 +1,6 @@
 """Data quality utility functions to set up validations."""
 from datetime import date
+import logging
 
 import great_expectations as gx
 from great_expectations.core.batch import RuntimeBatchRequest
@@ -18,6 +19,8 @@ from pyspark.sql.types import StringType, StructField, StructType, DateType, Boo
 
 from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
 from pysparkle.pyspark_utils import save_dataframe_as_delta
+
+logger = logging.getLogger(__name__)
 
 
 def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:
@@ -199,26 +202,34 @@ def publish_quality_results_table(
             threshold = result.expectation_config.kwargs["mostly"]
         except KeyError:
             threshold = None
-        unexpected_count = result.result["unexpected_count"]
-        unexpected_percent = result.result["unexpected_percent"]
-        success = result["success"]
-        row = spark.createDataFrame(
-            data=[
-                [
-                    data_quality_run_date,
-                    datasource_name,
-                    column_name,
-                    validator,
-                    value_set,
-                    threshold,
-                    unexpected_count,
-                    unexpected_percent,
-                    success,
-                ]
-            ],
-            schema=dq_results_schema,
-        )
-        data = data.union(row)
+        if not result.exception_info["raised_exception"]:
+            unexpected_count = result.result["unexpected_count"]
+            unexpected_percent = result.result["unexpected_percent"]
+            success = result["success"]
+            row = spark.createDataFrame(
+                data=[
+                    [
+                        data_quality_run_date,
+                        datasource_name,
+                        column_name,
+                        validator,
+                        value_set,
+                        threshold,
+                        unexpected_count,
+                        unexpected_percent,
+                        success,
+                    ]
+                ],
+                schema=dq_results_schema,
+            )
+            data = data.union(row)
+        else:
+            logger.error(f"Failure while executing expectation {validator}, on column {column_name}.")
+            logger.error(f"Execption message: {result.exception_info['exception_message']}")
+            failing_expectation = True
+
+    if failing_expectation:
+        raise
 
     data = data.coalesce(1)
 
