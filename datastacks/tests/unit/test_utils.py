@@ -2,7 +2,13 @@ from unittest.mock import patch
 
 import pytest
 
-from datastacks.utils import filter_files_by_extension, find_placeholders, substitute_env_vars, camel_to_snake
+from datastacks.utils import (
+    filter_files_by_extension,
+    find_placeholders,
+    substitute_env_vars,
+    camel_to_snake,
+    config_uniqueness_check,
+)
 
 TEST_ENV_VARS = {"TEST_VAR1": "value1", "TEST_VAR2": "value2", "ADLS_ACCOUNT": "value3"}
 
@@ -67,4 +73,32 @@ def test_filter_files_by_extension(extension, expected):
 )
 def test_camel_to_snake(input_str, expected_output):
     result = camel_to_snake(input_str)
+    assert result == expected_output
+
+
+@pytest.mark.parametrize(
+    "config_list, unique_key, expected_output",
+    [
+        (
+            [
+                {"id": 1, "name": "test1"},
+                {"id": 2, "name": "test2"},
+                {"id": 3, "name": "test3"},
+            ],
+            "id",
+            True,
+        ),
+        (
+            [
+                {"id": 1, "name": "test1"},
+                {"id": 2, "name": "test2"},
+                {"id": 2, "name": "test3"},
+            ],
+            "id",
+            False,
+        ),
+    ],
+)
+def test_config_uniqueness_check(config_list, unique_key, expected_output):
+    result = config_uniqueness_check(config_list, unique_key)
     assert result == expected_output
