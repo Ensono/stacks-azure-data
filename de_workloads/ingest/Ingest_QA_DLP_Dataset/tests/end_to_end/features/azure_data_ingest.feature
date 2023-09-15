@@ -11,4 +11,4 @@ Scenario Outline: Data Factory Ingest SQL Database into ADLS with Data Quality
 
     Examples: Output files
     |parameters|output_files|
-    |{"window_start" : "2007-01-01", "window_end": "2010-01-31"}|["SalesLT.Customer", "SalesLT.Product", "SalesLT.ProductModel", "movies.ratings_small"]|
+    |{"window_start" : "2007-01-01", "window_end": "2010-01-31"}|["SalesLT.Customer", "SalesLT.Product", "SalesLT.Product_dq", "SalesLT.ProductModel", "movies.ratings_small"]|
