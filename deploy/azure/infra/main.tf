@@ -320,7 +320,7 @@ resource "azurerm_key_vault_secret" "secrets" {
       value, version
     ]
   }
-  depends_on = [module.kv_default,azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+  depends_on = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "sql_password" {
