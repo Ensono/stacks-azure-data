@@ -21,14 +21,12 @@ Datastacks is a utility built to support various functions within the Ensono Sta
 * [Setup project environment](../getting_started/dev_quickstart_data_azure.md)
 
 ```bash
-# Initiate Datastacks using poetry:
-poetry run datastacks
-
-# Run Datastacks from the command line
+# Option 1: Run Datastacks CLI using Poetry's interactive shell (recommended for local development)
+poetry shell
 datastacks --help
 
-# Alternatively, run using entrypoint script
-python datastacks/datastacks_cli.py --help
+# Option 2: Run Datastacks CLI using poetry run (recommended where Poetry shell cannot be used, e.g. CI/CD pipelines)
+poetry run datastacks --help
 ```
 
 ## Generating data workloads
@@ -46,6 +44,9 @@ See [ETL Pipeline Deployment](../getting_started/etl_pipelines_deployment_azure.
 ### Examples
 
 ```bash
+# Activate virtual environment
+poetry shell
+
 # Generate resources for an ingest pipeline
 datastacks generate ingest --config="de_templates/test_config_ingest.yaml"
 
@@ -83,7 +84,7 @@ In order to generate a new data engineering workload the Datastacks CLI takes a 
 
 ## Performing data quality checks
 
-Datastacks provides a CLI to conduct data quality checks using the [PySparkle](pysparkle/pysparkle_quickstart.md) library as a backend.
+Datastacks provides a CLI to conduct data quality checks using the [PySparkle](./pysparkle.md) library as a backend.
 
 ```bash
 datastacks dq --help
@@ -92,5 +93,4 @@ datastacks dq --config-path "ingest/Ingest_AzureSql_Example/data_quality/ingest_
 
 ### Required configuration
 
-For details regarding the required environment settings and the configuration file please read
-[PySparkle](pysparkle/pysparkle_quickstart.md) and [PySparkle Data Quality](pysparkle/pysparkle_data_quality.md) sections.
+For details regarding the required environment settings and the configuration file please read the [Data Quality](./data_quality_azure.md#usage) section.

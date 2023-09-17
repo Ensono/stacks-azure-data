@@ -1,0 +1,39 @@
+input:
+  log:
+    level: info
+    format: text
+    colour: true
+  directory:
+    working: stacks # Update: Target directory for the scaffolded project
+    export: "~"  # Update: Path to your Stacks CLI installation
+  business:
+    company: mycompany # Update: Used for resource naming
+    domain: mydomain  # Update: Used for environment & Terraform state key naming
+    component: data # Update: Used for resource naming
+  cloud:
+    platform: azure
+  pipeline: azdo
+  project:
+    - name: stacks-data-platform # Update: Name of project created & used for resource naming
+      framework:
+        type: infra
+        option: data
+        version: latest
+      sourcecontrol:
+        type: github
+        url: https://github.com/mycompany/stacks-data-platform # Update: Used for setting up the remote repository
+      cloud:
+        region: ukwest # Update: The Azure region you'll be deploying into
+  terraform:
+    backend:
+      storage: tfstorage # Update: Storage account name for Terraform state
+      group: tfgroup # Update: Resource group account name for Terraform state
+      container: tfcontainer # Update: Container name account name for Terraform state
+  options:
+    cmdlog: false
+    dryrun: false
+    nobanner: false
+    nocliversion: false
+  overrides:
+    internal_config: ""
+    ado_variables_path: ""
