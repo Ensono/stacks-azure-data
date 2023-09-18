@@ -22,7 +22,7 @@ module "default_label_short" {
   attributes          = var.attributes
   delimiter           = ""
   tags                = var.tags
-  id_length_limit     = 20 //used for resources that have limits
+  id_length_limit     = 20
   regex_replace_chars = "/[^a-zA-Z0-9]/"
 }
 
@@ -40,7 +40,7 @@ module "kv_default" {
   resource_group_location       = azurerm_resource_group.default.location
   create_kv_networkacl          = true
   enable_rbac_authorization     = false
-  resource_tags                 = module.default_label.tags
+  resource_tags                 = module.default_label_short.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network        = true
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
@@ -202,12 +202,12 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 module "adls_default" {
 
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer                = module.default_label.id
+  resource_namer                = module.default_label_short.id_full
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   storage_account_details       = var.storage_account_details
   container_access_type         = var.container_access_type
-  resource_tags                 = module.default_label.tags
+  resource_tags                 = module.default_label_short.tags
   enable_private_network        = true
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
@@ -239,6 +239,7 @@ module "sql" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
+  //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
   auto_pause_delay_in_minutes   = 0
 }
 
