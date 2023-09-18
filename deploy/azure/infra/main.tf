@@ -49,6 +49,8 @@ module "kv_default" {
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
   kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
+  virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
+  network_acl_default_action    = "Allow"
 
 }
 
@@ -64,6 +66,7 @@ module "adf" {
   root_folder                     = var.root_folder
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
   tenant_id                       = data.azurerm_client_config.current.tenant_id
+  ir_enable_interactive_authoring = false
 }
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
@@ -220,29 +223,6 @@ module "adls_default" {
 
 }
 
-
-# Add secrets to KV. Please note this is just going to add secret names to KV. The actual value of that secret needs to be updated manually in Azure Key Vault. Existing secrets with the same name will not be overwritten.
-resource "azurerm_key_vault_secret" "secrets" {
-  for_each     = toset(var.kv_secrets)
-  name         = each.key
-  value        = ""
-  key_vault_id = module.kv_default.id
-  lifecycle {
-    ignore_changes = [
-
-      value, version
-    ]
-  }
-  depends_on = [module.kv_default]
-}
-
-resource "azurerm_key_vault_secret" "sql_password" {
-  name         = var.sql_password
-  value        = module.sql.sql_sa_password
-  key_vault_id = module.kv_default.id
-}
-
-
 # Storage accounts for data lake and config
 module "sql" {
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
@@ -260,38 +240,6 @@ module "sql" {
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
 
-}
-
-resource "azurerm_key_vault_secret" "sql_connect_string" {
-  for_each     = toset(var.sql_db_names)
-  name         = "connect-string-${each.key}"
-  value        = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
-  key_vault_id = module.kv_default.id
-}
-
-resource "azurerm_key_vault_secret" "sql_password_string" {
-  for_each     = toset(var.sql_db_names)
-  name         = "connect-sql-password-${each.key}"
-  value        = module.sql.sql_sa_password
-  key_vault_id = module.kv_default.id
-}
-
-resource "azurerm_key_vault_secret" "service-principal-secret" {
-  name         = "service-principal-secret"
-  value        = var.azure_client_secret
-  key_vault_id = module.kv_default.id
-}
-
-resource "azurerm_key_vault_secret" "azure-client-id" {
-  name         = "azure-client-id"
-  value        = data.azurerm_client_config.current.client_id
-  key_vault_id = module.kv_default.id
-}
-
-resource "azurerm_key_vault_secret" "azure-tenant-id" {
-  name         = "azure-tenant-id"
-  value        = data.azurerm_client_config.current.tenant_id
-  key_vault_id = module.kv_default.id
 }
 
 module "adb" {
@@ -373,4 +321,63 @@ resource "databricks_workspace_conf" "this" {
     "enableDbfsFileBrowser" : "true"
   }
   depends_on = [module.adb]
+}
+
+# Add secrets to KV. Please note this is just going to add secret names to KV. The actual value of that secret needs to be updated manually in Azure Key Vault. Existing secrets with the same name will not be overwritten.
+resource "azurerm_key_vault_secret" "secrets" {
+  for_each     = toset(var.kv_secrets)
+  name         = each.key
+  value        = ""
+  key_vault_id = module.kv_default.id
+  lifecycle {
+    ignore_changes = [
+
+      value, version
+    ]
+  }
+  depends_on = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "sql_password" {
+  name         = var.sql_password
+  value        = module.sql.sql_sa_password
+  key_vault_id = module.kv_default.id
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "sql_connect_string" {
+  for_each     = toset(var.sql_db_names)
+  name         = "connect-string-${each.key}"
+  value        = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
+  key_vault_id = module.kv_default.id
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "sql_password_string" {
+  for_each     = toset(var.sql_db_names)
+  name         = "connect-sql-password-${each.key}"
+  value        = module.sql.sql_sa_password
+  key_vault_id = module.kv_default.id
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "service-principal-secret" {
+  name         = "service-principal-secret"
+  value        = var.azure_client_secret
+  key_vault_id = module.kv_default.id
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "azure-client-id" {
+  name         = "azure-client-id"
+  value        = data.azurerm_client_config.current.client_id
+  key_vault_id = module.kv_default.id
+  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+}
+
+resource "azurerm_key_vault_secret" "azure-tenant-id" {
+  name         = "azure-tenant-id"
+  value        = data.azurerm_client_config.current.tenant_id
+  key_vault_id = module.kv_default.id
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
