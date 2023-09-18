@@ -38,7 +38,7 @@ module "kv_default" {
   resource_namer                = substr(module.default_label_short.id_full, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
-  create_kv_networkacl          = false
+  create_kv_networkacl          = true
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
@@ -239,7 +239,7 @@ module "sql" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
-  auto_pause_delay_in_minutes   = -1
+  auto_pause_delay_in_minutes   = 0
 }
 
 module "adb" {
