@@ -10,6 +10,21 @@ module "default_label" {
   tags       = var.tags
 }
 
+//This module should be used to generate names for resources that have limits:
+//// Between 3 and 24 characters long.
+//// Lowercase letters or numbers.
+//// Storage Account names must be globally unique.
+module "default_label_short" {
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace  = format("%s-%s", substr(var.name_company, 0, 6), substr(var.name_project,0,  6))
+  stage      = var.stage
+  name       = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
+  attributes = var.attributes
+  delimiter  = ""
+  tags       = var.tags
+  id_length_limit = 20 //used for resources that have limits
+  regex_replace_chars = "/[^a-zA-Z0-9]/"
+}
 
 resource "azurerm_resource_group" "default" {
   name     = module.default_label.id
@@ -17,6 +32,13 @@ resource "azurerm_resource_group" "default" {
   tags     = module.default_label.tags
 }
 
+output "new_kv_name" {
+  value = substr(module.default_label_short.id_full, 0, 24)
+}
+
+output "old_kv_name" {
+  value = substr(replace(module.default_label.id, "-", ""), 0, 24)
+}
 # KV for ADF
 module "kv_default" {
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
