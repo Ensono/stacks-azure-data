@@ -1,4 +1,4 @@
-{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
+{% set pipeline_name = 'ingest_' ~ dataset_name -%}
 {% set source_type = 'AzureSqlSource' if data_source_type == 'azure_sql' else '' -%}
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",

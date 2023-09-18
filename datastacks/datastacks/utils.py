@@ -80,10 +80,9 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
     Returns:
         Path to rendered template
     """
-    template_source_path = (
-        f"de_templates/{validated_config.workload_type.lower()}/{validated_config.template_source_folder}/"
-    )
-    target_dir = generate_target_dir(validated_config.workload_type, validated_config.name)
+    workload_type = validated_config.workload_type.lower()
+    template_source_path = f"de_templates/{workload_type}/{validated_config.template_source_folder}/"
+    target_dir = generate_target_dir(workload_type, validated_config.name)
 
     if Path(f"{target_dir}").exists():
         click.echo(
@@ -98,13 +97,11 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
     else:
         click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
-    click.echo(
-        "Generating workload components for pipeline " f"{validated_config.workload_type}_{validated_config.name}..."
-    )
+    click.echo(f"Generating workload components for pipeline {validated_config.name}...")
     render_template_components(validated_config, template_source_path, target_dir)
     if dq_flag:
         template_source_folder = f"{validated_config.template_source_folder}_DQ"
-        template_source_path = f"de_templates/" f"{validated_config.workload_type}/" f"{template_source_folder}/"
+        template_source_path = f"de_templates/{workload_type}/{template_source_folder}/"
         render_template_components(validated_config, template_source_path, target_dir)
     click.echo(f"Successfully generated workload components: {target_dir}")
 
