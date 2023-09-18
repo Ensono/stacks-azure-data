@@ -373,7 +373,7 @@ resource "azurerm_key_vault_secret" "azure-client-id" {
   name         = "azure-client-id"
   value        = data.azurerm_client_config.current.client_id
   key_vault_id = module.kv_default.id
-  depends_on   = [azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
+  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
 resource "azurerm_key_vault_secret" "azure-tenant-id" {
