@@ -239,7 +239,7 @@ module "sql" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
-
+  auto_pause_delay_in_minutes   = -1
 }
 
 module "adb" {
