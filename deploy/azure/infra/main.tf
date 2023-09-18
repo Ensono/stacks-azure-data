@@ -23,7 +23,7 @@ module "kv_default" {
   resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
-  create_kv_networkacl          = false
+  create_kv_networkacl          = true
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
