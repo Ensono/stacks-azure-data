@@ -42,10 +42,6 @@ variables:
     value: "de_workloads/$(workload_type)/$(pipeline_name)/data_factory"
   - name: self_repo_spark_src
     value: "de_workloads/$(workload_type)/$(pipeline_name)/spark_jobs"
-  - name: self_repo_blob_config
-    value: "$(self_repo_pipeline_dir)/config"
-  - name: blob_config_destination
-    value: "config/$(workload_type)/$(pipeline_name)"
   - name: tf_state_key
     value: $(domain)_$(workload_type)_$(pipeline_name)
   - name: dbfs_destination
@@ -166,18 +162,6 @@ stages:
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-                # Publish Config files
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: $(service_connection)
-                    scriptType: "pscore"
-                    scriptLocation: "inlineScript"
-                    inlineScript: "az storage blob upload-batch `
-                      --source $(self_repo_blob_config) `
-                      --destination $(blob_config_destination) `
-                      --account-name $(blob_configStorage) `
-                      --overwrite"
-
                 - task: AzureKeyVault@2
                   inputs:
                     azureSubscription: $(service_connection)
@@ -289,18 +273,6 @@ stages:
                 - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-                # Publish Config files
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: $(service_connection)
-                    scriptType: "pscore"
-                    scriptLocation: "inlineScript"
-                    inlineScript: "az storage blob upload-batch `
-                      --source $(self_repo_blob_config) `
-                      --destination $(blob_config_destination) `
-                      --account-name $(blob_configStorage) `
-                      --overwrite"
 
                 - task: AzureKeyVault@2
                   inputs:
