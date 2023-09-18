@@ -126,5 +126,5 @@ You must create the following Service Connections:
 
 | Name                  | When Needed   | Description                                           |
 |-----------------------|---------------|-------------------------------------------------------|
-| Stacks.Pipeline.Builds      | Project start | The Service Connection to Azure |
-| GitHubReleases   | Project start | The Service Connection to Github for releases
+| Stacks.Pipeline.Builds | Project start | The Service Connection to Azure |
+| GitHubReleases | Project start | The Service Connection to Github for releases |
