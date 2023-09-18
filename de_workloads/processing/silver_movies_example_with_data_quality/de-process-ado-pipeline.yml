@@ -19,6 +19,7 @@ trigger:
       - de_workloads/processing/silver_movies_example_with_data_quality/*
 
 variables:
+  - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
   - name: pipeline_name
