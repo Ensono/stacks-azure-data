@@ -240,7 +240,7 @@ module "sql" {
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
-  auto_pause_delay_in_minutes   = 0
+  auto_pause_delay_in_minutes = 0
 }
 
 module "adb" {
