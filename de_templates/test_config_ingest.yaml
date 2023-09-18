@@ -4,7 +4,7 @@
 
 # Data pipeline configurations
 # dataset_name parameter is used to determine names of the following ADF resources:
-# - pipeline: Ingest_<dataset_name>
+# - pipeline: ingest_<dataset_name>
 # - dataset: ds_<dataset_name>
 # - linked service: ls_<dataset_name>
 dataset_name: azure_sql_demo
