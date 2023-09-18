@@ -32,13 +32,23 @@ resource "azurerm_resource_group" "default" {
   tags     = module.default_label.tags
 }
 
+locals {
+  new_kv_name = substr(module.default_label_short.id_full, 0, 24)
+  old_kv_name = substr(replace(module.default_label.id, "-", ""), 0, 24)
+}
+
 output "new_kv_name" {
-  value = substr(module.default_label_short.id_full, 0, 24)
+  value = local.new_kv_name
 }
 
 output "old_kv_name" {
-  value = substr(replace(module.default_label.id, "-", ""), 0, 24)
+  value = local.old_kv_name
 }
+
+output "same" {
+  value = local.new_kv_name == local.old_kv_name ? true : false
+}
+
 # KV for ADF
 module "kv_default" {
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
