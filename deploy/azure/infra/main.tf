@@ -202,12 +202,12 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 module "adls_default" {
 
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer                = module.default_label_short.id_full
+  resource_namer                = module.default_label.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   storage_account_details       = var.storage_account_details
   container_access_type         = var.container_access_type
-  resource_tags                 = module.default_label_short.tags
+  resource_tags                 = module.default_label.tags
   enable_private_network        = true
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
