@@ -6,6 +6,7 @@ WORKLOAD_NAME = "{{ pipeline_name }}"
 logger_library = "pysparkle"
 logger = logging.getLogger(logger_library)
 
+
 def etl_main() -> None:
     """Execute data processing and transformation jobs."""
     logger.info(f"Running {WORKLOAD_NAME} processing...")
