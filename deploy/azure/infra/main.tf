@@ -15,14 +15,14 @@ module "default_label" {
 //// Lowercase letters or numbers.
 //// Storage Account names must be globally unique.
 module "default_label_short" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace  = format("%s-%s", substr(var.name_company, 0, 6), substr(var.name_project,0,  6))
-  stage      = var.stage
-  name       = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
-  attributes = var.attributes
-  delimiter  = ""
-  tags       = var.tags
-  id_length_limit = 20 //used for resources that have limits
+  source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace           = format("%s-%s", substr(var.name_company, 0, 6), substr(var.name_project, 0, 6))
+  stage               = var.stage
+  name                = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
+  attributes          = var.attributes
+  delimiter           = ""
+  tags                = var.tags
+  id_length_limit     = 20 //used for resources that have limits
   regex_replace_chars = "/[^a-zA-Z0-9]/"
 }
 
