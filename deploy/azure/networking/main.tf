@@ -1,13 +1,14 @@
 
 # Naming convention
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace  = format("%s-%s", var.name_company, var.name_project)
-  stage      = var.stage
-  name       = "${lookup(var.location_name_map, var.resource_group_location)}-${var.name_component}"
-  attributes = var.attributes
-  delimiter  = "-"
-  tags       = var.tags
+  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
+  stage           = var.stage
+  name            = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 16)}"
+  attributes      = var.attributes
+  delimiter       = "-"
+  id_length_limit = 60
+  tags            = var.tags
 }
 
 module "networking" {
