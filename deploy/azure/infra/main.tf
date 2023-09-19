@@ -36,7 +36,7 @@ resource "azurerm_resource_group" "default" {
 # KV for ADF
 module "kv_default" {
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
-  resource_namer                = substr(module.default_label_short.id_full, 0, 24)
+  resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   create_kv_networkacl          = true
@@ -203,7 +203,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 module "adls_default" {
 
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer                = module.default_label_short.id_full
+  resource_namer                = module.default_label_short.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   storage_account_details       = var.storage_account_details
