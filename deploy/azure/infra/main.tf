@@ -1,15 +1,31 @@
 
 # Naming convention
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace  = format("%s-%s", var.name_company, var.name_project)
-  stage      = var.stage
-  name       = "${lookup(var.location_name_map, var.resource_group_location)}-${var.name_component}"
-  attributes = var.attributes
-  delimiter  = "-"
-  tags       = var.tags
+  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
+  stage           = var.stage
+  name            = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 16)}"
+  attributes      = var.attributes
+  delimiter       = "-"
+  id_length_limit = 60
+  tags            = var.tags
 }
 
+//This module should be used to generate names for resources that have limits:
+//// Between 3 and 24 characters long.
+//// Lowercase letters or numbers.
+//// Storage Account names must be globally unique.
+module "default_label_short" {
+  source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace           = format("%s-%s", substr(var.name_company, 0, 6), substr(var.name_project, 0, 6))
+  stage               = var.stage
+  name                = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
+  attributes          = var.attributes
+  delimiter           = ""
+  tags                = var.tags
+  id_length_limit     = 20
+  regex_replace_chars = "/[^a-zA-Z0-9]/"
+}
 
 resource "azurerm_resource_group" "default" {
   name     = module.default_label.id
@@ -20,12 +36,12 @@ resource "azurerm_resource_group" "default" {
 # KV for ADF
 module "kv_default" {
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
-  resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
+  resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   create_kv_networkacl          = true
   enable_rbac_authorization     = false
-  resource_tags                 = module.default_label.tags
+  resource_tags                 = module.default_label_short.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network        = true
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
@@ -187,12 +203,12 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 module "adls_default" {
 
   source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer                = module.default_label.id
+  resource_namer                = module.default_label_short.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   storage_account_details       = var.storage_account_details
   container_access_type         = var.container_access_type
-  resource_tags                 = module.default_label.tags
+  resource_tags                 = module.default_label_short.tags
   enable_private_network        = true
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
@@ -224,7 +240,8 @@ module "sql" {
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
-
+  //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
+  auto_pause_delay_in_minutes = 0
 }
 
 module "adb" {
