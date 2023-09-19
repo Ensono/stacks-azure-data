@@ -36,7 +36,7 @@ stages:
     jobs:
       - job: Validate
         pool:
-          # vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image) test
           name: $(agentpool_name)
 
         steps:
