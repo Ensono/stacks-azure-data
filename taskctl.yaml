@@ -19,6 +19,7 @@ pipelines:
         - debug:env
 
   lint:
+    - task: lint:precommit
     - task: lint:yaml
     - task: lint:terraform:format
     - task: lint:terraform:validate
