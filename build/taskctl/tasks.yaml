@@ -5,6 +5,12 @@ tasks:
     command:
       - Update-BuildNumber
 
+  lint:precommit:
+    context: powershell
+    description: Perform Pre-Commit linting
+    command:
+      - git config --global --add safe.directory /app && pre-commit run --all-files --show-diff-on-failure
+
   lint:yaml:
     context: powershell
     description: Perform YAML linting
