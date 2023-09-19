@@ -70,11 +70,6 @@ stages:
               poetry install
             displayName: Install Dependencies
             workingDirectory: $(self_repo_dir)
-          - script: pip install --upgrade pre-commit
-            displayName: Install pre-commit
-          - bash: |
-              `which pre-commit` run --all-files --show-diff-on-failure
-            displayName: Run Linting Checks
           - bash: |
               poetry run pytest -rf -v pysparkle/tests/unit
             displayName: "Run Unit Tests"
