@@ -366,6 +366,3 @@ resource "azurerm_key_vault_secret" "azure-tenant-id" {
   key_vault_id = module.kv_default.id
   depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
-
-
-
