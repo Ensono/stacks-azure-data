@@ -20,5 +20,3 @@ variables:
   # GitHub infomration
   - name: create_release
     value: true
-  - name: github_org
-    value: $(company)
