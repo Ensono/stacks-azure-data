@@ -121,10 +121,11 @@ Deployment', referring to variables required after the fundamental infrastructur
 </details>
 
 ### Azure Pipelines Service Connections
+
 Service Connections are used in Azure DevOps Pipelines to connect to external services, like Azure and GitHub.
 You must create the following Service Connections:
 
 | Name                  | When Needed   | Description                                           |
 |-----------------------|---------------|-------------------------------------------------------|
-| Stacks.Pipeline.Builds | Project start | The Service Connection to Azure |
-| GitHubReleases | Project start | The Service Connection to Github for releases |
+| Stacks.Pipeline.Builds | Project start | The Service Connection to Azure. The service principal or managed identity that is used to create the connection must have contributor access to the Azure Subscription. |
+| GitHubReleases | Project start | The Service Connection to Github for releases. The access token that is used to create the connection must have read/write access to the GitHub repository. |
