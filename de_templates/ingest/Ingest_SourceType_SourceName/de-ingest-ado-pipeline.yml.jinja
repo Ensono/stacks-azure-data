@@ -1,4 +1,4 @@
-{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
+{% set pipeline_name = 'ingest_' ~ dataset_name -%}
 # Build and deploy pipeline for job {{ pipeline_name }}
 
 name: "$(Build.SourceBranchName)-init"
