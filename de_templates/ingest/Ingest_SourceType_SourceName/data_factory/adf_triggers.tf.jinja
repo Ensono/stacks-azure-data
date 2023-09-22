@@ -1,4 +1,4 @@
-{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
+{% set pipeline_name = 'ingest_' ~ dataset_name -%}
 resource "azurerm_data_factory_trigger_tumbling_window" "trigger_{{ pipeline_name }}" {
   name            = "trigger_{{ pipeline_name }}"
   data_factory_id = data.azurerm_data_factory.factory.id

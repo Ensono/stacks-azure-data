@@ -5,8 +5,9 @@ from unittest.mock import patch
 
 import pytest
 
-from datastacks.config import INGEST_TEMPLATE_FOLDER, IngestConfig
+from datastacks.config import IngestWorkloadConfigModel
 from datastacks.utils import (
+    validate_yaml_config,
     generate_pipeline,
     generate_target_dir,
     render_template_components,
@@ -26,7 +27,7 @@ def test_render_template_components(tmp_path):
         "ado_variable_groups_prod": ["prod_group"],
         "bronze_container": "test_raw",
     }
-    config = IngestConfig.parse_obj(config_dict)
+    config = IngestWorkloadConfigModel(**config_dict)
 
     template_source_path = "de_templates/ingest/Ingest_SourceType_SourceName/"
     target_dir = f"{tmp_path}/test_render"
@@ -46,9 +47,9 @@ def test_generate_pipeline(mock_target_dir, mock_confirm, tmp_path, dq, expected
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
     config_path = "datastacks/tests/unit/test_config.yml"
-    template_source_folder = INGEST_TEMPLATE_FOLDER
 
-    target_dir = generate_pipeline(config_path, dq, template_source_folder, "Ingest")
+    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
+    target_dir = generate_pipeline(validated_config, dq)
 
     for file_path in expected_files:
         assert Path(f"{target_dir}/{file_path}").exists()
@@ -62,9 +63,9 @@ def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path):
     rmtree(tmp_path)
 
     config_path = "datastacks/tests/unit/test_config.yml"
-    template_source_folder = INGEST_TEMPLATE_FOLDER
 
-    target_dir = generate_pipeline(config_path, False, template_source_folder, "Ingest")
+    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
+    target_dir = generate_pipeline(validated_config, False)
 
     for file_path in EXPECTED_FILE_LIST:
         assert Path(f"{target_dir}/{file_path}").exists()
@@ -80,9 +81,9 @@ def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, ov
     mock_confirm.return_value = True
 
     config_path = "datastacks/tests/unit/test_config.yml"
-    template_source_folder = INGEST_TEMPLATE_FOLDER
 
-    target_dir = generate_pipeline(config_path, False, template_source_folder, "Ingest")
+    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
+    target_dir = generate_pipeline(validated_config, False)
 
     for file_path in EXPECTED_FILE_LIST:
         assert Path(f"{target_dir}/{file_path}").exists()
@@ -93,7 +94,9 @@ def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, ov
 
     config_path = "datastacks/tests/unit/test_config_overwrite.yml"
     mock_confirm.return_value = overwrite_confirm
-    target_dir = generate_pipeline(config_path, False, template_source_folder, "Ingest")
+
+    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
+    target_dir = generate_pipeline(validated_config, False)
 
     with open(f"{target_dir}/data_factory/pipelines/ARM_IngestTemplate.json") as file:
         arm_template_dict = json.load(file)
@@ -107,9 +110,9 @@ def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
     mock_confirm.return_value = True
 
     config_path = "datastacks/tests/unit/test_config.yml"
-    template_source_folder = INGEST_TEMPLATE_FOLDER
 
-    target_dir = generate_pipeline(config_path, False, template_source_folder, "Ingest")
+    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
+    target_dir = generate_pipeline(validated_config, False)
 
     tested_file_path = f"{target_dir}/data_factory/pipelines/ARM_IngestTemplate.json"
 
@@ -124,4 +127,4 @@ def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
 
 
 def test_generate_target_dir():
-    assert generate_target_dir("a", "B") == "de_workloads/a/A_B"
+    assert generate_target_dir("a", "b") == "de_workloads/a/b"
