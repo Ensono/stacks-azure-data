@@ -52,7 +52,7 @@ module "kv_default" {
   kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
   virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
   network_acl_default_action    = "Allow"
-  reader_object_ids             = [module.adf.adf_factory_id]
+  reader_object_ids             = [module.adf.adf_managed_identity]
 
   depends_on = [module.adf]
 }
