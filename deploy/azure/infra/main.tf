@@ -84,23 +84,23 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-    interpreter = ["PowerShell", "-Command"]
+    interpreter = ["sh", "-Command"]
     command     = <<-EOT
-        $resourceName = '${module.adls_default.storage_account_names[0]}'
-        $resourceGroupName = '${azurerm_resource_group.default.name}'
-        $resourceType = 'Microsoft.Storage'
-        $text = $(az network private-endpoint-connection list -g $resourceGroupName -n $resourceName --type $resourceType)
-        $json = $text | ConvertFrom-Json
-        foreach($connection in $json)
-        {
-            $id = $connection.id
-            $status = $connection.properties.privateLinkServiceConnectionState.status
-            if($status -eq "Pending"){
-                Write-Host $id ' is in a pending state'
-                Write-Host $status
-                az network private-endpoint-connection approve --id $id
-            }
-        }
+        resourceName="${module.adls_default.storage_account_names[0]}"
+        resourceGroupName="${azurerm_resource_group.default.name}"
+        resourceType="Microsoft.Storage"
+        text=$(az network private-endpoint-connection list -g "$resourceGroupName" -n "$resourceName" --type "$resourceType")
+        json=$(echo "$text" | jq -r '.[]')
+        for connection in $json
+        do
+            id=$(echo "$connection" | jq -r '.id')
+            status=$(echo "$connection" | jq -r '.properties.privateLinkServiceConnectionState.status')
+            if [ "$status" = "Pending" ]; then
+                echo "$id is in a pending state"
+                echo "$status"
+                az network private-endpoint-connection approve --id "$id"
+            fi
+        done
 
         EOT
   }
