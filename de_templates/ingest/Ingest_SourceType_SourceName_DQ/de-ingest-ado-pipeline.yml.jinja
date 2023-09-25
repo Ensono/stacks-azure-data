@@ -1,4 +1,4 @@
-{% set pipeline_name = 'Ingest_' ~ dataset_name -%}
+{% set pipeline_name = 'ingest_' ~ dataset_name -%}
 # Build and deploy pipeline for job {{ pipeline_name }}
 
 name: "$(Build.SourceBranchName)-init"
@@ -77,18 +77,6 @@ stages:
           - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: {% raw %}${{ variables.TaskctlVersion }}{% endraw %}
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: $(pythonVersion)
-              githubToken: $(github_token)
-              addToPath: true
-            displayName: Set Python Version
-          - script: pip install --upgrade pre-commit tomli
-            displayName: Install pre-commit
-          - bash: |
-              PRE_COMMIT_PATH=$(which pre-commit)
-              $PRE_COMMIT_PATH run --all-files --show-diff-on-failure
-            displayName: Run Linting Checks
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
@@ -427,7 +415,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: $(github_org)/$(self_repo)
+              repositoryName: '$(Build.Repository.Name)'
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"
