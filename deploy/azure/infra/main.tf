@@ -84,8 +84,8 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-    interpreter = ["sh", "-Command"]
-    command     = <<-EOT
+    #  interpreter = ["sh", "-Command"]
+    command = <<-EOT
         resourceName="${module.adls_default.storage_account_names[0]}"
         resourceGroupName="${azurerm_resource_group.default.name}"
         resourceType="Microsoft.Storage/storageAccounts"
