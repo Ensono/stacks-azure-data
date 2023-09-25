@@ -87,7 +87,7 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
     interpreter = ["PowerShell", "-Command"]
     command     = <<-EOT
         $resourceName = '${module.adls_default.storage_account_names[0]}'
-        $resourceGroupName = '${azurerm_resource_group.default.name}'     
+        $resourceGroupName = '${azurerm_resource_group.default.name}' 
         $resourceType = 'Microsoft.Storage'
         $text = $(az network private-endpoint-connection list -g $resourceGroupName -n $resourceName --type $resourceType)
         $json = $text | ConvertFrom-Json
