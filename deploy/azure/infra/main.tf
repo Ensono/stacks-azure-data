@@ -88,7 +88,7 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
     command     = <<-EOT
         resourceName="${module.adls_default.storage_account_names[0]}"
         resourceGroupName="${azurerm_resource_group.default.name}"
-        resourceType="Microsoft.Storage"
+        resourceType="Microsoft.Storage/storageAccounts"
         text=$(az network private-endpoint-connection list -g "$resourceGroupName" -n "$resourceName" --type "$resourceType")
         json=$(echo "$text" | jq -r '.[]')
         for connection in $json
