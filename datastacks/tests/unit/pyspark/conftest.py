@@ -17,7 +17,7 @@ def spark(tmp_path_factory):
     """Spark session fixture with a temporary directory as a Spark warehouse."""
     temp_dir = tmp_path_factory.mktemp("spark-warehouse")
     spark_config = {"spark.sql.warehouse.dir": temp_dir}
-    spark = get_spark_session("pysparkle-test", spark_config)
+    spark = get_spark_session("pyspark-test", spark_config)
 
     yield spark
 

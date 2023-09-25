@@ -6,7 +6,7 @@ from datastacks.logger import setup_logger
 
 CONFIG_PATH = "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json"
 
-logger_library = "pysparkle"
+logger_library = "datastacks"
 
 if __name__ == "__main__":
     setup_logger(name=logger_library, log_level=logging.INFO)
