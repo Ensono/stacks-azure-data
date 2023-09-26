@@ -60,7 +60,6 @@ stages:
   - stage: Build_Stage
     variables:
       - group: stacks-credentials-nonprod-kv
-      - group: amido-stacks-de-pipeline-nonprod
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -74,6 +73,9 @@ stages:
                 sudo rm -rf $(Build.SourcesDirectory)/*
                 sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                 sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+          - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
           # Publish Config files
           - task: AzureCLI@2
             inputs:
