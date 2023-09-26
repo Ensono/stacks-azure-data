@@ -87,10 +87,7 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
     #  interpreter = ["sh", "-Command"]
     command = <<-EOT
         az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
-        resourceName="${module.adls_default.storage_account_names[0]}"
-        resourceGroupName="${azurerm_resource_group.default.name}"
-        resourceType="Microsoft.Storage/storageAccounts"
-        text=$(az network private-endpoint-connection list -g "$resourceGroupName" -n "$resourceName" --type "$resourceType")
+        text=$(az network private-endpoint-connection list --id ${module.adls_default.storage_account_ids[0]})
         pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
         for id in $pendingPE
         do
@@ -100,9 +97,7 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
         EOT
   }
 
-  depends_on = [
-    azurerm_data_factory_managed_private_endpoint.blob_pe
-  ]
+  depends_on = [azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
@@ -112,12 +107,55 @@ resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
   subresource_name   = "dfs"
 }
 
+# resource "null_resource" "approve_adf_adls_private_endpoint" {
+
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "local-exec" {
+#     #  interpreter = ["sh", "-Command"]
+#     command = <<-EOT
+#         az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+#         text=$(az network private-endpoint-connection list --id ${module.adls_default.storage_account_ids[1]})
+#         pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+#         for id in $pendingPE
+#         do
+#             echo "$id is in a pending state"
+#             az network private-endpoint-connection approve --id "$id"
+#         done
+#         EOT
+#   }
+
+#   depends_on = [azurerm_data_factory_managed_private_endpoint.adls_pe]
+# }
 resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
   name               = var.name_pe_kv
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.kv_default.id
   subresource_name   = "vault"
 }
+
+# resource "null_resource" "approve_adf_kv_private_endpoint" {
+
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "local-exec" {
+#     #  interpreter = ["sh", "-Command"]
+#     command = <<-EOT
+#         az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+#         text=$(az network private-endpoint-connection list --id ${module.kv_default.id})
+#         pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+#         for id in $pendingPE
+#         do
+#             echo "$id is in a pending state"
+#             az network private-endpoint-connection approve --id "$id"
+#         done
+#         EOT
+#   }
+
+#   depends_on = [azurerm_data_factory_managed_private_endpoint.kv_pe]
+# }
 
 resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
   name               = var.name_pe_sql
@@ -126,6 +164,29 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
   subresource_name   = "sqlServer"
 }
 
+# resource "null_resource" "approve_adf_sql_private_endpoint" {
+
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "local-exec" {
+#     #  interpreter = ["sh", "-Command"]
+#     command = <<-EOT
+#         az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+#         text=$(az network private-endpoint-connection list --id ${module.sql.sql_server_id})
+#         pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+#         for id in $pendingPE
+#         do
+#             echo "$id is in a pending state"
+#             az network private-endpoint-connection approve --id "$id"
+#         done
+#         EOT
+#   }
+
+#   depends_on = [azurerm_data_factory_managed_private_endpoint.sql_pe]
+# }
+
+
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   name               = var.name_pe_db
   data_factory_id    = module.adf.adf_factory_id
@@ -133,7 +194,6 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   subresource_name   = "databricks_ui_api"
 
   depends_on = [module.adb]
-
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
@@ -144,6 +204,28 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 
   depends_on = [module.adb]
 }
+
+# resource "null_resource" "approve_adf_db_private_endpoint" {
+
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "local-exec" {
+#     #  interpreter = ["sh", "-Command"]
+#     command = <<-EOT
+#         az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+#         text=$(az network private-endpoint-connection list --id ${module.adb.adb_databricks_id})
+#         pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+#         for id in $pendingPE
+#         do
+#             echo "$id is in a pending state"
+#             az network private-endpoint-connection approve --id "$id"
+#         done
+#         EOT
+#   }
+
+#   depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe]
+# }
 
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
