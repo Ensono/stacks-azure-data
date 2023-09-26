@@ -60,6 +60,7 @@ stages:
   - stage: Build_Stage
     variables:
       - group: stacks-credentials-nonprod-kv
+      - group: amido-stacks-de-pipeline-nonprod
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
