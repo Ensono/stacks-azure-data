@@ -81,6 +81,8 @@ stages:
               scriptType: "pscore"
               scriptLocation: "inlineScript"
               inlineScript: |
-                echo $(self_repo_blob_config)
-                echo $(blob_config_destination)
-                echo $(blob_configStorage)
+                az storage blob upload-batch `
+                --source $(self_repo_blob_config) `
+                --destination $(blob_config_destination) `
+                --account-name $(blob_configStorage) `
+                --overwrite
