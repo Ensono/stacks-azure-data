@@ -91,18 +91,12 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
         resourceGroupName="${azurerm_resource_group.default.name}"
         resourceType="Microsoft.Storage/storageAccounts"
         text=$(az network private-endpoint-connection list -g "$resourceGroupName" -n "$resourceName" --type "$resourceType")
-        json=$(echo "$text" | jq -r '.[]')
-        for connection in $json
+        pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+        for id in $pendingPE
         do
-            id=$(echo "$connection" | jq -r '.id')
-            status=$(echo "$connection" | jq -r '.properties.privateLinkServiceConnectionState.status')
-            if [ "$status" = "Pending" ]; then
-                echo "$id is in a pending state"
-                echo "$status"
-                az network private-endpoint-connection approve --id "$id"
-            fi
+            echo "$id is in a pending state"
+            az network private-endpoint-connection approve --id "$id"
         done
-
         EOT
   }
 
