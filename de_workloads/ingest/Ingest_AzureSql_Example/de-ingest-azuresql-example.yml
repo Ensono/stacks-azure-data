@@ -79,4 +79,7 @@ stages:
               azureSubscription: $(service_connection)
               scriptType: "pscore"
               scriptLocation: "inlineScript"
-              inlineScript: "az account show"
+              inlineScript: |
+                echo $(self_repo_blob_config)
+                echo $(blob_config_destination)
+                echo $(blob_configStorage)
