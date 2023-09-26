@@ -86,7 +86,7 @@ resource "null_resource" "approve_adf_blob_private_endpoint" {
   provisioner "local-exec" {
     #  interpreter = ["sh", "-Command"]
     command = <<-EOT
-        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${data.azurerm_client_config.current.client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
         resourceName="${module.adls_default.storage_account_names[0]}"
         resourceGroupName="${azurerm_resource_group.default.name}"
         resourceType="Microsoft.Storage/storageAccounts"
