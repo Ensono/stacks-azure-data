@@ -10,7 +10,7 @@ keywords:
   - development
 ---
 
-This section covers the steps required to start developing a Stacks Azure Data Platform from your machine:
+This section covers the steps required to start developing a Ensono Stacks Azure Data Platform from your machine:
 
 1. Make sure you have installed the applications in [local development requirements](../requirements_data_azure.md#local-development).
 2. Ensure that Poetry is added to your `$PATH`.
@@ -87,4 +87,4 @@ To run scripts within a Databricks cluster, you will need to:
 
 ## Next steps
 
-Once you setup your local development environment, you can continue with the Getting Started tutorial by [deploying the Shared Resources](shared_resources_deployment_azure.md).
+Once you setup your local development environment, you can continue with the Getting Started tutorial by [deploying the shared resources](shared_resources_deployment_azure.md).
