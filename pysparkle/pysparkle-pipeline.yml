@@ -60,9 +60,8 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: $(pythonVersion)
-              githubToken: $(github_token)
               addToPath: true
-            displayName: Set Python Version
+            displayName: Set Python Version (TEST)
           - bash: |
               pip install pylint pylint-exit pytest-cov poetry
             displayName: Install Pipeline Tools
