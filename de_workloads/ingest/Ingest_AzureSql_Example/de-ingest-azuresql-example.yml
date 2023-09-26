@@ -88,7 +88,7 @@ stages:
                 echo $(blob_config_destination)
                 echo $(blob_configStorage)
                 ls $(self_repo_blob_config)
-                az storage blob upload-batch `
+                az storage blob upload-batch --debug `
                 --source $(self_repo_blob_config) `
                 --destination $(blob_config_destination) `
                 --account-name $(blob_configStorage) `
