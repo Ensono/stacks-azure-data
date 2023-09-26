@@ -6,7 +6,7 @@ Link to the official documentation:
 ## Overview
 
 The Stacks Azure Data Platform solution provides
-a framework for accelerating the deployment of a production-ready data platform.
+a framework for accelerating the deployment of a production-ready modern data platform.
 
 ![Stacks Data Overview](docs/workloads/azure/data/images/stacks-data-overview.png)
 
@@ -22,8 +22,7 @@ Key elements of the solution include:
 
 * Infrastructure as code (IaC) for all infrastructure components (Terraform).
 * [Datastacks](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/datastacks) - a library and CLI built to accelerate the development of data engineering
-workloads in the data platform based upon templates.
-* [Pysparkle](https://stacks.amido.com/docs/workloads/azure/data/etl_pipelines/pysparkle/pysparkle_quickstart) - a library built to streamline data processing activities running in Apache Spark.
+workloads in the data platform.
 * Sample ingest pipeline that transfers data from a source into a landing (Bronze) data lake zone.
 * Sample data processing pipelines performing data transformations from Bronze to Silver and Silver to Gold layers.
 * Data Quality validations.
@@ -48,7 +47,6 @@ stacks-azure-data
 │   ├── shared_resources        # Shared resources used across data engineering workloads
 ├── deploy          # TF modules to deploy core Azure resources (used by `build` directory)
 ├── docs            # Documentation
-├── pysparkle       # Python library built to streamline data processing; packaged and uploaded to DBFS
 ├── stacks-cli      # Example config to use when scaffolding a project using stacks-cli
 ├── utils           # Python utilities package used across solution for local testing
 ├── .pre-commit-config.yaml         # Configuration for pre-commit hooks
