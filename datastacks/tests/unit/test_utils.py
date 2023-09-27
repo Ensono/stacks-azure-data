@@ -1,130 +1,104 @@
-import json
-from pathlib import Path
-from shutil import rmtree
 from unittest.mock import patch
 
 import pytest
 
-from datastacks.config import IngestWorkloadConfigModel
 from datastacks.utils import (
-    validate_yaml_config,
-    generate_pipeline,
-    generate_target_dir,
-    render_template_components,
+    filter_files_by_extension,
+    find_placeholders,
+    substitute_env_vars,
+    camel_to_snake,
+    config_uniqueness_check,
 )
-from tests.unit.template_structures import EXPECTED_DQ_FILE_LIST, EXPECTED_FILE_LIST
 
-
-def test_render_template_components(tmp_path):
-    config_dict = {
-        "dataset_name": "test_dataset",
-        "pipeline_description": "Pipeline for testing",
-        "data_source_type": "azure_sql",
-        "key_vault_linked_service_name": "test_keyvault",
-        "data_source_password_key_vault_secret_name": "test_password",
-        "data_source_connection_string_variable_name": "test_connection_string",
-        "ado_variable_groups_nonprod": ["nonprod_test_group"],
-        "ado_variable_groups_prod": ["prod_group"],
-        "bronze_container": "test_raw",
-    }
-    config = IngestWorkloadConfigModel(**config_dict)
-
-    template_source_path = "de_templates/ingest/Ingest_SourceType_SourceName/"
-    target_dir = f"{tmp_path}/test_render"
-
-    render_template_components(config, template_source_path, target_dir)
-
-    for file_path in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{file_path}").exists()
+TEST_ENV_VARS = {"TEST_VAR1": "value1", "TEST_VAR2": "value2", "ADLS_ACCOUNT": "value3"}
 
 
 @pytest.mark.parametrize(
-    "dq,expected_files", [(False, EXPECTED_FILE_LIST), (True, EXPECTED_FILE_LIST + EXPECTED_DQ_FILE_LIST)]
+    "input_str,expected",
+    [
+        (
+            "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/table_name",
+            ["ADLS_ACCOUNT"],
+        ),
+        (
+            "abcd{TEST_VAR1}{TEST_VAR2}",
+            ["TEST_VAR1", "TEST_VAR2"],
+        ),
+        (
+            "somestring{TEST_VAR3}{NONEXISTENT_VAR}123",
+            ["TEST_VAR3", "NONEXISTENT_VAR"],
+        ),
+    ],
 )
-@patch("datastacks.utils.click.confirm")
-@patch("datastacks.utils.generate_target_dir")
-def test_generate_pipeline(mock_target_dir, mock_confirm, tmp_path, dq, expected_files):
-    mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = True
-    config_path = "datastacks/tests/unit/test_config.yml"
-
-    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
-    target_dir = generate_pipeline(validated_config, dq)
-
-    for file_path in expected_files:
-        assert Path(f"{target_dir}/{file_path}").exists()
+@patch.dict("os.environ", TEST_ENV_VARS, clear=True)
+def test_find_placeholders(input_str, expected):
+    assert find_placeholders(input_str) == expected
 
 
-@patch("datastacks.utils.click.confirm")
-@patch("datastacks.utils.generate_target_dir")
-def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path):
-    mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = False
-    rmtree(tmp_path)
+@patch.dict("os.environ", TEST_ENV_VARS, clear=True)
+def test_substitute_env_vars():
+    input_str = "{TEST_VAR1}_{TEST_VAR2}_{ADLS_ACCOUNT}_{NONEXISTENT_VAR}"
 
-    config_path = "datastacks/tests/unit/test_config.yml"
-
-    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
-    target_dir = generate_pipeline(validated_config, False)
-
-    for file_path in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{file_path}").exists()
+    assert substitute_env_vars(input_str) == "value1_value2_value3_{NONEXISTENT_VAR}"
 
 
 @pytest.mark.parametrize(
-    "overwrite_confirm,expected_desc", [(False, "Pipeline for testing"), (True, "Pipeline for testing overwritten")]
+    "extension,expected",
+    [
+        ("csv", ["test1.csv", "test3.csv"]),
+        ("txt", ["test2.txt"]),
+        ("doc", ["test4.doc"]),
+        ("pdf", ["test5.pdf"]),
+        (".pdf", ["test5.pdf"]),
+    ],
 )
-@patch("datastacks.utils.click.confirm")
-@patch("datastacks.utils.generate_target_dir")
-def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, overwrite_confirm, expected_desc):
-    mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = True
-
-    config_path = "datastacks/tests/unit/test_config.yml"
-
-    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
-    target_dir = generate_pipeline(validated_config, False)
-
-    for file_path in EXPECTED_FILE_LIST:
-        assert Path(f"{target_dir}/{file_path}").exists()
-
-    with open(f"{target_dir}/data_factory/pipelines/ARM_IngestTemplate.json") as file:
-        arm_template_dict = json.load(file)
-    assert arm_template_dict["resources"][0]["properties"]["description"] == "Pipeline for testing"
-
-    config_path = "datastacks/tests/unit/test_config_overwrite.yml"
-    mock_confirm.return_value = overwrite_confirm
-
-    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
-    target_dir = generate_pipeline(validated_config, False)
-
-    with open(f"{target_dir}/data_factory/pipelines/ARM_IngestTemplate.json") as file:
-        arm_template_dict = json.load(file)
-    assert arm_template_dict["resources"][0]["properties"]["description"] == expected_desc
+def test_filter_files_by_extension(extension, expected):
+    paths = ["test1.csv", "test2.txt", "test3.csv", "test4.doc", "test5.pdf", "test6", "test7/csv"]
+    assert filter_files_by_extension(paths, extension) == expected
 
 
-@patch("datastacks.utils.click.confirm")
-@patch("datastacks.utils.generate_target_dir")
-def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
-    mock_target_dir.return_value = tmp_path
-    mock_confirm.return_value = True
-
-    config_path = "datastacks/tests/unit/test_config.yml"
-
-    validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
-    target_dir = generate_pipeline(validated_config, False)
-
-    tested_file_path = f"{target_dir}/data_factory/pipelines/ARM_IngestTemplate.json"
-
-    assert Path(f"{tested_file_path}").exists()
-
-    with open(tested_file_path) as file:
-        arm_template_dict = json.load(file)
-    assert (
-        arm_template_dict["resources"][0]["properties"]["activities"][1]["typeProperties"]["activities"][0]["name"]
-        == "AZURE_SQL_to_ADLS"
-    )
+@pytest.mark.parametrize(
+    "input_str, expected_output",
+    [
+        ("camelCase", "camel_case"),
+        ("CamelCase", "camel_case"),
+        ("CamelCamelCase", "camel_camel_case"),
+        ("Camel2Camel2Case", "camel2_camel2_case"),
+        ("getHTTPResponseCode", "get_http_response_code"),
+        ("get2HTTP", "get2_http"),
+        ("HTTPResponseCode", "http_response_code"),
+        ("noChange", "no_change"),
+        ("", ""),
+    ],
+)
+def test_camel_to_snake(input_str, expected_output):
+    result = camel_to_snake(input_str)
+    assert result == expected_output
 
 
-def test_generate_target_dir():
-    assert generate_target_dir("a", "b") == "de_workloads/a/b"
+@pytest.mark.parametrize(
+    "config_list, unique_key, expected_output",
+    [
+        (
+            [
+                {"id": 1, "name": "test1"},
+                {"id": 2, "name": "test2"},
+                {"id": 3, "name": "test3"},
+            ],
+            "id",
+            True,
+        ),
+        (
+            [
+                {"id": 1, "name": "test1"},
+                {"id": 2, "name": "test2"},
+                {"id": 2, "name": "test3"},
+            ],
+            "id",
+            False,
+        ),
+    ],
+)
+def test_config_uniqueness_check(config_list, unique_key, expected_output):
+    result = config_uniqueness_check(config_list, unique_key)
+    assert result == expected_output
