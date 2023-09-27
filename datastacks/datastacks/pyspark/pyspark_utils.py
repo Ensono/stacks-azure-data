@@ -7,7 +7,7 @@ from pyspark.errors import AnalysisException
 
 from pyspark.sql import DataFrame, SparkSession
 
-from pysparkle.utils import camel_to_snake, substitute_env_vars
+from datastacks.utils import camel_to_snake, substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
