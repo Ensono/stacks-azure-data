@@ -4,9 +4,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from tests.unit.conftest import TEST_CSV_DIR
+from tests.unit.pyspark.conftest import TEST_CSV_DIR
 
-from pysparkle.storage_utils import (
+from datastacks.pyspark.storage_utils import (
     ENV_NAME_ADLS_ACCOUNT,
     ENV_NAME_APPLICATION_ID,
     ENV_NAME_BLOB_ACCOUNT,

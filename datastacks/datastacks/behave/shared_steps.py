@@ -9,19 +9,19 @@ from azure.storage.filedatalake import DataLakeServiceClient
 from behave import given, step, then
 from behave.runner import Context
 
-from utils.constants import (
+from datastacks.constants import (
     ADLS_URL,
     AZURE_SUBSCRIPTION_ID,
     AZURE_DATA_FACTORY_NAME,
     AZURE_RESOURCE_GROUP_NAME,
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
 )
-from utils.azure.data_factory import (
+from datastacks.azure.data_factory import (
     check_adf_pipeline_in_complete_state,
     get_adf_pipeline_run,
     create_adf_pipeline_run,
 )
-from utils.azure.adls import all_files_present_in_adls
+from datastacks.azure.adls import all_files_present_in_adls
 
 credential = DefaultAzureCredential()
 adf_client = DataFactoryManagementClient(credential, AZURE_SUBSCRIPTION_ID)
