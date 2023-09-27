@@ -245,13 +245,6 @@ stages:
                     azureClientSecret: $(azure-client-secret)
                     azureTenantId: $(azure-tenant-id)
 
-                - task: PublishTestResults@2
-                  displayName: "Publish Test Results"
-                  inputs:
-                    testResultsFiles: "**/*.xml"
-                    searchFolder: '$(System.DefaultWorkingDirectory)/$(junit_src)'
-                  condition: succeededOrFailed()
-
   #############################################################
   # Deploy to Prod
   #############################################################
