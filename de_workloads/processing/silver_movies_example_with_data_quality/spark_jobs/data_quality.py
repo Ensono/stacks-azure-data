@@ -4,7 +4,7 @@ from pysparkle.config import CONFIG_CONTAINER
 from pysparkle.data_quality.main import data_quality_main
 from pysparkle.logger import setup_logger
 
-CONFIG_PATH = "processing/silver_movies_example_with_data_quality/config/data_quality/data_quality_config.json"
+CONFIG_PATH = "processing/silver_movies_example_with_data_quality/data_quality/data_quality_config.json"
 
 logger_library = "pysparkle"
 
