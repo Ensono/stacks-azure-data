@@ -71,5 +71,5 @@ steps:
     displayName: "Publish Test Results"
     inputs:
       testResultsFiles: "**/*.xml"
-      searchFolder: '$(System.DefaultWorkingDirectory)'
+      searchFolder: '${{ parameters.junitLocation }}'
     condition: succeededOrFailed()
