@@ -21,7 +21,14 @@
                     {
                         "name": "process_data",
                         "type": "DatabricksSparkPython",
-                        "dependsOn": [],
+                        "dependsOn": [
+                            {
+                                "activity": "automated_test_flag",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
                         "policy": {
                             "timeout": "1:00:00",
                             "retry": 0,
@@ -32,7 +39,10 @@
                         "userProperties": [],
                         "typeProperties": {
                             "pythonFile": "dbfs:/FileStore/scripts/silver_movies_example_with_data_quality/process.py",
-                            "parameters": [],
+                            "parameters": [
+                                "@variables('run_id')",
+                                "@string(variables('automated_test_flag'))"
+                            ],
                             "libraries": [
                                 {
                                     "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
@@ -65,7 +75,10 @@
                         "userProperties": [],
                         "typeProperties": {
                             "pythonFile": "dbfs:/FileStore/scripts/silver_movies_example_with_data_quality/data_quality.py",
-                            "parameters": [],
+                            "parameters": [
+                                "@variables('run_id')",
+                                "@string(variables('automated_test_flag'))"
+                            ],
                             "libraries": [
                                 {
                                     "whl": "dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl"
@@ -76,18 +89,72 @@
                             "referenceName": "ls_Databricks_Small",
                             "type": "LinkedServiceReference"
                         }
+                    },
+                    {
+                        "name": "run_id",
+                        "type": "SetVariable",
+                        "dependsOn": [],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "run_id",
+                            "value": {
+                                "value": "@{if(or(empty(pipeline().parameters.run_id),equals(pipeline().parameters.run_id, 'auto')), pipeline().RunId, pipeline().parameters.run_id)}",
+                                "type": "Expression"
+                            }
+                        }
+                    },
+                    {
+                        "name": "automated_test_flag",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "run_id",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "automated_test_flag",
+                            "value": {
+                                "value": "@startswith(variables('run_id'), pipeline().parameters.automated_test_prefix)",
+                                "type": "Expression"
+                            }
+                        }
                     }
                 ],
-                "policy": {
-                    "elapsedTimeMetric": {},
-                    "cancelAfter": {}
+                "parameters": {
+                    "run_id": {
+                        "type": "string",
+                        "defaultValue": "auto"
+                    },
+                    "automated_test_prefix": {
+                        "type": "string",
+                        "defaultValue": "automated_test_"
+                    }
+                },
+                "variables": {
+                    "automated_test_flag": {
+                        "type": "Boolean"
+                    },
+                    "run_id": {
+                        "type": "String"
+                    }
                 },
                 "folder": {
                     "name": "Process"
                 },
                 "annotations": []
-            },
-            "dependsOn": []
+            }
         }
     ]
 }
