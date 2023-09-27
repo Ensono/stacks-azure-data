@@ -35,7 +35,7 @@ variables:
   - name: test_end_to_end_src
     value: "de_workloads/$(job)/tests/end_to_end/features/"
   - name: junit_src
-    value: "de_workloads/$(jobtype)/$(job)/junit"
+    value: "de_workloads/$(job)/junit"
   - name: self_repo_sparkjob_dir
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
