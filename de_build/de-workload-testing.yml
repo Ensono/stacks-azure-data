@@ -53,7 +53,7 @@ steps:
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
 
-        echo ${{ parameters.junitLocation }}'
+        echo "${{ parameters.junitLocation }}"
       workingDirectory: '${{ parameters.workingDirectory }}'
     env:
       E2E_TEST_LOCATION: ${{ parameters.e2eTestLocation }}
