@@ -12,7 +12,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), 'gold_movies_example')]",
+            "name": "[concat(parameters('factoryName'), '/gold_movies_example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
