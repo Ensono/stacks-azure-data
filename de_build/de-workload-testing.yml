@@ -70,6 +70,6 @@ steps:
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
     inputs:
-      testResultsFiles: "**/*.xml"
-      searchFolder: '${{ parameters.junitLocation }}'
+      testResultsFiles: "*.xml"
+      searchFolder: '$(System.DefaultWorkingDirectory)/de_workloads/shared_resources/junit'
     condition: succeededOrFailed()
