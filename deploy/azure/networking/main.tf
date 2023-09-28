@@ -12,7 +12,7 @@ module "default_label" {
 }
 
 module "networking" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
+  source                  = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
   enable_private_networks = var.enable_private_networks ## NOTE setting this value to false will cause no resources to be created !!
   network_details         = var.network_details
   resource_group_location = var.resource_group_location
@@ -25,7 +25,7 @@ module "networking" {
 
 module "vmss" {
   count                        = var.enable_private_networks ? 1 : 0
-  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss"
+  source                       = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-vmss"
   vmss_name                    = module.default_label.id
   vmss_resource_group_name     = module.networking.vnets["amido-stacks-euw-de-hub"].vnet_resource_group_name
   vmss_resource_group_location = var.resource_group_location
