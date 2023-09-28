@@ -1,22 +1,22 @@
 import logging
 import sys
 
-from pysparkle.config import CONFIG_CONTAINER
-from pysparkle.data_quality.config import Config
-from pysparkle.data_quality.utils import (
+from datastacks.constants import CONFIG_CONTAINER_NAME
+from datastacks.pyspark.data_quality.config import Config
+from datastacks.pyspark.data_quality.utils import (
     add_expectation_suite,
     create_datasource_context,
     execute_validations,
     publish_quality_results_table,
 )
-from pysparkle.pyspark_utils import get_spark_session, read_datasource
-from pysparkle.storage_utils import check_env, load_json_from_blob, set_spark_properties
-from pysparkle.utils import substitute_env_vars
+from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource
+from datastacks.pyspark.storage_utils import check_env, load_json_from_blob, set_spark_properties
+from datastacks.utils import substitute_env_vars
 
 logger = logging.getLogger(__name__)
 
 
-def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER):
+def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_NAME):
     """Executes data quality checks based on the provided configuration.
 
     Args:

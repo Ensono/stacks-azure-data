@@ -12,8 +12,13 @@ from typing import Any, Callable, Optional
 from dateutil.parser import isoparse
 from pyspark.sql import DataFrame, SparkSession
 
-from pysparkle.pyspark_utils import get_spark_session, read_datasource, save_dataframe_as_delta
-from pysparkle.storage_utils import check_env, get_adls_directory_contents, get_adls_file_url, set_spark_properties
+from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource, save_dataframe_as_delta
+from datastacks.pyspark.storage_utils import (
+    check_env,
+    get_adls_directory_contents,
+    get_adls_file_url,
+    set_spark_properties,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -16,8 +16,8 @@ from great_expectations.data_context.types.base import (
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StringType, StructField, StructType, DateType, BooleanType
 
-from pysparkle.data_quality.config import DatasourceConfig, ValidationConfig
-from pysparkle.pyspark_utils import save_dataframe_as_delta
+from datastacks.pyspark.data_quality.config import DatasourceConfig, ValidationConfig
+from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta
 
 
 def create_datasource_context(datasource_name: str, gx_directory_path: str) -> AbstractDataContext:

@@ -1,7 +1,7 @@
 from pytest import fixture
 
-from pysparkle.data_quality.config import Config
-from pysparkle.data_quality.utils import create_datasource_context
+from datastacks.pyspark.data_quality.config import Config
+from datastacks.pyspark.data_quality.utils import create_datasource_context
 
 
 @fixture
