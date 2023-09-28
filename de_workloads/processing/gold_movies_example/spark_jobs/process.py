@@ -3,13 +3,13 @@ import logging
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import avg
 
-from pysparkle.etl import (
+from datastacks.pyspark.etl import (
     get_spark_session_for_adls,
     read_latest_rundate_data,
 )
-from pysparkle.logger import setup_logger
-from pysparkle.pyspark_utils import save_dataframe_as_delta
-from pysparkle.storage_utils import get_adls_file_url
+from datastacks.logger import setup_logger
+from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta
+from datastacks.pyspark.storage_utils import get_adls_file_url
 
 WORKLOAD_NAME = "gold_movies_example"
 SILVER_CONTAINER = "staging"
