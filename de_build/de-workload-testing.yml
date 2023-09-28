@@ -37,7 +37,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        poetry run pytest -rf -v "${{ parameters.unitTestLocation }} --junitxml=$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}/unit.xml"
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}/unit.xml"
       workingDirectory: '${{ parameters.workingDirectory }}'
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
