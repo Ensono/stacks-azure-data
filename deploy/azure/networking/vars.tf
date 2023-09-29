@@ -5,19 +5,17 @@
 variable "name_company" {
   description = "Company Name - should/will be used in conventional resource naming"
   type        = string
-  default     = "amido"
 }
 
 variable "name_project" {
   description = "Project Name - should/will be used in conventional resource naming"
   type        = string
-  default     = "stacks"
 }
 
 variable "name_component" {
   description = "Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing`"
   type        = string
-  default     = "de"
+  default     = "data"
 }
 
 
@@ -40,7 +38,7 @@ variable "tags" {
 
 variable "resource_group_location" {
   type    = string
-  default = "westeurope"
+  default = "uksouth"
 }
 
 
@@ -66,7 +64,7 @@ variable "location_name_map" {
 ############################################
 
 variable "enable_private_networks" {
-  default     = true
+  default     = false
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
@@ -75,7 +73,7 @@ variable "enable_private_networks" {
 variable "link_dns_network" {
   description = "weather link DNS with vnets"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "network_details" {
@@ -281,8 +279,7 @@ variable "vmss_instances" {
 }
 
 variable "vmss_admin_username" {
-  #default     = "adminuser"
-  default     = "rishi"
+  default     = "adminuser"
   type        = string
   description = "Sets the admin user name. This is used if remote access is required to a VM instance."
 }
