@@ -61,8 +61,8 @@ def etl_main() -> None:
         )
 
     logger.info(f"Reading data from {SILVER_CONTAINER} container...")
-    ratings = read_data("ratings")
-    metadata = read_data("metadata")
+    ratings = read_data("ratings_small")
+    metadata = read_data("movies_metadata")
 
     logger.info("Transforming data...")
     avg_ratings = average_ratings(ratings)
