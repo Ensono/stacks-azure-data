@@ -35,7 +35,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv"
   resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -59,7 +59,7 @@ module "kv_default" {
 
 # module call for ADF
 module "adf" {
-  source                          = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
+  source                          = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
   resource_namer                  = module.default_label.id
   resource_group_name             = azurerm_resource_group.default.name
   resource_group_location         = azurerm_resource_group.default.location
@@ -108,7 +108,6 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   subresource_name   = "databricks_ui_api"
 
   depends_on = [module.adb]
-
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
@@ -118,6 +117,35 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   subresource_name   = "browser_authentication"
 
   depends_on = [module.adb]
+}
+
+resource "null_resource" "approve_private_endpoints" {
+  for_each = {
+    blob = module.adls_default.storage_account_ids[0]
+    adls = module.adls_default.storage_account_ids[1]
+    kv   = module.kv_default.id
+    sql  = module.sql.sql_server_id
+    adb  = module.adb.adb_databricks_id
+    # Add more resources as needed
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+        text=$(az network private-endpoint-connection list --id ${each.value})
+        pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+        for id in $pendingPE
+        do
+            echo "$id is in a pending state"
+            az network private-endpoint-connection approve --id "$id" --description "Approved"
+        done
+    EOT
+  }
+  depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
 
 resource "azurerm_role_assignment" "kv_role" {
@@ -204,7 +232,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
   resource_namer                = module.default_label_short.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -228,7 +256,7 @@ module "adls_default" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
   resource_namer                = module.default_label.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -247,7 +275,7 @@ module "sql" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
+  source                                   = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adb?ref=master"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location
