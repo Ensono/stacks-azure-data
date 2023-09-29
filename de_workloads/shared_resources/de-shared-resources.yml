@@ -35,7 +35,7 @@ variables:
   - name: test_end_to_end_src
     value: "de_workloads/$(job)/tests/end_to_end/features/"
   - name: junit_src
-    value: "de_workloads/$(jobtype)/$(job)/junit"
+    value: "de_workloads/$(job)/junit"
   - name: self_repo_sparkjob_dir
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
@@ -235,7 +235,6 @@ stages:
                     workingDirectory: './'
                     unitTestLocation: './$(test_unit_src)'
                     e2eTestLocation: './$(test_end_to_end_src)'
-                    junitLocation: './$(junit_src)'
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
@@ -244,13 +243,6 @@ stages:
                     azureClientId: $(azure-client-id)
                     azureClientSecret: $(azure-client-secret)
                     azureTenantId: $(azure-tenant-id)
-
-                - task: PublishTestResults@2
-                  displayName: "Publish Test Results"
-                  inputs:
-                    testResultsFiles: "**/*.xml"
-                    searchFolder: '$(System.DefaultWorkingDirectory)/$(junit_src)'
-                  condition: succeededOrFailed()
 
   #############################################################
   # Deploy to Prod

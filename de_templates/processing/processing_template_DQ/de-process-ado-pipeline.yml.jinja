@@ -58,7 +58,9 @@ pool:
 stages:
   - stage: Build_Stage
     variables:
-      - group: stacks-credentials-nonprod-kv
+      {%- for group in ado_variable_groups_nonprod %}
+      - group: {{ group }}
+      {%- endfor %}
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -123,8 +125,9 @@ stages:
   #############################################################
   - stage: Deploy_NonPROD_Stage
     variables:
-      - group: amido-stacks-de-pipeline-nonprod
-      - group: stacks-credentials-nonprod-kv
+      {%- for group in ado_variable_groups_nonprod %}
+      - group: {{ group }}
+      {%- endfor %}
       - name: Environment.ShortName
         value: dev
     dependsOn: Build_Stage
@@ -229,7 +232,6 @@ stages:
                     workingDirectory: './'
                     unitTestLocation: './$(test_unit_src)'
                     e2eTestLocation: './$(test_end_to_end_src)'
-                    junitLocation: './$(junit_src)'
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
@@ -248,8 +250,9 @@ stages:
       - Deploy_NonPROD_Stage
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-de-pipeline-prod
-      - group: stacks-credentials-prod-kv
+      {%- for group in ado_variable_groups_prod %}
+      - group: {{ group }}
+      {%- endfor %}
       - name: Environment.ShortName
         value: prod
     jobs:
