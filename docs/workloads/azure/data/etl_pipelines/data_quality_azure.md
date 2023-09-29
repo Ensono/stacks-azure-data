@@ -10,14 +10,14 @@ keywords:
   - great expectations
 ---
 
-Stacks data workloads can be deployed with additional Data Quality checks. These checks validate that the outputs of
+Ensono Stacks data workloads can be deployed with additional Data Quality checks. These checks validate that the outputs of
 a data pipeline meet specified requirements, expressed in a simple, human-readable language. It allows
 you to assert expectations about your data, which can help catch any discrepancies, anomalies, or
 errors in your data as early in the pipeline as possible.
 
 Data Quality checks are executed as Python Databricks jobs with the quality validation logic
-packaged within our [PySparkle](pysparkle.md) library.
-Internally, PySparkle leverages the capabilities of the [Great Expectations](https://greatexpectations.io/)
+packaged within our [Datastacks](./datastacks.md) library.
+Internally, Datastacks leverages the capabilities of the [Great Expectations](https://greatexpectations.io/)
 library, an open-source Python-based library, to perform these checks.
 
 The design of the Data Quality processing is outlined in the following diagram.
@@ -37,10 +37,12 @@ The design of the Data Quality processing is outlined in the following diagram.
 
 ## Usage
 
-To perform data quality checks against a workload interactively, you can use the [Datastacks](./datastacks.md) CLI. Note, this also requires that the [Pysparkle environment variables](./pysparkle.md#pysparkle-environment-variables) are set:
+To perform data quality checks against a workload interactively, you can use the [Datastacks](./datastacks.md) CLI. Note, this also requires that the [Datastacks PySpark environment variables](./pyspark_utilities.md#prerequisites) are set:
 
 ```bash
 datastacks dq --help
+
+# Execute data quality checks using the provided config
 datastacks dq --config-path "ingest/Ingest_AzureSql_Example/data_quality/ingest_dq.json" --container config
 ```
 
@@ -71,8 +73,8 @@ Here is the description of the main elements:
     5. `validation_config`: A list of validation configurations where each configuration contains the following fields:
         1. `column_name`: Name of the validated column.
         2. `expectations`: List of expectations where each expectation has the following fields:
-            - `expectation_type`: Name of the Great Expectations [expectation class](https://greatexpectations.io/expectations/) to use.
-            - `expectation_kwargs`: The keyword arguments to pass to the expectation class.
+            * `expectation_type`: Name of the Great Expectations [expectation class](https://greatexpectations.io/expectations/) to use.
+            * `expectation_kwargs`: The keyword arguments to pass to the expectation class.
 
 ### Example
 

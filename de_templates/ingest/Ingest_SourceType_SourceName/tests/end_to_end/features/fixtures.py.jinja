@@ -2,12 +2,12 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 from behave import fixture
 from behave.runner import Context
-from utils.constants import (
+from datastacks.constants import (
     ADLS_URL,
     RAW_CONTAINER_NAME,
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
 )
-from utils.azure.adls import filter_directory_paths_adls, delete_directories_adls
+from datastacks.azure.adls import filter_directory_paths_adls, delete_directories_adls
 
 
 @fixture

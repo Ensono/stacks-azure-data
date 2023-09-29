@@ -1,7 +1,7 @@
 ---
 id: example_data_source
 title: Example Data Source
-sidebar_label: 5. Example Data Source
+sidebar_label: 6. Example Data Source
 hide_title: false
 hide_table_of_contents: false
 description: Setting up and using the example data source
@@ -12,14 +12,14 @@ keywords:
   - testing
 ---
 
-When deploying a Stacks data platform, you may optionally include an Azure SQL database. This database is intended to be used for experimenting and testing ingest processes with the Stacks data platform. The database will be deployed into the same resource groups as the core data platform resources, named for example:
+When deploying a Ensono Stacks data platform, you may optionally include an Azure SQL database. This database is intended to be used for experimenting and testing ingest processes with the Ensono Stacks data platform. The database will be deployed into the same resource groups as the core data platform resources, named for example:
 
 * **SQL server name:** amidostacksdeveuwdesql.database.windows.net
 * **SQL database name:** sqldbtest
 
 ## Example dataset
 
-The database can be populated with any dataset you wish for developing and testing Stacks.
+The database can be populated with any dataset you wish for developing and testing Ensono Stacks.
 
 The examples contained in the Getting Started documentation are based around populating the sample database with data
 from [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset), which contains metadata and ratings for approximately 45,000 movies released
