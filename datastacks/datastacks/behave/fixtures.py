@@ -1,3 +1,4 @@
+import logging
 from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 from behave import fixture
@@ -8,6 +9,8 @@ from datastacks.constants import (
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
 )
 from datastacks.azure.adls import filter_directory_paths_adls, delete_directories_adls
+
+logger = logging.getLogger(__name__)
 
 
 @fixture
@@ -20,7 +23,7 @@ def azure_adls_clean_up(context: Context, ingest_directory_name: str):
     """
     credential = DefaultAzureCredential()
     adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
-    print("BEFORE SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA")
+    logger.info("BEFORE SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA")
     automated_test_output_directory_paths = filter_directory_paths_adls(
         adls_client,
         RAW_CONTAINER_NAME,
@@ -32,7 +35,7 @@ def azure_adls_clean_up(context: Context, ingest_directory_name: str):
 
     yield context
 
-    print("AFTER SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA")
+    logger.info("AFTER SCENARIO. DELETING ANY AUTOMATED TEST OUTPUT DATA")
 
     automated_test_output_directory_paths = filter_directory_paths_adls(
         adls_client,
