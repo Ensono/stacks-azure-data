@@ -108,7 +108,6 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   subresource_name   = "databricks_ui_api"
 
   depends_on = [module.adb]
-
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
@@ -118,6 +117,35 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   subresource_name   = "browser_authentication"
 
   depends_on = [module.adb]
+}
+
+resource "null_resource" "approve_private_endpoints" {
+  for_each = {
+    blob = module.adls_default.storage_account_ids[0]
+    adls = module.adls_default.storage_account_ids[1]
+    kv   = module.kv_default.id
+    sql  = module.sql.sql_server_id
+    adb  = module.adb.adb_databricks_id
+    # Add more resources as needed
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+        text=$(az network private-endpoint-connection list --id ${each.value})
+        pendingPE=`echo $text | jq -r '.[] | select(.properties.privateLinkServiceConnectionState.status == "Pending") | .id'`
+        for id in $pendingPE
+        do
+            echo "$id is in a pending state"
+            az network private-endpoint-connection approve --id "$id" --description "Approved"
+        done
+    EOT
+  }
+  depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
 
 resource "azurerm_role_assignment" "kv_role" {
