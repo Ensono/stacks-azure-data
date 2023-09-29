@@ -279,7 +279,7 @@ variable "vmss_instances" {
 }
 
 variable "vmss_admin_username" {
-  default     = "rishi"
+  default     = "adminuser"
   type        = string
   description = "Sets the admin user name. This is used if remote access is required to a VM instance."
 }
