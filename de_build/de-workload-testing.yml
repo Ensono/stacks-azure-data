@@ -4,7 +4,7 @@ parameters:
   workingDirectory: './'
   unitTestLocation: './$(test_unit_src)'
   e2eTestLocation: './$(test_end_to_end_src)'
-  junitLocation: './$(junit_src)'
+  junitLocation: '$(junit_src)'
   azureSubscriptionId: ''
   azureResourceGroupName: ''
   azureDataFactoryName: ''
@@ -37,7 +37,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}/unit.xml"
       workingDirectory: '${{ parameters.workingDirectory }}'
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
@@ -48,7 +48,7 @@ steps:
       targetType: inline
       script: |
         if [ -d "${{ parameters.e2eTestLocation }}" ]; then
-          poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "${{ parameters.junitLocation }}"
+          poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}"
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
@@ -68,6 +68,6 @@ steps:
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
     inputs:
-      testResultsFiles: "**/*.xml"
+      testResultsFiles: "*.xml"
       searchFolder: '$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}'
     condition: succeededOrFailed()
