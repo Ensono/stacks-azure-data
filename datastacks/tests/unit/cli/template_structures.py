@@ -14,7 +14,6 @@ EXPECTED_FILE_LIST = [
     "tests/end_to_end/features/__init__.py",
     "tests/end_to_end/features/azure_data_ingest.feature",
     "tests/end_to_end/features/environment.py",
-    "tests/end_to_end/features/fixtures.py",
     "tests/end_to_end/__init__.py",
     "tests/unit/__init__.py",
     "de-ingest-ado-pipeline.yml",
