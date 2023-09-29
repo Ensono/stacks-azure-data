@@ -5,17 +5,19 @@
 variable "name_company" {
   description = "Company Name - should/will be used in conventional resource naming"
   type        = string
+  default     = "amido"
 }
 
 variable "name_project" {
   description = "Project Name - should/will be used in conventional resource naming"
   type        = string
+  default     = "stacks"
 }
 
 variable "name_component" {
   description = "Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing`"
   type        = string
-  default     = "data"
+  default     = "de"
 }
 
 
@@ -38,7 +40,7 @@ variable "tags" {
 
 variable "resource_group_location" {
   type    = string
-  default = "uksouth"
+  default = "westeurope"
 }
 
 
@@ -64,7 +66,7 @@ variable "location_name_map" {
 ############################################
 
 variable "enable_private_networks" {
-  default     = false
+  default     = true
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
@@ -73,7 +75,7 @@ variable "enable_private_networks" {
 variable "link_dns_network" {
   description = "weather link DNS with vnets"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "network_details" {
@@ -193,6 +195,53 @@ variable "network_details" {
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         }
     } },
+    "amido-stacks-euw-de-qa-prod" = {
+      name                = "amido-stacks-euw-de-qa-prod"
+      address_space       = ["10.6.0.0/16"]
+      dns_servers         = []
+      resource_group_name = "amido-stacks-euw-de-qa-prod-network"
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "amido-stacks-euw-de-qa-prod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-prod-pe"
+          sub_address_prefix                            = ["10.6.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "amido-stacks-euw-de-qa-prod" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-prod"
+          sub_address_prefix                            = ["10.6.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } },
+
+    "amido-stacks-euw-de-test-nonprod" = {
+      name                = "amido-stacks-euw-de-test-nonprod"
+      address_space       = ["10.7.0.0/16"]
+      dns_servers         = []
+      resource_group_name = "amido-stacks-euw-de-test-nonprod-network"
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "amido-stacks-euw-de-test-nonprod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-test-nonprod-pe"
+          sub_address_prefix                            = ["10.7.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "amido-stacks-euw-de-test-nonprod" = {
+          sub_name                                      = "amido-stacks-euw-de-test-nonprod"
+          sub_address_prefix                            = ["10.7.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } },
 
   }
 }
@@ -226,13 +275,14 @@ variable "dns_zone_name" {
 ############################################
 
 variable "vmss_instances" {
-  default     = 1
+  default     = 2
   type        = number
   description = "Sets the default number of VM instances running in the VMSS."
 }
 
 variable "vmss_admin_username" {
-  default     = "adminuser"
+  #default     = "adminuser"
+  default     = "rishi"
   type        = string
   description = "Sets the admin user name. This is used if remote access is required to a VM instance."
 }
