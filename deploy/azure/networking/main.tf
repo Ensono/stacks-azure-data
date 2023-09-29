@@ -1,3 +1,7 @@
+locals {
+  # Get the hub network name which will be used later to deploy the vmss into it
+  hub_network_name = [for network in var.network_details : network.name if network.is_hub == true][0]
+}
 
 # Naming convention
 module "default_label" {
@@ -27,10 +31,10 @@ module "vmss" {
   count                        = var.enable_private_networks ? 1 : 0
   source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss?ref=update-agent-version"
   vmss_name                    = module.default_label.id
-  vmss_resource_group_name     = module.networking.vnets["amido-stacks-euw-de-hub"].vnet_resource_group_name
+  vmss_resource_group_name     = module.networking.vnets[local.hub_network_name].vnet_resource_group_name
   vmss_resource_group_location = var.resource_group_location
   vnet_name                    = module.networking.hub_net_name
-  vnet_resource_group          = module.networking.vnets["amido-stacks-euw-de-hub"].vnet_resource_group_name
+  vnet_resource_group          = module.networking.vnets[local.hub_network_name].vnet_resource_group_name
   subnet_name                  = var.vmss_subnet_name
   vmss_instances               = var.vmss_instances
   vmss_admin_username          = var.vmss_admin_username
