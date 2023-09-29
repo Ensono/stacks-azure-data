@@ -273,7 +273,7 @@ variable "dns_zone_name" {
 ############################################
 
 variable "vmss_instances" {
-  default     = 2
+  default     = 1
   type        = number
   description = "Sets the default number of VM instances running in the VMSS."
 }
