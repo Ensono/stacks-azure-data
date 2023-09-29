@@ -3,18 +3,17 @@ import logging
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import avg
 
+from datastacks.logger import setup_logger
 from datastacks.pyspark.etl import (
     get_spark_session_for_adls,
-    read_latest_rundate_data,
 )
-from datastacks.logger import setup_logger
-from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta
+from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta, read_datasource
 from datastacks.pyspark.storage_utils import get_adls_file_url
 
 WORKLOAD_NAME = "gold_movies_example"
 SILVER_CONTAINER = "staging"
 GOLD_CONTAINER = "curated"
-SOURCE_DATA_TYPE = "parquet"
+SOURCE_DATA_TYPE = "delta"
 INPUT_PATH_PATTERN = "movies/{table_name}"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
@@ -54,10 +53,10 @@ def etl_main() -> None:
     spark = get_spark_session_for_adls(WORKLOAD_NAME)
 
     def read_data(table_name: str) -> DataFrame:
-        return read_latest_rundate_data(
+        table_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name=table_name))
+        return read_datasource(
             spark,
-            SILVER_CONTAINER,
-            INPUT_PATH_PATTERN.format(table_name=table_name),
+            table_url,
             datasource_type=SOURCE_DATA_TYPE,
         )
 
