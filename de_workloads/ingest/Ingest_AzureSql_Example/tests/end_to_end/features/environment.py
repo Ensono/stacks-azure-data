@@ -2,7 +2,7 @@ from behave import use_fixture
 from behave.model import Scenario
 from behave.runner import Context
 
-from fixtures import azure_adls_clean_up
+from datastacks.behave.fixtures import azure_adls_clean_up
 
 SQL_DB_INGEST_DIRECTORY_NAME = "Ingest_AzureSql_Example"
 
