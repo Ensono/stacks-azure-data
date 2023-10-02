@@ -17,33 +17,24 @@ SOURCE_DATA_TYPE = "delta"
 INPUT_PATH_PATTERN = "movies/{table_name}"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
-logger_library = "pysparkle"
+logger_library = "datastacks"
 logger = logging.getLogger(logger_library)
 
 
-def average_ratings(ratings: DataFrame) -> DataFrame:
-    """Calculate the average rating for each movie.
-
-    Args:
-        ratings: Input DataFrame containing movie ratings.
-
-    Returns:
-        DataFrame with average ratings for each movie.
-    """
-    return ratings.groupBy("movie_id").agg(avg("rating").alias("rating")).withColumnRenamed("movie_id", "id")
-
-
-def join_metadata_and_ratings(metadata: DataFrame, avg_ratings: DataFrame) -> DataFrame:
+def join_metadata_and_average_ratings(metadata: DataFrame, ratings: DataFrame) -> DataFrame:
     """Join movie metadata and average ratings DataFrames.
 
     Args:
         metadata: Input DataFrame containing movie metadata.
-        avg_ratings: Input DataFrame containing average ratings for each movie.
+        ratings: Input DataFrame containing all ratings for each movie.
 
     Returns:
         DataFrame containing movie metadata with average ratings.
     """
-    return metadata.join(avg_ratings, "id", "left")
+    avg_ratings = ratings.groupBy("movie_id").agg(avg("rating").alias("rating")).withColumnRenamed("movie_id", "id")
+    return metadata.drop(
+        "belongs_to_collection", "genres", "production_companies", "production_countries", "spoken_languages"
+    ).join(avg_ratings, "id", "left")
 
 
 def etl_main() -> None:
@@ -52,24 +43,17 @@ def etl_main() -> None:
 
     spark = get_spark_session_for_adls(WORKLOAD_NAME)
 
-    def read_data(table_name: str) -> DataFrame:
-        table_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name=table_name))
-        return read_datasource(
-            spark,
-            table_url,
-            datasource_type=SOURCE_DATA_TYPE,
-        )
-
     logger.info(f"Reading data from {SILVER_CONTAINER} container...")
-    ratings = read_data("ratings_small")
-    metadata = read_data("movies_metadata")
+    ratings_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name="ratings_small"))
+    ratings = read_datasource(spark, ratings_url, datasource_type=SOURCE_DATA_TYPE)
+    metadata_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name="movies_metadata"))
+    metadata = read_datasource(spark, metadata_url, datasource_type=SOURCE_DATA_TYPE)
 
     logger.info("Transforming data...")
-    avg_ratings = average_ratings(ratings)
-    output_df = join_metadata_and_ratings(metadata, avg_ratings)
+    output_df = join_metadata_and_average_ratings(metadata, ratings)
 
     logger.info(f"Saving data to {GOLD_CONTAINER} container...")
-    output_filepath = get_adls_file_url(GOLD_CONTAINER, "movies")
+    output_filepath = get_adls_file_url(GOLD_CONTAINER, OUTPUT_PATH_PATTERN.format(table_name="movies_ratings_agg"))
     save_dataframe_as_delta(spark, output_df, output_filepath, overwrite=True)
 
     logger.info(f"Finished: {WORKLOAD_NAME} processing.")
