@@ -71,7 +71,7 @@ variable "enable_private_networks" {
 
 
 variable "link_dns_network" {
-  description = "weather link DNS with vnets"
+  description = "Should the DNS be linked with the VNETs?"
   type        = bool
   default     = false
 }
