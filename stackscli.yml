@@ -1,13 +1,18 @@
 pipeline:
   - type: azdo
     files:
-      - name: build
-        path: build/azDevOps/azure/templates/air-infrastructure-data.yml
       - name: variable
         path: build/common-vars.yml
     templates:
       - name: variable
         path: build/common-vars-template.yml
+  - type: azdo
+    files:
+      - name: variable
+        path: build/azDevOps/azure/air-infrastructure-data-template.yml
+    templates:
+      - name: variable
+        path: build/azDevOps/azure/air-infrastructure-data.yml
 
 setup:
   operations:
