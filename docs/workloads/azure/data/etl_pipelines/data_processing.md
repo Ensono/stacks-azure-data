@@ -46,7 +46,7 @@ Within Data Factory, the processing pipelines are kept within the `Process` fold
 
 ![ADF_SilverPipelinesList.png](../images/ADF_SilverPipelinesList.png)
 
-In Data Factory a standard data processing pipeline is as simple as this example:
+In Data Factory a data processing pipeline can be as simple as this example:
 
 ![ADF_Silver.png](../images/ADF_silver.png)
 
