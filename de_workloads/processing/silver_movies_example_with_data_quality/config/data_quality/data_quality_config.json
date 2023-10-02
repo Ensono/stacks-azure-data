@@ -1,12 +1,12 @@
 {
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "movies_dataset",
-    "dq_output_path": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/",
+    "dq_output_path": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/movies/",
     "datasource_config": [
         {
             "datasource_name": "movies_metadata",
             "datasource_type": "delta",
-            "data_location": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/movies_metadata",
+            "data_location": "abfss://staging@{ADLS_ACCOUNT}.dfs.core.windows.net/movies/movies_metadata",
             "expectation_suite_name": "movies_metadata_suite",
             "validation_config": [
                 {
