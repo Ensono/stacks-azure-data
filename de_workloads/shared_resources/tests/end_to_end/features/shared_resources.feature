@@ -20,5 +20,5 @@ Feature:Data Factory Shared Resources
 
     Examples: Generate query
     |parameters|
-    |{"ingest_entity_config" : "{"version":1,"display_name":"movies.keywords","enabled":true,"schema":"movies","table":"keywords","columns":"[id],[keywords]","load_type":"full","delta_date_column":null,"delta_upsert_key":null}", "window_start": "2020-01-01", "window_end": "2020-12-31"}|
-    |{"ingest_entity_config" : "{"version":1,"display_name":"movies.ratings_small","enabled":true,"schema":"movies","table":"ratings_small","columns":"[userId],[movieId],[rating],[timestamp]","load_type":"delta","delta_date_column":"DATEADD(SECOND,[timestamp],'1970-01-01')","delta_upsert_key":"[userId],[movieId]"}", "window_start": "2020-01-01", "window_end": "2020-12-31"}|
+    |{"ingest_entity_config" : {"version":1,"display_name":"movies.keywords","enabled":true,"schema":"movies","table":"keywords","columns":"[id],[keywords]","load_type":"full","delta_date_column":null,"delta_upsert_key":null}, "window_start": "2020-01-01", "window_end": "2020-12-31"}|
+    |{"ingest_entity_config" : {"version":1,"display_name":"movies.ratings_small","enabled":true,"schema":"movies","table":"ratings_small","columns":"[userId],[movieId],[rating],[timestamp]","load_type":"delta","delta_date_column":"DATEADD(SECOND,[timestamp],'1970-01-01')","delta_upsert_key":"[userId],[movieId]"}, "window_start": "2020-01-01", "window_end": "2020-12-31"}|
