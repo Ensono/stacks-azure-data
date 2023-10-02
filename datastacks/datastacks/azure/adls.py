@@ -1,4 +1,7 @@
+import logging
 from azure.storage.filedatalake import DataLakeServiceClient
+
+logger = logging.getLogger(__name__)
 
 
 def filter_directory_paths_adls(
@@ -37,7 +40,7 @@ def delete_directories_adls(adls_client: DataLakeServiceClient, container_name: 
         directory_paths: List of directories to delete
     """
     for directory_path in directory_paths:
-        print(f"ATTEMPTING TO DELETE DIRECTORY: {directory_path}")
+        logger.info(f"ATTEMPTING TO DELETE DIRECTORY: {directory_path}")
         delete_directory_adls(adls_client, container_name, directory_path)
 
 
@@ -53,7 +56,7 @@ def delete_directory_adls(adls_client: DataLakeServiceClient, container_name, di
     if adls_directory_client.exists():
         adls_directory_client.delete_directory()
     else:
-        print(f"The Following Directory Was Not Found: {directory_path}")
+        logger.info(f"The Following Directory Was Not Found: {directory_path}")
 
 
 def all_files_present_in_adls(
