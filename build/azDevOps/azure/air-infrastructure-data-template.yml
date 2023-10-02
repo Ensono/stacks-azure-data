@@ -48,7 +48,7 @@ stages:
                 sudo rm -rf $(Build.SourcesDirectory)/*
           - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              TaskctlVersion: {{`${{ variables.TaskctlVersion }}`}}
 
           - task: Bash@3
             displayName: "TaskCTL: Setup"
@@ -105,7 +105,7 @@ stages:
                       sudo rm -rf $(Build.SourcesDirectory)/*
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+                    TaskctlVersion: {{`${{ variables.TaskctlVersion }}`}}
                 - bash: |
                     sudo apt-get install -y jq
                     ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
