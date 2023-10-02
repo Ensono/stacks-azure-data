@@ -71,7 +71,7 @@ variable "enable_private_networks" {
 
 
 variable "link_dns_network" {
-  description = "weather link DNS with vnets"
+  description = "Should the DNS be linked with the VNETs?"
   type        = bool
   default     = false
 }
@@ -193,6 +193,53 @@ variable "network_details" {
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         }
     } },
+    "amido-stacks-euw-de-qa-prod" = {
+      name                = "amido-stacks-euw-de-qa-prod"
+      address_space       = ["10.6.0.0/16"]
+      dns_servers         = []
+      resource_group_name = "amido-stacks-euw-de-qa-prod-network"
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "amido-stacks-euw-de-qa-prod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-prod-pe"
+          sub_address_prefix                            = ["10.6.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "amido-stacks-euw-de-qa-prod" = {
+          sub_name                                      = "amido-stacks-euw-de-qa-prod"
+          sub_address_prefix                            = ["10.6.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } },
+
+    "amido-stacks-euw-de-test-nonprod" = {
+      name                = "amido-stacks-euw-de-test-nonprod"
+      address_space       = ["10.7.0.0/16"]
+      dns_servers         = []
+      resource_group_name = "amido-stacks-euw-de-test-nonprod-network"
+      is_hub              = false
+      link_to_private_dns = true
+      subnet_details = {
+        "amido-stacks-euw-de-test-nonprod-pe" = {
+          sub_name                                      = "amido-stacks-euw-de-test-nonprod-pe"
+          sub_address_prefix                            = ["10.7.1.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        },
+        "amido-stacks-euw-de-test-nonprod" = {
+          sub_name                                      = "amido-stacks-euw-de-test-nonprod"
+          sub_address_prefix                            = ["10.7.2.0/24"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
+        }
+    } },
 
   }
 }
@@ -226,7 +273,7 @@ variable "dns_zone_name" {
 ############################################
 
 variable "vmss_instances" {
-  default     = 1
+  default     = 2
   type        = number
   description = "Sets the default number of VM instances running in the VMSS."
 }
