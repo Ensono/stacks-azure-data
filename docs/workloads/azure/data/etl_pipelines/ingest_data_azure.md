@@ -25,6 +25,24 @@ The solution contains the following example data ingest workload:
 
 - [ingest_azure_sql_example](https://github.com/ensono/stacks-azure-data/tree/main/de_workloads/ingest/ingest_azure_sql_example): Ingests data from the [example Azure SQL source](../getting_started/example_data_source.md) and lands data into the data lake Bronze layer.
 
+## Data source types
+
+The example ingest pipeline is based around an Azure SQL data source. Further data source types will be continue added as templates in [Datastacks](./datastacks.md) in future. If the data source type you require is not yet available, the existing templates are adaptable for most other data source types with minimal modifications.
+
+The following files within the workload would need to be updated to modify an ingest workload to be based around a different data source type:
+
+- `data_factory/adf_linked_services` - The Linked Service establishes the connection to the data source. The linked service `type` property must be specific to the data source type.
+- `data_factory/adf_datasets` - The Dataset needs to define the data that will be retrieved from the Linked Service. It should be parameterised wherever possible.
+- `data_factory/pipelines/ARM_IngestTemplate.json` - The Copy Activity in the pipeline may need modifying to reflect the new Dataset type.
+
+Refer to Microsoft documentation for up-to-date details of [connector types supported by Data Factory](https://learn.microsoft.com/en-us/azure/data-factory/connector-overview), and Terraform documentation for adding [custom linked services](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_factory_linked_custom_service) and [custom datasets](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_factory_custom_dataset).
+
+:::note Updating Data Factory resources
+
+The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them be overwritten when pipelines are next run. If you wish to update Data Factory resources, update the appropriate files within the workload (under the `data_factory` path).
+
+:::
+
 ## Pipeline overview
 
 The diagram below gives an overview of the ingestion pipeline design.
@@ -36,11 +54,15 @@ The diagram below gives an overview of the ingestion pipeline design.
 The configuration files for the workload are
 stored in the pipeline's [config](https://github.com/ensono/stacks-azure-data/tree/main/de_workloads/ingest/Ingest_AzureSql_Example/config) directory.
 
-JSON format is used for the configuration files. Our blueprint includes a sample configuration definition for the data ingestion sources
-([ingest_azure_sql_example.json](https://github.com/ensono/stacks-azure-data/blob/main/de_workloads/ingest/ingest_azure_sql_example/config/ingest_sources/ingest_config.json))
+JSON format is used for the configuration files. Our blueprint includes a sample configuration definition for the data ingestion sources, e.g.
+([ingest_config.json](https://github.com/ensono/stacks-azure-data/blob/main/de_workloads/ingest/ingest_azure_sql_example/config/ingest_sources/ingest_config.json))
 and its schema ([ingest_config_schema.json](https://github.com/ensono/stacks-azure-data/blob/main/de_workloads/ingest/ingest_azure_sql_example/config/schema/ingest_config_schema.json)).
 
-The sample ingest pipeline is based around an Azure SQL data source, however the approach used is adaptable for most other data source types with minimal modifications. Different data data source types would be expected to have the same JSON keys, except for under `ingest_entities`, where different keys will be required dependent on the data source type.
+:::tip
+
+The `ingest_config.json` example is based upon an Azure SQL data source. Different data data source types would be expected to have the same JSON keys, except for under `ingest_entities`, where different keys will be required dependent on the data source type.
+
+:::
 
 See the descriptions of the example JSON config file below:
 
