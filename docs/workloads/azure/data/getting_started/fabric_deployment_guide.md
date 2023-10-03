@@ -4,7 +4,7 @@ title: Fabric Lakehouse Deployment
 sidebar_label: 9. Fabric Lakehouse Deployment
 hide_title: false
 hide_table_of_contents: false
-description: Deployment of common Azure Data Factory resources shared by data pipelines
+description: Deployment of Microsoft Fabric Lakehouse through Azure Portal
 keywords:
   - data
   - infrastructure
@@ -13,7 +13,7 @@ keywords:
   - fabric
 ---
 
-This section provides an overview of deploying microsoft fabric through Azure portal for Ensono Stacks Data Platform.
+This section provides an overview of deploying Microsoft Fabric through Azure portal for Ensono Stacks Data Platform.
 
 
 ## Step 1: Create fabric capacity resource
@@ -33,39 +33,43 @@ This section provides an overview of deploying microsoft fabric through Azure po
 
 ## Step 2: Create a Microsoft Fabric Workspace
 
-Workspaces are places to collaborate with colleagues to create collections of items such as lakehouses, warehouses, and reports.
+Workspaces are places to collaborate with colleagues to create collections of items such as lakehouses, warehouses, and reports. please refer below Microsoft link for more details https://learn.microsoft.com/en-us/fabric/get-started/workspaces
 
-1. Sign-in to your organization's PowerBI portal at https://app.powerbi.com. you would need to ask your IT admin to grant a PowerBI pro license and workspace admin rights on your account to create workspaces.
+1. Sign-in to your organization's PowerBI portal by login into https://app.fabric.microsoft.com and choose PowerBI . you would need to ask your IT admin to grant a PowerBI pro license and workspace admin rights on your account to create workspaces.
 
 2. Select workspaces from left plane and choose new workspace from bottom.
 ![Ensono Stacks Fabric workspace](../images/fabric_workspaces_powerbi.png)
 
-3. Enter the name of workspace and under advanced options choose "fabric" for license mode and scroll down for step 4.
+3. Enter the name of workspace as per recommended naming pattern `companyname-projectname-stage-region-component` (for example: `amido-stacks-dev-euw-fabric`) and under advanced options choose "fabric" for license mode and scroll down for step 4.
 ![Ensono Stacks Fabric workspace](../images/fabric_choose_fabric.png)
 
 4. Choose the Azure fabric capacity resource created at ## Step 1 and hit "Apply".
 ![Ensono Stacks Fabric capacity link](../images/fabric_capacity_link.png)
 
-5. Select newly created workspace from left workspaces panel.
+## Step 3: Step 3: Create a Lakehouse
+
+1. Sign-in to your organization's PowerBI portal by login into https://app.fabric.microsoft.com and choose PowerBI . you would need to ask your IT admin to grant a PowerBI pro license and workspace admin rights on your account to create workspaces.
+
+2. Select newly created workspace from left workspaces panel.
 ![Ensono Stacks Fabric select workspace](../images/fabric_select_workspace.png)
 
-6. From header menu choose New and select "more options"
+3. From header menu choose New and select "more options"
 ![Ensono Stacks Fabric options](../images/fabric_more_options.png)
 
-7. Choose Lakehouse, and provide Name.
+4. Choose Lakehouse, and provide Name.
 ![Ensono Stacks Fabric new lakehouse](../images/fabric_new_lakehouse.png)
 
-8. Right click on files option on left side plane and choose "New shortcut".
+5. Right click on files option on left side plane and choose "New shortcut".
 ![Ensono Stacks Fabric new shortcut](../images/fabric_create_shortcut.png)
 
-9. Under "External sources" select "Azure Data Lake Storage Gen2".
+6. Under "External sources" select "Azure Data Lake Storage Gen2".
 ![Ensono Stacks Fabric adls shortcut](../images/fabric_dfs_shortcut.png)
 
-10. Provide connection details for your ADLS storage account and hit "Next".
+7. Provide connection details for your ADLS storage account and hit "Next".
 ![Ensono Stacks Fabric adls connection](../images/fabric_dfs_connection.png)
-  1. URL: the url for ADLS gen2 endpoint to connect.
+  1. URL: the url for ADLS gen2 endpoint to connect. please refer this as an example "https://amidostacksdeveuwadls.dfs.core.windows.net/"
   2. connection ( leave blank)
   3. connection name ( can be left as is)
-  4. Authentication type, can very depending on organization's need, SAS token is advised.
+  4. Authentication type, can very depending on organization's need, SAS token is advised. Please refer below Microsoft link for generating SAS token https://learn.microsoft.com/en-us/azure/ai-services/translator/document-translation/how-to-guides/create-sas-tokens?tabs=Containers
 
-## Step 3: TO be ADDED by DE
+## Step 4: TO be ADDED by DE
