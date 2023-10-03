@@ -75,7 +75,7 @@ stages:
   - stage: {{ .Name }}
     dependsOn: {{ range .DependsOn }}
       - {{ . }}{{ end }}
-    condition: and(succeeded(), {{if .Type eq Development}}ne{{else}}eq{{end}}(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: and(succeeded(), {{if (eq .Type "Development")}}ne{{else}}eq{{end}}(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
       - group: stacks-credentials-{{ .Name }}-kv
       - group: amido-stacks-euw-de-{{ .Name }}-network
