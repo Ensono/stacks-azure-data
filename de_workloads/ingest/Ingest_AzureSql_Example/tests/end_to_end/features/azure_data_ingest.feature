@@ -5,9 +5,9 @@ Feature:Azure Data Ingest
   Scenario Outline: Data Factory Ingest SQL Database into ADLS with Data Quality
     Given the ADF pipeline Ingest_AzureSql_Example_DQ has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
-    And the ADF pipeline Ingest_AzureSql_Example_DQ has finished with state Succeeded
-    And the ADF pipeline completed in less than 900 seconds
-    Then the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
+    Then the ADF pipeline Ingest_AzureSql_Example_DQ has finished with state Succeeded
+    And the ADF pipeline Ingest_AzureSql_Example_DQ completed in less than 900 seconds
+    And the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
 
     Examples: Output files
     |parameters|output_files|
@@ -17,9 +17,9 @@ Feature:Azure Data Ingest
   Scenario Outline: Data Factory Ingest SQL Database into ADLS
     Given the ADF pipeline Ingest_AzureSql_Example has been triggered with <parameters>
     And I poll the pipeline every 10 seconds until it has completed
-    And the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
-    And the ADF pipeline completed in less than 480 seconds
-    Then the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
+    Then the ADF pipeline Ingest_AzureSql_Example has finished with state Succeeded
+    And the ADF pipeline Ingest_AzureSql_Example completed in less than 480 seconds
+    And the files <output_files> are present in the ADLS container raw in the directory Ingest_AzureSql_Example
 
     Examples: Output files
     |parameters|output_files|
