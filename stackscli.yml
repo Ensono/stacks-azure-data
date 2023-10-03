@@ -13,6 +13,13 @@ pipeline:
     templates:
       - name: variable
         path: build/azDevOps/templates/air-infrastructure-data-template.yml
+  - type: azdo
+    files:
+      - name: variable
+        path: environments.json
+    templates:
+      - name: variable
+        path: environments-template.json
 
 setup:
   operations:
