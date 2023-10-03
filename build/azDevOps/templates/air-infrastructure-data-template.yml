@@ -73,8 +73,7 @@ stages:
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
 {{ range .Input.Environment }}
   - stage: {{ .Name }}
-    dependsOn: 
-    {{ if eq (len .DependsOn) 0 }}
+    dependsOn: {{ if eq (len .DependsOn) 0 }}
       - Build
     {{ end }}{{ range .DependsOn }}
       - {{ . }}{{ end }}
