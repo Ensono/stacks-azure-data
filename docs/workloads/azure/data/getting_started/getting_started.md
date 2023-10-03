@@ -27,3 +27,4 @@ A more [detailed workflow diagram](../architecture/architecture_data_azure.md#de
 6. (Optional) [Example Data Source](./example_data_source.md) - To assist with the 'Getting Started' steps, you may wish to setup the Example Data Source.
 7. [Data Ingest Pipeline Deployment](./ingest_pipeline_deployment_azure.md) - Generate and deploy a data ingest pipeline using the Datastacks CLI.
 8. [Data Processing Pipeline Deployment](./processing_pipeline_deployment_azure.md) - Generate and deploy a data processing pipeline using the Datastacks CLI.
+9. [Microsoft Fabric Deployment](./fabric_deployment_guide.md) - Step by step guide to deploy a Microsoft Fabric capcity. 
