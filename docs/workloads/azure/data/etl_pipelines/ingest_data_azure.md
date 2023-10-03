@@ -27,7 +27,7 @@ The solution contains the following example data ingest workload:
 
 ## Data source types
 
-The example ingest pipeline is based around an Azure SQL data source. Further data source types will be continue added as templates in [Datastacks](./datastacks.md) in future. If the data source type you require is not yet available, the existing templates are adaptable for most other data source types with minimal modifications.
+The example ingest pipeline is based around an Azure SQL data source. Further data source types will continue to be added as templates in [Datastacks](./datastacks.md) in future. If the data source type you require is not yet available, the existing templates are adaptable for most other data source types with minimal modifications.
 
 The following files within the workload would need to be updated to modify an ingest workload to be based around a different data source type:
 
@@ -35,9 +35,11 @@ The following files within the workload would need to be updated to modify an in
 - `data_factory/adf_datasets` - The Dataset needs to define the data that will be retrieved from the Linked Service. It should be parameterised wherever possible.
 - `data_factory/pipelines/ARM_IngestTemplate.json` - The Copy Activity in the pipeline may need modifying to reflect the new Dataset type.
 
+See [Data Factory development quickstart](../getting_started/dev_quickstart_data_azure.md#azure-data-factory-development) for further information on updating Data Factory resources.
+
 :::note Updating Data Factory resources
 
-The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them being overwritten when deployment pipelines are next run. See [Data Factory development quickstart](../getting_started/dev_quickstart_data_azure.md#azure-data-factory-development) for further information on updating Data Factory resources.
+The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them being overwritten when deployment pipelines are next run.
 
 :::
 
