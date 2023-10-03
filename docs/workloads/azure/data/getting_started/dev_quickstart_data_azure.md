@@ -66,7 +66,11 @@ make pre_commit
 
 ## (Optional) PySpark development in Databricks
 
-ℹ️ This sub-section assumes that [Datastacks build & deployment](./datastacks_deployment_azure.md) has been completed - if you are working through the _getting started guide_ for the first time, you may skip this section.
+:::note Datastacks prerequisite
+
+This sub-section assumes that [Datastacks build & deployment](./datastacks_deployment_azure.md) has been completed - if you are working through the _getting started guide_ for the first time, you may skip this section.
+
+:::
 
 When developing with PySpark, you may wish to either:
 
@@ -83,10 +87,18 @@ To run scripts within a Databricks cluster, you will need to:
 
 ## Troubleshooting
 
-ℹ️ If you encounter PATH-related issues with Poetry when running the tests, we recommend installing Poetry using
+:::tip
+
+If you encounter PATH-related issues with Poetry when running the tests, we recommend installing Poetry using
 [pipx](https://python-poetry.org/docs/#installing-with-pipx) rather than the official installer.
 
-ℹ️ Running end-to-end tests from your local machine may require additional permissions in Azure. If the tests fail whilst clearing up directories, ensure that you have [Storage Blob Data Contributor](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor) access applied to your Azure Active Directory subscription. You may also be required to configure the [firewall rules](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security) for the storage account to whitelist your IP address.
+:::
+
+:::tip
+
+Running end-to-end tests from your local machine may require additional permissions in Azure. If the tests fail whilst clearing up directories, ensure that you have [Storage Blob Data Contributor](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor) access applied to your Azure Active Directory subscription. You may also be required to configure the [firewall rules](https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security) for the storage account to whitelist your IP address.
+
+:::
 
 ## Next steps
 

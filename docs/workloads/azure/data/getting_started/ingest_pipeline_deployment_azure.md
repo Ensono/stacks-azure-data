@@ -179,7 +179,11 @@ If successful, the new resources will now be deployed into the non-production re
 
 The Azure Data Factory resources can be viewed through the [Data Factory UI](https://adf.azure.com/). You may also wish to run/debug the newly generated pipeline from here (see [Microsoft documentation](https://learn.microsoft.com/en-us/azure/data-factory/iterative-development-debugging)).
 
-ℹ️ Note: The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them be overwritten when pipelines are next run. If you wish to update Data Factory resources, update the appropriate files within the workload (under the `data_factory` path).
+:::note Updating Data Factory resources
+
+The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them be overwritten when pipelines are next run. If you wish to update Data Factory resources, update the appropriate files within the workload (under the `data_factory` path).
+
+:::
 
 Continue to make any further amendments required to the new workload, re-running the DevOps pipeline as required. If including data quality checks, update the (`ingest_dq`) file in the repository with details of checks required on the data.
 
@@ -190,7 +194,11 @@ In the example pipeline templates:
 - Deployment to the non-production (nonprod) environment is triggered on a feature branch when a pull request is open
 - Deployment to the production (prod) environment is triggered on merging to the `main` branch, followed by manual approval of the release step.
 
-ℹ️ It is recommended in any data platform that processes for deploying and releasing across environments should be agreed and documented, ensuring sufficient review and quality assurance of any new workloads. The template CI/CD pipelines provided are based upon two platform environments (nonprod and prod) - but these may be amended depending upon the specific requirements of your project and organisation.
+:::tip
+
+It is recommended in any data platform that processes for deploying and releasing across environments should be agreed and documented, ensuring sufficient review and quality assurance of any new workloads. The template CI/CD pipelines provided are based upon two platform environments (nonprod and prod) - but these may be amended depending upon the specific requirements of your project and organisation.
+
+:::
 
 ## Next steps
 
