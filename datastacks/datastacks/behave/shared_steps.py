@@ -105,12 +105,13 @@ def check_all_files_present_in_adls(context: Context, output_files: str, contain
     assert all_files_present_in_adls(adls_client, container_name, test_directory_name, expected_files_list)
 
 
-@step("the ADF pipeline completed in less than {seconds} seconds")
-def check_adf_pipeline_completion_time(context: Context, seconds: str):
+@step("the ADF pipeline {pipeline_name} completed in less than {seconds} seconds")
+def check_adf_pipeline_completion_time(context: Context, pipeline_name: str, seconds: str):
     """Check if the Azure Data Factory pipeline completed within the specified time.
 
     Args:
         context: Behave context object.
+        pipeline_name: Name of the pipeline.
         seconds: The maximum allowed duration in seconds.
     """
     end_time = datetime.now()
