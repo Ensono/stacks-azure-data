@@ -19,10 +19,10 @@ This section provides an overview of deploying microsoft fabric through Azure po
 ## Step 1: Create fabric capacity resource
 
 1. Login to azure portal, search for Fabric and select Create.
-  
+
 ![Ensono Stacks Fabric look](../images/fabric_lookup.png)
 
-2. Create a fabric resource. 
+2. Create a fabric resource.
 ![Ensono Stacks Fabric create](../images/fabric_create.png)
    1. Select the subscription for the new fabric capacity.
    2. Create a new resource group for this fabric capacity, or select an existing one.
@@ -33,9 +33,9 @@ This section provides an overview of deploying microsoft fabric through Azure po
 
 ## Step 2: Create a Microsoft Fabric Workspace
 
-Workspaces are places to collaborate with colleagues to create collections of items such as lakehouses, warehouses, and reports. 
+Workspaces are places to collaborate with colleagues to create collections of items such as lakehouses, warehouses, and reports.
 
-1. Sign-in to your organization's PowerBI portal at https://app.powerbi.com. you would need to ask your IT admin to grant a PowerBI pro license and workspace admin rights on your account to create workspaces. 
+1. Sign-in to your organization's PowerBI portal at https://app.powerbi.com. you would need to ask your IT admin to grant a PowerBI pro license and workspace admin rights on your account to create workspaces.
 
 2. Select workspaces from left plane and choose new workspace from bottom.
 ![Ensono Stacks Fabric workspace](../images/fabric_workspaces_powerbi.png)
@@ -49,24 +49,23 @@ Workspaces are places to collaborate with colleagues to create collections of it
 5. Select newly created workspace from left workspaces panel.
 ![Ensono Stacks Fabric select workspace](../images/fabric_select_workspace.png)
 
-6. From header menu choose New and select "more options" 
+6. From header menu choose New and select "more options"
 ![Ensono Stacks Fabric options](../images/fabric_more_options.png)
 
 7. Choose Lakehouse, and provide Name.
 ![Ensono Stacks Fabric new lakehouse](../images/fabric_new_lakehouse.png)
 
-8. Right click on files option on left side plane and choose "New shortcut". 
+8. Right click on files option on left side plane and choose "New shortcut".
 ![Ensono Stacks Fabric new shortcut](../images/fabric_create_shortcut.png)
 
 9. Under "External sources" select "Azure Data Lake Storage Gen2".
 ![Ensono Stacks Fabric adls shortcut](../images/fabric_dfs_shortcut.png)
- 
+
 10. Provide connection details for your ADLS storage account and hit "Next".
 ![Ensono Stacks Fabric adls connection](../images/fabric_dfs_connection.png)
-  1. URL: the url for ADLS gen2 endpoint to connect. 
+  1. URL: the url for ADLS gen2 endpoint to connect.
   2. connection ( leave blank)
   3. connection name ( can be left as is)
-  4. Authentication type, can very depending on organization's need, SAS token is advised. 
+  4. Authentication type, can very depending on organization's need, SAS token is advised.
 
 ## Step 3: TO be ADDED by DE
-
