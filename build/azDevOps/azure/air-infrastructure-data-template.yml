@@ -75,7 +75,7 @@ stages:
   - stage: {{ .Name }}
     dependsOn: {{ range .DependsOn }}
       - {{ . }}{{ end }}
-    condition: and(succeeded(), {{if .Type=='Development'}}ne{{else}}eq{{end}}(variables['Build.SourceBranch'], 'refs/heads/main'))
+    condition: and(succeeded(), {{if .Type == 'Development'}}ne{{else}}eq{{end}}(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
       - group: stacks-credentials-{{ .Name }}-kv
       - group: amido-stacks-euw-de-{{ .Name }}-network
@@ -152,8 +152,8 @@ stages:
                     TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
                     TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
                     TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
-                    TF_VAR_public_network_access_enabled: {{if .Type=='Production'}}false{{else}}true{{end}}
-                    TF_VAR_browser_authentication_enabled: {{if .Type=='Production'}}true{{else}}false{{end}}
+                    TF_VAR_public_network_access_enabled: {{if .Type='Production'}}false{{else}}true{{end}}
+                    TF_VAR_browser_authentication_enabled: {{if .Type='Production'}}true{{else}}false{{end}}
                     TF_VAR_link_dns_spoke_network: true
                     TF_VAR_azure_client_secret: $(azure-client-secret)
   {{ end }}
