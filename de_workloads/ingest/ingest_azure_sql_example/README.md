@@ -1,4 +1,8 @@
-# Ingest Template Workload
+# Ingest Azure SQL Example Workload
+
+__Workload Type:__ Ingest
+
+__Description:__ Ingest from demo Azure SQL database using ingest config file, with data quality checks.
 
 Created in Stacks Azure Data Platform. Contains resources for:
 
