@@ -30,7 +30,7 @@ pydantic = "^1.10.12"
 delta-spark = "^2.4.0"
 
 [tool.poetry.scripts]
-datastacks = "datastacks.cli:cli"
+datastacks = "datastacks.cli.datastacks_cli:cli"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
