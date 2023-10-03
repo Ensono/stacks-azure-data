@@ -10,7 +10,7 @@ Feature:Data Factory Shared Resources
 
     Examples: Get config
     |parameters|
-    |{"config_container" : "config", "config_file": "test_config.json", "config_path": "shared_steps_test/ingest_sources"}|
+    |{"config_container" : "config", "config_file": "test_config.json", "config_path": "automated_test/shared_steps_test"}|
 
   Scenario Outline: Data Factory generate ingest query
     Given the ADF pipeline Generate_Ingest_Query has been triggered with <parameters>

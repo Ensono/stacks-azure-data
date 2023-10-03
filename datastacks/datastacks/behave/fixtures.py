@@ -74,7 +74,9 @@ def azure_blob_config_prepare(context: Context, data_target_directory: str, data
     config_filepaths = [f for f in listdir(data_local_directory) if isfile(join(data_local_directory, f))]
 
     for file in config_filepaths:
-        upload_file_to_blob(blob_service_client, CONFIG_CONTAINER_NAME, target_directory, file)
+        upload_file_to_blob(
+            blob_service_client, CONFIG_CONTAINER_NAME, target_directory, f"{data_local_directory}/{file}"
+        )
 
     yield context
 
