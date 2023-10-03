@@ -1,7 +1,7 @@
 ---
 id: Quick step by step guide for fabric deployment
 title: Quick step by step guide for fabric deployment
-sidebar_label: 2. Infrastructure Deployment
+sidebar_label: 9. Fabric Lakehouse Deployment
 hide_title: false
 hide_table_of_contents: false
 description: Deployment of common Azure Data Factory resources shared by data pipelines
