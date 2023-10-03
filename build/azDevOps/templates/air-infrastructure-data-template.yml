@@ -73,8 +73,8 @@ stages:
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
 {{ range .Input.Environment }}
   - stage: {{ .Name }}
-    dependsOn: {{ if eq (len .DependsOn) 0 }}
-      - Build {{ end }}{{ range .DependsOn }}
+    dependsOn:{{ if eq (len .DependsOn) 0 }}
+      - Build{{ end }}{{ range .DependsOn }}
       - {{ . }}{{ end }}
     condition: and(succeeded(), {{if (eq .Type "Development")}}ne{{else}}eq{{end}}(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
@@ -157,7 +157,7 @@ stages:
                     TF_VAR_browser_authentication_enabled: {{if (eq .Type "Production")}}true{{else}}false{{end}}
                     TF_VAR_link_dns_spoke_network: true
                     TF_VAR_azure_client_secret: $(azure-client-secret)
-  {{ end }}
+{{ end }}
   - stage: Release
     dependsOn:
       - Prod
