@@ -58,11 +58,6 @@ JSON format is used for the configuration files. Our blueprint includes a sample
 ([ingest_config.json](https://github.com/ensono/stacks-azure-data/blob/main/de_workloads/ingest/ingest_azure_sql_example/config/ingest_sources/ingest_config.json))
 and its schema ([ingest_config_schema.json](https://github.com/ensono/stacks-azure-data/blob/main/de_workloads/ingest/ingest_azure_sql_example/config/schema/ingest_config_schema.json)).
 
-:::tip
-
-The `ingest_config.json` example is based upon an Azure SQL data source. Different data data source types would be expected to have the same JSON keys, except for under `ingest_entities`, where different keys will be required dependent on the data source type.
-
-:::
 
 See the descriptions of the example JSON config file below:
 
@@ -86,6 +81,12 @@ See the descriptions of the example JSON config file below:
     ]
 }
 ```
+
+:::tip
+
+The `ingest_config.json` example is based upon an Azure SQL data source. Different data data source types would be expected to have the same JSON keys, except for under `ingest_entities`, where different keys will be required dependent on the data source type.
+
+:::
 
 These configuration files will be referenced each time an ingestion pipeline
 is triggered in Data Factory, and all entities will be ingested. To disable a particular ingest
