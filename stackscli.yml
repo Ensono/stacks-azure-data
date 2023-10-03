@@ -9,10 +9,10 @@ pipeline:
   - type: azdo
     files:
       - name: variable
-        path: build/azDevOps/azure/air-infrastructure-data-template.yml
+        path: build/azDevOps/azure/air-infrastructure-data.yml
     templates:
       - name: variable
-        path: build/azDevOps/azure/air-infrastructure-data.yml
+        path: build/azDevOps/azure/air-infrastructure-data-template.yml
 
 setup:
   operations:
