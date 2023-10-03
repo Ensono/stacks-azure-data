@@ -32,4 +32,4 @@ repos:
       - id: pydocstyle
         args: ["--config=pyproject.toml"]
         additional_dependencies: ["tomli"]
-exclude: 'build/azDevOps/azure/air-infrastructure-data-template.yml'
+exclude: 'build/azDevOps/templates/*'
