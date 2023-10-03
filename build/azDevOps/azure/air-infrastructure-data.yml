@@ -74,12 +74,12 @@ stages:
               ARM_CLIENT_SECRET: "$(azure-client-secret)"
 
   - stage: NonProd
-    dependsOn: build
+    dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: stacks-credentials-NonProd-kv
-      - group: amido-stacks-euw-de-NonProd-network
-      - group: amido-stacks-de-pipeline-NonProd
+      - group: stacks-credentials-nonprod-kv
+      - group: amido-stacks-euw-de-nonprod-network
+      - group: amido-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
         value: dev
       # Available in Terraform Output, but not yet enabled to export as pipeline vars
