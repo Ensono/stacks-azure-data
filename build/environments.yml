@@ -1,0 +1,6 @@
+#Used by datastacks cli
+environment:
+  - name: nonprod
+    type: Development
+  - name: prod
+    type: Production

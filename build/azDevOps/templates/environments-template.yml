@@ -1,0 +1,5 @@
+#Used by datastacks cli
+environment:
+{{ range .Input.Environment }}
+  - name: {{ .Name }}
+  - type: {{ .Type }}

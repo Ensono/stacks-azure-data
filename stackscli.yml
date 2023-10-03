@@ -5,7 +5,7 @@ pipeline:
         path: build/common-vars.yml
     templates:
       - name: variable
-        path: build/common-vars-template.yml
+        path: build/azDevOps/templates/common-vars-template.yml
   - type: azdo
     files:
       - name: variable
@@ -13,6 +13,13 @@ pipeline:
     templates:
       - name: variable
         path: build/azDevOps/templates/air-infrastructure-data-template.yml
+  - type: azdo
+    files:
+      - name: variable
+        path: build/environments.yml
+    templates:
+      - name: variable
+        path: build/azDevOps/templates/environments-template.yml
 
 setup:
   operations:
