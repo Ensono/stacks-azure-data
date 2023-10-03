@@ -3,3 +3,4 @@ environment:
 {{ range .Input.Environment }}
   - name: {{ .Name }}
   - type: {{ .Type }}
+{{ end }}
