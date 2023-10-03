@@ -35,11 +35,9 @@ The following files within the workload would need to be updated to modify an in
 - `data_factory/adf_datasets` - The Dataset needs to define the data that will be retrieved from the Linked Service. It should be parameterised wherever possible.
 - `data_factory/pipelines/ARM_IngestTemplate.json` - The Copy Activity in the pipeline may need modifying to reflect the new Dataset type.
 
-Refer to Microsoft documentation for up-to-date details of [connector types supported by Data Factory](https://learn.microsoft.com/en-us/azure/data-factory/connector-overview), and Terraform documentation for adding [custom linked services](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_factory_linked_custom_service) and [custom datasets](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_factory_custom_dataset).
-
 :::note Updating Data Factory resources
 
-The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them be overwritten when pipelines are next run. If you wish to update Data Factory resources, update the appropriate files within the workload (under the `data_factory` path).
+The structure of the data platform and Data Factory resources are defined in the project's code repository, and deployed through the Azure DevOps pipelines. Changes to Data Factory resources directly through the UI will lead to them being overwritten when deployment pipelines are next run. See [Data Factory development quickstart](../getting_started/dev_quickstart_data_azure.md#azure-data-factory-development) for further information on updating Data Factory resources.
 
 :::
 
