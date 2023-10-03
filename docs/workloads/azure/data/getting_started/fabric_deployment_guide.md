@@ -1,6 +1,6 @@
 ---
-id: Quick step by step guide for fabric deployment
-title: Quick step by step guide for fabric deployment
+id: fabric_deployment_guide
+title: Fabric Lakehouse Deployment
 sidebar_label: 9. Fabric Lakehouse Deployment
 hide_title: false
 hide_table_of_contents: false
