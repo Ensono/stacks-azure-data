@@ -1,0 +1,109 @@
+name: "$(Build.SourceBranchName)-init"
+
+pr:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+
+trigger:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+variables:
+  - template: ../../version-data-vars.yml
+  - template: ../../common-vars.yml
+  - template: air-infrastructure-data-vars.yml
+  - name: tf_state_key
+    value: $(domain)
+  - name: TF_FILE_LOCATION
+    value: $(self_repo_tf_src)
+
+stages:
+  - stage: Build
+    variables:
+      - group: stacks-credentials-nonprod-kv
+
+    jobs:
+      - job: Validate
+        pool:
+          name: $(agentpool_name)
+
+        steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+
+  - stage: NonProd
+    dependsOn:
+      - Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    variables:
+      - group: stacks-credentials-nonprod-kv
+      - group: amido-stacks-euw-de-nonprod-network
+      - group: amido-stacks-de-pipeline-nonprod
+      - name: Environment.ShortName
+        value: dev
+      # Available in Terraform Output, but not yet enabled to export as pipeline vars
+      - name: dns_base_domain
+        value: nonprod.amidostacks.com
+      - name: core_environment
+        value: nonprod
+    jobs:
+      - deployment: InfraNonProd
+        pool:
+          name: $(agentpool_name)
+        environment: ${{ variables.domain }}-nonprod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+
+  - stage: Prod
+    dependsOn:
+      - NonProd
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
+    variables:
+      - group: stacks-credentials-prod-kv
+      - group: amido-stacks-euw-de-prod-network
+      - group: amido-stacks-de-pipeline-prod
+      - name: Environment.ShortName
+        value: prod
+      # Available in Terraform Output, but not yet enabled to export as pipeline vars
+      - name: dns_base_domain
+        value: prod.amidostacks.com
+      - name: core_environment
+        value: prod
+    jobs:
+      - deployment: InfraProd
+        pool:
+          name: $(agentpool_name)
+        environment: ${{ variables.domain }}-prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
