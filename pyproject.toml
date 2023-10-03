@@ -28,13 +28,13 @@ pyyaml = "^6.0.1"
 great-expectations = "^0.17.11"
 pydantic = "^1.10.12"
 delta-spark = "^2.4.0"
+behave = "^1.2.6"
 
 [tool.poetry.scripts]
 datastacks = "datastacks.cli:cli"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
-behave = "^1.2.6"
 black = "^23.1.0"
 pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
