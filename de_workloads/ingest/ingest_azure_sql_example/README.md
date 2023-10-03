@@ -1,5 +1,7 @@
 # Ingest Azure SQL Example Workload
 
+__Workload Name:__ ingest_azure_sql_example
+
 __Workload Type:__ Ingest
 
 __Description:__ Ingest from demo Azure SQL database using ingest config file, with data quality checks.

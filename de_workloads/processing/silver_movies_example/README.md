@@ -1,5 +1,7 @@
 # Silver Movies Example Workload
 
+__Workload Name:__ silver_movies_example
+
 __Workload Type:__ Processing
 
 __Description:__ Example pipeline for silver movies.

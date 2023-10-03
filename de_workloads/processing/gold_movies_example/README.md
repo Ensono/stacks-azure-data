@@ -1,5 +1,7 @@
 # Gold Movies Example Workload
 
+__Workload Name:__ gold_movies_example
+
 __Workload Type:__ Processing
 
 __Description:__ Example pipeline for generating gold layer movies data.
