@@ -37,3 +37,8 @@ input:
   overrides:
     internal_config: ""
     ado_variables_path: ""
+  environment:
+    - name: nonprod
+      type: Development
+    - name: prod
+      type: Production
