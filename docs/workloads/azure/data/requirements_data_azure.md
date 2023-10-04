@@ -11,7 +11,7 @@ keywords:
 
 ## Local development
 
-The following tools are recommended for developing while using the Stacks data solution:
+The following tools are recommended for developing while using the Ensono Stacks data solution:
 
 | Tool | Notes |
 | ----- | ----- |
@@ -39,7 +39,7 @@ resources into the target subscription(s)
 
 ### Terraform state storage
 
-Deployment of Azure resources in Stacks is done through Terraform. Within your Azure subscription, you must provision a [storage container](https://learn.microsoft.com/en-us/azure/storage/blobs/blob-containers-portal) to hold [Terraform state data](https://developer.hashicorp.com/terraform/language/state). Details regarding this storage are required when you first scaffold the project using the Stacks CLI. Therefore, once you have provisioned the storage container, make note of the following:
+Deployment of Azure resources in Ensono Stacks is done through Terraform. Within your Azure subscription, you must provision a [storage container](https://learn.microsoft.com/en-us/azure/storage/blobs/blob-containers-portal) to hold [Terraform state data](https://developer.hashicorp.com/terraform/language/state). Details regarding this storage are required when you first scaffold the project using the Ensono Stacks CLI. Therefore, once you have provisioned the storage container, make note of the following:
 
 * Storage account name
 * Resource group name
@@ -47,9 +47,9 @@ Deployment of Azure resources in Stacks is done through Terraform. Within your A
 
 ## Azure DevOps
 
-CI/CD processes within the Stacks data platform are designed to be run in Azure DevOps Pipelines[^1]. Therefore, it is a requirement to [create a project in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=browser).
+CI/CD processes within the Ensono Stacks data platform are designed to be run in Azure DevOps Pipelines[^1]. Therefore, it is a requirement to [create a project in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=browser).
 
-[^1]: More general information on [using Azure Pipelines in Stacks](https://stacks.amido.com/docs/infrastructure/azure/pipelines/azure_devops) is also available.
+[^1]: More general information on [using Azure Pipelines in Stacks](/docs/infrastructure/azure/pipelines/azure_devops) is also available.
 
 ### Azure Pipelines variable groups
 
@@ -82,7 +82,7 @@ Deployment', referring to variables required after the fundamental infrastructur
 | databricksHost                   | After core infra | Databricks URL                              |
 | databricksWorkspaceResourceId    | After core infra | Databricks workspace resource id            |
 | datafactoryname                  | After core infra | Azure Data Factory name                     |
-| github_token                     | After core infra | Github token                                |
+| github_token                     | After core infra | GitHub PAT token, see below for more details                                |                            |
 | integration_runtime_name         | After core infra | Azure Data Factory integration runtime name |
 | KeyVault_baseURL                 | After core infra | Vault URI                                   |
 | keyvault_name                    | After core infra | Key Vault name                              |
@@ -119,3 +119,19 @@ Deployment', referring to variables required after the fundamental infrastructur
 | azure-tenant-id       | Project start | Directory ID for Azure Active Directory application   |
 
 </details>
+
+### Github PAT Token
+
+Within the pipelines we use an Azure DevOps task called UsePythonVersion@0 which allows us to install a specific version of Python onto the build agent. If the Python version doesn't exist on the build agent, it will download it from [Github Actions](https://github.com/actions/python-versions) however this requires a Github PAT Token otherwise you may hit by a GitHub anonymous download limit.
+You can create a token by following this [guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+You do not require any permissions on this token because GitHub only needs to read your public profile.
+
+### Azure Pipelines Service Connections
+
+Service Connections are used in Azure DevOps Pipelines to connect to external services, like Azure and GitHub.
+You must create the following Service Connections:
+
+| Name                  | When Needed   | Description                                           |
+|-----------------------|---------------|-------------------------------------------------------|
+| Stacks.Pipeline.Builds | Project start | The Service Connection to Azure. The service principal or managed identity that is used to create the connection must have contributor access to the Azure Subscription. |
+| GitHubReleases | Project start | The Service Connection to Github for releases. The access token that is used to create the connection must have read/write access to the GitHub repository. |

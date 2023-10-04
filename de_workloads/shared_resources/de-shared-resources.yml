@@ -19,6 +19,7 @@ trigger:
       - de_workloads/shared_resources/*
 
 variables:
+  - template: ../../build/common-vars.yml
   - template: ../../de_build/job-pipeline-vars.yml
   - template: ../../build/version-data-vars.yml
   - name: job  # update job type
@@ -34,7 +35,7 @@ variables:
   - name: test_end_to_end_src
     value: "de_workloads/$(job)/tests/end_to_end/features/"
   - name: junit_src
-    value: "de_workloads/$(jobtype)/$(job)/junit"
+    value: "de_workloads/$(job)/junit"
   - name: self_repo_sparkjob_dir
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
@@ -65,19 +66,6 @@ stages:
           - template: ../../build/azDevOps/templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: $(pythonVersion)
-              githubToken: $(github_token)
-              addToPath: true
-            displayName: Set Python Version
-          - script: pip install --upgrade pre-commit tomli
-            displayName: Install pre-commit
-          - bash: |
-              `which pre-commit` run --all-files --show-diff-on-failure
-            displayName: Run Linting Checks
-            env:
-              PRE_COMMIT_HOME: $(self_repo_job_dir)
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
@@ -247,22 +235,15 @@ stages:
                     workingDirectory: './'
                     unitTestLocation: './$(test_unit_src)'
                     e2eTestLocation: './$(test_end_to_end_src)'
-                    junitLocation: './$(junit_src)'
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
                     azureRegionName: $(region)
                     azureStorageAccountName: $(blob_adls_storage)
+                    azureConfigAccountName: $(blob_configStorage)
                     azureClientId: $(azure-client-id)
                     azureClientSecret: $(azure-client-secret)
                     azureTenantId: $(azure-tenant-id)
-
-                - task: PublishTestResults@2
-                  displayName: "Publish Test Results"
-                  inputs:
-                    testResultsFiles: "**/*.xml"
-                    searchFolder: '$(System.DefaultWorkingDirectory)/$(junit_src)'
-                  condition: succeededOrFailed()
 
   #############################################################
   # Deploy to Prod
@@ -453,7 +434,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: $(github_org)/$(self_repo)
+              repositoryName: '$(Build.Repository.Name)'
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"

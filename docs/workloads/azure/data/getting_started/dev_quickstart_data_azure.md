@@ -10,7 +10,7 @@ keywords:
   - development
 ---
 
-This section covers the steps required to start developing a Stacks Azure Data Platform from your machine:
+This section covers the steps required to start developing a Ensono Stacks Azure Data Platform from your machine:
 
 1. Make sure you have installed the applications in [local development requirements](../requirements_data_azure.md#local-development).
 2. Ensure that Poetry is added to your `$PATH`.
@@ -34,9 +34,13 @@ In order to interact with Azure resources when developing, including running end
     - `AZURE_DATA_FACTORY_NAME`
     - `AZURE_REGION_NAME`
     - `AZURE_STORAGE_ACCOUNT_NAME`
+    - `AZURE_CONFIG_ACCOUNT_NAME`
 
+## Running tests
 
-## Running unit tests
+`make` commands are provided to assist with running tests while developing locally. See [testing](../etl_pipelines/testing_data_azure.md) for further details on these tests.
+
+### Unit tests
 
 In order to run unit tests, run the following command:
 
@@ -44,7 +48,7 @@ In order to run unit tests, run the following command:
 make test
 ```
 
-## Running end-to-end tests
+### End-to-end tests
 
 Running the end-to-end tests will involve executing Data Factory pipelines in Azure. Ensure you have setup the [Azure connection](#optional-azure-connection) and run:
 
@@ -52,7 +56,17 @@ Running the end-to-end tests will involve executing Data Factory pipelines in Az
 make test_e2e
 ```
 
+### Code quality checks
+
+[Pre-commit](https://pre-commit.com/) is used for code quality and linting checks on the project. It can be run using:
+
+```bash
+make pre_commit
+```
+
 ## (Optional) PySpark development in Databricks
+
+ℹ️ This sub-section assumes that [Datastacks build & deployment](./datastacks_deployment_azure.md) has been completed - if you are working through the _getting started guide_ for the first time, you may skip this section.
 
 When developing with PySpark, you may wish to either:
 
@@ -64,7 +78,7 @@ To run scripts within a Databricks cluster, you will need to:
 - Install the Datastacks whl file on the cluster, either from:
     - The latest deployed version in `dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl`, or
     - Create a new whl file with the `poetry build` command.
-- Add Spark environment variables, as per the Data Factory linked service (see [adf_linked_services.tf](https://github.com/Ensono/stacks-azure-data/blob/main/de_workloads/shared_resources/data_factory/adf_linked_services.tf)).
+- Add the additional [environment variables](../etl_pipelines/pyspark_utilities.md#prerequisites) required for PySpark development - the values can be set as per the Data Factory linked service (see [adf_linked_services.tf](https://github.com/Ensono/stacks-azure-data/blob/main/de_workloads/shared_resources/data_factory/adf_linked_services.tf)).
 - Ensure the user has appropriate permissions for Azure resources required.
 
 ## Troubleshooting
@@ -76,4 +90,4 @@ To run scripts within a Databricks cluster, you will need to:
 
 ## Next steps
 
-Once you setup your local development environment, you can continue with the Getting Started tutorial by [deploying the Shared Resources](shared_resources_deployment_azure.md).
+Once you setup your local development environment, you can continue with the Getting Started tutorial by [deploying the shared resources](shared_resources_deployment_azure.md).

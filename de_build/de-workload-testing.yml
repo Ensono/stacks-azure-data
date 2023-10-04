@@ -4,12 +4,13 @@ parameters:
   workingDirectory: './'
   unitTestLocation: './$(test_unit_src)'
   e2eTestLocation: './$(test_end_to_end_src)'
-  junitLocation: './$(junit_src)'
+  junitLocation: '$(junit_src)'
   azureSubscriptionId: ''
   azureResourceGroupName: ''
   azureDataFactoryName: ''
   azureRegionName: ''
   azureStorageAccountName: ''
+  azureConfigAccountName: ''
   azureClientId: ''
   azureClientSecret: ''
   azureTenantId: ''
@@ -37,7 +38,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}"
+        poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}/unit.xml"
       workingDirectory: '${{ parameters.workingDirectory }}'
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
@@ -48,7 +49,7 @@ steps:
       targetType: inline
       script: |
         if [ -d "${{ parameters.e2eTestLocation }}" ]; then
-          poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "${{ parameters.junitLocation }}"
+          poetry run behave "${{ parameters.e2eTestLocation }}" --junit --junit-directory "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}"
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
@@ -61,6 +62,7 @@ steps:
       AZURE_DATA_FACTORY_NAME: ${{ parameters.azureDataFactoryName }}
       AZURE_REGION_NAME: ${{ parameters.azureRegionName }}
       AZURE_STORAGE_ACCOUNT_NAME: ${{ parameters.azureStorageAccountName }}
+      AZURE_CONFIG_ACCOUNT_NAME: ${{ parameters.azureConfigAccountName }}
       AZURE_CLIENT_ID: ${{ parameters.azureClientId }}
       AZURE_CLIENT_SECRET: ${{ parameters.azureClientSecret }}
       AZURE_TENANT_ID: ${{ parameters.azureTenantId }}
@@ -68,6 +70,6 @@ steps:
   - task: PublishTestResults@2
     displayName: "Publish Test Results"
     inputs:
-      testResultsFiles: "**/*.xml"
+      testResultsFiles: "*.xml"
       searchFolder: '$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}'
     condition: succeededOrFailed()
