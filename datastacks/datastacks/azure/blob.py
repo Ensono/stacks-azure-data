@@ -45,7 +45,7 @@ def delete_blob_prefix(blob_service_client: BlobServiceClient, container_name: s
     else:
         try:
             for blob in blob_list:
-                logger.info(f"deleting {blob}")
+                logger.info(f"Deleting {blob.name}")
                 container_client.delete_blob(blob.name)
             logger.info(f"All blobs with prefix {blob_prefix} deleted successfully from container {container_name}")
         except Exception as e:

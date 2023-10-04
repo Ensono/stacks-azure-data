@@ -46,7 +46,7 @@ def test_render_template_components(tmp_path):
 def test_generate_pipeline(mock_target_dir, mock_confirm, tmp_path, dq, expected_files):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
-    config_path = "datastacks/tests/unit/cli/test_config.yml"
+    config_path = "datastacks/tests/unit/cli/test_config_ingest.yml"
 
     validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
     target_dir = generate_pipeline(validated_config, dq)
@@ -62,7 +62,7 @@ def test_generate_pipeline_new_path(mock_target_dir, mock_confirm, tmp_path):
     mock_confirm.return_value = False
     rmtree(tmp_path)
 
-    config_path = "datastacks/tests/unit/cli/test_config.yml"
+    config_path = "datastacks/tests/unit/cli/test_config_ingest.yml"
 
     validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
     target_dir = generate_pipeline(validated_config, False)
@@ -80,7 +80,7 @@ def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, ov
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
 
-    config_path = "datastacks/tests/unit/cli/test_config.yml"
+    config_path = "datastacks/tests/unit/cli/test_config_ingest.yml"
 
     validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
     target_dir = generate_pipeline(validated_config, False)
@@ -92,7 +92,7 @@ def test_generate_pipeline_overwrite(mock_target_dir, mock_confirm, tmp_path, ov
         arm_template_dict = json.load(file)
     assert arm_template_dict["resources"][0]["properties"]["description"] == "Pipeline for testing"
 
-    config_path = "datastacks/tests/unit/cli/test_config_overwrite.yml"
+    config_path = "datastacks/tests/unit/cli/test_config_ingest_overwrite.yml"
     mock_confirm.return_value = overwrite_confirm
 
     validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
@@ -109,7 +109,7 @@ def test_enum_templating(mock_target_dir, mock_confirm, tmp_path):
     mock_target_dir.return_value = tmp_path
     mock_confirm.return_value = True
 
-    config_path = "datastacks/tests/unit/cli/test_config.yml"
+    config_path = "datastacks/tests/unit/cli/test_config_ingest.yml"
 
     validated_config = validate_yaml_config(config_path, IngestWorkloadConfigModel)
     target_dir = generate_pipeline(validated_config, False)
