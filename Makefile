@@ -13,6 +13,7 @@ test:
 
 test_e2e:
 	poetry run behave de_workloads/ingest/Ingest_AzureSql_Example/tests/end_to_end/features/azure_data_ingest.feature
+	poetry run behave de_workloads/shared_resources/tests/end_to_end/features/shared_resources.feature
 
 pre_commit:
 	poetry run pre-commit run --all-files
