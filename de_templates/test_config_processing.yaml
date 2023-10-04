@@ -1,0 +1,18 @@
+#######################
+# Required parameters #
+#######################
+
+# Pipeline configurations
+pipeline_name: processing_demo
+
+# Description of pipeline shown in Azure Data Factory
+pipeline_description: "Example pipeline."
+
+# Azure DevOps configurations
+ado_variable_groups_nonprod:
+  - amido-stacks-de-pipeline-nonprod
+  - stacks-credentials-nonprod-kv
+
+ado_variable_groups_prod:
+  - amido-stacks-de-pipeline-prod
+  - stacks-credentials-prod-kv

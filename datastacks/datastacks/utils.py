@@ -1,102 +1,114 @@
-"""Data Workload Generation Utilities.
+import json
+import logging
+import os
+import re
 
-This module provides utility functions to automate the generation of data pipelines and workloads. It facilitates
-rendering templates based on the provided config, and writing out the rendered templates to the specified directories.
-"""
-import click
-import yaml
-
-from pydantic import BaseModel
-from datastacks.config import IngestConfig
-from jinja2 import Environment, FileSystemLoader
+from collections import Counter
 from pathlib import Path
 
 
-def generate_target_dir(stage_name: str, dataset_name: str) -> str:
-    """Generate the target directory name using stage name and name of the dataset.
+def find_placeholders(input_str: str) -> list[str]:
+    """Finds all placeholders in the form {PLACEHOLDER} in the input string.
 
     Args:
-        stage_name: Name of the pipeline stage, e.g. Ingest.
-        dataset_name: Name of the dataset being processed.
+        input_str: The input string possibly containing placeholders.
 
     Returns:
-        Path to render template into
+        A list of all found placeholders.
     """
-    target_dir = f"de_workloads/{stage_name.lower()}/{stage_name.capitalize()}_{dataset_name}"
-    return target_dir
+    return re.findall(r"\{(.+?)\}", input_str)
 
 
-def render_template_components(config: BaseModel, template_source_path: str, target_dir: str) -> None:
-    """Render all template components using the provided config.
-
-    Renders all templates within a given path with provided config, and saves results into a new target path,
-    while maintaining folder structure and removing jinja file extensions, any existing files with the same name
-    are overwritten.
+def substitute_env_vars(input_str: str) -> str:
+    """Replaces placeholders in the form {PLACEHOLDER} with corresponding environment variable values.
 
     Args:
-        config: Pydantic model of config containing required templating params
-        template_source_path: Path containing templates to be rendered
-        target_dir: Directory to render templates into
-    """
-    Path(target_dir).mkdir(parents=True, exist_ok=True)
-    template_loader = FileSystemLoader(searchpath=str(Path(template_source_path).absolute()))
-    template_env = Environment(loader=template_loader, autoescape=True, keep_trailing_newline=True)
-
-    template_list = template_env.list_templates(extensions=".jinja")
-    for template in template_list:
-        template = template_env.get_template(template)
-        template_filepath = Path(template.filename.split(template_source_path, 1)[1])
-        template_path = template_filepath.parent
-        template_filename = template_filepath.stem
-        Path(target_dir / template_path).mkdir(parents=True, exist_ok=True)
-        template.stream(config).dump(f"{target_dir}/{template_path}/{template_filename}")
-
-
-def generate_pipeline(config_path: str, dq_flag: bool, template_source_folder: str, stage_name: str) -> str:
-    """Generate a data pipeline workload into the project.
-
-    Reads in config from given file, renders templates for new pipeline, writes out to new path, and returns the
-    target directory it wrote out to. If directory already exists it asks for user input to confirm overwrite.
-
-    Args:
-        config_path: Path to config file containing templating params
-        dq_flag: Flag indicating whether to include data quality components or not
-        template_source_folder: Name of the folder within the template directory
-            containing the templates to be rendered
-        stage_name: Name of the pipeline stage eg. Ingest
+        input_str: The input string possibly containing placeholders.
 
     Returns:
-        Path to rendered template
+        The input string with placeholders replaced with environment variable values.
     """
-    click.echo("Reading config from provided path...")
-    with open(config_path, "r") as file:
-        config_dict = yaml.safe_load(file)
-    config = IngestConfig.parse_obj(config_dict)
+    placeholders = find_placeholders(input_str)
 
-    click.echo("Successfully read config file.\n")
+    for placeholder in placeholders:
+        env_var_value = os.getenv(placeholder)
+        if env_var_value:
+            input_str = input_str.replace("{" + placeholder + "}", env_var_value)
 
-    template_source_path = f"de_templates/{stage_name.lower()}/{template_source_folder}/"
-    target_dir = generate_target_dir(stage_name, config.dataset_name)
+    return input_str
 
-    if Path(f"{target_dir}").exists():
-        click.echo(
-            f"Target Directory {target_dir} already exists. "
-            "Any files which are duplicated in the template will be overwritten."
-        )
-        if not click.confirm("Do you want to continue?"):
-            click.echo("Terminating process.")
-            return target_dir
-        else:
-            click.echo("Continuing with overwrite.")
-    else:
-        click.echo(f"Target Directory {target_dir} doesn't exist, creating directory.")
 
-    click.echo(f"Generating workload components for pipeline {stage_name}_{config.dataset_name}...")
-    render_template_components(config, template_source_path, target_dir)
-    if dq_flag:
-        template_source_folder = f"{template_source_folder}_DQ"
-        template_source_path = f"de_templates/{stage_name.lower()}/{template_source_folder}/"
-        render_template_components(config, template_source_path, target_dir)
-    click.echo(f"Successfully generated workload components: {target_dir}")
+def filter_files_by_extension(paths: list[str], extension: str) -> list[str]:
+    """Returns paths with the given extension.
 
-    return target_dir
+    Args:
+        paths: List of file paths.
+        extension: File extension to filter by. Dot is not necessary, e.g. you can pass "csv".
+
+    Returns:
+        A list of file paths that end with the given extension.
+
+    """
+    if not extension.startswith("."):
+        extension = f".{extension}"
+
+    return [path for path in paths if path.endswith(extension)]
+
+
+def camel_to_snake(camel_str: str) -> str:
+    """Converts a camelCase string to snake_case.
+
+    Args:
+        camel_str: A string in camelCase format.
+
+    Returns:
+        The string converted to snake_case format.
+
+    """
+    snake_str = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", camel_str)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", snake_str).lower()
+
+
+def config_uniqueness_check(config_list: list[dict], unique_key: str):
+    """Checks dictionaries within the list and returns true if the unique_key provided is actually unique.
+
+    Args:
+        config_list: List of dictionaries containing config
+        unique_key: Key to check for uniqueness
+    """
+    key_counter = Counter(i[unique_key] for i in config_list)
+    duplicates = [key for key, count in key_counter.items() if count > 1]
+    if duplicates:
+        logging.error(f"{unique_key} values are not unique: {', '.join(map(str, duplicates))}")
+        return False
+    return True
+
+
+def load_config_as_dict(path: str) -> dict:
+    """Gets the contents of the required JSON resource and converts to a dictionary.
+
+    Args:
+        path: Path of the required resource (e.g 'folder1/resource1.json')
+
+    Returns:
+        Config as a dictionary
+    """
+    with open(path) as f:
+        return json.load(f)
+
+
+def load_configs_as_list(path: str) -> list[dict]:
+    """Gets all JSON config files within the given path.
+
+    Args:
+        path: Path of the required resources folder within the config folder (e.g 'folder1')
+
+    Returns:
+        Configs as a list of dictionaries
+    """
+    config_list = []
+    files = Path(path).glob("*.json")
+    for file in list(files):
+        with open(file) as f:
+            config_list.append(json.load(f))
+    return config_list

@@ -5,6 +5,12 @@ tasks:
     command:
       - Update-BuildNumber
 
+  lint:precommit:
+    context: powershell
+    description: Perform Pre-Commit linting
+    command:
+      - git config --global --add safe.directory /app && pre-commit run --all-files --show-diff-on-failure
+
   lint:yaml:
     context: powershell
     description: Perform YAML linting
@@ -35,7 +41,7 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug | out-null
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
