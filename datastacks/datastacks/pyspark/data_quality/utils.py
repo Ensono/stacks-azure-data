@@ -184,57 +184,37 @@ def publish_quality_results_table(
         ]
     )
 
-    emp_RDD = spark.sparkContext.emptyRDD()
-
-    data = spark.createDataFrame(data=emp_RDD, schema=dq_results_schema)
     failing_expectation = False
 
+    results_list = []
     for result in results:
-        try:
-            column_name = result.expectation_config.kwargs["column"]
-        except KeyError:
-            column_name = result.expectation_config.kwargs["column_A"]
+        column_name = result.expectation_config.kwargs.get("column", result.expectation_config.kwargs.get("column_A"))
         validator = result.expectation_config.expectation_type
-        try:
-            value_set = result.expectation_config.kwargs["value_set"]
-        except KeyError:
-            value_set = None
-        try:
-            threshold = result.expectation_config.kwargs["mostly"]
-        except KeyError:
-            threshold = None
         if not result.exception_info["raised_exception"]:
-            unexpected_count = result.result["unexpected_count"]
-            unexpected_percent = result.result["unexpected_percent"]
-            success = result["success"]
-            row = spark.createDataFrame(
-                data=[
-                    [
-                        data_quality_run_date,
-                        datasource_name,
-                        column_name,
-                        validator,
-                        value_set,
-                        threshold,
-                        unexpected_count,
-                        unexpected_percent,
-                        success,
-                    ]
-                ],
-                schema=dq_results_schema,
+            results_list.append(
+                (
+                    data_quality_run_date,
+                    datasource_name,
+                    column_name,
+                    validator,
+                    result.expectation_config.kwargs.get("value_set"),
+                    result.expectation_config.kwargs.get("mostly"),
+                    result.result.get("unexpected_count"),
+                    result.result.get("unexpected_percent"),
+                    result.get("success"),
+                )
             )
-            data = data.union(row)
         else:
             logger.error(f"Failure while executing expectation {validator}, on column {column_name}.")
-            logger.error(f"Execption message: {result.exception_info['exception_message']}")
+            logger.error(f"Exception message: {result.exception_info['exception_message']}")
             failing_expectation = True
+
+    data = spark.createDataFrame(data=results_list, schema=dq_results_schema)
 
     if failing_expectation:
         raise
 
-    data = data.coalesce(1)
-
-    save_dataframe_as_delta(spark, data, dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
+    save_dataframe_as_delta(spark, data.coalesce(1), dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
 
     failed_validations = data.filter(data.success == "False")
     return failed_validations
