@@ -184,8 +184,6 @@ def publish_quality_results_table(
         ]
     )
 
-    failing_expectation = False
-
     results_list = []
     for result in results:
         column_name = result.expectation_config.kwargs.get("column", result.expectation_config.kwargs.get("column_A"))
@@ -207,12 +205,8 @@ def publish_quality_results_table(
         else:
             logger.error(f"Failure while executing expectation {validator}, on column {column_name}.")
             logger.error(f"Exception message: {result.exception_info['exception_message']}")
-            failing_expectation = True
 
     data = spark.createDataFrame(data=results_list, schema=dq_results_schema)
-
-    if failing_expectation:
-        raise
 
     save_dataframe_as_delta(spark, data.coalesce(1), dq_path, overwrite=False, merge_keys=["data_quality_run_date"])
 
