@@ -17,7 +17,7 @@ WORKLOAD_NAME = "silver_movies_example"
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"
 SOURCE_DATA_TYPE = "parquet"
-INPUT_PATH_PATTERN = "Ingest_AzureSql_Example/movies.{table_name}/v1/full/"
+INPUT_PATH_PATTERN = "ingest_azure_sql_example/movies.{table_name}/v1/full/"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
 

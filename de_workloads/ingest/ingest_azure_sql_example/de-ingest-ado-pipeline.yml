@@ -1,4 +1,4 @@
-# Build and deploy pipeline for job Ingest_AzureSql_Example
+# Build and deploy pipeline for job ingest_azure_sql_example
 
 name: "$(Build.SourceBranchName)-init"
 
@@ -8,7 +8,7 @@ pr:
       - "main"
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/*
+      - de_workloads/ingest/ingest_azure_sql_example/*
 
 trigger:
   branches:
@@ -16,18 +16,16 @@ trigger:
       - "main"
   paths:
     include:
-      - de_workloads/ingest/Ingest_AzureSql_Example/*
+      - de_workloads/ingest/ingest_azure_sql_example/*
 
 variables:
   - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job  # update job name
-    value: "Ingest_AzureSql_Example"
-  - name: jobtype  # update job type
+  - name: job
+    value: "ingest_azure_sql_example"
+  - name: jobtype
     value: "ingest"
-  - name: include_data_quality  # update data quality option
-    value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(jobtype)/$(job)"
   - name: self_repo_adf_dir
@@ -48,8 +46,8 @@ variables:
     value: "config/$(jobtype)/$(job)"
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
-  - name: dbfs_destination  # update job name
-    value: 'dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ'
+  - name: dbfs_destination
+    value: 'dbfs:/FileStore/scripts/ingest_azure_sql_example'
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 
@@ -59,6 +57,7 @@ pool:
 stages:
   - stage: Build_Stage
     variables:
+      - group: amido-stacks-de-pipeline-nonprod
       - group: stacks-credentials-nonprod-kv
     jobs:
       - job: Build_Job
@@ -111,7 +110,6 @@ stages:
               targetType: inline
               script: taskctl lint
             env:
-              # Dotnet Build
               CLOUD_PROVIDER: "$(cloud_provider)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
@@ -182,7 +180,7 @@ stages:
                   env:
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
@@ -211,9 +209,8 @@ stages:
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
                     TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-                    TF_VAR_include_data_quality: "$(include_data_quality)"
 
-      # Start Testing
+      #   # Start Testing
       - deployment: Test_NonPROD
         displayName: "Testing  NonPROD"
         environment: ${{ variables.domain }}-nonprod
@@ -236,7 +233,6 @@ stages:
                     azureDataFactoryName: $(datafactoryname)
                     azureRegionName: $(region)
                     azureStorageAccountName: $(blob_adls_storage)
-                    azureConfigAccountName: $(blob_configStorage)
                     azureClientId: $(azure-client-id)
                     azureClientSecret: $(azure-client-secret)
                     azureTenantId: $(azure-tenant-id)
@@ -308,7 +304,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
 
@@ -319,7 +315,6 @@ stages:
                     targetType: inline
                     script: taskctl infrastructure
                   env:
-                    # Dotnet Build
                     CLOUD_PROVIDER: "$(cloud_provider)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
@@ -339,7 +334,6 @@ stages:
                     TF_VAR_data_factory: $(datafactoryname)
                     TF_VAR_integration_runtime_name: $(integration_runtime_name)
                     TF_VAR_linked_service_connectionstring: "$(sql_connection)"
-                    TF_VAR_include_data_quality: "$(include_data_quality)"
 
   - stage: Release
     dependsOn:
