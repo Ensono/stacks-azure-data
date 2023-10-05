@@ -16,33 +16,6 @@ from datastacks.utils import substitute_env_vars
 logger = logging.getLogger(__name__)
 
 
-class ValidationsFailedException(Exception):
-    """Raised when validations fail.
-
-    Attributes:
-        datasource: Name of the datasource for which validations failed.
-        failure_count: Number of validations that failed.
-        output_path: Path to the output file containing the validation results.
-    """
-
-    def __init__(self, datasource, failure_count, output_path):
-        """Initializes the exception.
-
-        Args:
-            datasource: Name of the datasource for which validations failed.
-            failure_count: Number of validations that failed.
-            output_path: Path to the output file containing the validation results.
-        """
-        self.datasource = datasource
-        self.failure_count = failure_count
-        self.output_path = output_path
-        message = (
-            f"Validations failed: datasource {datasource} had {failure_count} validations fail. "
-            f"See {output_path} for details."
-        )
-        super().__init__(message)
-
-
 def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_NAME):
     """Executes data quality checks based on the provided configuration.
 
@@ -97,8 +70,9 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_N
         ).cache()
 
         if not failed_validations.rdd.isEmpty():
-            raise ValidationsFailedException(
-                datasource.datasource_name, failed_validations.count(), full_dq_output_path
+            logger.info(
+                f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed. "
+                f"See {full_dq_output_path} for details."
             )
         else:
             logger.info(f"Checking {datasource.datasource_name}, All validations passed.")
