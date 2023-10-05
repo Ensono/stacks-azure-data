@@ -22,7 +22,7 @@ variables:
   - template: ../../build/common-vars.yml
   - template: ../../de_build/job-pipeline-vars.yml
   - template: ../../build/version-data-vars.yml
-  - name: job  # update job type
+  - name: job
     value: "shared_resources"
   - name: include_databricks_resources  # update databricks option
     value: "true"

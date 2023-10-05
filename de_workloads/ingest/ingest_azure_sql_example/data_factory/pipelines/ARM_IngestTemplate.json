@@ -12,7 +12,7 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), '/Ingest_AzureSql_Example_DQ')]",
+            "name": "[concat(parameters('factoryName'), '/ingest_azure_sql_example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -35,10 +35,7 @@
                                     "value": "ingest/@{pipeline().parameters.data_source_name}/ingest_sources",
                                     "type": "Expression"
                                 },
-                                "config_file": {
-                                    "value": "@{pipeline().parameters.data_source_name}.json",
-                                    "type": "Expression"
-                                }
+                                "config_file": "ingest_config.json"
                             }
                         }
                     },
@@ -68,7 +65,7 @@
                             "isSequential": false,
                             "activities": [
                                 {
-                                    "name": "SQL_to_ADLS",
+                                    "name": "AZURE_SQL_to_ADLS",
                                     "type": "Copy",
                                     "dependsOn": [
                                         {
@@ -158,7 +155,7 @@
                                     },
                                     "inputs": [
                                         {
-                                            "referenceName": "ds_ex_AzureSql_ExampleSource",
+                                            "referenceName": "ds_azure_sql_example",
                                             "type": "DatasetReference",
                                             "parameters": {}
                                         }
@@ -271,7 +268,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/Ingest_AzureSql_Example_DQ/ingest_dq.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/ingest_azure_sql_example/ingest_dq.py",
                             "parameters": [
                                 "@variables('run_id')",
                                 "@string(variables('automated_test_flag'))"
@@ -299,7 +296,7 @@
                     },
                     "data_source_name": {
                         "type": "string",
-                        "defaultValue": "Ingest_AzureSql_Example"
+                        "defaultValue": "ingest_azure_sql_example"
                     },
                     "window_end": {
                         "type": "string",
