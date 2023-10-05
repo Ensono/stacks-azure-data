@@ -6,7 +6,7 @@ from datastacks.utils import (
     load_configs_as_list,
 )
 
-CONFIG_PATH = "de_workloads/ingest/Ingest_AzureSql_Example/config"
+CONFIG_PATH = "de_workloads/ingest/ingest_azure_sql_example/config"
 INGEST_CONFIG_PATH = f"{CONFIG_PATH}/ingest_sources"
 INGEST_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/ingest_config_schema.json"
 
