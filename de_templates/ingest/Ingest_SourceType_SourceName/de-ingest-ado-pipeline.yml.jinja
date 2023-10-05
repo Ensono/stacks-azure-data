@@ -23,9 +23,9 @@ variables:
   - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
   - template: ../../../build/version-data-vars.yml
-  - name: job # update job name
+  - name: job
     value: "{{ pipeline_name }}"
-  - name: jobtype # update job type
+  - name: jobtype
     value: "ingest"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(jobtype)/$(job)"

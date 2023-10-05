@@ -4,7 +4,7 @@ from behave.runner import Context
 
 from datastacks.behave.fixtures import azure_adls_clean_up
 
-SQL_DB_INGEST_DIRECTORY_NAME = "Ingest_AzureSql_Example"
+SQL_DB_INGEST_DIRECTORY_NAME = "ingest_azure_sql_example"
 
 
 def before_scenario(context: Context, scenario: Scenario):
