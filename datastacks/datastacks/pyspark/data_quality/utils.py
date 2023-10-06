@@ -180,6 +180,8 @@ def publish_quality_results_table(
             StructField("threshold", StringType(), True),
             StructField("failure_count", StringType(), True),
             StructField("failure_percent", StringType(), True),
+            StructField("dq_check_exception", BooleanType(), True),
+            StructField("exception_message", StringType(), True),
             StructField("success", BooleanType(), True),
         ]
     )
@@ -188,23 +190,34 @@ def publish_quality_results_table(
     for result in results:
         column_name = result.expectation_config.kwargs.get("column", result.expectation_config.kwargs.get("column_A"))
         validator = result.expectation_config.expectation_type
-        if not result.exception_info["raised_exception"]:
-            results_list.append(
-                (
-                    data_quality_run_date,
-                    datasource_name,
-                    column_name,
-                    validator,
-                    result.expectation_config.kwargs.get("value_set"),
-                    result.expectation_config.kwargs.get("mostly"),
-                    result.result.get("unexpected_count"),
-                    result.result.get("unexpected_percent"),
-                    result.get("success"),
-                )
+        result_entry = (
+            data_quality_run_date,
+            datasource_name,
+            column_name,
+            validator,
+            result.expectation_config.kwargs.get("value_set"),
+            result.expectation_config.kwargs.get("mostly"),
+        )
+        if not result.exception_info.get("raised_exception"):
+            result_entry = result_entry + (
+                result.result.get("unexpected_count"),
+                result.result.get("unexpected_percent"),
+                False,
+                None,
+                result.get("success"),
             )
         else:
+            result_entry = result_entry + (
+                None,
+                None,
+                True,
+                result.exception_info.get("exception_message"),
+                result.get("success"),
+            )
             logger.error(f"Failure while executing expectation {validator}, on column {column_name}.")
             logger.error(f"Exception message: {result.exception_info['exception_message']}")
+
+        results_list.append(result_entry)
 
     data = spark.createDataFrame(data=results_list, schema=dq_results_schema)
 

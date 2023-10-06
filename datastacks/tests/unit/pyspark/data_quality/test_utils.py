@@ -4,6 +4,7 @@ from datetime import date
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import ExpectationValidationResult
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
+from pyspark.sql.types import StructType, DateType, StringType, BooleanType, StructField
 
 from datastacks.pyspark.data_quality.utils import (
     add_expectations_for_columns,
@@ -165,17 +166,21 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
     datasource_name = "fake_database"
     data_quality_run_date = date(year=2000, month=1, day=1)
 
-    expected_cols = [
-        "data_quality_run_date",
-        "datasource_name",
-        "column_name",
-        "validator",
-        "value_set",
-        "threshold",
-        "failure_count",
-        "failure_percent",
-        "success",
-    ]
+    dq_results_schema = StructType(
+        [
+            StructField("data_quality_run_date", DateType(), True),
+            StructField("datasource_name", StringType(), True),
+            StructField("column_name", StringType(), True),
+            StructField("validator", StringType(), True),
+            StructField("value_set", StringType(), True),
+            StructField("threshold", StringType(), True),
+            StructField("failure_count", StringType(), True),
+            StructField("failure_percent", StringType(), True),
+            StructField("dq_check_exception", BooleanType(), True),
+            StructField("exception_message", StringType(), True),
+            StructField("success", BooleanType(), True),
+        ]
+    )
     expected_data = [
         (
             data_quality_run_date,
@@ -186,6 +191,8 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
             "0.99",
             "1",
             "20",
+            False,
+            None,
             False,
         ),
         (
@@ -198,10 +205,12 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
             None,
             None,
             False,
+            None,
+            False,
         ),
     ]
 
-    expected_failure = spark.createDataFrame(data=expected_data, schema=expected_cols)
+    expected_failure = spark.createDataFrame(data=expected_data, schema=dq_results_schema)
 
     mocker.patch("datastacks.pyspark.data_quality.utils.save_dataframe_as_delta")
     failed_validations = publish_quality_results_table(
