@@ -157,7 +157,25 @@ def expectation_results():
         success=False, result=result3, expectation_config=expectation_config3
     )
 
-    expectation_results = [validator_result1, validator_result2, validator_result3]
+    exception_info4 = {
+        "raised_exception": True,
+        "exception_message": "Exception: test exception",
+    }
+    kwargs4 = {
+        "column": "col1",
+        "result_format": "COMPLETE",
+        "batch_id": "batch",
+        "mostly": 0.99,
+        "type_": "StringType",
+    }
+    expectation_config4 = ExpectationConfiguration(
+        kwargs=kwargs4, expectation_type="expect_column_values_to_be_of_type"
+    )
+    validator_result4 = ExpectationValidationResult(
+        success=False, exception_info=exception_info4, expectation_config=expectation_config4
+    )
+
+    expectation_results = [validator_result1, validator_result2, validator_result3, validator_result4]
     return expectation_results
 
 
@@ -206,6 +224,19 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
             None,
             False,
             None,
+            False,
+        ),
+        (
+            data_quality_run_date,
+            datasource_name,
+            "col1",
+            "expect_column_values_to_be_of_type",
+            None,
+            "0.99",
+            None,
+            None,
+            True,
+            "Exception: test exception",
             False,
         ),
     ]
