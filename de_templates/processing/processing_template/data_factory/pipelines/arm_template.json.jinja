@@ -24,7 +24,7 @@
                         "type": "DatabricksSparkPython",
                         "dependsOn": [
                             {
-                                "activity": "automated_test_flag",
+                                "activity": "output_path",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -42,7 +42,8 @@
                             "pythonFile": "{{ process_data_python_path }}",
                             "parameters": [
                                 "@variables('run_id')",
-                                "@string(variables('automated_test_flag'))"
+                                "@string(variables('automated_test_flag'))",
+                                "@variables('output_path')"
                             ],
                             "libraries": [
                                 {
@@ -95,16 +96,44 @@
                                 "type": "Expression"
                             }
                         }
+                    },
+                    {
+                        "name": "output_path",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "automated_test_flag",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "output_path",
+                            "value": {
+                                "value": "@{pipeline().parameters.default_output_path}@{if(variables('automated_test_flag'), concat('/automated_tests/', variables('run_id')), '')}",
+                                "type": "Expression"
+                            }
+                        }
                     }
                 ],
                 "parameters": {
+                    "automated_test_prefix": {
+                        "type": "string",
+                        "defaultValue": "automated_test_"
+                    },
                     "run_id": {
                         "type": "string",
                         "defaultValue": "auto"
                     },
-                    "automated_test_prefix": {
+                    "default_output_path": {
                         "type": "string",
-                        "defaultValue": "automated_test_"
+                        "defaultValue": "{{ pipeline_name }}"
                     }
                 },
                 "variables": {
@@ -112,6 +141,9 @@
                         "type": "Boolean"
                     },
                     "run_id": {
+                        "type": "String"
+                    },
+                    "output_path": {
                         "type": "String"
                     }
                 },
