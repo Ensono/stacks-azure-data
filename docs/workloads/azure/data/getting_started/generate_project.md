@@ -12,7 +12,7 @@ keywords:
   - template
 ---
 
-This section provides an overview of scaffolding and generating a new Data Platform project using the [Ensono Stacks CLI](/docs/stackscli/about).
+This section provides an overview of scaffolding and generating a new Data Platform project using the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about).
 
 It assumes the following [requirements](../requirements_data_azure.md) are in place:
 
@@ -21,7 +21,7 @@ It assumes the following [requirements](../requirements_data_azure.md) are in pl
 
 ## Step 1: Install the Ensono Stacks CLI
 
-Download and install the [Ensono Stacks CLI](/docs/stackscli/about).
+Download and install the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about).
 Please refer to the **Stacks.CLI.Manual** in the latest [stacks-cli release](https://github.com/ensono/stacks-cli/releases) for detailed instructions.
 
 ## Step 2: Prepare the project config
@@ -45,7 +45,13 @@ A [sample data project config file](https://github.com/Ensono/stacks-azure-data/
 | terraform.backend.group | `tfgroup` | Resource group account name for Terraform state. |
 | terraform.backend.container | `tfcontainer` | Container name account name for Terraform state. |
 
-All other values can be left as they are. For full documentation of all fields in the config file, refer to the Ensono Stacks CLI documentation.
+All other values can be left as they are. For full documentation of all fields in the config file, refer to the Stacks CLI Manual.
+
+:::tip
+
+Alternatively, you can use the `stacks-cli interactive` command to generate a YAML configuration file by answering a series of questions. See the Stacks CLI Manual for further information.
+
+:::
 
 ## Step 3: Scaffold the project
 
