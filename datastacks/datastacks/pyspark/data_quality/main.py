@@ -62,12 +62,18 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_N
         else:
             full_dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
 
+        logger.info(f"DQ check completed for {datasource.datasource_name}. Results:")
+        logger.info(results)
+
         failed_validations = publish_quality_results_table(
             spark, full_dq_output_path, datasource.datasource_name, results, data_quality_run_date
-        )
+        ).cache()
 
         if not failed_validations.rdd.isEmpty():
-            logger.info(f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed.")
+            logger.info(
+                f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed. "
+                f"See {full_dq_output_path} for details."
+            )
         else:
             logger.info(f"Checking {datasource.datasource_name}, All validations passed.")
 
