@@ -47,6 +47,13 @@ If you encounter PATH-related issues with Poetry when running the tests, we reco
 
 :::
 
+:::tip
+
+If you encounter PATH-related issues with Poetry when running the tests, we recommend installing Poetry using
+[pipx](https://python-poetry.org/docs/#installing-with-pipx) rather than the official installer.
+
+:::
+
 ### Unit tests
 
 In order to run unit tests, run the following command:
