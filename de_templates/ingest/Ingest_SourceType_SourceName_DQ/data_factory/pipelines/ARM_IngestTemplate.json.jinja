@@ -273,7 +273,8 @@
                             "pythonFile": "dbfs:/FileStore/scripts/{{ pipeline_name }}/ingest_dq.py",
                             "parameters": [
                                 "@variables('run_id')",
-                                "@string(variables('automated_test_flag'))"
+                                "@string(variables('automated_test_flag'))",
+                                "@variables('output_path')"
                             ],
                             "libraries": [
                                 {
