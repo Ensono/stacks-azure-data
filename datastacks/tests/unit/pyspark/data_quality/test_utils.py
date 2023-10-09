@@ -4,6 +4,7 @@ from datetime import date
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.expectation_validation_result import ExpectationValidationResult
 from great_expectations.core.expectation_configuration import ExpectationConfiguration
+from pyspark.sql.types import StructType, DateType, StringType, BooleanType, StructField
 
 from datastacks.pyspark.data_quality.utils import (
     add_expectations_for_columns,
@@ -77,6 +78,7 @@ def test_execute_validations(spark, dq_config, datasource_context, data, expecte
 
 @pytest.fixture(scope="session")
 def expectation_results():
+    expectation_type = "expect_column_values_to_be_in_set"
     result1 = {
         "element_count": 5,
         "unexpected_count": 0,
@@ -92,9 +94,9 @@ def expectation_results():
         "unexpected_index_list": None,
     }
     kwargs1 = {"column": "col2", "result_format": "COMPLETE", "batch_id": "batch"}
-    expectation_type = "expect_column_values_to_be_in_set"
     expectation_config1 = ExpectationConfiguration(kwargs=kwargs1, expectation_type=expectation_type)
     validator_result1 = ExpectationValidationResult(result=result1, expectation_config=expectation_config1)
+
     result2 = {
         "element_count": 5,
         "unexpected_count": 1,
@@ -124,7 +126,56 @@ def expectation_results():
     validator_result2 = ExpectationValidationResult(
         success=False, result=result2, expectation_config=expectation_config2
     )
-    expectation_results = [validator_result1, validator_result2]
+
+    result3 = {
+        "element_count": 5,
+        "partial_unexpected_list": ["wrong"],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 20,
+        "unexpected_percent_nonmissing": 20,
+        "partial_unexpected_index_list": None,
+        "partial_unexpected_counts": [
+            {"value": "wrong", "count": 1},
+        ],
+        "unexpected_list": [
+            "wrong",
+        ],
+        "unexpected_index_list": None,
+    }
+    kwargs3 = {
+        "column": "adult",
+        "result_format": "COMPLETE",
+        "batch_id": "batch",
+        "mostly": 0.99,
+        "type_": "StringType",
+    }
+    expectation_config3 = ExpectationConfiguration(
+        kwargs=kwargs3, expectation_type="expect_column_values_to_be_of_type"
+    )
+    validator_result3 = ExpectationValidationResult(
+        success=False, result=result3, expectation_config=expectation_config3
+    )
+
+    exception_info4 = {
+        "raised_exception": True,
+        "exception_message": "Exception: test exception",
+    }
+    kwargs4 = {
+        "column": "col1",
+        "result_format": "COMPLETE",
+        "batch_id": "batch",
+        "mostly": 0.99,
+        "type_": "StringType",
+    }
+    expectation_config4 = ExpectationConfiguration(
+        kwargs=kwargs4, expectation_type="expect_column_values_to_be_of_type"
+    )
+    validator_result4 = ExpectationValidationResult(
+        success=False, exception_info=exception_info4, expectation_config=expectation_config4
+    )
+
+    expectation_results = [validator_result1, validator_result2, validator_result3, validator_result4]
     return expectation_results
 
 
@@ -133,17 +184,21 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
     datasource_name = "fake_database"
     data_quality_run_date = date(year=2000, month=1, day=1)
 
-    expected_cols = [
-        "data_quality_run_date",
-        "datasource_name",
-        "column_name",
-        "validator",
-        "value_set",
-        "threshold",
-        "failure_count",
-        "failure_percent",
-        "success",
-    ]
+    dq_results_schema = StructType(
+        [
+            StructField("data_quality_run_date", DateType(), True),
+            StructField("datasource_name", StringType(), True),
+            StructField("column_name", StringType(), True),
+            StructField("validator", StringType(), True),
+            StructField("value_set", StringType(), True),
+            StructField("threshold", StringType(), True),
+            StructField("failure_count", StringType(), True),
+            StructField("failure_percent", StringType(), True),
+            StructField("dq_check_exception", BooleanType(), True),
+            StructField("exception_message", StringType(), True),
+            StructField("success", BooleanType(), True),
+        ]
+    )
     expected_data = [
         (
             data_quality_run_date,
@@ -155,10 +210,38 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
             "1",
             "20",
             False,
-        )
+            None,
+            False,
+        ),
+        (
+            data_quality_run_date,
+            datasource_name,
+            "adult",
+            "expect_column_values_to_be_of_type",
+            None,
+            "0.99",
+            None,
+            None,
+            False,
+            None,
+            False,
+        ),
+        (
+            data_quality_run_date,
+            datasource_name,
+            "col1",
+            "expect_column_values_to_be_of_type",
+            None,
+            "0.99",
+            None,
+            None,
+            True,
+            "Exception: test exception",
+            False,
+        ),
     ]
 
-    expected_failure = spark.createDataFrame(data=expected_data, schema=expected_cols)
+    expected_failure = spark.createDataFrame(data=expected_data, schema=dq_results_schema)
 
     mocker.patch("datastacks.pyspark.data_quality.utils.save_dataframe_as_delta")
     failed_validations = publish_quality_results_table(
