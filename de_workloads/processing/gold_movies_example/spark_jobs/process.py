@@ -3,6 +3,7 @@ import logging
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import avg
 
+from datastacks.constants import SILVER_CONTAINER_NAME, GOLD_CONTAINER_NAME
 from datastacks.logger import setup_logger
 from datastacks.pyspark.etl import (
     get_spark_session_for_adls,
@@ -11,8 +12,6 @@ from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta, read_datas
 from datastacks.pyspark.storage_utils import get_adls_file_url
 
 WORKLOAD_NAME = "gold_movies_example"
-SILVER_CONTAINER = "staging"
-GOLD_CONTAINER = "curated"
 SOURCE_DATA_TYPE = "delta"
 INPUT_PATH_PATTERN = "movies/{table_name}"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
@@ -43,17 +42,19 @@ def etl_main() -> None:
 
     spark = get_spark_session_for_adls(WORKLOAD_NAME)
 
-    logger.info(f"Reading data from {SILVER_CONTAINER} container...")
-    ratings_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name="ratings_small"))
+    logger.info(f"Reading data from {SILVER_CONTAINER_NAME} container...")
+    ratings_url = get_adls_file_url(SILVER_CONTAINER_NAME, INPUT_PATH_PATTERN.format(table_name="ratings_small"))
     ratings = read_datasource(spark, ratings_url, datasource_type=SOURCE_DATA_TYPE)
-    metadata_url = get_adls_file_url(SILVER_CONTAINER, INPUT_PATH_PATTERN.format(table_name="movies_metadata"))
+    metadata_url = get_adls_file_url(SILVER_CONTAINER_NAME, INPUT_PATH_PATTERN.format(table_name="movies_metadata"))
     metadata = read_datasource(spark, metadata_url, datasource_type=SOURCE_DATA_TYPE)
 
     logger.info("Transforming data...")
     output_df = join_metadata_and_average_ratings(metadata, ratings)
 
-    logger.info(f"Saving data to {GOLD_CONTAINER} container...")
-    output_filepath = get_adls_file_url(GOLD_CONTAINER, OUTPUT_PATH_PATTERN.format(table_name="movies_ratings_agg"))
+    logger.info(f"Saving data to {GOLD_CONTAINER_NAME} container...")
+    output_filepath = get_adls_file_url(
+        GOLD_CONTAINER_NAME, OUTPUT_PATH_PATTERN.format(table_name="movies_ratings_agg")
+    )
     save_dataframe_as_delta(spark, output_df, output_filepath, overwrite=True)
 
     logger.info(f"Finished: {WORKLOAD_NAME} processing.")
