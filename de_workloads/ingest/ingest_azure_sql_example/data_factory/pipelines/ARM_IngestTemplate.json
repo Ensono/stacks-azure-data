@@ -50,7 +50,7 @@
                                 ]
                             },
                             {
-                                "activity": "automated_test_flag",
+                                "activity": "output_path",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -283,6 +283,30 @@
                             "referenceName": "ls_Databricks_Small",
                             "type": "LinkedServiceReference"
                         }
+                    },
+                    {
+                        "name": "output_path",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "automated_test_flag",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "output_path",
+                            "value": {
+                                "value": "@{pipeline().parameters.default_output_path}@{if(variables('automated_test_flag'), concat('/automated_tests/', variables('run_id')), '')}",
+                                "type": "Expression"
+                            }
+                        }
                     }
                 ],
                 "policy": {
@@ -290,13 +314,17 @@
                     "cancelAfter": {}
                 },
                 "parameters": {
-                    "run_id": {
+                    "automated_test_prefix": {
                         "type": "string",
-                        "defaultValue": "auto"
+                        "defaultValue": "automated_test_"
                     },
                     "data_source_name": {
                         "type": "string",
                         "defaultValue": "ingest_azure_sql_example"
+                    },
+                    "run_id": {
+                        "type": "string",
+                        "defaultValue": "auto"
                     },
                     "window_end": {
                         "type": "string",
@@ -306,17 +334,20 @@
                         "type": "string",
                         "defaultValue": "2010-01-01"
                     },
-                    "automated_test_prefix": {
+                    "default_output_path": {
                         "type": "string",
-                        "defaultValue": "automated_test_"
+                        "defaultValue": "ingest_azure_sql_example"
                     }
                 },
                 "variables": {
+                    "automated_test_flag": {
+                        "type": "Boolean"
+                    },
                     "run_id": {
                         "type": "String"
                     },
-                    "automated_test_flag": {
-                        "type": "Boolean"
+                    "output_path": {
+                        "type": "String"
                     }
                 },
                 "folder": {
