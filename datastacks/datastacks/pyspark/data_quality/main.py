@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.config import Config
@@ -17,21 +16,25 @@ from datastacks.utils import substitute_env_vars
 logger = logging.getLogger(__name__)
 
 
-def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_NAME):
+def data_quality_main(
+    config_path: str,
+    container_name: str = CONFIG_CONTAINER_NAME,
+    test_flag: bool = False,
+    test_run_id: str = "default_run_id",
+):
     """Executes data quality checks based on the provided configuration.
 
     Args:
         config_path: Path to a JSON config inside an Azure Blob container.
         container_name: Name of the container for storing configurations.
+        test_flag: Flag if the process is being run as part of automated tests.
+        test_run_id: Used to name the output folder if the process is being run as part of automated tests.
 
     Raises:
         EnvironmentError: if any of the required environment variables for ADLS access are not set.
 
     """
     check_env()
-
-    data_factory_run_id = sys.argv[1]
-    data_factory_test_flag = sys.argv[2]
 
     dq_conf_dict = load_json_from_blob(container_name, config_path)
     dq_conf = Config.parse_obj(dq_conf_dict)
@@ -56,12 +59,10 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_N
 
         data_quality_run_date = validation_result.meta["run_id"].run_time
 
-        if data_factory_test_flag == "True":
-            full_dq_output_path = (
-                f"{dq_output_path}automated_tests/{data_factory_run_id}/{datasource.datasource_name}_dq/"
-            )
+        if test_flag:
+            full_dq_output_path = f"{dq_output_path}automated_tests/{test_run_id}/{datasource.datasource_name}_dq/"
             full_quarantine_output_path = (
-                f"{dq_output_path}automated_tests/{data_factory_run_id}/{datasource.datasource_name}_quarantine/"
+                f"{dq_output_path}automated_tests/{test_run_id}/{datasource.datasource_name}_quarantine/"
             )
         else:
             full_dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
