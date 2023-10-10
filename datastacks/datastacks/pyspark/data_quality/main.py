@@ -1,5 +1,4 @@
 import logging
-import re
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.config import Config
@@ -8,6 +7,7 @@ from datastacks.pyspark.data_quality.utils import (
     create_datasource_context,
     execute_validations,
     publish_quality_results_table,
+    replace_adls_data_location,
 )
 from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource
 from datastacks.pyspark.storage_utils import check_env, load_json_from_blob, set_spark_properties
@@ -47,8 +47,7 @@ def data_quality_main(
     set_spark_properties(spark)
 
     if test_data_adls_path:
-        logger.info(f"Using test data location: {test_data_adls_path}...")
-        dq_input_path = re.sub(r"abfss://.*\.dfs\.core\.windows\.net/.*", test_data_adls_path, dq_conf.dq_input_path)
+        dq_input_path = replace_adls_data_location(dq_conf.dq_input_path, test_data_adls_path)
     else:
         dq_input_path = dq_conf.dq_input_path
 
