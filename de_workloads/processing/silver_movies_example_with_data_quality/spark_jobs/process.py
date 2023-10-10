@@ -4,6 +4,7 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, explode, from_json
 from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType
 
+from datastacks.constants import BRONZE_CONTAINER_NAME, SILVER_CONTAINER_NAME
 from datastacks.pyspark.etl import (
     TableTransformation,
     get_spark_session_for_adls,
@@ -14,8 +15,6 @@ from datastacks.logger import setup_logger
 from datastacks.pyspark.pyspark_utils import rename_columns_to_snake_case
 
 WORKLOAD_NAME = "silver_movies_example"
-BRONZE_CONTAINER = "raw"
-SILVER_CONTAINER = "staging"
 SOURCE_DATA_TYPE = "parquet"
 INPUT_PATH_PATTERN = "ingest_azure_sql_example/movies.{table_name}/v1/full/"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
@@ -128,14 +127,14 @@ def etl_main() -> None:
     for table in tables:
         df = read_latest_rundate_data(
             spark,
-            BRONZE_CONTAINER,
+            BRONZE_CONTAINER_NAME,
             INPUT_PATH_PATTERN.format(table_name=table.table_name),
             datasource_type=SOURCE_DATA_TYPE,
         )
 
         output_path = OUTPUT_PATH_PATTERN.format(table_name=table.table_name)
 
-        transform_and_save_as_delta(spark, df, table.transformation_function, SILVER_CONTAINER, output_path)
+        transform_and_save_as_delta(spark, df, table.transformation_function, SILVER_CONTAINER_NAME, output_path)
 
     logger.info(f"Finished: {WORKLOAD_NAME} processing.")
 
