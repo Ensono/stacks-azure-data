@@ -46,7 +46,7 @@ def data_quality_main(
 
     set_spark_properties(spark)
 
-    if test_data_adls_path:
+    if test_flag and test_data_adls_path:
         dq_input_path = replace_adls_data_location(dq_conf.dq_input_path, test_data_adls_path)
     else:
         dq_input_path = dq_conf.dq_input_path
