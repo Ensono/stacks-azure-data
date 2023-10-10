@@ -1,4 +1,5 @@
 import logging
+import re
 
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.config import Config
@@ -20,6 +21,7 @@ def data_quality_main(
     container_name: str = CONFIG_CONTAINER_NAME,
     test_flag: bool = False,
     test_run_id: str = "default_run_id",
+    test_data_adls_path: str = None,
 ):
     """Executes data quality checks based on the provided configuration.
 
@@ -28,6 +30,7 @@ def data_quality_main(
         container_name: Name of the container for storing configurations.
         test_flag: Flag if the process is being run as part of automated tests.
         test_run_id: Used to name the output folder if the process is being run as part of automated tests.
+        test_data_adls_path: Override the ADLS input path of the data being tested if required for automated tests.
 
     Raises:
         EnvironmentError: if any of the required environment variables for ADLS access are not set.
@@ -43,12 +46,22 @@ def data_quality_main(
 
     set_spark_properties(spark)
 
+    if test_data_adls_path:
+        logger.info(f"Using test data location: {test_data_adls_path}...")
+        dq_input_path = re.sub(r"abfss://.*\.dfs\.core\.windows\.net/.*", test_data_adls_path, dq_conf.dq_input_path)
+    else:
+        dq_input_path = dq_conf.dq_input_path
+
     dq_output_path = substitute_env_vars(dq_conf.dq_output_path)
 
     for datasource in dq_conf.datasource_config:
         logger.info(f"Checking DQ for datasource: {datasource.datasource_name}...")
+        if datasource.datasource_type == "table":
+            data_location = datasource.data_location
+        else:
+            data_location = dq_input_path + datasource.data_location
 
-        df = read_datasource(spark, datasource.data_location, datasource.datasource_type)
+        df = read_datasource(spark, data_location, datasource.datasource_type)
 
         gx_context = create_datasource_context(datasource.datasource_name, dq_conf.gx_directory_path)
         gx_context = add_expectation_suite(gx_context, datasource)
