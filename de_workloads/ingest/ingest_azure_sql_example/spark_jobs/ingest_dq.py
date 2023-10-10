@@ -23,5 +23,5 @@ if __name__ == "__main__":
         container_name=CONFIG_CONTAINER_NAME,
         test_flag=test_flag,
         test_run_id=run_id,
-        test_data_location_path=test_output_path,
+        test_data_adls_path=test_output_path,
     )
