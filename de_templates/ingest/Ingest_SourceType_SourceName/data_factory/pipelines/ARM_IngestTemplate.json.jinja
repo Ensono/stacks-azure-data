@@ -52,7 +52,7 @@
                                 ]
                             },
                             {
-                                "activity": "automated_test_flag",
+                                "activity": "output_path",
                                 "dependencyConditions": [
                                     "Succeeded"
                                 ]
@@ -172,7 +172,7 @@
                                                     "type": "Expression"
                                                 },
                                                 "path": {
-                                                    "value": "@{pipeline().parameters.data_source_name}@{if(variables('automated_test_flag'), concat('/automated_tests/', variables('run_id')), '')}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
+                                                    "value": "@{variables('output_path')}/@{item()['display_name']}/v@{string(item()['version'])}/@{item()['load_type']}/rundate=@{replace(utcNow(),':','')}/@{if(equals(item()['load_type'], 'delta'), concat('window=',pipeline().parameters.window_start,'_', pipeline().parameters.window_end), '')}",
                                                     "type": "Expression"
                                                 }
                                             }
@@ -249,6 +249,30 @@
                                 "type": "Expression"
                             }
                         }
+                    },
+                    {
+                        "name": "output_path",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "automated_test_flag",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "output_path",
+                            "value": {
+                                "value": "@{pipeline().parameters.default_output_path}@{if(variables('automated_test_flag'), concat('/automated_tests/', variables('run_id')), '')}",
+                                "type": "Expression"
+                            }
+                        }
                     }
                 ],
                 "policy": {
@@ -256,13 +280,17 @@
                     "cancelAfter": {}
                 },
                 "parameters": {
-                    "run_id": {
+                    "automated_test_prefix": {
                         "type": "string",
-                        "defaultValue": "auto"
+                        "defaultValue": "automated_test_"
                     },
                     "data_source_name": {
                         "type": "string",
                         "defaultValue": "{{ pipeline_name }}"
+                    },
+                    "run_id": {
+                        "type": "string",
+                        "defaultValue": "auto"
                     },
                     "window_end": {
                         "type": "string",
@@ -272,17 +300,20 @@
                         "type": "string",
                         "defaultValue": "{{ window_start_default }}"
                     },
-                    "automated_test_prefix": {
+                    "default_output_path": {
                         "type": "string",
-                        "defaultValue": "automated_test_"
+                        "defaultValue": "{{ pipeline_name }}"
                     }
                 },
                 "variables": {
+                    "automated_test_flag": {
+                        "type": "Boolean"
+                    },
                     "run_id": {
                         "type": "String"
                     },
-                    "automated_test_flag": {
-                        "type": "Boolean"
+                    "output_path": {
+                        "type": "String"
                     }
                 },
                 "folder": {
