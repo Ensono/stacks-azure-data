@@ -8,8 +8,9 @@ from datastacks.pyspark.data_quality.utils import (
     create_datasource_context,
     execute_validations,
     publish_quality_results_table,
+    select_failed_data,
 )
-from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource
+from datastacks.pyspark.pyspark_utils import get_spark_session, read_datasource, save_dataframe_as_delta
 from datastacks.pyspark.storage_utils import check_env, load_json_from_blob, set_spark_properties
 from datastacks.utils import substitute_env_vars
 
@@ -59,8 +60,12 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_N
             full_dq_output_path = (
                 f"{dq_output_path}automated_tests/{data_factory_run_id}/{datasource.datasource_name}_dq/"
             )
+            full_quarantine_output_path = (
+                f"{dq_output_path}automated_tests/{data_factory_run_id}/{datasource.datasource_name}_quarantine/"
+            )
         else:
             full_dq_output_path = f"{dq_output_path}{datasource.datasource_name}_dq/"
+            full_quarantine_output_path = f"{dq_output_path}{datasource.datasource_name}_quarantine/"
 
         logger.info(f"DQ check completed for {datasource.datasource_name}. Results:")
         logger.info(results)
@@ -74,6 +79,9 @@ def data_quality_main(config_path: str, container_name: str = CONFIG_CONTAINER_N
                 f"Checking {datasource.datasource_name}, {failed_validations.count()} validations failed. "
                 f"See {full_dq_output_path} for details."
             )
+            failed_data = select_failed_data(spark, failed_validations)
+            # TODO: consider adding logic for merge keys
+            save_dataframe_as_delta(spark, failed_data, full_quarantine_output_path, overwrite=True)
         else:
             logger.info(f"Checking {datasource.datasource_name}, All validations passed.")
 
