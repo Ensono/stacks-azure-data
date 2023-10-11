@@ -157,6 +157,10 @@ def get_data_factory_param(param_position: int, default_value: str | bool = None
         param_position: The ordinal position of the parameter passed to the Python activity.
         default_value: Default value to return if the parameter is not found.
         convert_bool: Convert the parameter to a bool based on string value of "True".
+
+    Returns:
+        The parameter value passed from Data Factory (via sys.argv) or the default parameter value.
+
     """
     if len(sys.argv) <= param_position:
         logging.warning("Excepted arguments from Data Factory not found, using default value.")

@@ -1,12 +1,13 @@
 {
     "gx_directory_path": "/dbfs/great_expectations/",
     "dataset_name": "movies",
+    "dq_input_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
     "dq_output_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
     "datasource_config": [
         {
             "datasource_name": "movies.movies_metadata",
             "datasource_type": "parquet",
-            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/movies.movies_metadata/v1/*/*/*",
+            "data_location": "movies.movies_metadata/v1/*/*/*",
             "expectation_suite_name": "movies.movies_metadata_suite",
             "validation_config": [
                 {
@@ -41,7 +42,7 @@
         {
             "datasource_name": "movies.keywords",
             "datasource_type": "parquet",
-            "data_location": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/movies.keywords/v1/*/*/*",
+            "data_location": "movies.keywords/v1/*/*/*",
             "expectation_suite_name": "movies.keywords_suite",
             "validation_config": [
                 {
