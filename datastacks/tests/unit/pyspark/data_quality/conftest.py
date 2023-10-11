@@ -11,6 +11,7 @@ def dq_config(tmp_path) -> Config:
     json_config = {
         "gx_directory_path": gx_directory_path,
         "dataset_name": "movies_dataset",
+        "dq_input_path": "abfss://test_db@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
         "dq_output_path": "abfss://test_db@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
         "datasource_config": [
             {

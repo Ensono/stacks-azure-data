@@ -1,6 +1,7 @@
 """Data quality utility functions to set up validations."""
 from datetime import date
 import logging
+import re
 
 import great_expectations as gx
 from great_expectations.core.batch import RuntimeBatchRequest
@@ -225,3 +226,34 @@ def publish_quality_results_table(
 
     failed_validations = data.filter(data.success == "False")
     return failed_validations
+
+
+def replace_adls_data_location(
+    adls_location_path: str,
+    updated_data_path: str,
+) -> str:
+    """Update an ADLS path using the updated_data_path. Everything after the container URI will be updated.
+
+    Args:
+        adls_location_path: Path in ADLS, including the full "abfss://" URI.
+        updated_data_path: New path to append to the ADLS URI.
+
+    Returns:
+        Updated location path.
+
+    Example:
+        >>> replace_adls_data_location("abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/sql_example/", "test_location")
+        "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/test_location/"
+    """
+    adls_uri_pattern = r"(abfss://.*\.dfs\.core\.windows\.net/).*"
+    if re.match(adls_uri_pattern, adls_location_path):
+        new_adls_path = re.sub(adls_uri_pattern, "\\1" + updated_data_path, adls_location_path)
+        if not new_adls_path.endswith("/"):
+            new_adls_path += "/"
+        logger.info(f"Updated location path to: {new_adls_path}...")
+        return new_adls_path
+    else:
+        logger.warning(
+            f"Input path is not the expected format for ADLS, cannot update location: {adls_location_path}..."
+        )
+        return adls_location_path

@@ -8,7 +8,6 @@ from behave import fixture
 from behave.runner import Context
 from datastacks.constants import (
     ADLS_URL,
-    BRONZE_CONTAINER_NAME,
     CONFIG_CONTAINER_NAME,
     CONFIG_BLOB_URL,
     AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
@@ -20,24 +19,26 @@ logger = logging.getLogger(__name__)
 
 
 @fixture
-def azure_adls_clean_up(context: Context, ingest_directory_name: str):
+def azure_adls_clean_up(context: Context, container_name: str, ingest_directory_name: str):
     """Delete test directories in ADLS.
 
     Args:
         context: Behave context object.
+        container_name: Name of the ADLS storage container.
         ingest_directory_name: Name of the ADLS directory to delete.
+
     """
     credential = DefaultAzureCredential()
     adls_client = DataLakeServiceClient(account_url=ADLS_URL, credential=credential)
     logger.info("BEFORE SCENARIO: Deleting any existing test output data.")
     automated_test_output_directory_paths = filter_directory_paths_adls(
         adls_client,
-        BRONZE_CONTAINER_NAME,
+        container_name,
         ingest_directory_name,
         AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
     )
 
-    delete_directories_adls(adls_client, BRONZE_CONTAINER_NAME, automated_test_output_directory_paths)
+    delete_directories_adls(adls_client, container_name, automated_test_output_directory_paths)
 
     yield context
 
@@ -45,12 +46,12 @@ def azure_adls_clean_up(context: Context, ingest_directory_name: str):
 
     automated_test_output_directory_paths = filter_directory_paths_adls(
         adls_client,
-        BRONZE_CONTAINER_NAME,
+        container_name,
         ingest_directory_name,
         AUTOMATED_TEST_OUTPUT_DIRECTORY_PREFIX,
     )
 
-    delete_directories_adls(adls_client, BRONZE_CONTAINER_NAME, automated_test_output_directory_paths)
+    delete_directories_adls(adls_client, container_name, automated_test_output_directory_paths)
 
 
 @fixture
