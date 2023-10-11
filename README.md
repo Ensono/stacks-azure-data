@@ -7,28 +7,28 @@ Link to the official documentation:
 
 The Ensono Stacks Azure Data Platform solution provides a framework for accelerating the deployment of a production-ready modern data platform in Azure.
 
-![Stacks Data Overview](docs/workloads/azure/data/images/stacks-data-overview.png)
+![Stacks Data Overview](./docs/workloads/azure/data/images/stacks-data-overview.png)
 
 1. Use the [Stacks CLI](https://stacks.ensono.com/docs/stackscli/about) to generate a new data platform project.
 2. Build and deploy the data platform infrastructure into your Azure environment.
-3. Accelerate development of data workloads and ETL pipelines with [Datastacks](https://stacks.ensono.com/docs/workloads/azure/data/etl_pipelines/datastacks).
+3. Accelerate development of data workloads and ETL pipelines with [Datastacks](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/datastacks).
 
-The Ensono Stacks Data Platform delivers a modern Lakehouse solution, based upon the [Medallion Architecture](etl_pipelines/etl_intro_data_azure.md#medallion-architecture), with Bronze, Silver and Gold layers for various stages of data preparation. The platform utilises tools including **Azure Data Factory** for data ingestion and orchestration, **Databricks** for data processing and **Azure Data Lake Storage Gen2** for data lake storage.
+The Ensono Stacks Data Platform delivers a modern Lakehouse solution, based upon the [Medallion Architecture](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/data_engineering_intro_azure#medallion-architecture), with Bronze, Silver and Gold layers for various stages of data preparation. The platform utilises tools including **Azure Data Factory** for data ingestion and orchestration, **Databricks** for data processing and **Azure Data Lake Storage Gen2** for data lake storage.
 
 Key elements of the solution include:
 
 - Infrastructure as code (IaC) for all infrastructure components (Terraform).
 - Deployment pipelines to enable CI/CD and DataOps for the platform and all data workloads.
-- [Datastacks](./etl_pipelines/datastacks.md) - a library and CLI built to accelerate the development of data engineering
+- [Datastacks](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/datastacks) - a library and CLI built to accelerate the development of data engineering
 workloads in the data platform.
-- A framework for [data quality validations](./etl_pipelines/data_quality_azure.md).
-- [Automated tests](./etl_pipelines/testing_data_azure.md) to ensure quality assurance and operational efficiency.
-- Sample [data ingest pipelines](./etl_pipelines/ingest_data_azure.md) that transfer data from a source into the landing (Bronze) data lake zone.
-- Sample [data processing pipelines](./etl_pipelines/data_processing.md) performing data transformations from Bronze to Silver and Silver to Gold layers.
+- A framework for [data quality validations](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/data_quality_azure).
+- [Automated tests](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/testing_data_azure) to ensure quality assurance and operational efficiency.
+- Sample [data ingest pipelines](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/ingest_data_azure) that transfer data from a source into the landing (Bronze) data lake zone.
+- Sample [data processing pipelines](https://stacks.ensono.com/docs/workloads/azure/data/data_engineering/data_processing) performing data transformations from Bronze to Silver and Silver to Gold layers.
 
 ### High-level architecture
 
-![High-level architecture](docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
+![High-level architecture](./docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
 
 ## Repository structure
 
