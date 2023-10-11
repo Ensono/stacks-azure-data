@@ -11,6 +11,7 @@ from datastacks.pyspark.data_quality.utils import (
     add_expectation_suite,
     execute_validations,
     publish_quality_results_table,
+    replace_adls_data_location,
 )
 
 
@@ -252,3 +253,24 @@ def test_publish_quality_results_table(mocker, spark, expectation_results):
         spark, base_path, datasource_name, expectation_results, data_quality_run_date
     )
     assert sorted(failed_validations.collect()) == sorted(expected_failure.collect())
+
+
+@pytest.mark.parametrize(
+    "adls_location,data_path,expected",
+    [
+        (
+            "abfss://raw@teststorage.dfs.core.windows.net/original/",
+            "test",
+            "abfss://raw@teststorage.dfs.core.windows.net/test/",
+        ),
+        (
+            "abfss://raw@teststorage.dfs.core.windows.net/original/",
+            "test/",
+            "abfss://raw@teststorage.dfs.core.windows.net/test/",
+        ),
+        ("not_an_adls_uri", "test", "not_an_adls_uri"),
+    ],
+)
+def test_replace_adls_data_location(adls_location, data_path, expected):
+    result = replace_adls_data_location(adls_location, data_path)
+    assert result == expected

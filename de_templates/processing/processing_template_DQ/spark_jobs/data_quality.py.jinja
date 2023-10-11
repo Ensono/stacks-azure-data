@@ -17,4 +17,6 @@ if __name__ == "__main__":
     test_flag = get_data_factory_param(2, False, True)
 
     # Run Data Quality
-    data_quality_main(CONFIG_PATH, CONFIG_CONTAINER_NAME, test_flag, run_id)
+    data_quality_main(
+        config_path=CONFIG_PATH, container_name=CONFIG_CONTAINER_NAME, test_flag=test_flag, test_run_id=run_id
+    )

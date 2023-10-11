@@ -15,6 +15,13 @@ if __name__ == "__main__":
     # Get parameters passed from Data Factory Python activity
     run_id = get_data_factory_param(1, "default_run_id")
     test_flag = get_data_factory_param(2, False, True)
+    test_output_path = get_data_factory_param(3)
 
     # Run Data Quality
-    data_quality_main(CONFIG_PATH, CONFIG_CONTAINER_NAME, test_flag, run_id)
+    data_quality_main(
+        config_path=CONFIG_PATH,
+        container_name=CONFIG_CONTAINER_NAME,
+        test_flag=test_flag,
+        test_run_id=run_id,
+        test_data_adls_path=test_output_path,
+    )
