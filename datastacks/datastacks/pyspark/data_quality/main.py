@@ -1,3 +1,7 @@
+"""Data Quality Main.
+
+This module is the entrypoint for executing Data Quality processing against datasets, based upon provided configuration.
+"""
 import logging
 
 from datastacks.constants import CONFIG_CONTAINER_NAME

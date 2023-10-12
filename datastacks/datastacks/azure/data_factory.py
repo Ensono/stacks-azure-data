@@ -1,3 +1,7 @@
+"""Azure utilities - Data Factory.
+
+This module provides a collection of helper functions related to Azure Data Factory.
+"""
 from azure.mgmt.datafactory import DataFactoryManagementClient
 from azure.mgmt.datafactory.models import PipelineRun, CreateRunResponse
 

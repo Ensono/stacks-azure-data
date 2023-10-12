@@ -5,7 +5,7 @@ rendering templates based on the provided config, and writing out the rendered t
 """
 import click
 
-from datastacks.cli.config import WorkloadConfigBaseModel
+from datastacks.generate.template_config import WorkloadConfigBaseModel
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from typing import Type
@@ -81,7 +81,8 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
         Path to rendered template
     """
     workload_type = validated_config.workload_type.lower()
-    template_source_path = f"de_templates/{workload_type}/{validated_config.template_source_folder}/"
+    templates_directory = "datastacks/datastacks/generate/templates"
+    template_source_path = f"{templates_directory}/{workload_type}/{validated_config.template_source_folder}/"
     target_dir = generate_target_dir(workload_type, validated_config.name)
 
     if Path(f"{target_dir}").exists():
@@ -101,7 +102,7 @@ def generate_pipeline(validated_config: WorkloadConfigBaseModel, dq_flag: bool) 
     render_template_components(validated_config, template_source_path, target_dir)
     if dq_flag:
         template_source_folder = f"{validated_config.template_source_folder}_DQ"
-        template_source_path = f"de_templates/{workload_type}/{template_source_folder}/"
+        template_source_path = f"{templates_directory}/{workload_type}/{template_source_folder}/"
         render_template_components(validated_config, template_source_path, target_dir)
     click.echo(f"Successfully generated workload components: {target_dir}")
 
