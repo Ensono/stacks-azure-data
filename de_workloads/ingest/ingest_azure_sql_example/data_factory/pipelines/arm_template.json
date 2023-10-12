@@ -268,7 +268,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "pythonFile": "dbfs:/FileStore/scripts/ingest_azure_sql_example/ingest_dq.py",
+                            "pythonFile": "dbfs:/FileStore/scripts/ingest_azure_sql_example/data_quality.py",
                             "parameters": [
                                 "@variables('run_id')",
                                 "@string(variables('automated_test_flag'))",

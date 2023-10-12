@@ -5,7 +5,7 @@ from stacks.data.pyspark.etl import get_data_factory_param
 from stacks.data.pyspark.data_quality.main import data_quality_main
 from stacks.data.logger import setup_logger
 
-CONFIG_PATH = "ingest/ingest_azure_sql_example/data_quality/ingest_dq.json"
+CONFIG_PATH = "ingest/ingest_azure_sql_example/data_quality/data_quality_config.json"
 
 logger_library = "datastacks"
 
