@@ -98,7 +98,7 @@ Within the generated workload, the following Python file will be used as the ent
 
 ```python
 import logging
-from datastacks.logger import setup_logger
+from stacks.data.logger import setup_logger
 
 WORKLOAD_NAME = "processing_demo"
 
@@ -126,13 +126,13 @@ if __name__ == "__main__":
 For the getting started guide, we have provided a simple example - you may extend this based on whatever your workload requires. Copy the following additional imports and constants into the top of your `process.py` file:
 
 ```python
-from datastacks.pyspark.etl import (
+from stacks.data.pyspark.etl import (
     TableTransformation,
     get_spark_session_for_adls,
     read_latest_rundate_data,
     transform_and_save_as_delta,
 )
-from datastacks.pyspark.pyspark_utils import rename_columns_to_snake_case
+from stacks.data.pyspark.pyspark_utils import rename_columns_to_snake_case
 
 BRONZE_CONTAINER = "raw"
 SILVER_CONTAINER = "staging"

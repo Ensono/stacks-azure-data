@@ -62,7 +62,7 @@ You may pass parameters from Data Factory to the Python job executed in Databric
 These parameters can then be accessed from the Python file, by using the `get_data_factory_param` Datastacks function - for example the below could be used to access the first parameter shown above:
 
 ```python
-from datastacks.pyspark.etl import get_data_factory_param
+from stacks.data.pyspark.etl import get_data_factory_param
 
 run_id = get_data_factory_param(1, "default_run_id")
 ```

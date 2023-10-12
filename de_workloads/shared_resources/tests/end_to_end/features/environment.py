@@ -2,7 +2,7 @@ from behave import use_fixture
 from behave.model import Scenario
 from behave.runner import Context
 
-from datastacks.behave.fixtures import azure_blob_config_prepare
+from stacks.data.behave.fixtures import azure_blob_config_prepare
 
 DATA_TARGET_DIRECTORY = "shared_steps_test"
 DATA_LOCAL_DIRECTORY = "datastacks/tests/data/ingest_sources"
