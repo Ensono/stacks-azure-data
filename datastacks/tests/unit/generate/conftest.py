@@ -1,3 +1,7 @@
+TEST_CONFIG_DIRECTORY = "datastacks/tests/data/template_config/"
+TEST_CONFIG_INGEST = TEST_CONFIG_DIRECTORY + "test_config_ingest.yml"
+TEST_CONFIG_INGEST_OVERWRITE = TEST_CONFIG_DIRECTORY + "test_config_ingest_overwrite.yml"
+
 EXPECTED_FILE_LIST = [
     "config/ingest_sources/ingest_config.json",
     "config/schema/ingest_config_schema.json",

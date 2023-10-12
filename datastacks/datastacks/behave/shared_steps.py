@@ -1,3 +1,8 @@
+"""Behave Shared Steps.
+
+This module contains a collection of reusable Behave steps, designed to be used in tests running against Azure data
+workloads.
+"""
 import json
 import uuid
 from datetime import datetime

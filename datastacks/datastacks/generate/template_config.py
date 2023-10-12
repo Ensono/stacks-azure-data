@@ -1,3 +1,7 @@
+"""Template configuration.
+
+Classes specifying the configuration used for generation of data workloads from templates.
+"""
 from datetime import date, datetime
 from enum import Enum
 from typing import Optional, Literal

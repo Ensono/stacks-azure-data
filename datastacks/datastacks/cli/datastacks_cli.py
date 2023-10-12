@@ -10,8 +10,8 @@ from click_loglevel import LogLevel
 from datastacks.constants import CONFIG_CONTAINER_NAME
 from datastacks.pyspark.data_quality.main import data_quality_main
 from datastacks.logger import setup_logger
-from datastacks.cli.utils import validate_yaml_config, generate_pipeline
-from datastacks.cli.config import IngestWorkloadConfigModel, ProcessingWorkloadConfigModel
+from datastacks.generate.data_workloads import validate_yaml_config, generate_pipeline
+from datastacks.generate.template_config import IngestWorkloadConfigModel, ProcessingWorkloadConfigModel
 
 
 @click.group()

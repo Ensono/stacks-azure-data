@@ -1,3 +1,7 @@
+"""Utilities module.
+
+This module provides a collection of generic helper functions and utilities to support datastacks.
+"""
 import json
 import logging
 import os

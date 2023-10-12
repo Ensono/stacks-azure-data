@@ -1,3 +1,7 @@
+"""Azure utilities - Blob.
+
+This module provides a collection of helper functions related to Azure Blob Storage.
+"""
 import logging
 from azure.storage.blob import BlobServiceClient
 

@@ -1,3 +1,7 @@
+"""Azure utilities - ADLS.
+
+This module provides a collection of helper functions related to Azure Data Lake Storage (ADLS).
+"""
 import logging
 from azure.storage.filedatalake import DataLakeServiceClient
 
