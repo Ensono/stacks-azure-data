@@ -1,37 +1,17 @@
 [tool.poetry]
-name = "datastacks"
-version = "0.4.0"
-description = "A tool for generating data pipelines, featuring utilities for data transformations."
+name = "stacks-azure-data"
+version = "0.5.0"
+description = "Stacks provides a solution to accelerate the deployment of an Azure data platform."
 authors = [
     "Andy Durkan <andy.durkan@ensono.com>",
     "Paulina Motyl <paulina.motyl@ensono.com>",
 ]
 readme = "README.md"
-
-packages = [
-    { include = "datastacks", from = "datastacks" },
-]
+homepage = "https://github.com/Ensono/stacks-azure-data"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-click = "^8.1.7"
-pyspark = "^3.4.0"
-jsonschema = "^4.17.3"
-azure-identity = "^1.13.0"
-azure-mgmt-datafactory = "^3.1.0"
-azure-storage-file-datalake = "^12.11.0"
-click-loglevel = "^0.4.0.post1"
-colorlog = "^6.7.0"
-polling2 = "^0.5.0"
-jinja2 = "^3.1.2"
-pyyaml = "^6.0.1"
-great-expectations = "^0.17.11"
-pydantic = "^1.10.12"
-delta-spark = "^2.4.0"
-behave = "^1.2.6"
-
-[tool.poetry.scripts]
-datastacks = "datastacks.cli.datastacks_cli:cli"
+stacks-data = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
