@@ -11,7 +11,7 @@ DQ_CONFIG_PATH = f"{CONFIG_PATH}/data_quality"
 DQ_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/data_quality_config_schema.json"
 
 
-def test_config_processing_schemas_valid():
+def test_data_quality_schemas_valid():
     schema = load_config_as_dict(INGEST_DQ_CONFIG_SCHEMA)
     all_configs = load_configs_as_list(INGEST_DQ_CONFIG_PATH)
     assert all_configs
