@@ -25,7 +25,7 @@ def test_data_quality_schemas_valid():
         raise Exception(errors)
 
 
-def test_config_ingest_dq_uniqueness():
+def test_config_data_quality_uniqueness():
     all_configs = load_configs_as_list(INGEST_DQ_CONFIG_PATH)
     errors = []
     for config in all_configs:
