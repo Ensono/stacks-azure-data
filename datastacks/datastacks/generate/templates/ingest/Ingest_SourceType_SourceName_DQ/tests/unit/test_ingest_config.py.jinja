@@ -1,3 +1,4 @@
+{% set pipeline_name = 'ingest_' ~ dataset_name -%}
 import pytest
 from jsonschema import validate
 
@@ -7,7 +8,7 @@ from datastacks.utils import (
     load_configs_as_list,
 )
 
-CONFIG_PATH = "de_workloads/ingest/ingest_azure_sql_example/config"
+CONFIG_PATH = "de_workloads/ingest/{{ pipeline_name }}/config"
 INGEST_CONFIG_PATH = f"{CONFIG_PATH}/ingest_sources"
 INGEST_DQ_CONFIG_PATH = f"{CONFIG_PATH}/data_quality"
 INGEST_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/ingest_config_schema.json"
