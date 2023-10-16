@@ -102,7 +102,7 @@ from stacks.data.logger import setup_logger
 
 WORKLOAD_NAME = "processing_demo"
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 logger = logging.getLogger(logger_library)
 
 

@@ -16,7 +16,7 @@ SOURCE_DATA_TYPE = "delta"
 INPUT_PATH_PATTERN = "movies/{table_name}"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 logger = logging.getLogger(logger_library)
 
 

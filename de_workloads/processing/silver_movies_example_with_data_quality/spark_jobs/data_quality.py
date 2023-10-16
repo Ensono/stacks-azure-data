@@ -7,7 +7,7 @@ from stacks.data.logger import setup_logger
 
 CONFIG_PATH = "processing/silver_movies_example_with_data_quality/data_quality/data_quality_config.json"
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ INPUT_PATH_PATTERN = "ingest_azure_sql_example/movies.{table_name}/v1/full/"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 logger = logging.getLogger(logger_library)
 
 
