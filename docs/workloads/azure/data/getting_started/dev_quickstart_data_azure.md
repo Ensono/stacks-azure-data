@@ -17,10 +17,14 @@ This section covers the steps required to start developing a Ensono Stacks Azure
 
 ## Environment setup
 
-A Makefile has been created to assist with setting up the development environment. Run:
+A Makefile has been created to assist with setting up the development environment. The commands below will use Poetry to create a Python virtual environment and install requirements (including [stacks-data](../data_engineering/stacks_data_utilities.md)):
 
 ```bash
+# Use make command to setup your local development environment
 make setup_dev_environment
+
+# Enter the Poetry virtual environment shell
+poetry shell
 ```
 
 ### (Optional) Azure connection
@@ -79,12 +83,6 @@ make pre_commit
 
 ## (Optional) PySpark development in Databricks
 
-:::note Prerequisite
-
-This sub-section assumes that [Datastacks build & deployment](./datastacks_deployment_azure.md) has been completed - if you are working through the _getting started guide_ for the first time, you may skip this section.
-
-:::
-
 When developing with PySpark, you may wish to either:
 
 - Run scripts locally using a local Spark installation, or
@@ -92,15 +90,13 @@ When developing with PySpark, you may wish to either:
 
 To run scripts within a Databricks cluster, you will need to:
 
-- Install the Datastacks whl file on the cluster, either from:
-    - The latest deployed version in `dbfs:/FileStore/jars/datastacks-latest-py3-none-any.whl`, or
-    - Create a new whl file with the `poetry build` command.
-- Add the additional [environment variables](../data_engineering/pyspark_utilities.md#prerequisites) required for PySpark development - the values can be set as per the Data Factory linked service (see [adf_linked_services.tf](https://github.com/Ensono/stacks-azure-data/blob/main/de_workloads/shared_resources/data_factory/adf_linked_services.tf)).
+- Ensure the [stacks-data library](../data_engineering/stacks_data_utilities.md) is installed on the cluster.
+- Add the additional [Azure environment variables](../data_engineering/stacks_data_utilities.md#azure-environment-variables) - the values can be set as per the Data Factory linked service (see [adf_linked_services.tf](https://github.com/Ensono/stacks-azure-data/blob/main/de_workloads/shared_resources/data_factory/adf_linked_services.tf)).
 - Ensure the user has appropriate permissions for Azure resources required.
 
 ## Azure Data Factory Development
 
-A core component of the Ensono Stacks Azure data platform is [Azure Data Factory](https://learn.microsoft.com/en-us/azure/data-factory/), which is used for ingest activities, pipeline orchestration and scheduling. When an instance of Data Factory has been deployed, it's intuitive user interface can be used for reviewing, monitoring and editing resources.
+A core component of the Ensono Stacks Data Platform is [Azure Data Factory](https://learn.microsoft.com/en-us/azure/data-factory/), which is used for ingest activities, pipeline orchestration and scheduling. When an instance of Data Factory has been deployed, it's intuitive user interface can be used for reviewing, monitoring and editing resources.
 
 While resources can be edited directly through the UI, the approach used in Stacks is to manage all resources through infrastructure-as-code using Terraform. The allows full CI/CD capabilities and control over changes across environments. Developers may use Data Factory's UI to assist in the development of new resources, and then transpose these into the project repository.
 
