@@ -47,7 +47,7 @@
                             "libraries": [
                                 {
                                     "pypi": {
-                                        "package": "stacks-data"
+                                        "package": "stacks-data==0.2.1"
                                     }
                                 }
                             ]
