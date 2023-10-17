@@ -147,7 +147,7 @@ def execute_validations(
         batch_request=batch_request,
         expectation_suite_name=dq_conf.expectation_suite_name,
     )
-    gx_validation_results = validator.validate()
+    gx_validation_results = validator.validate(result_format="COMPLETE")
 
     return gx_validation_results
 
@@ -181,6 +181,7 @@ def publish_quality_results_table(
             StructField("threshold", StringType(), True),
             StructField("failure_count", StringType(), True),
             StructField("failure_percent", StringType(), True),
+            StructField("failure_query", StringType(), True),
             StructField("dq_check_exception", BooleanType(), True),
             StructField("exception_message", StringType(), True),
             StructField("success", BooleanType(), True),
@@ -203,12 +204,14 @@ def publish_quality_results_table(
             result_entry = result_entry + (
                 result.result.get("unexpected_count"),
                 result.result.get("unexpected_percent"),
+                result.result.get("unexpected_index_query"),
                 False,
                 None,
                 result.get("success"),
             )
         else:
             result_entry = result_entry + (
+                None,
                 None,
                 None,
                 True,
@@ -257,3 +260,25 @@ def replace_adls_data_location(
             f"Input path is not the expected format for ADLS, cannot update location: {adls_location_path}..."
         )
         return adls_location_path
+
+
+def select_failed_data(spark: SparkSession, failed_validations: DataFrame) -> DataFrame:
+    """Quarantine failed data.
+
+    Given a dataframe containing failed validations, this function
+    writes out the failed data to a quarantine location
+
+    Args:
+        spark: Spark session.
+        failed_validations: Dataframe containing failed validations
+
+    Returns:
+        Dataframe containing failed data
+    """
+    failure_queries_rows = failed_validations.select("failure_query").distinct().collect()
+    failure_queries = [row.failure_query for row in failure_queries_rows]
+
+    failed_data = spark.sql(failure_queries.pop())
+    for failure_query in failure_queries:
+        failed_data = failed_data.union(spark.sql(failure_query))
+    return failed_data
