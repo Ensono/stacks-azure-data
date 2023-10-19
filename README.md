@@ -5,10 +5,10 @@ Link to the official documentation:
 
 ## Overview
 
-The [Ensono Stacks Azure Data Platform](https://github.com/ensono/stacks-azure-data) solution provides
+The Ensono Stacks Azure Data Platform solution provides
 a framework for accelerating the deployment of a production-ready modern data platform in Azure.
 
-![Ensono Stacks Data Overview](./images/stacks-data-overview.png)
+![Ensono Stacks Data Overview](./docs/workloads/azure/data/images/stacks-data-overview.png)
 
 1. Use the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about) to generate a new data platform project.
 2. Build and deploy the data platform infrastructure into your Azure environment.
