@@ -5,8 +5,7 @@ Link to the official documentation:
 
 ## Overview
 
-The Ensono Stacks Azure Data Platform solution provides
-a framework for accelerating the deployment of a production-ready modern data platform in Azure.
+The Ensono Stacks Azure Data Platform solution provides a framework for accelerating the deployment of a production-ready modern data platform in Azure.
 
 ![Ensono Stacks Data Overview](./docs/workloads/azure/data/images/stacks-data-overview.png)
 
