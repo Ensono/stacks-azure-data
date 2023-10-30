@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://github.com/Ensono/stacks-azure-data"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.9, <3.12"
 stacks-data = "^0.3.2"
 
 [tool.poetry.group.dev.dependencies]
