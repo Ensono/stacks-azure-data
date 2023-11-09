@@ -29,7 +29,7 @@ data_factory
 
 ## Spark Jobs
 
-This spark job is written in Python (Pyspark) and uses the [Datastacks](../../../datastacks) library to process datasets produced by the `silver_movies_example` workload and produce a Gold layer dataset. Specifically, it loads the `ratings_small` dataset, calculates the average rating for each movie, and joins that to the `movies_metadata` dataset before outputting it as a new `movies_ratings_agg` dataset.
+This Spark job is written in Python (PySpark) and uses the `stacks-data` library to process datasets produced by the `silver_movies_example` workload and produce a Gold layer dataset. Specifically, it loads the `ratings_small` dataset, calculates the average rating for each movie, and joins that to the `movies_metadata` dataset before outputting it as a new `movies_ratings_agg` dataset.
 
 ```
 spark_jobs

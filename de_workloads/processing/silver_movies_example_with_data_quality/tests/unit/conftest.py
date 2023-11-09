@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from datastacks.pyspark.pyspark_utils import get_spark_session
+from stacks.data.pyspark.pyspark_utils import get_spark_session
 
 
 @fixture(scope="session")

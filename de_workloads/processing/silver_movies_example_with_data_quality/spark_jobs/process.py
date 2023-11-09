@@ -4,15 +4,15 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, explode, from_json
 from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, StructType
 
-from datastacks.constants import BRONZE_CONTAINER_NAME, SILVER_CONTAINER_NAME
-from datastacks.pyspark.etl import (
+from stacks.data.constants import BRONZE_CONTAINER_NAME, SILVER_CONTAINER_NAME
+from stacks.data.pyspark.etl import (
     TableTransformation,
     get_spark_session_for_adls,
     read_latest_rundate_data,
     transform_and_save_as_delta,
 )
-from datastacks.logger import setup_logger
-from datastacks.pyspark.pyspark_utils import rename_columns_to_snake_case
+from stacks.data.logger import setup_logger
+from stacks.data.pyspark.pyspark_utils import rename_columns_to_snake_case
 
 WORKLOAD_NAME = "silver_movies_example"
 SOURCE_DATA_TYPE = "parquet"
@@ -20,7 +20,7 @@ INPUT_PATH_PATTERN = "ingest_azure_sql_example/movies.{table_name}/v1/full/"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 logger = logging.getLogger(logger_library)
 
 

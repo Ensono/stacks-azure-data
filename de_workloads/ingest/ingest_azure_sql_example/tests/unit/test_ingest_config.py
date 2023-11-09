@@ -1,7 +1,7 @@
 import pytest
 from jsonschema import validate
 
-from datastacks.utils import (
+from stacks.data.utils import (
     config_uniqueness_check,
     load_config_as_dict,
     load_configs_as_list,
@@ -11,7 +11,7 @@ CONFIG_PATH = "de_workloads/ingest/ingest_azure_sql_example/config"
 INGEST_CONFIG_PATH = f"{CONFIG_PATH}/ingest_sources"
 INGEST_DQ_CONFIG_PATH = f"{CONFIG_PATH}/data_quality"
 INGEST_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/ingest_config_schema.json"
-INGEST_DQ_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/ingest_dq_schema.json"
+INGEST_DQ_CONFIG_SCHEMA = f"{CONFIG_PATH}/schema/data_quality_config_schema.json"
 
 
 @pytest.mark.parametrize(

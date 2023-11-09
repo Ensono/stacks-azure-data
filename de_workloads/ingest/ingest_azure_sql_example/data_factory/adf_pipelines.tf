@@ -7,7 +7,7 @@ resource "azurerm_resource_group_template_deployment" "pipeline_ingest_azure_sql
       value = data.azurerm_data_factory.factory.name
     }
   })
-  template_content = file("${path.module}/pipelines/ARM_IngestTemplate.json")
+  template_content = file("${path.module}/pipelines/arm_template.json")
   depends_on = [
     azurerm_data_factory_custom_dataset.ds_azure_sql_example
   ]

@@ -12,7 +12,7 @@ keywords:
   - template
 ---
 
-This section provides an overview of scaffolding and generating a new Data Platform project using the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about).
+This section provides an overview of scaffolding and generating a new data platform project using the [Ensono Stacks CLI](/docs/stackscli/about).
 
 It assumes the following [requirements](./requirements_data_azure.md) are in place:
 
@@ -21,7 +21,7 @@ It assumes the following [requirements](./requirements_data_azure.md) are in pla
 
 ## Step 1: Install the Ensono Stacks CLI
 
-Download and install the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about).
+Download and install the [Ensono Stacks CLI](/docs/stackscli/about).
 Please refer to the **Stacks.CLI.Manual** in the latest [stacks-cli release](https://github.com/ensono/stacks-cli/releases) for detailed instructions.
 
 ## Step 2: Prepare the project config

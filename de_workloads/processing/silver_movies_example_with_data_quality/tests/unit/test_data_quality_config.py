@@ -1,6 +1,6 @@
 from jsonschema import validate
 
-from datastacks.utils import (
+from stacks.data.utils import (
     config_uniqueness_check,
     load_config_as_dict,
     load_configs_as_list,
