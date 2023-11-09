@@ -3,20 +3,20 @@ import logging
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import avg
 
-from datastacks.constants import SILVER_CONTAINER_NAME, GOLD_CONTAINER_NAME
-from datastacks.logger import setup_logger
-from datastacks.pyspark.etl import (
+from stacks.data.constants import SILVER_CONTAINER_NAME, GOLD_CONTAINER_NAME
+from stacks.data.logger import setup_logger
+from stacks.data.pyspark.etl import (
     get_spark_session_for_adls,
 )
-from datastacks.pyspark.pyspark_utils import save_dataframe_as_delta, read_datasource
-from datastacks.pyspark.storage_utils import get_adls_file_url
+from stacks.data.pyspark.pyspark_utils import save_dataframe_as_delta, read_datasource
+from stacks.data.pyspark.storage_utils import get_adls_file_url
 
 WORKLOAD_NAME = "gold_movies_example"
 SOURCE_DATA_TYPE = "delta"
 INPUT_PATH_PATTERN = "movies/{table_name}"
 OUTPUT_PATH_PATTERN = "movies/{table_name}"
 
-logger_library = "datastacks"
+logger_library = "stacks.data"
 logger = logging.getLogger(logger_library)
 
 

@@ -1,5 +1,3 @@
-{% set pipeline_name = 'ingest_' ~ dataset_name -%}
-{% set source_type = 'AzureSqlSource' if data_source_type == 'azure_sql' else '' -%}
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -14,11 +12,11 @@
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), '/{{ pipeline_name }}')]",
+            "name": "[concat(parameters('factoryName'), '/ingest_azure_sql_example')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
-                "description": "{{ pipeline_description }}",
+                "description": "Ingest from demo Azure SQL database using ingest config file, with data quality checks.",
                 "activities": [
                     {
                         "name": "Get_Ingest_Config",
@@ -67,7 +65,7 @@
                             "isSequential": false,
                             "activities": [
                                 {
-                                    "name": "{{ data_source_type | upper }}_to_ADLS",
+                                    "name": "AZURE_SQL_to_ADLS",
                                     "type": "Copy",
                                     "dependsOn": [
                                         {
@@ -87,7 +85,7 @@
                                     "userProperties": [],
                                     "typeProperties": {
                                         "source": {
-                                            "type": "{{ source_type }}",
+                                            "type": "AzureSqlSource",
                                             "additionalColumns": [
                                                 {
                                                     "name": "meta_ingestion_datetime",
@@ -157,7 +155,7 @@
                                     },
                                     "inputs": [
                                         {
-                                            "referenceName": "ds_{{ dataset_name }}",
+                                            "referenceName": "ds_azure_sql_example",
                                             "type": "DatasetReference",
                                             "parameters": {}
                                         }
@@ -251,6 +249,45 @@
                         }
                     },
                     {
+                        "name": "Data_Quality",
+                        "type": "DatabricksSparkPython",
+                        "dependsOn": [
+                            {
+                                "activity": "For_Each_Ingest_Entity",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "1:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "pythonFile": "dbfs:/FileStore/scripts/ingest_azure_sql_example/data_quality.py",
+                            "parameters": [
+                                "@variables('run_id')",
+                                "@string(variables('automated_test_flag'))",
+                                "@variables('output_path')"
+                            ],
+                            "libraries": [
+                                {
+                                    "pypi": {
+                                        "package": "stacks-data==0.3.3"
+                                    }
+                                }
+                            ]
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "ls_Databricks_Small",
+                            "type": "LinkedServiceReference"
+                        }
+                    },
+                    {
                         "name": "output_path",
                         "type": "SetVariable",
                         "dependsOn": [
@@ -286,7 +323,7 @@
                     },
                     "data_source_name": {
                         "type": "string",
-                        "defaultValue": "{{ pipeline_name }}"
+                        "defaultValue": "ingest_azure_sql_example"
                     },
                     "run_id": {
                         "type": "string",
@@ -294,15 +331,15 @@
                     },
                     "window_end": {
                         "type": "string",
-                        "defaultValue": "{{ window_end_default }}"
+                        "defaultValue": "2010-01-31"
                     },
                     "window_start": {
                         "type": "string",
-                        "defaultValue": "{{ window_start_default }}"
+                        "defaultValue": "2010-01-01"
                     },
                     "default_output_path": {
                         "type": "string",
-                        "defaultValue": "{{ pipeline_name }}"
+                        "defaultValue": "ingest_azure_sql_example"
                     }
                 },
                 "variables": {

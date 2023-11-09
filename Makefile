@@ -6,7 +6,6 @@ setup_dev_environment:
 
 test:
 	poetry run python -m pytest de_workloads
-	poetry run python -m pytest datastacks
 
 test_e2e:
 	poetry run behave de_workloads/shared_resources/tests/end_to_end/features/shared_resources.feature
