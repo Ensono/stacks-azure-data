@@ -29,7 +29,7 @@ tasks:
     context: powershell
     description: Initialise Terraform for Azure
     command:
-      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_ARGS" -Path $env:TF_FILE_LOCATION -Debug
+      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION -Debug
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
 
   infra:plan:
@@ -81,3 +81,16 @@ tasks:
       - sleep {{ .sleep }}
     variables:
       sleep: 30
+
+  # The following tasks are used to setup a local environment using the information in the stage_envvars.yml file
+  setup:dev:
+    context: powershell
+    description: Create a shell script to configure the environment variables
+    command:
+      - New-EnvConfig -Path /app/build/config/stage_envvars.yml -ScriptPath /app/local
+
+  setup:environment:
+    context: powershell
+    description: Ensure that the environment is configured correctly
+    command:
+      - Confirm-Environment -Path /app/build/config/stage_envvars.yml

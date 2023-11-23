@@ -1,0 +1,53 @@
+# State the env vars that need to exist in each stage
+# The default section will always be checked
+
+default:
+  variables:
+    - name: CLOUD_PLATFORM
+      description: Cloud that is being targeted, e.g. aws or azure
+    - name: STAGE
+      description: The stage that is being deployed by this pipeline run
+    - name: TESTS_PATH
+      description: Path to the tests folder
+      required: false
+  credentials:
+    azure:
+      - name: ARM_CLIENT_ID
+      - name: ARM_CLIENT_SECRET
+      - name: ARM_SUBSCRIPTION_ID
+      - name: ARM_TENANT_ID
+    aws:
+      - name: AWS_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+      - name: AWS_REGION
+
+stages:
+  - name: networking
+    variables:
+      - name: TF_FILE_LOCATION
+        description: Path to the Terraform template files, from the perspective of the executing container
+      - name: TF_VAR_enable_private_network
+        description: State if the infrastructure should be deployed using private networks
+      - name: TF_VAR_core_environment
+        description: Environment that things are being deployed to
+      - name: TF_VAR_component
+        description: Component that is being deployed
+      - name: TF_VAR_resource_group_location
+        description: Location of the resource group in Azure
+      - name: TF_VAR_name_company
+        description: Name of the company for which this infrastructure is being built
+      - name: TF_VAR_name_project
+        description: Name of the project
+      - name: TF_VAR_name_domain
+        description: Area / domain that this project relates to
+      - name: TF_VAR_stage
+        description: Stage within the specified Terraform files that is being deployed.
+      - name: TF_VAR_sql_admin_login
+        description: Name of the user to log into SQL with
+      - name: TF_VAR_build_agent_ip
+        description: IP address of the build agent which needs access to the platform. This is only required when using a private network
+      - name: TF_BACKEND_INIT
+        description: Arguments that should be passed to Terraform during the init process
+      - name: TF_BACKEND_PLAN
+        description: Arguments that should be passed to Terraform during the plan process
+        required: false
