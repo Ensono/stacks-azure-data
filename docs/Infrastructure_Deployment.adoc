@@ -10,7 +10,7 @@ The Terraform templates in this repository create any required networks as well 
 
 In order to use EIR locally two tools are required.
 
-* Taskctl - https://github.com/Ensono/taskctl/releases/tag/v1.5.0
+* Taskctl - https://github.com/Ensono/taskctl/releases/tag/v1.5.1
 ** Please ensure you download this version of Taskctl as it is has support for generating the environment file required for the container
 * Container Engine (any one of the following will work)
 ** Docker Desktop - https://www.docker.com/products/docker-desktop/
@@ -25,10 +25,14 @@ There are a number of variables that need to be configured in order to deploy an
 
 When the script file has been updated, run it and then subsequent tasks can be executed. All of the environment variables in the current shell will be copied into the execution environment.
 
+NOTE: The following provides an example of deploying the network stage of the Terraform files. The same process is true for the infra stage.
+
+IMPORTANT: If the repo directory does not have a `local` subfolder, create it. This folder is ignored by Git so files will be not be checked in. The directory is used to save generated script files.
+
 [source,powershell,linenums]
 ----
 # Create a script to setup the environment variables for networking infrastructure
-mkdir local # This directory is ignored by Git
+$env:CLOUD_PLATFORM = "azure"
 $env:STAGE = "networking"
 taskctl setup:dev
 ----
@@ -36,74 +40,96 @@ taskctl setup:dev
 .Create script to configure environment variables
 image::images/create-env-script.png[]
 
+The setting of the CLOUD_PROVIDER variable informs the script which environment variables are required for the chosen provider. These will be added to the script and should be updated accordingly:
+
+[cols="1a,1a",options=header]
+|====
+| Azure | AWS
+| * ARM_CLIENT_ID
+* ARM_CLIENT_SECRET
+* ARM_SUBSCRIPTION_ID
+* ARM_TENANT_ID
+| * AWS_ACCESS_KEY_ID
+* AWS_SECRET_ACCESS_KEY
+* AWS_REGION
+|====
+
+
+NOTE: If there are concerns about adding such values to a file they can be set before the generation of the script, as they have values they will not be added to the file.
+
 Once the file has been created, it needs to be edited with the relevant values. The following shows example values in the file.
 
+.Setting envrionment variables
 [source,powershell,options=linenums]
 ----
-# Cloud that is being targeted, e.g. aws or azure
+# The Cloud platform for which these variables are being set
 $env:CLOUD_PLATFORM="azure"
 
 # Path to the Terraform template files, from the perspective of the executing container
 $env:TF_FILE_LOCATION="/app/deploy/azure/networking"
 
-# State if the infrastructure should be deployed using private networks
-$env:TF_VAR_enable_private_network="false"
+# 
+$env:ARM_CLIENT_ID="d819a784-70ca-4eb2-bce2-ffbd7035fb6a"
 
-# Environment that things are being deployed to
-$env:TF_VAR_core_environment="nonprod"
+# 
+$env:ARM_CLIENT_SECRET="gPGKp3LUN1QnhSY5lakiAeMZjsO7XxWD"
 
-# Component that is being deployed
-$env:TF_VAR_component="de"
+# 
+$env:ARM_SUBSCRIPTION_ID="9c2c9cee-3f32-40b0-926a-87ebaefcadae"
 
-# Location of the resource group in Azure
-$env:TF_VAR_resource_group_location="westeurope"
+# 
+$env:ARM_TENANT_ID="d0f9915f-7774-4679-b47d-f456d8583e24"
 
-# Name of the company for which this infrastructure is being built
+# Company Name - should/will be used in conventional resource naming
 $env:TF_VAR_name_company="ensono"
 
-# Name of the project
+# Project Name - should/will be used in conventional resource naming
 $env:TF_VAR_name_project="salesdata"
 
-# Area / domain that this project relates to
-$env:TF_VAR_name_domain="core-data"
-
-# Stage within the specified Terraform files that is being deployed.
-$env:TF_VAR_stage="dev"
-
-# Name of the user to log into SQL with
-$env:TF_VAR_sql_admin_login="mssqladmin"
-
-# IP address of the build agent which needs access to the platform. This is only required when using a private network
-$env:TF_VAR_build_agent_ip=""
-
 # Arguments that should be passed to Terraform during the init process
-$env:TF_BACKEND_INIT = "key=$($env:tf_state_key),storage_account_name=amidostackstfstate,resource_group_name=$($env:TF_STATE_RG),container_name=$($env:TF_STATE_CONTAINER),subscription_id=$($env:arm_subscription_id),tenant_id=$($env:arm_tenant_id),client_id=$($env:arm_client_id),client_secret=$($env:arm_client_secret)"
+$env:TF_BACKEND_INIT="key=rjsdata,storage_account_name=stacksstate,resource_group_name=Stacks-Ancillary-Resources,container_name=tfstate,subscription_id=$($env:arm_subscription_id),tenant_id=$($env:arm_tenant_id),client_id=$($env:arm_client_id),client_secret=$($env:arm_client_secret)"
 ----
+
+NOTE: The credentials values set for Azure in the above script are dummy values and will not work with Azure.
 
 After editing the file needs to be executed so that the variables are set in the environment before the tasks are excecuted. In addition to the variables in the file, the following credential variables need to be set for the specified cloud.
 
-* Azure
-** ARM_CLIENT_ID
-** ARM_CLIENT_SECRET
-** ARM_SUBSCRITPION_ID
-** ARM_TENANT_ID
-* AWS
-** AWS_ACCESS_KEY_ID
-** AWS_SECRET_ACCESS_KEY
-** AWS_REGION
-
 [source,powershell,linenums]
 ----
-# Set the credential environment variables
-# The values set here are dummy values and do not provide access to Azure
-$env:ARM_CLIENT_ID = "d819a784-70ca-4eb2-bce2-ffbd7035fb6a"
-$env:ARM_CLIENT_SECRET = "gPGKp3LUN1QnhSY5lakiAeMZjsO7XxWD"
-$env:ARM_SUBSCRIPTION_ID = "9c2c9cee-3f32-40b0-926a-87ebaefcadae"
-$env:ARM_TENANT_ID = "d0f9915f-7774-4679-b47d-f456d8583e24"
-
 # Execute environment variable script
-local/env--networking.ps1
+local/env-azure-networking.ps1
 
 # Run the task to initialise the chosen terraform templates
 taskctl infra:init
+
+# Generate a plan for the resources that need to be created
+taskctl infra:plan
 ----
+
+.Initialising Terraform
+image::images/terraform-init.png[]
+
+.Creating the plan
+image::images/networking-no-private.png[]
+
+=== Enabling Private Networks
+
+It is possible to create a number of virtual networks, and associated subnets, which will be used when the parameter `enable_private_networks` is enabled. If this is required update the environment variables so that:
+
+[cols="1a,1a",options=header]
+|===
+| PowerShell | Bash
+| [source,powershell]
+----
+$env:TF_VAR_enable_private_networks = 'true'
+----
+| [source,bash]
+----
+export TF_VAR_enable_private_networks = 'true'
+----
+|===
+
+Run the command `taskctl infra:plan` again to get the networking configured.
+
+.Creating a plan for private networking
+image::images/networking-private.png[]

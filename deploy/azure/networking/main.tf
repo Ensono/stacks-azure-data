@@ -11,24 +11,23 @@ module "default_label" {
 }
 
 module "networking" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-hub-spoke?ref=fix/deployment"
   enable_private_networks = var.enable_private_networks ## NOTE setting this value to false will cause no resources to be created !!
-  network_details         = var.network_details
+  network_details         = local.network_details
   resource_group_location = var.resource_group_location
   create_hub_fw           = var.create_hub_fw
   create_fw_public_ip     = var.create_fw_public_ip
-  create_private_dns_zone = var.create_private_dns_zone
-  dns_zone_name           = module.default_label.id
+  dns_zone_name           = [module.default_label.id]
 }
 
 module "vmss" {
   count                        = var.enable_private_networks ? 1 : 0
-  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss"
+  source                       = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-vmss?ref=fix/deployment"
   vmss_name                    = module.default_label.id
-  vmss_resource_group_name     = module.networking.vnets["amido-stacks-euw-de-hub"].vnet_resource_group_name
+  vmss_resource_group_name     = length(module.networking) > 0 ? module.networking.vnets[module.networking.hub_net_name].vnet_resource_group_name : ""
   vmss_resource_group_location = var.resource_group_location
   vnet_name                    = module.networking.hub_net_name
-  vnet_resource_group          = module.networking.vnets["amido-stacks-euw-de-hub"].vnet_resource_group_name
+  vnet_resource_group          = module.networking.vnets[module.networking.hub_net_name].vnet_resource_group_name
   subnet_name                  = var.vmss_subnet_name
   vmss_instances               = var.vmss_instances
   vmss_admin_username          = var.vmss_admin_username
