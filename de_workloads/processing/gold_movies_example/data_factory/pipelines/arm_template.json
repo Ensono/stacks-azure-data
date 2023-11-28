@@ -115,11 +115,10 @@
                     },
                     "run_id": {
                         "type": "String"
+                    },
+                    "output_path": {
+                        "type": "String"
                     }
-                },
-                "policy": {
-                    "elapsedTimeMetric": {},
-                    "cancelAfter": {}
                 },
                 "folder": {
                     "name": "Process"
