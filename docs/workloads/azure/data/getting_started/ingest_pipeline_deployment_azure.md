@@ -132,6 +132,7 @@ The default ingest workload contains an example [tumbling window trigger](../dat
 Configuration of the data that the workload will ingest from the source is specified in the file in the workload's `config/ingest_sources/ingest_config.json` file - see [data ingest configuration](../data_engineering/ingest_data_azure.md#configuration) for further details on this file. For the example data source, update the contents of the file with the following:
 
 ```json
+
 {
     "data_source_name": "Ingest_AzureSql_MyNewExample",
     "data_source_type": "azure_sql",
@@ -155,12 +156,35 @@ Configuration of the data that the workload will ingest from the source is speci
             "schema": "movies",
             "table": "ratings_small",
             "columns": "[userId], [movieId], [rating], [timestamp]",
-            "load_type": "delta",
-            "delta_date_column": "DATEADD(SECOND,[timestamp],'1970-01-01')",
-            "delta_upsert_key": "[userId], [movieId]"
+            "load_type": "full",
+            "delta_date_column": null,
+            "delta_upsert_key": null
+        },
+        {
+            "version": 1,
+            "display_name": "movies.keywords",
+            "enabled": true,
+            "schema": "movies",
+            "table": "keywords",
+            "columns": "[id], [keywords]",
+            "load_type": "full",
+            "delta_date_column": null,
+            "delta_upsert_key": null
+        },
+        {
+            "version": 1,
+            "display_name": "movies.links",
+            "enabled": true,
+            "schema": "movies",
+            "table": "links",
+            "columns": "[movieId], [imdbId], [tmdbId]",
+            "load_type": "full",
+            "delta_date_column": null,
+            "delta_upsert_key": null
         }
     ]
 }
+
 ```
 
 ## Step 5: Update end-to-end tests
