@@ -1,5 +1,5 @@
 locals {
-    
+
   # Each region must have corresponding a shortend name for resource naming purposes
   location_name_map = {
     northeurope   = "eun"

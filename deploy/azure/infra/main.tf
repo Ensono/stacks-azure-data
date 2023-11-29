@@ -27,7 +27,7 @@ module "kv_default" {
   enable_rbac_authorization  = false
   resource_tags              = module.default_label.tags
   contributor_object_ids     = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network     = true
+  enable_private_network     = var.enable_private_networks
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
@@ -46,10 +46,12 @@ module "adf" {
   repository_name                 = var.repository_name
   root_folder                     = var.root_folder
   managed_virtual_network_enabled = var.managed_virtual_network_enabled
+  public_network_enabled          = var.enable_private_networks == true ? false : true
 }
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
 resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
+  count = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_blob
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[0]
@@ -57,6 +59,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
+  count = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_dfs
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[1]
@@ -64,6 +67,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
+  count = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_kv
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.kv_default.id
@@ -71,6 +75,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
+  count = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_sql
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.sql.sql_server_id
@@ -160,7 +165,6 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 
 # Storage accounts for data lake and config
 module "adls_default" {
-
   source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
   resource_namer             = module.default_label.id
   resource_group_name        = azurerm_resource_group.default.name
@@ -168,7 +172,7 @@ module "adls_default" {
   storage_account_details    = var.storage_account_details
   container_access_type      = var.container_access_type
   resource_tags              = module.default_label.tags
-  enable_private_network     = true
+  enable_private_network     = var.enable_private_networks
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
@@ -209,13 +213,12 @@ module "sql" {
   administrator_login        = var.administrator_login
   sql_db_names               = var.sql_db_names
   resource_tags              = module.default_label.tags
-  enable_private_network     = true
+  enable_private_network     = var.enable_private_networks
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
   private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
   private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
-
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
@@ -247,6 +250,7 @@ module "adb" {
   add_rbac_users                           = var.add_rbac_users
   rbac_databricks_users                    = var.rbac_databricks_users
   databricks_group_display_name            = var.databricks_group_display_name
+  public_network_access_enabled            = var.enable_private_networks == true ? false : true
 }
 
 resource "azurerm_role_assignment" "adb_role" {
