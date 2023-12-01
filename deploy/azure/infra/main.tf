@@ -32,7 +32,7 @@ module "kv_default" {
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
   private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
+##  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
 }
 
 # module call for ADF
@@ -165,6 +165,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 
 # Storage accounts for data lake and config
 module "adls_default" {
+  azure_object_id            = data.azurerm_client_config.current.object_id
   source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-adls"
   resource_namer             = module.default_label.id
   resource_group_name        = azurerm_resource_group.default.name
@@ -218,7 +219,7 @@ module "sql" {
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
   private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
+ ## private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
@@ -246,10 +247,8 @@ module "adb" {
   enable_databricksws_diagnostic           = var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_enableDbfsFileBrowser             = var.enable_enableDbfsFileBrowser
-  add_rbac_users                           = var.add_rbac_users
-  rbac_databricks_users                    = var.rbac_databricks_users
-  databricks_group_display_name            = var.databricks_group_display_name
+ls 
+
   public_network_access_enabled            = var.enable_private_networks == true ? false : true
 }
 
