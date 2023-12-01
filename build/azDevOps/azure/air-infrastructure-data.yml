@@ -3,7 +3,7 @@ name: "$(Build.SourceBranchName)-init"
 pr:
   branches:
     include:
-    - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/*
@@ -13,27 +13,40 @@ pr:
 trigger:
   branches:
     include:
-      - 'main'
+      - "main"
   paths:
     include:
       - build/azDevOps/*
-      - build/taskctl/*      
+      - build/taskctl/*
       - deploy/azure/infra/*
 variables:
+  - template: ../../version-data-vars.yml
+  - template: ../../common-vars.yml
   - template: air-infrastructure-data-vars.yml
+  - name: tf_state_key
+    value: $(domain)
+  - name: TF_FILE_LOCATION
+    value: $(self_repo_tf_src)
 
 stages:
   - stage: Build
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
 
     jobs:
       - job: Validate
         pool:
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
           - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -64,9 +77,9 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-infra-credentials-nonprod
       - group: stacks-credentials-nonprod-kv
       - group: amido-stacks-euw-de-nonprod-network
+      - group: amido-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
         value: dev
       # Available in Terraform Output, but not yet enabled to export as pipeline vars
@@ -76,17 +89,26 @@ stages:
         value: nonprod
     jobs:
       - deployment: InfraNonProd
-        pool:
-          vmImage: $(pool_vm_image)
+        pool:  # "amido-stacks-core-data-agent-pool"
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         environment: ${{ variables.domain }}-nonprod
         strategy:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
                     TaskctlVersion: ${{ variables.TaskctlVersion }}
                 - bash: |
+                    sudo apt-get install -y jq
                     ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
                     echo "$ip"
                     echo "##vso[task.setvariable variable=build_agent_ip;]$ip"
@@ -107,10 +129,10 @@ stages:
                     ARM_TENANT_ID: $(azure-tenant-id)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_dev)
+                    TF_STATE_KEY: $(tf_state_key)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_dev),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
                     TF_VAR_core_environment: $(core_environment)
                     TF_VAR_name_component: $(component)
@@ -125,6 +147,15 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                    TF_VAR_public_subnet_name: $(databricks_public_subnet_name)
+                    TF_VAR_private_subnet_name: $(databricks_private_subnet_name)
+                    TF_VAR_pe_subnet_name: $(pe_subnet_name)
+                    TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
+                    TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
+                    TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+                    TF_VAR_link_dns_spoke_network: true
+                    TF_VAR_azure_client_secret: $(azure-client-secret)
+
 
   #   yamllint disable rule:comments-indentation
 
@@ -132,9 +163,9 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-infra-credentials-prod
       - group: stacks-credentials-prod-kv
       - group: amido-stacks-euw-de-prod-network
+      - group: amido-stacks-de-pipeline-prod
       - name: Environment.ShortName
         value: prod
       - name: dns_base_domain
@@ -144,7 +175,8 @@ stages:
     jobs:
       - deployment: AppInfraProd
         pool:
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
 
         environment: ${{ variables.domain }}-prod
 
@@ -152,6 +184,13 @@ stages:
           runOnce:
             deploy:
               steps:
+                - task: Bash@3
+                  displayName: "Clean Workspace"
+                  inputs:
+                    targetType: "inline"
+                    script: |
+                      echo "Cleaning workspace..."
+                      sudo rm -rf $(Build.SourcesDirectory)/*
 
                 - template: ../templates/air-infrastructure-data-setup.yml
                   parameters:
@@ -178,16 +217,16 @@ stages:
                     ARM_TENANT_ID: $(azure-tenant-id)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key_prod)
+                    TF_STATE_KEY: $(tf_state_key)
                     TS_STATE_RG: $(tf_state_rg)
                     TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key_prod),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"                    # Deployment Specific Configuration
+                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
                     # Deployment Specific Configuration
                     TF_VAR_core_environment: $(core_environment)
                     TF_VAR_name_component: $(component)
                     TF_VAR_resource_group_location: $(region)
-                    TF_VAR_create_cdn_endpoint: false
-                    TF_VAR_create_dns_record: true
+                    #TF_VAR_create_cdn_endpoint: false
+                    #TF_VAR_create_dns_record: true
                     TF_VAR_name_company: $(company)
                     TF_VAR_name_project: $(project)
                     TF_VAR_name_domain: $(domain)
@@ -198,22 +237,35 @@ stages:
                     TF_VAR_subnet_name: $(pe_subnet_name)
                     TF_VAR_vnet_name: $(pe_vnet_name)
                     TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
-
+                    TF_VAR_public_subnet_name: $(databricks_public_subnet_name)
+                    TF_VAR_private_subnet_name: $(databricks_private_subnet_name)
+                    TF_VAR_pe_subnet_name: $(pe_subnet_name)
+                    TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
+                    TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
+                    TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+                    TF_VAR_public_network_access_enabled: false
+                    TF_VAR_browser_authentication_enabled: true
+                    TF_VAR_link_dns_spoke_network: true
+                    TF_VAR_azure_client_secret: $(azure-client-secret)
 
   - stage: Release
     dependsOn:
       - Build
       - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
-    variables:
-      - group: amido-stacks-infra-credentials-nonprod
-      # - name: version_number
-      #   value: "$(version_major).$(version_minor).$(version_revision)"
     jobs:
       - job: CreateGitHubRelease
         pool:
-          vmImage: $(pool_vm_image)
+          # vmImage: $(pool_vm_image)
+          name: $(agentpool_name)
         steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
           # Check out the repo so that it can be tagged
           - checkout: self
             persistCredentials: true
@@ -269,11 +321,11 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: $(github_org)/$(self_repo)
+              repositoryName: '$(Build.Repository.Name)'
               tag: v${newVersion}
-              releaseNotesSource: 'inline'
+              releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"
-              tagSource: 'gitTag'
-              changeLogCompareToRelease: 'lastFullRelease'
-              changeLogType: 'commitBased'
+              tagSource: "gitTag"
+              changeLogCompareToRelease: "lastFullRelease"
+              changeLogType: "commitBased"
             condition: eq(variables['ShouldCreateRelease'], 'true')

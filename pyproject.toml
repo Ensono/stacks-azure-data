@@ -1,25 +1,51 @@
 [tool.poetry]
-name = "stacks-azure-data-platform"
-version = "0.1.0"
-description = ""
-authors = ["Andy Durkan <andy.durkan@ensono.com>"]
+name = "stacks-azure-data"
+version = "0.5.1"
+description = "Ensono Stacks provides a solution to accelerate the deployment of an Azure data platform."
+authors = [
+    "Ensono Stacks <stacks@ensono.com>"
+]
 readme = "README.md"
+homepage = "https://github.com/Ensono/stacks-azure-data"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-pytest = "^7.2.2"
-jsonschema = "^4.17.3"
-behave = "^1.2.6"
-azure-identity = "^1.12.0"
-azure-mgmt-datafactory = "^3.1.0"
-azure-storage-file-datalake = "^12.11.0"
-polling2 = "^0.5.0"
+python = "^3.9, <3.12"
+stacks-data = "^0.3.2"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
 black = "^23.1.0"
 pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
+flake8-docstrings = "^1.7.0"
+pydocstyle = "^6.3.0"
+tomli = "^2.0.1"
+pytest-mock = "^3.11.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
+[tool.black]
+    line-length = 120
+    target-version = ['py310']
+    exclude = '''
+    /(
+        \.git
+      | \.venv
+    )/
+    '''
+
+[tool.flake8]
+max-line-length = "120"
+exclude = ".venv,.git"
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D100,D101,D104"
+match = "(?!test_|conftest).*\\.py"
+match_dir = "^(?!(tests)).*"

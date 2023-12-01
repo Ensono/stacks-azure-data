@@ -1,0 +1,39 @@
+#######################
+# Required parameters #
+#######################
+
+# Data pipeline configurations
+# dataset_name parameter is used to determine names of the following ADF resources:
+# - pipeline: ingest_<dataset_name>
+# - dataset: ds_<dataset_name>
+# - linked service: ls_<dataset_name>
+dataset_name: azure_sql_demo
+pipeline_description: "Ingest from demo Azure SQL database using ingest config file."
+data_source_type: azure_sql
+data_source_password_key_vault_secret_name: sql-password
+data_source_connection_string_variable_name: sql_connection
+
+
+# Azure DevOps configurations
+ado_variable_groups_nonprod:
+  - amido-stacks-de-pipeline-nonprod
+  - stacks-credentials-nonprod-kv
+
+ado_variable_groups_prod:
+  - amido-stacks-de-pipeline-prod
+  - stacks-credentials-prod-kv
+
+
+#######################
+# Optional parameters #
+#######################
+
+# Data lake bronze container
+# Default value is raw - other container names may be specified here if required
+bronze_container: raw
+
+
+# Workload config
+# These are used to set the default time window in the pipeline and in the corresponding e2e tests
+window_start_default: 2010-01-01
+window_end_default: 2010-01-31

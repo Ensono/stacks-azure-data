@@ -19,9 +19,13 @@ pipelines:
         - debug:env
 
   lint:
+    - task: lint:precommit
     - task: lint:yaml
+      depends_on: lint:precommit
     - task: lint:terraform:format
+      depends_on: lint:precommit
     - task: lint:terraform:validate
+      depends_on: lint:precommit
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
@@ -30,3 +34,18 @@ pipelines:
       depends_on: infra:init
     - task: infra:apply
       depends_on: infra:plan
+
+  infrastructurePlan:
+    - task: infra:init
+    - task: infra:plan
+      depends_on: infra:init
+
+  databricks:
+    - task: databricks:connect
+    - task: databricks:createdir
+      depends_on: databricks:connect
+    - task: databricks:upload
+      depends_on: databricks:createdir
+
+  deworkloadTesting:
+    - task: deworkload:Testing

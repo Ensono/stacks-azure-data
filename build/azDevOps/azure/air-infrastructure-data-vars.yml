@@ -1,24 +1,12 @@
 variables:
-  - name: region
-    value: westeurope
-  - name: company
-    value: amido
-  - name: project
-    value: stacks
-  - name: domain
-    value: core-data
-  - name: self_repo
-    value: stacks-azure-data-ingest
-  - name: self_generic_name
-    value: stacks-infrastructure
-  - group: amido-stacks-webapp
   - name: git_integration
-    value: null #github removed github integration with ADF
+    value: null  # github removed github integration with ADF
   - name: git_integration_prod
     value: null
   - name: sql_admin_login
     value: mssqladmin
 
+<<<<<<< HEAD
   - name: cloud_providers
     value: "azure"
 
@@ -62,6 +50,8 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
 
+=======
+>>>>>>> main
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
@@ -75,36 +65,11 @@ variables:
     value: "$(self_repo_dir)/$(self_repo_tf_src)"
 
   # Versioning
-  - name: version_major
-    value: 1
-  - name: version_minor
-    value: 0
   - name: version_revision
     value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
   - name: version_number
     value: $(version_major).$(version_minor).$(version_revision)
 
-
-  # Dashboard
-  - name: DASHBOARD_VERSION
-    value: $(Build.BuildNumber)
-  - name: DASHBOARD_TAGS
-    value: environment=$(System.StageName),source=$(Build.SourceBranchName),app=$(Build.DefinitionName)
-  # Static definition within Influx Config
-  - name: DASHBOARD_MEASUREMENT
-    value: deployment
-  - group: amido-stacks-influx-credentials-prod
-  # yamllint disable rule:comments-indentation
-    # Group should contain:
-      # DASHBOARD_INFLUX_ORG
-      # DASHBOARD_INFLUX_BUCKET
-      # DASHBOARD_INFLUX_TOKEN
-      # DASHBOARD_INFLUX_SERVER
-  # yamllint enable rule:comments-indentation
   # GitHub infomration
   - name: create_release
     value: true
-  - name: github_release_service_connection
-    value: GitHubReleases
-  - name: github_org
-    value: $(company)

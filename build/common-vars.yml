@@ -1,0 +1,46 @@
+variables:
+  - name: region
+    value: westeurope
+  - name: company
+    value: amido
+  - name: project
+    value: stacks
+  - name: domain
+    value: core-data
+  - name: cloud_providers
+    value: azure
+  - name: component
+    value: de
+  - name: self_repo
+    value: stacks-azure-data-ingest
+  # Terraform Configuration
+
+  # State configuration
+
+  # Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
+  # Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
+  # there are some best practices around this if you are going for feature based environments
+  # avoid running anything past dev that is not on master
+  - name: tf_state_rg
+    value: Stacks-Ancillary-Resources
+  - name: tf_state_storage
+    value: amidostackstfstate
+  - name: tf_state_container
+    value: tfstate
+
+  # Agent configuration
+  - name: TaskctlVersion
+    value: 1.4.2
+  - name: pool_vm_image
+    value: ubuntu-20.04
+  - name: agentpool_name
+    value: "amido-stacks-core-data-agent-pool"
+
+  # Service Connections
+  - name: service_connection
+    value: Stacks.Pipeline.Builds
+  - name: github_release_service_connection
+    value: GitHubReleases
+
+  - name: pythonVersion
+    value: "3.10"

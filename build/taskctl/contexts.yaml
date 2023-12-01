@@ -15,6 +15,7 @@ contexts:
         - /app
         - --env-file
         - envfile
+<<<<<<< HEAD
         - amidostacks/runner-pwsh:0.4.60-stable
         - pwsh
         - -NoProfile
@@ -44,6 +45,9 @@ contexts:
         - --env-file
         - envfile
         - amidostacks/runner-pwsh-python:0.4.60-stable
+=======
+        - amidostacks/runner-pwsh-data:0.4.21-unstable
+>>>>>>> main
         - pwsh
         - -NoProfile
         - -Command

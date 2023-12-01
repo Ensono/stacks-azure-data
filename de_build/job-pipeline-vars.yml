@@ -1,13 +1,4 @@
 variables:
-  - name: region
-    value: westeurope
-  - name: domain
-    value: core-data
-  - name: self_repo
-    value: stacks-azure-data
-  - name: company
-    value: amido
-
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
@@ -15,25 +6,11 @@ variables:
   #   value: src/api
   - name: self_repo_dir
     value: "$(Agent.BuildDirectory)/s"
-  - name: agentpool_name
-    value: "amido-stacks-core-data-agent-pool"
-  
+  # - name: pool_vm_image
+  #   value: ubuntu-20.04
+  - name: test_unit_path
+    value: 'tests/unit/'
 
-
-# Versioning
-  # - name: version_major
-  #   value: 1
-  # - name: version_minor
-  #   value: 0
-  # - name: version_revision
-  #   value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
-  # - name: version_number
-  #   value: $(version_major).$(version_minor).$(version_revision)
-
-# GitHub infomration
+  # GitHub information
   - name: create_release
     value: true
-  - name: github_release_service_connection
-    value: GitHubReleases
-  - name: github_org
-    value: $(company)

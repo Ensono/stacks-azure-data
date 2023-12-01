@@ -1,0 +1,141 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "type": "string",
+            "metadata": "Data Factory name"
+        }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/Get_Ingest_Config')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "description": "Retrieve ingest config from the config store for the specified data source.",
+                "activities": [
+                    {
+                        "name": "Lookup_Config",
+                        "type": "Lookup",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "1:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "JsonSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": false,
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "JsonReadSettings"
+                                }
+                            },
+                            "dataset": {
+                                "referenceName": "ds_dp_ConfigStore_Json",
+                                "type": "DatasetReference",
+                                "parameters": {
+                                    "filename": {
+                                        "value": "@pipeline().parameters.config_file",
+                                        "type": "Expression"
+                                    },
+                                    "path": {
+                                        "value": "@pipeline().parameters.config_path",
+                                        "type": "Expression"
+                                    },
+                                    "container": {
+                                        "value": "@pipeline().parameters.config_container",
+                                        "type": "Expression"
+                                    }
+                                }
+                            },
+                            "firstRowOnly": false
+                        }
+                    },
+                    {
+                        "name": "Return_Config",
+                        "type": "SetVariable",
+                        "dependsOn": [
+                            {
+                                "activity": "Filter_Enabled",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "variableName": "pipelineReturnValue",
+                            "value": [
+                                {
+                                    "key": "config",
+                                    "value": {
+                                        "type": "Expression",
+                                        "content": "@activity('Filter_Enabled').output['Value']"
+                                    }
+                                }
+                            ],
+                            "setSystemVariable": true
+                        }
+                    },
+                    {
+                        "name": "Filter_Enabled",
+                        "type": "Filter",
+                        "dependsOn": [
+                            {
+                                "activity": "Lookup_Config",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "userProperties": [],
+                        "typeProperties": {
+                            "items": {
+                                "value": "@activity('Lookup_Config').output.value",
+                                "type": "Expression"
+                            },
+                            "condition": {
+                                "value": "@equals(item()['enabled'],true)",
+                                "type": "Expression"
+                            }
+                        }
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {},
+                    "cancelAfter": {}
+                },
+                "parameters": {
+                    "config_container": {
+                        "type": "string",
+                        "defaultValue": "config"
+                    },
+                    "config_path": {
+                        "type": "string",
+                        "defaultValue": "ingest_sources"
+                    },
+                    "config_file": {
+                        "type": "string"
+                    }
+                },
+                "folder": {
+                    "name": "Utilities"
+                },
+                "annotations": []
+            },
+            "dependsOn": []
+        }
+    ]
+}

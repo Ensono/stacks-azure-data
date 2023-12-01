@@ -2,6 +2,8 @@ envfile
 .terraform.lock.hcl
 .terraform/
 tfplan
+terraform.tfstate
+.terraform.tfstate.lock.info
 
 ## Python / Data Engineering
 # Byte-compiled / optimized / DLL files
@@ -34,6 +36,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+.DS_Store
 
 #IDE
 .vscode

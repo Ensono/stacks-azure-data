@@ -1,0 +1,60 @@
+{
+    "gx_directory_path": "/dbfs/great_expectations/",
+    "dataset_name": "movies",
+    "dq_input_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
+    "dq_output_path": "abfss://raw@{ADLS_ACCOUNT}.dfs.core.windows.net/ingest_azure_sql_example/",
+    "datasource_config": [
+        {
+            "datasource_name": "movies.movies_metadata",
+            "datasource_type": "parquet",
+            "data_location": "movies.movies_metadata/v1/*/*/*",
+            "expectation_suite_name": "movies.movies_metadata_suite",
+            "validation_config": [
+                {
+                    "column_name": "status",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_be_in_set",
+                            "expectation_kwargs": {"value_set": ["Canceled", "In Production", "Planned", "Post Production", "Released", "Rumored"]}
+                        }
+                    ]
+                },
+                {
+                    "column_name": "adult",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_be_in_set",
+                            "expectation_kwargs": {"value_set": ["True", "False"]}
+                        }
+                    ]
+                },
+                {
+                    "column_name": "imdb_id",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_match_regex",
+                            "expectation_kwargs": {"regex": "^tt\\d{7}$"}
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "datasource_name": "movies.keywords",
+            "datasource_type": "parquet",
+            "data_location": "movies.keywords/v1/*/*/*",
+            "expectation_suite_name": "movies.keywords_suite",
+            "validation_config": [
+                {
+                    "column_name": "id",
+                    "expectations": [
+                        {
+                            "expectation_type": "expect_column_values_to_not_be_null",
+                            "expectation_kwargs": {}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
