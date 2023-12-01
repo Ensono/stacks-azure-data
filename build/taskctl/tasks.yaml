@@ -41,12 +41,7 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
-<<<<<<< HEAD
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan"
-
-=======
       (Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
->>>>>>> main
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
