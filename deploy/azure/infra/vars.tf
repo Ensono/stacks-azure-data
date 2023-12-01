@@ -42,8 +42,6 @@ variable "resource_group_location" {
 
 }
 
-<<<<<<< HEAD
-=======
 
 # Each region must have corresponding a shortend name for resource naming purposes
 variable "location_name_map" {
@@ -62,7 +60,6 @@ variable "location_name_map" {
   }
 }
 
->>>>>>> main
 variable "git_integration" {
   type        = string
   default     = "null"

@@ -87,7 +87,6 @@ tasks:
     variables:
       sleep: 30
 
-<<<<<<< HEAD
   # The following tasks are used to setup a local environment using the information in the stage_envvars.yml file
   setup:dev:
     context: powershell
@@ -100,7 +99,6 @@ tasks:
     description: Ensure that the environment is configured correctly
     command:
       - Confirm-Environment -Path /app/build/config/stage_envvars.yml
-=======
   # Databricks tasks
   databricks:connect:
     context: powershell
@@ -180,4 +178,3 @@ tasks:
         } else {
             Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
         }
->>>>>>> main
