@@ -1,8 +1,8 @@
 
 # Naming convention
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  stage      = var.stage
+  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  stage           = var.stage
   namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
   name            = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 16)}"
   attributes      = var.attributes
@@ -35,27 +35,27 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
-  resource_namer             = substr(replace(module.default_label.id, "-", ""), 0, 24)
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  create_kv_networkacl       = false
-  enable_rbac_authorization  = false
-  resource_tags              = module.default_label.tags
-  contributor_object_ids     = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network     = var.enable_private_networks
-  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
-  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
-  pe_resource_group_location = var.pe_resource_group_location
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
+  resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
+  resource_group_name           = azurerm_resource_group.default.name
+  resource_group_location       = azurerm_resource_group.default.location
+  create_kv_networkacl          = false
+  enable_rbac_authorization     = false
+  resource_tags                 = module.default_label.tags
+  contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  enable_private_network        = var.enable_private_networks
+  pe_subnet_id                  = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
+  pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
-  kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
+  kv_private_dns_zone_id        = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].id : null
   virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
-  depends_on = [module.adf]
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
+  depends_on                    = [module.adf]
+  private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].name : null
+  private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.kv_private_dns_zone[0].id}"] : []
 }
 
 # module call for ADF
@@ -237,27 +237,27 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 
 # Storage accounts for data lake and config
 module "adls_default" {
-  source                     = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
-  resource_namer             = module.default_label.id
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  storage_account_details    = var.storage_account_details
-  container_access_type      = var.container_access_type
-  resource_tags              = module.default_label.tags
-  enable_private_network     = var.enable_private_networks
-  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
-  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
-  pe_resource_group_location = var.pe_resource_group_location
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
+  resource_namer                = module.default_label.id
+  resource_group_name           = azurerm_resource_group.default.name
+  resource_group_location       = azurerm_resource_group.default.location
+  storage_account_details       = var.storage_account_details
+  container_access_type         = var.container_access_type
+  resource_tags                 = module.default_label.tags
+  enable_private_network        = var.enable_private_networks
+  pe_subnet_id                  = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
+  pe_resource_group_location    = var.pe_resource_group_location
   dfs_dns_resource_group_name   = var.dns_resource_group_name
   blob_dns_resource_group_name  = var.dns_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = var.sa_public_network_access_enabled
-  dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
-  blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
+  dfs_private_zone_id           = var.enable_private_networks ? data.azurerm_private_dns_zone.dfs_private_zone[0].id : null
+  blob_private_zone_id          = var.enable_private_networks ? data.azurerm_private_dns_zone.blob_private_zone[0].id : null
   azure_object_id               = data.azurerm_client_config.current.object_id
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
+  # private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  # private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 # Storage accounts for data lake and config
@@ -271,11 +271,11 @@ module "sql" {
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
-  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
-  pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
+  pe_subnet_id                  = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
+  pe_resource_group_location    = var.pe_resource_group_location
+  private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.sql_private_dns_zone[0].name : null
+  private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.sql_private_dns_zone[0].id}"] : []
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
@@ -297,7 +297,7 @@ module "adb" {
   create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
-  virtual_network_id                       = data.azurerm_virtual_network.vnet.id
+  virtual_network_id                       = var.enable_private_networks ? data.azurerm_virtual_network.vnet[0].id : null
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
@@ -310,7 +310,7 @@ module "adb" {
   create_lb                                = false
   managed_vnet                             = false
   browser_authentication_enabled           = var.browser_authentication_enabled
-  private_dns_zone_id                      = data.azurerm_private_dns_zone.adb_private_dns_zone.id
+  private_dns_zone_id                      = var.enable_private_networks ? data.azurerm_private_dns_zone.adb_private_dns_zone[0].id : null
 
   depends_on = [azurerm_resource_group.default]
 }

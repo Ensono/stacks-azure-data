@@ -245,7 +245,7 @@ variable "sql_version" {
 variable "administrator_login" {
   type        = string
   sensitive   = true
-  default = "dhldhflkjdklfjd"
+  default     = "dhldhflkjdklfjd"
   description = "The administrator login name for the new server. Required unless azuread_authentication_only in the azuread_administrator block is true. When omitted, Azure will generate a default username which cannot be subsequently changed. Changing this forces a new resource to be created."
 }
 
@@ -539,5 +539,5 @@ variable "azure_client_secret" {
   type        = string
   description = "A client secret that was generated for the App Registration."
   sensitive   = true
-  default = ""
+  default     = ""
 }
