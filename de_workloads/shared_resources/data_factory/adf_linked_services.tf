@@ -39,7 +39,7 @@ resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_S
       AZURE_CLIENT_ID     = "{{secrets/key-vault-backed/azure-client-id}}"
       AZURE_TENANT_ID     = "{{secrets/key-vault-backed/azure-tenant-id}}"
       ADLS_ACCOUNT        = var.adls_datalake_name
-      BLOB_ACCOUNT        = var.blob_configstore_name
+      BLOB_CONFIG_ACCOUNT = var.blob_configstore_name
       PYSPARK_PYTHON      = "/databricks/python3/bin/python3"
     }
   }

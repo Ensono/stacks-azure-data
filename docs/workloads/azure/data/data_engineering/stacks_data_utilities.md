@@ -45,4 +45,4 @@ To interact with Azure resources, the following additional environment variables
 - `AZURE_CLIENT_ID`: Application ID for Azure Active Directory application.
 - `AZURE_CLIENT_SECRET`: Service Principal Secret.
 - `ADLS_ACCOUNT`: ADLS account name.
-- `BLOB_ACCOUNT`: Blob Storage account name.
+- `BLOB_CONFIG_ACCOUNT`: Blob Storage account name.
