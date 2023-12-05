@@ -15,7 +15,7 @@ priority = "supplemental"
 
 [tool.poetry.dependencies]
 python = "^3.9, <3.12"
-stacks-data = "^0.4.2"
+stacks-data = "^0.4.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
