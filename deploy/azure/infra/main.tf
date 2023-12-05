@@ -31,8 +31,8 @@ module "kv_default" {
   pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
   pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns.name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns.id}"] : []
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 # module call for ADF
@@ -176,8 +176,8 @@ module "adls_default" {
   pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
   pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns.name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns.id}"] : []
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 
@@ -217,8 +217,8 @@ module "sql" {
   pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
   pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns.name : null
-  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns.id}"] : []
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
