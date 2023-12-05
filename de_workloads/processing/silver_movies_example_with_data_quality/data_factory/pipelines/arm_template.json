@@ -46,7 +46,7 @@
                             "libraries": [
                                 {
                                     "pypi": {
-                                        "package": "stacks-data==0.4.0",
+                                        "package": "stacks-data==0.4.1",
                                         "repo": "https://test.pypi.org/simple/"
                                     }
                                 }
@@ -85,7 +85,7 @@
                             "libraries": [
                                 {
                                     "pypi": {
-                                        "package": "stacks-data==0.4.0",
+                                        "package": "stacks-data==0.4.1",
                                         "repo": "https://test.pypi.org/simple/"
                                     }
                                 }
