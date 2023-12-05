@@ -2,15 +2,8 @@
 # Naming convention
 module "default_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace  = format("%s-%s", var.name_company, var.name_project)
   stage      = var.stage
-  name       = "${lookup(local.location_name_map, var.resource_group_location)}-${var.name_component}"
-  attributes = var.attributes
-  delimiter  = "-"
-  tags       = var.tags
-  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
   namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
-  stage           = var.stage
   name            = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 16)}"
   attributes      = var.attributes
   delimiter       = "-"
@@ -54,20 +47,7 @@ module "kv_default" {
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
 ##  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv"
-  resource_namer                = substr(module.default_label_short.id, 0, 24)
-  resource_group_name           = azurerm_resource_group.default.name
-  resource_group_location       = azurerm_resource_group.default.location
-  create_kv_networkacl          = true
-  enable_rbac_authorization     = false
-  resource_tags                 = module.default_label_short.tags
-  contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network        = true
-  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
   kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
@@ -257,7 +237,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 
 # Storage accounts for data lake and config
 module "adls_default" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
+  source                     = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
   resource_namer             = module.default_label.id
   resource_group_name        = azurerm_resource_group.default.name
   resource_group_location    = azurerm_resource_group.default.location
@@ -268,8 +248,6 @@ module "adls_default" {
   pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
-  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
   dfs_dns_resource_group_name   = var.dns_resource_group_name
   blob_dns_resource_group_name  = var.dns_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
@@ -291,7 +269,7 @@ module "sql" {
   administrator_login           = var.administrator_login
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
-  enable_private_network        = true
+  enable_private_network        = var.enable_private_networks
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location    = var.pe_resource_group_location
@@ -311,7 +289,7 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_private_network                   = var.enable_private_network
+  enable_private_network                   = var.enable_private_networks
   create_pe_subnet                         = false
   create_subnets                           = true
   vnet_name                                = var.vnet_name
@@ -339,21 +317,6 @@ resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
-}
-
-
-resource "databricks_token" "pat" {
-  comment = var.databricks_pat_comment
-  // 120 day token
-  lifetime_seconds = 120 * 24 * 60 * 60
-  depends_on       = [module.adb]
-}
-
-resource "azurerm_key_vault_secret" "databricks_token" {
-  name         = var.databricks-token
-  value        = databricks_token.pat.token_value
-  key_vault_id = module.kv_default.id
-  depends_on   = [module.adb, module.kv_default]
 }
 
 
@@ -404,32 +367,6 @@ resource "azurerm_key_vault_secret" "sql_password" {
 }
 
 
-# Storage accounts for data lake and config
-module "sql" {
-  source                     = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
-  resource_namer             = module.default_label.id
-  resource_group_name        = azurerm_resource_group.default.name
-  resource_group_location    = azurerm_resource_group.default.location
-  sql_version                = var.sql_version
-  administrator_login        = var.administrator_login
-  sql_db_names               = var.sql_db_names
-  resource_tags              = module.default_label.tags
-  enable_private_network     = var.enable_private_networks
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location = var.pe_resource_group_location
-  private_dns_zone_name      = data.azurerm_private_dns_zone.private_dns.name
- ## private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
-  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
-}
-
-resource "azurerm_key_vault_secret" "sql_connect_string" {
-  for_each     = toset(var.sql_db_names)
-  name         = "connect-string-${each.key}"
-  value        = "Server=tcp:${module.sql.sql_server_name}.database.windows.net,1433;Database=${each.key};User ID=${module.sql.sql_sa_login};Password=${module.sql.sql_sa_password};Trusted_Connection=False;Encrypt=True;Connection Timeout=30"
-  key_vault_id = module.kv_default.id
-  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
-}
 
 resource "azurerm_key_vault_secret" "sql_password_string" {
   for_each     = toset(var.sql_db_names)
@@ -439,11 +376,6 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
-resource "azurerm_role_assignment" "adb_role" {
-  scope                = module.adb.adb_databricks_id
-  role_definition_name = var.adb_role_adf
-  principal_id         = module.adf.adf_managed_identity
-}
 
 resource "databricks_token" "pat" {
   comment = var.databricks_pat_comment
@@ -454,6 +386,9 @@ resource "databricks_token" "pat" {
 resource "azurerm_key_vault_secret" "databricks_token" {
   name         = var.databricks-token
   value        = databricks_token.pat.token_value
+  key_vault_id = module.kv_default.id
+}
+
 resource "azurerm_key_vault_secret" "service-principal-secret" {
   name         = "service-principal-secret"
   value        = var.azure_client_secret
@@ -461,12 +396,6 @@ resource "azurerm_key_vault_secret" "service-principal-secret" {
   depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 
-resource "azurerm_key_vault_secret" "azure-client-id" {
-  name         = "azure-client-id"
-  value        = data.azurerm_client_config.current.client_id
-  key_vault_id = module.kv_default.id
-  depends_on   = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
-}
 
 resource "azurerm_key_vault_secret" "azure-tenant-id" {
   name         = "azure-tenant-id"

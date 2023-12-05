@@ -226,13 +226,6 @@ variable "kv_secrets" {
   default     = ["secret1", "secret2", "secret3"]
 }
 
-variable "azure_client_secret" {
-  type        = string
-  description = "A client secret that was generated for the App Registration."
-  sensitive   = true
-}
-
-
 variable "contributor_object_ids" {
   description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
   type        = list(string)
@@ -397,7 +390,7 @@ variable "browser_authentication_enabled" {
 ############################################
 
 variable "enable_private_networks" {
-  default     = true
+  default     = false
   type        = bool
   description = "Enable Private Networking for Secure Data Platform."
 }
@@ -540,4 +533,11 @@ variable "sql_public_network_access_enabled" {
   type        = bool
   default     = false
   description = "Allow public network access to sql server. Set as true or false."
+}
+
+variable "azure_client_secret" {
+  type        = string
+  description = "A client secret that was generated for the App Registration."
+  sensitive   = true
+  default = ""
 }
