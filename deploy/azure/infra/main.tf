@@ -44,18 +44,18 @@ module "kv_default" {
   resource_tags              = module.default_label.tags
   contributor_object_ids     = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network     = var.enable_private_networks
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location = var.pe_resource_group_location
-##  private_dns_zone_ids       = ["${data.azurerm_private_dns_zone.private_dns.id}"]
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
   kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
   virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
-
   depends_on = [module.adf]
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 # module call for ADF
@@ -76,7 +76,7 @@ module "adf" {
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
 resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
-  count = var.enable_private_networks == true ? 1 : 0
+  count              = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_blob
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[0]
@@ -84,7 +84,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
-  count = var.enable_private_networks == true ? 1 : 0
+  count              = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_dfs
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[1]
@@ -92,7 +92,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
-  count = var.enable_private_networks == true ? 1 : 0
+  count              = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_kv
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.kv_default.id
@@ -100,7 +100,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
-  count = var.enable_private_networks == true ? 1 : 0
+  count              = var.enable_private_networks == true ? 1 : 0
   name               = var.name_pe_sql
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.sql.sql_server_id
@@ -245,8 +245,8 @@ module "adls_default" {
   container_access_type      = var.container_access_type
   resource_tags              = module.default_label.tags
   enable_private_network     = var.enable_private_networks
-  pe_subnet_id               = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name     = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location = var.pe_resource_group_location
   dfs_dns_resource_group_name   = var.dns_resource_group_name
   blob_dns_resource_group_name  = var.dns_resource_group_name
@@ -256,7 +256,8 @@ module "adls_default" {
   dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
   blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
   azure_object_id               = data.azurerm_client_config.current.object_id
-
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
 }
 
 # Storage accounts for data lake and config
@@ -270,9 +271,11 @@ module "sql" {
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
-  pe_resource_group_location    = var.pe_resource_group_location
+  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
+  pe_resource_group_location = var.pe_resource_group_location
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.private_dns[0].name : null
+  private_dns_zone_ids       = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.private_dns[0].id}"] : []
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
