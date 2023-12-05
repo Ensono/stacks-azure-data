@@ -31,7 +31,7 @@ resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_S
 
   new_cluster_config {
     node_type             = "Standard_DS3_v2"
-    cluster_version       = "13.0.x-scala2.12"
+    cluster_version       = "13.3.x-scala2.12"
     min_number_of_workers = 2
     max_number_of_workers = 2
     spark_environment_variables = {
