@@ -3072,13 +3072,13 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "stacks-data"
-version = "0.4.1"
+version = "0.4.2"
 description = "A suite of utilities to support data engineering workloads within an Ensono Stacks data platform."
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "stacks_data-0.4.1-py3-none-any.whl", hash = "sha256:ed644b3992bd7f72bf88835644b4aea51f9d6be2fbeae535cf0983f8496d40e7"},
-    {file = "stacks_data-0.4.1.tar.gz", hash = "sha256:6e6fca6e9dda1ede92fd1899ecbb42e4a36d22a980669b85f70381fb6dcfa754"},
+    {file = "stacks_data-0.4.2-py3-none-any.whl", hash = "sha256:360c317e42932a1c1d68934c8f4b14b09dac4c9a8519439ab7fa27e80ee3dbb8"},
+    {file = "stacks_data-0.4.2.tar.gz", hash = "sha256:aae2b0cc774e5fffeb3ca88190789ac1642852ef290dd4face5b6d39bca4bc3c"},
 ]
 
 [package.dependencies]
@@ -3401,4 +3401,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.12"
-content-hash = "00b0b8fc3992cb8841457bc5034ebab2bc0a9d85114faac7a1f4c99530969aa4"
+content-hash = "164b8ebbf69cfa4b44b89bb42b60dd4bb7ec8f2e1c2ebcc63421503c88cd2fba"
