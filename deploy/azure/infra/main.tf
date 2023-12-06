@@ -50,12 +50,12 @@ module "kv_default" {
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.kv_public_network_access_enabled
   kv_private_dns_zone_id        = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].id : null
-  virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
+  virtual_network_subnet_ids    = var.enable_private_networks ? [data.azurerm_subnet.pe_subnet[0].id] : []
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
   depends_on                    = [module.adf]
   private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].name : null
-  private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.kv_private_dns_zone[0].id}"] : []
+  #private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.kv_private_dns_zone[0].id}"] : []
 }
 
 # module call for ADF
@@ -275,7 +275,7 @@ module "sql" {
   pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location    = var.pe_resource_group_location
   private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.sql_private_dns_zone[0].name : null
-  private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.sql_private_dns_zone[0].id}"] : []
+  # private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.sql_private_dns_zone[0].id}"] : []
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
@@ -304,7 +304,7 @@ module "adb" {
   public_subnet_prefix                     = var.public_subnet_prefix
   private_subnet_prefix                    = var.private_subnet_prefix
   pe_subnet_prefix                         = var.pe_subnet_prefix
-  pe_subnet_id                             = data.azurerm_subnet.pe_subnet.id
+  pe_subnet_id                             = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
