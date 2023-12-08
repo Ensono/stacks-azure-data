@@ -309,7 +309,7 @@ module "adb" {
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
-  managed_vnet                             = var.enable_private_networks ? true : false
+  managed_vnet                             = var.enable_private_networks ? false : true
   browser_authentication_enabled           = var.browser_authentication_enabled
   private_dns_zone_id                      = var.enable_private_networks ? data.azurerm_private_dns_zone.adb_private_dns_zone[0].id : null
 
