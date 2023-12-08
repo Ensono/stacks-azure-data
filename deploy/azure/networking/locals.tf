@@ -56,7 +56,7 @@ locals {
       address_space       = ["10.3.0.0/16"]
       dns_servers         = []
       resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-nonprod-network"
-      is_hub              = true
+      is_hub              = false
       link_to_private_dns = true
       subnet_details = {
         "subnet-1" = {
@@ -88,7 +88,7 @@ locals {
       address_space       = ["10.4.0.0/16"]
       dns_servers         = []
       resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-prod-network"
-      is_hub              = true
+      is_hub              = false
       link_to_private_dns = true
       subnet_details = {
         "subnet-1" = {
