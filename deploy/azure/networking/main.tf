@@ -23,7 +23,7 @@ module "networking" {
   create_hub_fw           = var.create_hub_fw
   create_fw_public_ip     = var.create_fw_public_ip
   dns_zone_name           = ["${module.default_label.id}.com"]
-  merge_dns_zones = true
+  merge_dns_zones         = true
   link_dns_network        = var.link_dns_network
 }
 

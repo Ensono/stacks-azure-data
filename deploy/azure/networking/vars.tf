@@ -54,7 +54,7 @@ variable "enable_private_networks" {
 }
 
 variable "link_dns_network" {
-  description = "Should the DNS be linked with the VNETs?"
+  description = "git addShould the DNS be linked with the VNETs?"
   type        = bool
   default     = false
 }

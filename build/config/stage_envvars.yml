@@ -165,7 +165,7 @@ stages:
     description: 'The name of the Private DNS Zone (Default: privatelink.amido-stacks-core-data-euw-de.com)'
   - name: TF_VAR_dns_zone_resource_group
     required: false
-    description: 'The Resource Group for the Private DNS Zone. (Default: amido-stacks-euw-de-hub-network)'
+    description: 'The Resource Group for the Private DNS Zone. (Default: ensono-euw-hub-network)'
   - name: TF_VAR_e_2_test_role
     required: false
     description: 'Role assignment for end to end Testing. (Default: Storage Blob Data Contributor)'

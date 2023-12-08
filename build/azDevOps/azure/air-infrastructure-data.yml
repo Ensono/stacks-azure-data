@@ -77,7 +77,7 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: stacks-credentials-nonprod-kv
+      - group: ensono-sp-creds
       - group: amido-stacks-euw-de-nonprod-network
       - group: amido-stacks-de-pipeline-nonprod
       - name: Environment.ShortName
@@ -117,16 +117,16 @@ stages:
                   displayName: "Taskctl: Infrastructure"
                   inputs:
                     targetType: inline
-                    script: taskctl infrastructure
+                    script: taskctl infra:plan
                     informationPreference: continue
                   env:
                     ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     CLOUD_PROVIDER: "$(cloud_provider)"
-                    ARM_CLIENT_ID: $(azure-client-id)
-                    ARM_CLIENT_SECRET: $(azure-client-secret)
-                    ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
-                    ARM_TENANT_ID: $(azure-tenant-id)
+                    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                    ARM_TENANT_ID: $(ARM_TENANT_ID)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
                     TF_STATE_KEY: $(tf_state_key)

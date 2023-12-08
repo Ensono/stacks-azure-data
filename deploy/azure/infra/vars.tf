@@ -354,15 +354,14 @@ variable "private_subnet_name" {
 
 variable "public_subnet_prefix" {
   type        = list(string)
-  default     = []
+  default     = ["10.3.3.0/24"]
   description = "IP Address Space fo the Public Databricks Subnet."
 }
 
 variable "private_subnet_prefix" {
   type        = list(string)
-  default     = []
+  default     = ["10.3.4.0/24"]
   description = "IP Address Space fo the Private Databricks Subnet."
-
 }
 
 variable "pe_subnet_prefix" {
@@ -451,7 +450,7 @@ variable "adb_private_zone" {
 
 variable "dns_zone_resource_group" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-euw-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
 
@@ -485,7 +484,7 @@ variable "pe_resource_group_location" {
 }
 variable "dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-euw-hub-network"
   description = "Name of the resource group where pvt dns is present."
 }
 
@@ -497,7 +496,7 @@ variable "blob_private_dns_zone_name" {
 
 variable "blob_dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-euw-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
@@ -509,7 +508,7 @@ variable "dfs_private_dns_zone_name" {
 
 variable "dfs_dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-euw-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
@@ -523,11 +522,11 @@ variable "kv_public_network_access_enabled" {
   description = "Allow public network access to Key Vault. Set as true or false."
 }
 
-variable "sa_public_network_access_enabled" {
-  type        = bool
-  default     = false
-  description = "Allow public network access to storage account. Set as true or false."
-}
+#variable "sa_public_network_access_enabled" {
+#  type        = bool
+#  default     = false
+#  description = "Allow public network access to storage account. Set as true or false."
+#}
 
 variable "sql_public_network_access_enabled" {
   type        = bool

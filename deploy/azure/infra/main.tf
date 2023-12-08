@@ -48,7 +48,7 @@ module "kv_default" {
   pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
-  public_network_access_enabled = var.kv_public_network_access_enabled
+  public_network_access_enabled = var.enable_private_networks == true ? false : true  ## Remove this if you want this enabled privately
   kv_private_dns_zone_id        = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].id : null
   virtual_network_subnet_ids    = var.enable_private_networks ? [data.azurerm_subnet.pe_subnet[0].id] : []
   network_acl_default_action    = "Allow"
@@ -112,8 +112,8 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "databricks_ui_api"
-
   depends_on = [module.adb]
+  count    = var.enable_private_networks == true ? 1 : 0
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
@@ -121,11 +121,11 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "browser_authentication"
-
+  count    = var.enable_private_networks == true ? 1 : 0
   depends_on = [module.adb]
 }
 
-resource "null_resource" "approve_private_endpoints" {
+/* resource "null_resource" "approve_private_endpoints" {
   for_each = {
     blob = module.adls_default.storage_account_ids[0]
     adls = module.adls_default.storage_account_ids[1]
@@ -153,6 +153,7 @@ resource "null_resource" "approve_private_endpoints" {
   }
   depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
+*/
 
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
@@ -252,7 +253,7 @@ module "adls_default" {
   blob_dns_resource_group_name  = var.dns_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
-  public_network_access_enabled = var.sa_public_network_access_enabled
+  public_network_access_enabled = var.enable_private_networks ? false : true
   dfs_private_zone_id           = var.enable_private_networks ? data.azurerm_private_dns_zone.dfs_private_zone[0].id : null
   blob_private_zone_id          = var.enable_private_networks ? data.azurerm_private_dns_zone.blob_private_zone[0].id : null
   azure_object_id               = data.azurerm_client_config.current.object_id
@@ -277,7 +278,7 @@ module "sql" {
   private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.sql_private_dns_zone[0].name : null
   # private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.sql_private_dns_zone[0].id}"] : []
   dns_resource_group_name       = var.dns_resource_group_name
-  public_network_access_enabled = var.sql_public_network_access_enabled
+  public_network_access_enabled  = var.enable_private_networks == true ? false : true  ## Remove this if you want this enabled privately
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
   auto_pause_delay_in_minutes = 0
 }
@@ -308,7 +309,7 @@ module "adb" {
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
-  managed_vnet                             = false
+  managed_vnet                             = true
   browser_authentication_enabled           = var.browser_authentication_enabled
   private_dns_zone_id                      = var.enable_private_networks ? data.azurerm_private_dns_zone.adb_private_dns_zone[0].id : null
 
@@ -328,6 +329,7 @@ resource "azurerm_key_vault_secret" "databricks-host" {
   value        = module.adb.databricks_hosturl
   key_vault_id = module.kv_default.id
   depends_on   = [module.adb, module.kv_default]
+
 }
 
 resource "databricks_secret_scope" "kv" {
