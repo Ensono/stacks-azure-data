@@ -35,7 +35,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv"
+  source                        = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-kv?ref=fix/deployment"
   resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -337,7 +337,7 @@ resource "databricks_secret_scope" "kv" {
 
   keyvault_metadata {
     resource_id = module.kv_default.id
-    dns_name    = module.kv_default.vault_uri
+    dns_name    = module.kv_default.pe_fqdn
   }
   depends_on = [module.adb, module.kv_default]
 }
