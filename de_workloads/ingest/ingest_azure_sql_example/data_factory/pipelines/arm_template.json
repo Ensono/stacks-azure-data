@@ -277,7 +277,7 @@
                             "libraries": [
                                 {
                                     "pypi": {
-                                        "package": "stacks-data==0.4.5"
+                                        "package": "stacks-data==1.0.0"
                                     }
                                 }
                             ]
