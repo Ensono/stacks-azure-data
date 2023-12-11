@@ -53,7 +53,7 @@ tasks:
     context: powershell
     description: Destory Terraform
     command:
-      - (Push-Location $env:TF_FILE_LOCATION && terraform destroy -auto-approve)
+      - (Push-Location $env:TF_FILE_LOCATION && terraform destroy)
 
   publish:github:
     context: powershell
