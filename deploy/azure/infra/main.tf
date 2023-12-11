@@ -39,7 +39,7 @@ module "kv_default" {
   resource_namer                = substr(replace(module.default_label.id, "-", ""), 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
-  create_kv_networkacl          = false
+  create_kv_networkacl          = var.enable_private_networks ? true : false
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
@@ -50,7 +50,7 @@ module "kv_default" {
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.enable_private_networks == true ? false : true  ## Remove this if you want this enabled privately
   kv_private_dns_zone_id        = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].id : null
-  virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet[0].id]
+  virtual_network_subnet_ids    = var.enable_private_networks ? [data.azurerm_subnet.pe_subnet[0].id] : []
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
   depends_on                    = [module.adf]
