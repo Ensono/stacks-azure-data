@@ -49,6 +49,12 @@ tasks:
       #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
       - (Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
 
+  infra:destroy:
+    context: powershell
+    description: Destory Terraform
+    command:
+      - (Push-Location $env:TF_FILE_LOCATION && terraform destroy -auto-approve)
+
   publish:github:
     context: powershell
     description: Publish Release to GitHub
