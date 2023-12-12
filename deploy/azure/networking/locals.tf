@@ -47,6 +47,17 @@ locals {
             "Microsoft.ServiceBus",
             "Microsoft.Sql",
           "Microsoft.Storage"]
+        },
+        "subnet-3" = {
+          sub_name                                      = "AzureBastionSubnet"
+          sub_address_prefix                            = ["10.2.0.0/26"]
+          private_endpoint_network_policies_enabled     = true
+          private_link_service_network_policies_enabled = true
+          service_endpoints = ["Microsoft.AzureActiveDirectory",
+            "Microsoft.KeyVault",
+            "Microsoft.ServiceBus",
+            "Microsoft.Sql",
+          "Microsoft.Storage"]
         }
       }
     },

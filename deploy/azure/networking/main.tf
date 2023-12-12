@@ -5,14 +5,14 @@ locals {
 
 # Naming convention
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace  = format("%s-%s", var.name_company, var.name_project)
-  stage      = var.stage
-  name       = "${lookup(local.location_name_map, var.resource_group_location)}-${var.name_component}"
-  attributes = var.attributes
-  delimiter  = "-"
+  source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
+  namespace       = format("%s-%s", var.name_company, var.name_project)
+  stage           = var.stage
+  name            = "${lookup(local.location_name_map, var.resource_group_location)}-${var.name_component}"
+  attributes      = var.attributes
+  delimiter       = "-"
   id_length_limit = 60
-  tags       = var.tags
+  tags            = var.tags
 }
 
 module "networking" {

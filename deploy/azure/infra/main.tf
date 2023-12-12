@@ -48,7 +48,7 @@ module "kv_default" {
   pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
-  public_network_access_enabled = var.enable_private_networks == true ? false : true  ## Remove this if you want this enabled privately
+  public_network_access_enabled = var.enable_private_networks == true ? false : true ## Remove this if you want this enabled privately
   kv_private_dns_zone_id        = var.enable_private_networks ? data.azurerm_private_dns_zone.kv_private_dns_zone[0].id : null
   virtual_network_subnet_ids    = var.enable_private_networks ? [data.azurerm_subnet.pe_subnet[0].id] : []
   network_acl_default_action    = "Allow"
@@ -112,8 +112,8 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "databricks_ui_api"
-  depends_on = [module.adb]
-  count    = var.enable_private_networks == true ? 1 : 0
+  depends_on         = [module.adb]
+  count              = var.enable_private_networks == true ? 1 : 0
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
@@ -121,8 +121,8 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "browser_authentication"
-  count    = var.enable_private_networks == true ? 1 : 0
-  depends_on = [module.adb]
+  count              = var.enable_private_networks == true ? 1 : 0
+  depends_on         = [module.adb]
 }
 
 /* resource "null_resource" "approve_private_endpoints" {
@@ -263,22 +263,22 @@ module "adls_default" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
-  resource_namer                = module.default_label.id
-  resource_group_name           = azurerm_resource_group.default.name
-  resource_group_location       = azurerm_resource_group.default.location
-  sql_version                   = var.sql_version
-  administrator_login           = var.administrator_login
-  sql_db_names                  = var.sql_db_names
-  resource_tags                 = module.default_label.tags
-  enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
-  pe_resource_group_name        = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
-  pe_resource_group_location    = var.pe_resource_group_location
-  private_dns_zone_name         = var.enable_private_networks ? data.azurerm_private_dns_zone.sql_private_dns_zone[0].name : null
+  source                     = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
+  resource_namer             = module.default_label.id
+  resource_group_name        = azurerm_resource_group.default.name
+  resource_group_location    = azurerm_resource_group.default.location
+  sql_version                = var.sql_version
+  administrator_login        = var.administrator_login
+  sql_db_names               = var.sql_db_names
+  resource_tags              = module.default_label.tags
+  enable_private_network     = var.enable_private_networks
+  pe_subnet_id               = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : null
+  pe_resource_group_name     = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].resource_group_name : null
+  pe_resource_group_location = var.pe_resource_group_location
+  private_dns_zone_name      = var.enable_private_networks ? data.azurerm_private_dns_zone.sql_private_dns_zone[0].name : null
   # private_dns_zone_ids          = var.enable_private_networks ? ["${data.azurerm_private_dns_zone.sql_private_dns_zone[0].id}"] : []
   dns_resource_group_name       = var.dns_resource_group_name
-  public_network_access_enabled  = var.enable_private_networks == true ? false : true  ## Remove this if you want this enabled privately
+  public_network_access_enabled = var.enable_private_networks == true ? false : true ## Remove this if you want this enabled privately
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
   auto_pause_delay_in_minutes = 0
 }
