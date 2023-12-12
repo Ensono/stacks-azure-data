@@ -81,10 +81,10 @@ $env:ARM_SUBSCRIPTION_ID="9c2c9cee-3f32-40b0-926a-87ebaefcadae"
 $env:ARM_TENANT_ID="d0f9915f-7774-4679-b47d-f456d8583e24"
 
 # Company Name - should/will be used in conventional resource naming
-$env:TF_VAR_name_company="ensono"
+$env:TF_VAR_name_company="enso"
 
 # Project Name - should/will be used in conventional resource naming
-$env:TF_VAR_name_project="salesdata"
+$env:TF_VAR_name_project="sales"
 
 # Arguments that should be passed to Terraform during the init process
 $env:TF_BACKEND_INIT="key=rjsdata,storage_account_name=stacksstate,resource_group_name=Stacks-Ancillary-Resources,container_name=tfstate,subscription_id=$($env:arm_subscription_id),tenant_id=$($env:arm_tenant_id),client_id=$($env:arm_client_id),client_secret=$($env:arm_client_secret)"
@@ -112,24 +112,30 @@ image::images/terraform-init.png[]
 .Creating the plan
 image::images/networking-no-private.png[]
 
-=== Enabling Private Networks
+==== Enable Public networking
+To enable public networking, locate the file `deploy/azure/infra/vars.tf`. Once you have located this, look for the variable `enable_private_networks` and make sure the default value is set to `false`.
+You should be able to run `taskctl infra:apply` from your local machine as you are deploying publicly accessible infrastructure.
 
-It is possible to create a number of virtual networks, and associated subnets, which will be used when the parameter `enable_private_networks` is enabled. If this is required update the environment variables so that:
+==== Enable Private networking
+To enable private networking, locate the file `deploy/azure/infra/vars.tf`. Once you have located this, look for the variable `enable_private_networks` and make sure the default value is set to `true`.
 
-[cols="1a,1a",options=header]
-|===
-| PowerShell | Bash
-| [source,powershell]
-----
-$env:TF_VAR_enable_private_networks = 'true'
-----
-| [source,bash]
-----
-export TF_VAR_enable_private_networks = 'true'
-----
-|===
+To deploy infrastructure that has private networking enabled you will need to run these commands on a bastion server from the Azure Portal. 
+
+==== Running a Bastion server
+On the Azure Portal, head to Virtual Machine Scale Sets, then click on the virtual machine scale set that the networking terraform has created. Then click on the `Instances` tab, and click on any of the instances. Click on the connect drop down and connect via bastion. Click on `Deploy Bation Server` and wait for the bastion host to be created. 
+
+Log in to the bastion and set up taskctl and clone the repo from GitHub as done earlier in this guide. Follow the same steps until you have taskctl installed on the bastion server and ensure you have the shell script that has all the necessary environment variables. 
+
+You will then be able to run taskctl on the infra pipeline to deploy the infrastructure with private networking enabled. 
 
 Run the command `taskctl infra:plan` again to get the networking configured.
 
 .Creating a plan for private networking
 image::images/networking-private.png[]
+
+=== Note
+
+When choosing to deploy networking or infra, you will need to head to your shell script and change the TF_FILE_LOCATION and STAGE variables aswell as changing the tfstate `key` in the TF_BACKEND_INIT variable  to another name. Once you have made these changes in the shell script, run the shell script to export these variables into your env.
+
+
+
