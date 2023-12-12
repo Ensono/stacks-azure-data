@@ -124,7 +124,7 @@ To deploy infrastructure that has private networking enabled you will need to ru
 ==== Running a Bastion server
 On the Azure Portal, head to Virtual Machine Scale Sets, then click on the virtual machine scale set that the networking terraform has created. Then click on the `Instances` tab, and click on any of the instances. Click on the connect drop down and connect via bastion. Click on `Deploy Bation Server` and wait for the bastion host to be created. 
 
-Log in to the bastion using VM password (username: adminuser, password: Kj53:?o8JYaf}GM2 ) and set up taskctl and clone the repo from GitHub as done earlier in this guide. Follow the same steps until you have taskctl installed on the bastion server and ensure you have the shell script that has all the necessary environment variables. 
+Log in to the bastion using VM password (username: adminuser, password:  ) and set up taskctl and clone the repo from GitHub as done earlier in this guide. Follow the same steps until you have taskctl installed on the bastion server and ensure you have the shell script that has all the necessary environment variables. 
 
 You will then be able to run taskctl on the infra pipeline to deploy the infrastructure with private networking enabled. 
 
