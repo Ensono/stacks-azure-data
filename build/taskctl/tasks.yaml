@@ -9,7 +9,7 @@ tasks:
     context: powershell
     description: Perform Pre-Commit linting
     command:
-      - pip install pre-commit && git config --global --add safe.directory /app && pre-commit run --all-files --show-diff-on-failure
+      - pip install pre-commit && pre-commit install --install-hooks && git config --global --add safe.directory /app && pre-commit run --all-files --show-diff-on-failure
 
   lint:yaml:
     context: powershell
