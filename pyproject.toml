@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stacks-azure-data"
-version = "0.5.1"
+version = "0.6.0"
 description = "Ensono Stacks provides a solution to accelerate the deployment of an Azure data platform."
 authors = [
     "Ensono Stacks <stacks@ensono.com>"
@@ -10,7 +10,7 @@ homepage = "https://github.com/Ensono/stacks-azure-data"
 
 [tool.poetry.dependencies]
 python = "^3.9, <3.12"
-stacks-data = "^0.3.2"
+stacks-data = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"
