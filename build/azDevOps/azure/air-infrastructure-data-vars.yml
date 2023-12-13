@@ -6,7 +6,6 @@ variables:
   - name: sql_admin_login
     value: mssqladmin
 
-<<<<<<< HEAD
   - name: cloud_providers
     value: "azure"
 
@@ -50,8 +49,6 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
 
-=======
->>>>>>> main
   # SelfConfig
   # If you haven't specified source_repo at cli runtime please ensure you replace it here
   # It is case sensitive for TFS based repos
