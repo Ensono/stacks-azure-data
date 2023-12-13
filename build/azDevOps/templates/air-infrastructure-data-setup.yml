@@ -12,4 +12,4 @@ steps:
       targetType: inline
       script: |
         wget https://github.com/Ensono/taskctl/releases/download/v${{ parameters.TaskctlVersion }}/taskctl_${{ parameters.TaskctlVersion }}_linux_amd64.tar.gz -O /tmp/taskctl.tar.gz
-        tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
+        sudo tar zxf /tmp/taskctl.tar.gz -C /usr/local/bin taskctl
