@@ -1,12 +1,11 @@
 import logging
 
-from stacks.data.azure.data_factory import get_data_factory_param
 from stacks.data.constants import CONFIG_CONTAINER_NAME
+from stacks.data.pyspark.etl import get_data_factory_param
 from stacks.data.pyspark.data_quality.main import data_quality_main
 from stacks.data.logger import setup_logger
 
 CONFIG_PATH = "processing/silver_movies_example_with_data_quality/data_quality/data_quality_config.json"
-WORKLOAD_NAME = "silver_movies_example_with_data_quality"
 
 logger_library = "stacks.data"
 
@@ -20,9 +19,5 @@ if __name__ == "__main__":
 
     # Run Data Quality
     data_quality_main(
-        workload_name=WORKLOAD_NAME,
-        config_path=CONFIG_PATH,
-        container_name=CONFIG_CONTAINER_NAME,
-        test_flag=test_flag,
-        test_run_id=run_id,
+        config_path=CONFIG_PATH, container_name=CONFIG_CONTAINER_NAME, test_flag=test_flag, test_run_id=run_id
     )

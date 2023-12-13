@@ -31,7 +31,7 @@ resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_S
 
   new_cluster_config {
     node_type             = "Standard_DS3_v2"
-    cluster_version       = "13.3.x-scala2.12"
+    cluster_version       = "13.0.x-scala2.12"
     min_number_of_workers = 2
     max_number_of_workers = 2
     spark_environment_variables = {
@@ -39,7 +39,7 @@ resource "azurerm_data_factory_linked_service_azure_databricks" "ls_Databricks_S
       AZURE_CLIENT_ID     = "{{secrets/key-vault-backed/azure-client-id}}"
       AZURE_TENANT_ID     = "{{secrets/key-vault-backed/azure-tenant-id}}"
       ADLS_ACCOUNT        = var.adls_datalake_name
-      CONFIG_BLOB_ACCOUNT = var.blob_configstore_name
+      BLOB_ACCOUNT        = var.blob_configstore_name
       PYSPARK_PYTHON      = "/databricks/python3/bin/python3"
     }
   }

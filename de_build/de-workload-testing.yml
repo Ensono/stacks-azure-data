@@ -61,8 +61,8 @@ steps:
       AZURE_RESOURCE_GROUP_NAME: ${{ parameters.azureResourceGroupName }}
       AZURE_DATA_FACTORY_NAME: ${{ parameters.azureDataFactoryName }}
       AZURE_REGION_NAME: ${{ parameters.azureRegionName }}
-      ADLS_ACCOUNT: ${{ parameters.azureStorageAccountName }}
-      CONFIG_BLOB_ACCOUNT: ${{ parameters.azureConfigAccountName }}
+      AZURE_STORAGE_ACCOUNT_NAME: ${{ parameters.azureStorageAccountName }}
+      AZURE_CONFIG_ACCOUNT_NAME: ${{ parameters.azureConfigAccountName }}
       AZURE_CLIENT_ID: ${{ parameters.azureClientId }}
       AZURE_CLIENT_SECRET: ${{ parameters.azureClientSecret }}
       AZURE_TENANT_ID: ${{ parameters.azureTenantId }}
