@@ -68,16 +68,16 @@ $env:CLOUD_PLATFORM="azure"
 # Path to the Terraform template files, from the perspective of the executing container
 $env:TF_FILE_LOCATION="/app/deploy/azure/networking"
 
-# 
+#
 $env:ARM_CLIENT_ID="d819a784-70ca-4eb2-bce2-ffbd7035fb6a"
 
-# 
+#
 $env:ARM_CLIENT_SECRET="gPGKp3LUN1QnhSY5lakiAeMZjsO7XxWD"
 
-# 
+#
 $env:ARM_SUBSCRIPTION_ID="9c2c9cee-3f32-40b0-926a-87ebaefcadae"
 
-# 
+#
 $env:ARM_TENANT_ID="d0f9915f-7774-4679-b47d-f456d8583e24"
 
 # Company Name - should/will be used in conventional resource naming
@@ -119,14 +119,14 @@ You should be able to run `taskctl infra:apply` from your local machine as you a
 ==== Enable Private networking
 To enable private networking, locate the file `deploy/azure/infra/vars.tf`. Once you have located this, look for the variable `enable_private_networks` and make sure the default value is set to `true`.
 
-To deploy infrastructure that has private networking enabled you will need to run these commands on a bastion server from the Azure Portal. 
+To deploy infrastructure that has private networking enabled you will need to run these commands on a bastion server from the Azure Portal.
 
 ==== Running a Bastion server
-On the Azure Portal, head to Virtual Machine Scale Sets, then click on the virtual machine scale set that the networking terraform has created. Then click on the `Instances` tab, and click on any of the instances. Click on the connect drop down and connect via bastion. Click on `Deploy Bation Server` and wait for the bastion host to be created. 
+On the Azure Portal, head to Virtual Machine Scale Sets, then click on the virtual machine scale set that the networking terraform has created. Then click on the `Instances` tab, and click on any of the instances. Click on the connect drop down and connect via bastion. Click on `Deploy Bation Server` and wait for the bastion host to be created.
 
-Log in to the bastion using VM password (username: adminuser, password:  ) and set up taskctl and clone the repo from GitHub as done earlier in this guide. Follow the same steps until you have taskctl installed on the bastion server and ensure you have the shell script that has all the necessary environment variables. 
+Log in to the bastion using VM password (username: adminuser, password:  ) and set up taskctl and clone the repo from GitHub as done earlier in this guide. Follow the same steps until you have taskctl installed on the bastion server and ensure you have the shell script that has all the necessary environment variables.
 
-You will then be able to run taskctl on the infra pipeline to deploy the infrastructure with private networking enabled. 
+You will then be able to run taskctl on the infra pipeline to deploy the infrastructure with private networking enabled.
 
 Run the command `taskctl infra:plan` again to get the networking configured.
 
@@ -136,6 +136,3 @@ image::images/networking-private.png[]
 === Note
 
 When choosing to deploy networking or infra, you will need to head to your shell script and change the TF_FILE_LOCATION and STAGE variables aswell as changing the tfstate `key` in the TF_BACKEND_INIT variable  to another name. Once you have made these changes in the shell script, run the shell script to export these variables into your env.
-
-
-

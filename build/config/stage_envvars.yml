@@ -8,7 +8,7 @@ default:
     - name: STAGE
       description: The stage that is being deployed by this pipeline run
     - name: TF_FILE_LOCATION
-      description: Path to the Terraform template files, from the perspective of the executing container      
+      description: Path to the Terraform template files, from the perspective of the executing container
     - name: TESTS_PATH
       description: Path to the tests folder
       required: false
