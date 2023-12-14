@@ -2,7 +2,7 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: amido
+    value: ensono
   - name: project
     value: stacks
   - name: domain
