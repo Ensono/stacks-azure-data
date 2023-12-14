@@ -111,7 +111,6 @@ tasks:
     description: Configure databricks-cli
     command:
       - |
-        brew install databricks
         Write-Output "`nConfigure databricks-cli"
         $args = @"
         $env:DATABRICKS_HOST
