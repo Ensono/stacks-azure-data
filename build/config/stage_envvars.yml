@@ -35,7 +35,7 @@ stages:
       - name: TF_VAR_tags
         required: false
         description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
-      - name: TF_BACKEND_INIT
+      - name: TF_BACKEND_ARGS
         description: Arguments that should be passed to Terraform during the init process
       - name: TF_BACKEND_PLAN
         description: Arguments that should be passed to Terraform during the plan process
