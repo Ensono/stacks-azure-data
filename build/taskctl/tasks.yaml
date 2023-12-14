@@ -34,7 +34,7 @@ tasks:
     context: powershell
     description: Initialise Terraform for Azure
     command:
-      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION
+      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_ARGS" -Path $env:TF_FILE_LOCATION
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION
 
   infra:plan:
@@ -107,7 +107,7 @@ tasks:
       - Confirm-Environment -Path /app/build/config/stage_envvars.yml
   # Databricks tasks
   databricks:connect:
-    context: powershell
+    context: powershell-data
     description: Configure databricks-cli
     command:
       - |
