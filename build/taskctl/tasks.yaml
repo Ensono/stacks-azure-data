@@ -111,6 +111,7 @@ tasks:
     description: Configure databricks-cli
     command:
       - |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install databricks
         Write-Output "`nConfigure databricks-cli"
         $args = @"
