@@ -21,9 +21,9 @@ variables:
   # avoid running anything past dev that is not on master
   # sample value: company-webapp
   - name: tf_state_rg
-    value: Stacks-Ancillary-Resources
+    value: stacks-data-testing
   - name: tf_state_storage
-    value: amidostackstfstate
+    value: testingstackstfstate
   - name: tf_state_container
     value: tfstate
   - name: tf_state_key_dev

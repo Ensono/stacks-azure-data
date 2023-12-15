@@ -19,6 +19,7 @@ stages:
     variables:
       - group: stacks-credentials-nonprod-kv
 
+
     jobs:
       - job: Validate
         pool:

@@ -123,10 +123,10 @@ stages:
                     ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
                     CLOUD_PROVIDER: "$(cloud_provider)"
-                    ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                    ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                    ARM_TENANT_ID: $(ARM_TENANT_ID)
+                    ARM_CLIENT_ID: $(azure_client_id)
+                    ARM_CLIENT_SECRET: $(azure_client_secret)
+                    ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
+                    ARM_TENANT_ID: $(azure_tenant_id)
                     # Terraform Backend Configuration
                     TF_STATE_CONTAINER: $(tf_state_container)
                     TF_STATE_KEY: $(tf_state_key)
