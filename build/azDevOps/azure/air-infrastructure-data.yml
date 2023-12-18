@@ -77,8 +77,8 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/main'))
     variables:
-      - group: amido-stacks-euw-de-nonprod-network
-      - group: amido-stacks-de-pipeline-nonprod
+      - group: amido-euw-nonprod-network
+      - group: amido-pipeline-euw-nonprod
       - group: stacks-credentials-nonprod-kv
       - name: Environment.ShortName
         value: dev
