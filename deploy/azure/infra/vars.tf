@@ -450,7 +450,7 @@ variable "adb_private_zone" {
 
 variable "dns_zone_resource_group" {
   type        = string
-  default     = "amido-euw-hub-network-2"
+  default     = "amido-euw-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
 
