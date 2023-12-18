@@ -39,6 +39,6 @@ module "vmss" {
   vmss_instances               = var.vmss_instances
   vmss_admin_username          = var.vmss_admin_username
   vmss_disable_password_auth   = var.vmss_disable_password_auth
-  vmss_sku                     = "Standard_D5_v2"
+  vmss_sku                     = "Standard_D8_v3"
   depends_on                   = [module.networking]
 }
