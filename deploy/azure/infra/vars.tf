@@ -450,7 +450,7 @@ variable "adb_private_zone" {
 
 variable "dns_zone_resource_group" {
   type        = string
-  default     = "amido-euw-hub-network"
+  default     = "zaid-euw-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
 
@@ -484,7 +484,7 @@ variable "pe_resource_group_location" {
 }
 variable "dns_resource_group_name" {
   type        = string
-  default     = "amido-euw-hub-network"
+  default     = "zaid-euw-hub-network"
   description = "Name of the resource group where pvt dns is present."
 }
 
@@ -496,7 +496,7 @@ variable "blob_private_dns_zone_name" {
 
 variable "blob_dns_resource_group_name" {
   type        = string
-  default     = "amido-euw-hub-network"
+  default     = "zaid-euw-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
@@ -508,7 +508,7 @@ variable "dfs_private_dns_zone_name" {
 
 variable "dfs_dns_resource_group_name" {
   type        = string
-  default     = "amido-euw-hub-network"
+  default     = "zaid-euw-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
