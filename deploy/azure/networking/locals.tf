@@ -20,7 +20,7 @@ locals {
   network_details = {
     "hub_network" = {
       name                = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-hub"
-      address_space       = ["10.2.0.0/16"]
+      address_space       = ["10.16.0.0/16"]
       dns_servers         = []
       resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-hub-network"
       is_hub              = true
@@ -28,7 +28,7 @@ locals {
       subnet_details = {
         "subnet-1" = {
           sub_name                                      = "${var.name_company}-de-hub"
-          sub_address_prefix                            = ["10.2.1.0/24"]
+          sub_address_prefix                            = ["10.16.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -39,7 +39,7 @@ locals {
         },
         "subnet-2" = {
           sub_name                                      = "build-agent"
-          sub_address_prefix                            = ["10.2.2.0/24"]
+          sub_address_prefix                            = ["10.16.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -50,7 +50,7 @@ locals {
         },
         "subnet-3" = {
           sub_name                                      = "AzureBastionSubnet"
-          sub_address_prefix                            = ["10.2.0.0/26"]
+          sub_address_prefix                            = ["10.16.0.0/26"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -64,7 +64,7 @@ locals {
 
     "nonprod-network" = {
       name                = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-nonprod"
-      address_space       = ["10.3.0.0/16"]
+      address_space       = ["10.17.0.0/16"]
       dns_servers         = []
       resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-nonprod-network"
       is_hub              = false
@@ -72,7 +72,7 @@ locals {
       subnet_details = {
         "subnet-1" = {
           sub_name                                      = "${var.name_company}-de-nonprod-pe"
-          sub_address_prefix                            = ["10.3.1.0/24"]
+          sub_address_prefix                            = ["10.17.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -83,7 +83,7 @@ locals {
         },
         "subnet-2" = {
           sub_name                                      = "${var.name_company}-de-nonprod"
-          sub_address_prefix                            = ["10.3.2.0/24"]
+          sub_address_prefix                            = ["10.17.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -96,7 +96,7 @@ locals {
     }
     "prod-network" = {
       name                = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-prod"
-      address_space       = ["10.4.0.0/16"]
+      address_space       = ["10.18.0.0/16"]
       dns_servers         = []
       resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-prod-network"
       is_hub              = false
@@ -104,7 +104,7 @@ locals {
       subnet_details = {
         "subnet-1" = {
           sub_name                                      = "${var.name_company}-de-prod-pe"
-          sub_address_prefix                            = ["10.4.1.0/24"]
+          sub_address_prefix                            = ["10.18.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
@@ -115,7 +115,7 @@ locals {
         },
         "subnet-2" = {
           sub_name                                      = "${var.name_company}-de-prod"
-          sub_address_prefix                            = ["10.4.2.0/24"]
+          sub_address_prefix                            = ["10.18.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints = ["Microsoft.AzureActiveDirectory",
