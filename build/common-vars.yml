@@ -6,7 +6,7 @@ variables:
   - name: project
     value: stacks
   - name: domain
-    value: core-data-1
+    value: core-data
   - name: cloud_providers
     value: azure
   - name: component
