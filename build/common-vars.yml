@@ -2,7 +2,7 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: amido
+    value: zaid
   - name: project
     value: stacks
   - name: domain
@@ -22,9 +22,9 @@ variables:
   # there are some best practices around this if you are going for feature based environments
   # avoid running anything past dev that is not on master
   - name: tf_state_rg
-    value: stacks-data-testing
+    value: stacks-data-testing-zaid
   - name: tf_state_storage
-    value: testingstackstfstate
+    value: zaidteststackstfstate
   - name: tf_state_container
     value: tfstate
 
@@ -32,7 +32,7 @@ variables:
   - name: TaskctlVersion
     value: 1.5.0
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-22.04
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
 
