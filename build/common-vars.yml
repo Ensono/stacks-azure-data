@@ -6,7 +6,7 @@ variables:
   - name: project
     value: stacks
   - name: domain
-    value: core-data
+    value: core-data-1
   - name: cloud_providers
     value: azure
   - name: component
@@ -34,7 +34,7 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
   - name: agentpool_name
-    value: "amido-stacks-core-data-agent-pool"
+    value: "zaid-test"
 
   # Service Connections
   - name: service_connection
