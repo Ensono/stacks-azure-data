@@ -24,7 +24,7 @@ variables:
   - template: ../../common-vars.yml
   - template: air-infrastructure-data-vars.yml
   - name: tf_state_key
-    value: "$(domain)-2"
+    value: "$(domain)-3"
   - name: TF_FILE_LOCATION
     value: $(self_repo_tf_src)
 
