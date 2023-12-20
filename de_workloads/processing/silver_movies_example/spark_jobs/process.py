@@ -6,8 +6,8 @@ from pyspark.sql.types import ArrayType, IntegerType, StringType, StructField, S
 
 from stacks.data.constants import BRONZE_CONTAINER_NAME, SILVER_CONTAINER_NAME
 from stacks.data.pyspark.etl import (
+    EtlSession,
     TableTransformation,
-    get_spark_session_for_adls,
     read_latest_rundate_data,
     transform_and_save_as_delta,
 )
@@ -115,7 +115,9 @@ def etl_main() -> None:
     """Execute data processing and transformation jobs."""
     logger.info(f"Running {WORKLOAD_NAME} processing...")
 
-    spark = get_spark_session_for_adls(WORKLOAD_NAME)
+    etl_session = EtlSession(WORKLOAD_NAME)
+    spark_session = etl_session.spark_session
+    adls_client = etl_session.adls_client
 
     tables = [
         TableTransformation("keywords", transform_keywords),
@@ -126,7 +128,8 @@ def etl_main() -> None:
 
     for table in tables:
         df = read_latest_rundate_data(
-            spark,
+            spark_session,
+            adls_client,
             BRONZE_CONTAINER_NAME,
             INPUT_PATH_PATTERN.format(table_name=table.table_name),
             datasource_type=SOURCE_DATA_TYPE,
@@ -134,7 +137,9 @@ def etl_main() -> None:
 
         output_path = OUTPUT_PATH_PATTERN.format(table_name=table.table_name)
 
-        transform_and_save_as_delta(spark, df, table.transformation_function, SILVER_CONTAINER_NAME, output_path)
+        transform_and_save_as_delta(
+            spark_session, adls_client, df, table.transformation_function, SILVER_CONTAINER_NAME, output_path
+        )
 
     logger.info(f"Finished: {WORKLOAD_NAME} processing.")
 
