@@ -153,7 +153,7 @@ stages:
                     TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
                     TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
                     TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
-                    TF_VAR_link_dns_spoke_network: true
+                    TF_VAR_link_dns_spoke_network: "true"
                     TF_VAR_azure_client_secret: $(azure-client-secret)
 
 
@@ -245,7 +245,7 @@ stages:
                     TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
                     TF_VAR_public_network_access_enabled: false
                     TF_VAR_browser_authentication_enabled: true
-                    TF_VAR_link_dns_spoke_network: true
+                    TF_VAR_link_dns_spoke_network: "true"
                     TF_VAR_azure_client_secret: $(azure-client-secret)
 
   - stage: Release
