@@ -34,7 +34,7 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
   - name: agentpool_name
-    value: "amido-stacks-core-data-agent-pool"
+    value: "zaid-test"
 
   # Service Connections
   - name: service_connection
