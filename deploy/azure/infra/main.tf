@@ -43,7 +43,7 @@ module "kv_default" {
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label_short.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
-  enable_private_network        = true
+  enable_private_network        = var.enable_private_networks
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location    = var.pe_resource_group_location
@@ -239,7 +239,7 @@ module "adls_default" {
   storage_account_details       = var.storage_account_details
   container_access_type         = var.container_access_type
   resource_tags                 = module.default_label_short.tags
-  enable_private_network        = true
+  enable_private_network        = var.enable_private_networks
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location    = var.pe_resource_group_location
@@ -264,7 +264,7 @@ module "sql" {
   administrator_login           = var.administrator_login
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
-  enable_private_network        = true
+  enable_private_network        = var.enable_private_networks
   pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
   pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
   pe_resource_group_location    = var.pe_resource_group_location
@@ -284,7 +284,7 @@ module "adb" {
   enable_databricksws_diagnostic           = false #var.enable_databricksws_diagnostic
   data_platform_log_analytics_workspace_id = azurerm_log_analytics_workspace.la.id
   databricksws_diagnostic_setting_name     = var.databricksws_diagnostic_setting_name
-  enable_private_network                   = true
+  enable_private_network                   = var.enable_private_networks
   create_pe_subnet                         = false
   create_subnets                           = true
   vnet_name                                = var.vnet_name
