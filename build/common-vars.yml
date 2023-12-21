@@ -2,7 +2,7 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: amido
+    value: zm
   - name: project
     value: stacks
   - name: domain
@@ -22,9 +22,9 @@ variables:
   # there are some best practices around this if you are going for feature based environments
   # avoid running anything past dev that is not on master
   - name: tf_state_rg
-    value: Stacks-Ancillary-Resources
+    value: zm-euw-data
   - name: tf_state_storage
-    value: amidostackstfstate
+    value: zmstackstfstate
   - name: tf_state_container
     value: tfstate
 
