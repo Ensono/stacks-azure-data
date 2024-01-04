@@ -382,7 +382,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: '$(Build.Repository.Name)'
+              repositoryName: $(Build.Repository.Name)
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"

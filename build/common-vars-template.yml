@@ -30,11 +30,11 @@ variables:
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.4.2
+    value: 1.5.0
   - name: pool_vm_image
     value: ubuntu-20.04
   - name: agentpool_name
-    value: "amido-stacks-core-data-agent-pool"
+    value: "zaid-test2"
 
   # Service Connections
   - name: service_connection

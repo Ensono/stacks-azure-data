@@ -44,3 +44,5 @@ coverage.xml
 
 #Build
 dist
+
+local
