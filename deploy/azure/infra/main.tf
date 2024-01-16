@@ -42,19 +42,38 @@ module "kv_default" {
   create_kv_networkacl          = true
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label_short.tags
-  contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
+  contributor_object_ids        = var.contributor_object_ids
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.id) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
-  public_network_access_enabled = var.kv_public_network_access_enabled
-  kv_private_dns_zone_id        = data.azurerm_private_dns_zone.kv_private_dns_zone.id
-  virtual_network_subnet_ids    = [data.azurerm_subnet.pe_subnet.id]
+  public_network_access_enabled = var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
+  kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone.*.id) : ""
+  virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet.*.id)] : []
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
 
   depends_on = [module.adf]
+}
+
+# When the KV is created the user being used to deploy the resource is added with permissions
+# to access the KV. However it does not have purge permissions so it is not possible for Terraform
+# to destroy thhe key vault.
+# The following null_resource runs a script that adds the purge permissions
+resource "null_resource" "update_sp_permissions" {
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
+        az keyvault set-policy --name ${module.kv_default.key_vault_name} --object-id ${data.azurerm_client_config.current.client_id} --secret-permissions purge --key-permissions purge --certificate-permissions purge
+    EOT
+  }
+
+  depends_on = [module.kv_default]
 }
 
 # module call for ADF
@@ -74,6 +93,7 @@ module "adf" {
 
 ###########  Private Endpoints for ADF to connect to Azure services ######################
 resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = var.name_pe_blob
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[0]
@@ -81,6 +101,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "blob_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = var.name_pe_dfs
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adls_default.storage_account_ids[1]
@@ -88,6 +109,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "adls_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = var.name_pe_kv
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.kv_default.id
@@ -95,6 +117,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = var.name_pe_sql
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.sql.sql_server_id
@@ -102,6 +125,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = var.name_pe_db
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
@@ -111,6 +135,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
+  count = var.enable_private_networks ? 1 : 0
   name               = "${var.name_pe_db}_auth"
   data_factory_id    = module.adf.adf_factory_id
   target_resource_id = module.adb.adb_databricks_id
@@ -120,7 +145,10 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 }
 
 resource "null_resource" "approve_private_endpoints" {
-  for_each = {
+  for_each = local.private_endpoint_list
+  
+  /*
+  {
     blob = module.adls_default.storage_account_ids[0]
     adls = module.adls_default.storage_account_ids[1]
     kv   = module.kv_default.id
@@ -128,6 +156,7 @@ resource "null_resource" "approve_private_endpoints" {
     adb  = module.adb.adb_databricks_id
     # Add more resources as needed
   }
+  */
 
   triggers = {
     always_run = timestamp()
@@ -193,6 +222,7 @@ data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
 
+/*
 resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
   name                           = "ADF to Log Analytics"
   target_resource_id             = module.adf.adf_factory_id
@@ -200,7 +230,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
   log_analytics_destination_type = "Dedicated"
 
   dynamic "log" {
-    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.logs
+    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.log_category_types
 
     content {
       category = log.value
@@ -227,7 +257,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
     }
   }
 }
-
+*/
 
 # Storage accounts for data lake and config
 module "adls_default" {
@@ -240,16 +270,16 @@ module "adls_default" {
   container_access_type         = var.container_access_type
   resource_tags                 = module.default_label_short.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.id) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dfs_dns_resource_group_name   = var.dns_resource_group_name
   blob_dns_resource_group_name  = var.dns_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
-  public_network_access_enabled = var.sa_public_network_access_enabled
-  dfs_private_zone_id           = data.azurerm_private_dns_zone.dfs_private_zone.id
-  blob_private_zone_id          = data.azurerm_private_dns_zone.blob_private_zone.id
+  public_network_access_enabled = !var.enable_private_networks
+  dfs_private_zone_id           = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.dfs_private_zone.*.id) : ""
+  blob_private_zone_id          = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.blob_private_zone.*.id) : ""
   azure_object_id               = data.azurerm_client_config.current.object_id
 
 }
@@ -265,8 +295,8 @@ module "sql" {
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = data.azurerm_subnet.pe_subnet.id
-  pe_resource_group_name        = data.azurerm_subnet.pe_subnet.resource_group_name
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.id) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
@@ -289,20 +319,20 @@ module "adb" {
   create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
-  virtual_network_id                       = data.azurerm_virtual_network.vnet.id
+  virtual_network_id                       = var.enable_private_networks ? tostring(data.azurerm_virtual_network.vnet.*.id) : ""
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
   public_subnet_prefix                     = var.public_subnet_prefix
   private_subnet_prefix                    = var.private_subnet_prefix
   pe_subnet_prefix                         = var.pe_subnet_prefix
-  pe_subnet_id                             = data.azurerm_subnet.pe_subnet.id
+  pe_subnet_id                             = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.id) : ""
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
-  managed_vnet                             = false
+  managed_vnet                             = !var.enable_private_networks
   browser_authentication_enabled           = var.browser_authentication_enabled
-  private_dns_zone_id                      = data.azurerm_private_dns_zone.adb_private_dns_zone.id
+  private_dns_zone_id                      = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.adb_private_dns_zone.*.id) : ""
 
   depends_on = [azurerm_resource_group.default]
 }
@@ -361,12 +391,7 @@ resource "azurerm_key_vault_secret" "secrets" {
   name         = each.key
   value        = ""
   key_vault_id = module.kv_default.id
-  lifecycle {
-    ignore_changes = [
 
-      value, version
-    ]
-  }
   depends_on = [module.kv_default, azurerm_private_dns_zone_virtual_network_link.privatelink-dns["privatelink.vaultcore.azure.net"]]
 }
 

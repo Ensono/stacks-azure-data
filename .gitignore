@@ -1,7 +1,7 @@
 envfile
 .terraform.lock.hcl
 .terraform/
-tfplan
+*tfplan
 terraform.tfstate
 .terraform.tfstate.lock.info
 
@@ -44,3 +44,5 @@ coverage.xml
 
 #Build
 dist
+
+local
