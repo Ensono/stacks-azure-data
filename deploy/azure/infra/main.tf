@@ -1,11 +1,20 @@
 
+# Create a random string as a suffix to the end of the SQL name
+# this is to help when destorying and redeploying instances
+resource "random_string" "sqlsuffix" {
+  length           = 4
+  special = false
+  upper = false
+  numeric = false
+}
+
 # Naming convention
 module "default_label" {
   source          = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
   namespace       = format("%s-%s", substr(var.name_company, 0, 16), substr(var.name_project, 0, 16))
   stage           = var.stage
   name            = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 16)}"
-  attributes      = var.attributes
+  attributes      = concat([random_string.sqlsuffix.result], var.attributes)
   delimiter       = "-"
   id_length_limit = 60
   tags            = var.tags
@@ -17,10 +26,10 @@ module "default_label" {
 //// Storage Account names must be globally unique.
 module "default_label_short" {
   source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
-  namespace           = format("%s-%s", substr(var.name_company, 0, 6), substr(var.name_project, 0, 6))
+  namespace           = format("%s-%s", substr(var.name_company, 0, 4), substr(var.name_project, 0, 4))
   stage               = var.stage
   name                = "${lookup(var.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
-  attributes          = var.attributes
+  attributes          = concat([random_string.sqlsuffix.result], var.attributes)
   delimiter           = ""
   tags                = var.tags
   id_length_limit     = 20
@@ -35,14 +44,14 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/kv-purge"
   resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   create_kv_networkacl          = true
   enable_rbac_authorization     = false
   resource_tags                 = module.default_label_short.tags
-  contributor_object_ids        = var.contributor_object_ids
+  contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network        = var.enable_private_networks
   pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.*.resource_group_name) : ""
@@ -60,7 +69,8 @@ module "kv_default" {
 # When the KV is created the user being used to deploy the resource is added with permissions
 # to access the KV. However it does not have purge permissions so it is not possible for Terraform
 # to destroy thhe key vault.
-# The following null_resource runs a script that adds the purge permissions
+# The following null_resource runs a script that adds the purge permissions#
+/*
 resource "null_resource" "update_sp_permissions" {
   triggers = {
     always_run = timestamp()
@@ -75,6 +85,7 @@ resource "null_resource" "update_sp_permissions" {
 
   depends_on = [module.kv_default]
 }
+*/
 
 # module call for ADF
 module "adf" {
@@ -287,7 +298,7 @@ module "adls_default" {
 # Storage accounts for data lake and config
 module "sql" {
   source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
-  resource_namer                = module.default_label.id
+  resource_namer                = format("%s%s", module.default_label.id, random_string.sqlsuffix.result)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   sql_version                   = var.sql_version
