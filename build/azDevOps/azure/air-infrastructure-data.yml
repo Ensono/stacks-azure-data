@@ -160,7 +160,7 @@ stages:
                         # Deployment Specific Configuration
                         # State if the infrastructure is being deployed to a public or private network
                         # This value is taken from the parameters
-                        TF_VAR_enable_private_networks: lower("${{ parameters.enable_private_networks }}")
+                        TF_VAR_enable_private_networks: $(lower("${{ parameters.enable_private_networks }}"))
 
                         # Common variables that are required for both public and private networks
                         TF_VAR_administrator_login: $(sql_admin_login)
