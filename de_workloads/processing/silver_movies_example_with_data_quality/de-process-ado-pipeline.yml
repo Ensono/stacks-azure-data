@@ -49,8 +49,7 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(workload_type)_$(pipeline_name)
   - name: dbfs_destination
-    value: 'dbfs:/FileStore/scripts/$(pipeline_name)'
-
+    value: "dbfs:/FileStore/scripts/$(pipeline_name)"
 
 pool:
   name: $(agentpool_name)
@@ -111,7 +110,7 @@ stages:
               script: taskctl lint
             env:
               # Dotnet Build
-              CLOUD_PROVIDER: "$(cloud_provider)"
+              CLOUD_PLATFORM: "$(cloud_platform)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
@@ -182,7 +181,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
@@ -193,7 +192,7 @@ stages:
                     script: taskctl -d infrastructure
                   env:
                     # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    CLOUD_PLATFORM: "$(cloud_platform)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
                     ARM_CLIENT_ID: "$(azure-client-id)"
@@ -226,9 +225,9 @@ stages:
                   parameters:
                     pythonVersion: $(pythonVersion)
                     githubToken: $(github_token)
-                    workingDirectory: './'
-                    unitTestLocation: './$(test_unit_src)'
-                    e2eTestLocation: './$(test_end_to_end_src)'
+                    workingDirectory: "./"
+                    unitTestLocation: "./$(test_unit_src)"
+                    e2eTestLocation: "./$(test_end_to_end_src)"
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
@@ -306,7 +305,7 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
@@ -317,7 +316,7 @@ stages:
                     script: taskctl infrastructure
                   env:
                     # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    CLOUD_PLATFORM: "$(cloud_platform)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
                     ARM_CLIENT_ID: "$(azure-client-id)"
@@ -410,7 +409,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: '$(Build.Repository.Name)'
+              repositoryName: "$(Build.Repository.Name)"
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"

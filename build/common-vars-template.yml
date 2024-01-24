@@ -7,7 +7,7 @@ variables:
     value: "{{ .Project.Name }}"
   - name: domain
     value: "{{ .Input.Business.Domain }}"
-  - name: cloud_providers
+  - name: cloud_platform
     value: "{{ .Input.Cloud.Platform }}"
   - name: component
     value: "{{ .Input.Business.Component }}"
