@@ -10,7 +10,7 @@ param (
 $tfvars = @{}
 
 # Output the values of the enviornment variables
-Get-ChildItem -Path env: | Where-Object name -like $prefix | % {
+Get-ChildItem -Path env: | Where-Object name -like $prefix | ForEach-Object {
 
     # Get th name of the variable, without the prefix
     $name = $_.name -replace $prefix,""
