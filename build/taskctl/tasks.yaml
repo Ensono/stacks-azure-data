@@ -37,6 +37,13 @@ tasks:
       - Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION -Debug
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
 
+  infra:vars:
+    context: powershell
+    description: Create Terraform variables file
+    command:
+      - /app/build/scripts/Set-TFVars.ps1 | Out-File -Path "${env:TF_FILE_LOCATION}/terraform.tfvars"
+      - dir ${env:TF_FILE_LOCATION}
+
   infra:plan:
     context: powershell
     description: Plan Terraform
