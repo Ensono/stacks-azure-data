@@ -86,6 +86,7 @@ stages:
               script: |
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
+
           - template: ../templates/air-infrastructure-data-setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -104,13 +105,8 @@ stages:
               targetType: inline
               script: taskctl lint
             env:
-              # Dotnet Build
-              SELF_REPO_SRC: $(self_repo_src)
+              TF_FILE_LOCATION: /app/deploy/azure/infra
               CLOUD_PLATFORM: "$(cloud_platform)"
-              ARM_TENANT_ID: "$(azure-tenant-id)"
-              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-              ARM_CLIENT_ID: "$(azure-client-id)"
-              ARM_CLIENT_SECRET: "$(azure-client-secret)"
 
   # Iterate around the stages that have been specified. This is based on the parameters and what branch
   # of the the repo that the deployment is being run from
