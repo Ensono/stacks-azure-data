@@ -18,7 +18,7 @@ Get-ChildItem -Path env: | Where-Object name -like $prefix | % {
     # set the value
     $value = $_.value # -replace "\`"", "\`""
 
-    if (!($value -is [int]) -and !($value.StartsWith("{"))) {
+    if (!($value -is [int]) -and !($value.StartsWith("{")) -and !($value.StartsWith("["))) {
         $value = "`"{0}`"" -f $value
     }
 
