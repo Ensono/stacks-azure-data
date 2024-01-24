@@ -1,6 +1,6 @@
 variables:
   - name: git_integration
-    value: null  # github removed github integration with ADF
+    value: null # github removed github integration with ADF
   - name: git_integration_prod
     value: null
   - name: sql_admin_login

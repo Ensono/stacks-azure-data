@@ -18,7 +18,6 @@ variable "name_component" {
   default     = "data"
 }
 
-
 variable "stage" {
   type    = string
   default = "dev"
@@ -96,16 +95,16 @@ variable "network_details" {
   }))
 
   default = {
-    "amido-stacks-euw-de-hub" = {
-      name                = "amido-stacks-euw-de-hub"
+    "ensono-stacks-euw-de-hub" = {
+      name                = "ensono-stacks-euw-de-hub"
       address_space       = ["10.2.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-hub-network"
+      resource_group_name = "ensono-stacks-euw-de-hub-network"
       is_hub              = true
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-hub" = {
-          sub_name                                      = "amido-stacks-euw-de-hub"
+        "ensono-stacks-euw-de-hub" = {
+          sub_name                                      = "ensono-stacks-euw-de-hub"
           sub_address_prefix                            = ["10.2.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -122,23 +121,23 @@ variable "network_details" {
     } },
 
 
-    "amido-stacks-euw-de-nonprod" = {
-      name                = "amido-stacks-euw-de-nonprod"
+    "ensono-stacks-euw-de-nonprod" = {
+      name                = "ensono-stacks-euw-de-nonprod"
       address_space       = ["10.3.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-nonprod-network"
+      resource_group_name = "ensono-stacks-euw-de-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-nonprod-pe" = {
-          sub_name                                      = "amido-stacks-euw-de-nonprod-pe"
+        "ensono-stacks-euw-de-nonprod-pe" = {
+          sub_name                                      = "ensono-stacks-euw-de-nonprod-pe"
           sub_address_prefix                            = ["10.3.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "amido-stacks-euw-de-nonprod" = {
-          sub_name                                      = "amido-stacks-euw-de-nonprod"
+        "ensono-stacks-euw-de-nonprod" = {
+          sub_name                                      = "ensono-stacks-euw-de-nonprod"
           sub_address_prefix                            = ["10.3.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -146,23 +145,23 @@ variable "network_details" {
         }
     } },
 
-    "amido-stacks-euw-de-prod" = {
-      name                = "amido-stacks-euw-de-prod"
+    "ensono-stacks-euw-de-prod" = {
+      name                = "ensono-stacks-euw-de-prod"
       address_space       = ["10.4.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-prod-network"
+      resource_group_name = "ensono-stacks-euw-de-prod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-prod-pe" = {
-          sub_name                                      = "amido-stacks-euw-de-prod-pe"
+        "ensono-stacks-euw-de-prod-pe" = {
+          sub_name                                      = "ensono-stacks-euw-de-prod-pe"
           sub_address_prefix                            = ["10.4.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "amido-stacks-euw-de-prod" = {
-          sub_name                                      = "amido-stacks-euw-de-prod"
+        "ensono-stacks-euw-de-prod" = {
+          sub_name                                      = "ensono-stacks-euw-de-prod"
           sub_address_prefix                            = ["10.4.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -170,46 +169,46 @@ variable "network_details" {
         }
     } },
 
-    "amido-stacks-euw-de-qa-nonprod" = {
-      name                = "amido-stacks-euw-de-qa-nonprod"
+    "ensono-stacks-euw-de-qa-nonprod" = {
+      name                = "ensono-stacks-euw-de-qa-nonprod"
       address_space       = ["10.5.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-qa-nonprod-network"
+      resource_group_name = "ensono-stacks-euw-de-qa-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-qa-nonprod-pe" = {
-          sub_name                                      = "amido-stacks-euw-de-qa-nonprod-pe"
+        "ensono-stacks-euw-de-qa-nonprod-pe" = {
+          sub_name                                      = "ensono-stacks-euw-de-qa-nonprod-pe"
           sub_address_prefix                            = ["10.5.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "amido-stacks-euw-de-qa-nonprod" = {
-          sub_name                                      = "amido-stacks-euw-de-qa-nonprod"
+        "ensono-stacks-euw-de-qa-nonprod" = {
+          sub_name                                      = "ensono-stacks-euw-de-qa-nonprod"
           sub_address_prefix                            = ["10.5.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         }
     } },
-    "amido-stacks-euw-de-qa-prod" = {
-      name                = "amido-stacks-euw-de-qa-prod"
+    "ensono-stacks-euw-de-qa-prod" = {
+      name                = "ensono-stacks-euw-de-qa-prod"
       address_space       = ["10.6.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-qa-prod-network"
+      resource_group_name = "ensono-stacks-euw-de-qa-prod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-qa-prod-pe" = {
-          sub_name                                      = "amido-stacks-euw-de-qa-prod-pe"
+        "ensono-stacks-euw-de-qa-prod-pe" = {
+          sub_name                                      = "ensono-stacks-euw-de-qa-prod-pe"
           sub_address_prefix                            = ["10.6.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "amido-stacks-euw-de-qa-prod" = {
-          sub_name                                      = "amido-stacks-euw-de-qa-prod"
+        "ensono-stacks-euw-de-qa-prod" = {
+          sub_name                                      = "ensono-stacks-euw-de-qa-prod"
           sub_address_prefix                            = ["10.6.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -217,23 +216,23 @@ variable "network_details" {
         }
     } },
 
-    "amido-stacks-euw-de-test-nonprod" = {
-      name                = "amido-stacks-euw-de-test-nonprod"
+    "ensono-stacks-euw-de-test-nonprod" = {
+      name                = "ensono-stacks-euw-de-test-nonprod"
       address_space       = ["10.7.0.0/16"]
       dns_servers         = []
-      resource_group_name = "amido-stacks-euw-de-test-nonprod-network"
+      resource_group_name = "ensono-stacks-euw-de-test-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "amido-stacks-euw-de-test-nonprod-pe" = {
-          sub_name                                      = "amido-stacks-euw-de-test-nonprod-pe"
+        "ensono-stacks-euw-de-test-nonprod-pe" = {
+          sub_name                                      = "ensono-stacks-euw-de-test-nonprod-pe"
           sub_address_prefix                            = ["10.7.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "amido-stacks-euw-de-test-nonprod" = {
-          sub_name                                      = "amido-stacks-euw-de-test-nonprod"
+        "ensono-stacks-euw-de-test-nonprod" = {
+          sub_name                                      = "ensono-stacks-euw-de-test-nonprod"
           sub_address_prefix                            = ["10.7.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
