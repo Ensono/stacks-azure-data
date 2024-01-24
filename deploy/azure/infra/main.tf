@@ -53,13 +53,13 @@ module "kv_default" {
   resource_tags                 = module.default_label_short.tags
   contributor_object_ids        = concat(var.contributor_object_ids, [data.azurerm_client_config.current.object_id])
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.id) : ""
-  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.resource_group_name) : ""
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
-  kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone.id) : ""
-  virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet.id)] : []
+  kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone[0].id) : ""
+  virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id)] : []
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
 
@@ -282,16 +282,16 @@ module "adls_default" {
   container_access_type         = var.container_access_type
   resource_tags                 = module.default_label_short.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = var.enable_private_networks ? lower(tostring(data.azurerm_subnet.pe_subnet.id)) : ""
-  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.resource_group_name) : ""
+  pe_subnet_id                  = var.enable_private_networks ? lower(tostring(data.azurerm_subnet.pe_subnet[0].id)) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dfs_dns_resource_group_name   = var.dns_resource_group_name
   blob_dns_resource_group_name  = var.dns_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = !var.enable_private_networks
-  dfs_private_zone_id           = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.dfs_private_zone.id) : ""
-  blob_private_zone_id          = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.blob_private_zone.id) : ""
+  dfs_private_zone_id           = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.dfs_private_zone[0].id) : ""
+  blob_private_zone_id          = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.blob_private_zone[0].id) : ""
   azure_object_id               = data.azurerm_client_config.current.object_id
 }
 
@@ -306,8 +306,8 @@ module "sql" {
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.default_label.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.id) : ""
-  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet.resource_group_name) : ""
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
+  pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = var.dns_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
@@ -330,20 +330,20 @@ module "adb" {
   create_subnets                           = true
   vnet_name                                = var.vnet_name
   vnet_resource_group                      = var.vnet_resource_group_name
-  virtual_network_id                       = var.enable_private_networks ? tostring(data.azurerm_virtual_network.vnet.id) : ""
+  virtual_network_id                       = var.enable_private_networks ? tostring(data.azurerm_virtual_network.vnet[0].id) : ""
   public_subnet_name                       = var.public_subnet_name
   private_subnet_name                      = var.private_subnet_name
   pe_subnet_name                           = var.pe_subnet_name
   public_subnet_prefix                     = var.public_subnet_prefix
   private_subnet_prefix                    = var.private_subnet_prefix
   pe_subnet_prefix                         = var.pe_subnet_prefix
-  pe_subnet_id                             = var.enable_private_networks ? data.azurerm_subnet.pe_subnet.id : ""
+  pe_subnet_id                             = var.enable_private_networks ? data.azurerm_subnet.pe_subnet[0].id : ""
   public_network_access_enabled            = var.public_network_access_enabled
   create_nat                               = false
   create_lb                                = false
   managed_vnet                             = !var.enable_private_networks
   browser_authentication_enabled           = var.browser_authentication_enabled
-  private_dns_zone_id                      = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.adb_private_dns_zone.id) : ""
+  private_dns_zone_id                      = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.adb_private_dns_zone[0].id) : ""
 
   depends_on = [azurerm_resource_group.default]
 }
