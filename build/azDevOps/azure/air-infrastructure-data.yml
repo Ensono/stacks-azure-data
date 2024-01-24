@@ -207,14 +207,10 @@ stages:
 
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
-                            ARM_CLIENT_ID: $(azure-client-id)
-                            ARM_CLIENT_SECRET: $(azure-client-secret)
-                            ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
-                            ARM_TENANT_ID: $(azure-tenant-id)
                             STAGE: infra
 
                             TF_FILE_LOCATION: /app/deploy/azure/infra
-                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                             TF_BACKEND_DESTROY_PLAN: '-input=false,-out="destroy.tfplan"'
 
                     - ${{ if eq(parameters.deploy, true) }}:
@@ -227,18 +223,14 @@ stages:
                             informationPreference: continue
                           env:
                             ENV_NAME: ${{ stage.environment_shortname }}
-                            STAGE: infra
 
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
-                            ARM_CLIENT_ID: $(azure-client-id)
-                            ARM_CLIENT_SECRET: $(azure-client-secret)
-                            ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
-                            ARM_TENANT_ID: $(azure-tenant-id)
+                            STAGE: infra
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: /app/deploy/azure/infra
-                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
+                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
   - stage: Release
     dependsOn:
