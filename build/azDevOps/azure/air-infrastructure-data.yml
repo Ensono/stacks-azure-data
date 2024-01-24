@@ -159,6 +159,8 @@ stages:
                         script: |
                           taskctl infra:vars
                       env:
+                        TF_FILE_LOCATION: /app/deploy/azure/infra
+
                         # Deployment Specific Configuration
                         # State if the infrastructure is being deployed to a public or private network
                         # This value is taken from the parameters
