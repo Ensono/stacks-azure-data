@@ -2,7 +2,7 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: zm
+    value: beaker
   - name: project
     value: stacks
   - name: domain
@@ -22,17 +22,17 @@ variables:
   # there are some best practices around this if you are going for feature based environments
   # avoid running anything past dev that is not on master
   - name: tf_state_rg
-    value: zm-euw-data
+    value: stacks-terraform-state
   - name: tf_state_storage
-    value: zmstackstfstate
+    value: stacksstatehjfis
   - name: tf_state_container
     value: tfstate
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.4.2
+    value: 1.5.2
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-22.04
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
 
