@@ -43,7 +43,3 @@ data "azurerm_private_dns_zone" "adb_private_dns_zone" {
   resource_group_name = var.dns_zone_resource_group
 }
 
-# Get information about all the private endpoint connections on the storage account
-data "azapi_resource" "private_endpoint_connections" {
-  type = "Microsoft.Storage/storageAccounts@2022-09-01"
-}
