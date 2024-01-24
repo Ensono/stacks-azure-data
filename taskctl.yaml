@@ -29,10 +29,10 @@ pipelines:
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
-    - task: setup:environment
+    # - task: setup:environment
     - task: infra:init
-      depends_on:
-        - setup:environment
+    #  depends_on:
+    #    - setup:environment
     - task: infra:plan
       depends_on: infra:init
     - task: infra:apply
