@@ -119,7 +119,7 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
-          - group: stacks-credentials-${{ stage.environment_shortname }}-kv
+          - group: ensono-sp-creds
           - group: zm-stacks-euw-de-${{ stage.environment_shortname }}-network
 
         jobs:
