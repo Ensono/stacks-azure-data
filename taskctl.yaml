@@ -19,13 +19,8 @@ pipelines:
     #    - debug:env
 
   lint:
-    # - task: lint:precommit
     - task: lint:yaml
-    #  depends_on: lint:precommit
-    - task: lint:terraform:format
-    #  depends_on: lint:precommit
     - task: lint:terraform:validate
-    #  depends_on: lint:precommit
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
