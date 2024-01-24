@@ -4,9 +4,9 @@ variables:
   - name: company
     value: beaker
   - name: project
-    value: stacks
+    value: water
   - name: domain
-    value: core-data
+    value: water-data
   - name: cloud_providers
     value: azure
   - name: component
