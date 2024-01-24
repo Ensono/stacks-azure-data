@@ -56,7 +56,7 @@ tasks:
     command:
       #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
       # - (Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
-      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
+      - Push-Location $env:TF_FILE_LOCATION && Get-Content terraform.tfvars && Invoke-Terraform -Apply -Path tfplan -Debug
 
   infra:destroy:plan:
     context: powershell
