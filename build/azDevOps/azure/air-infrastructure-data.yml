@@ -186,7 +186,7 @@ stages:
 
                     # Upload the Terraform variables file and the plan for debugging
                     - ${{ if eq(parameters.upload, true) }}:
-                        - template: templates/upload.yml
+                        - template: ../templates/upload.yml
 
                     # remove the infrastructure if the parameter has been set
                     - ${{ if eq(parameters.destroy, true) }}:
