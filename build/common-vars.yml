@@ -7,7 +7,7 @@ variables:
     value: water
   - name: domain
     value: water-data
-  - name: cloud_providers
+  - name: cloud_platform
     value: azure
   - name: component
     value: de

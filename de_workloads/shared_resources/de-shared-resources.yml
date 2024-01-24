@@ -24,7 +24,7 @@ variables:
   - template: ../../build/version-data-vars.yml
   - name: job
     value: "shared_resources"
-  - name: include_databricks_resources  # update databricks option
+  - name: include_databricks_resources # update databricks option
     value: "true"
   - name: self_repo_job_dir
     value: "$(self_repo_dir)/de_workloads/$(job)"
@@ -102,7 +102,7 @@ stages:
               script: taskctl lint
             env:
               # Dotnet Build
-              CLOUD_PROVIDER: "$(cloud_provider)"
+              CLOUD_PLATFORM: "$(cloud_platform)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
@@ -189,7 +189,7 @@ stages:
                     script: taskctl -d infrastructure
                   env:
                     # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    CLOUD_PLATFORM: "$(cloud_platform)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
                     ARM_CLIENT_ID: "$(azure-client-id)"
@@ -232,9 +232,9 @@ stages:
                   parameters:
                     pythonVersion: $(pythonVersion)
                     githubToken: $(github_token)
-                    workingDirectory: './'
-                    unitTestLocation: './$(test_unit_src)'
-                    e2eTestLocation: './$(test_end_to_end_src)'
+                    workingDirectory: "./"
+                    unitTestLocation: "./$(test_unit_src)"
+                    e2eTestLocation: "./$(test_end_to_end_src)"
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
@@ -332,7 +332,7 @@ stages:
                     script: taskctl infrastructure
                   env:
                     # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    CLOUD_PLATFORM: "$(cloud_platform)"
                     ARM_TENANT_ID: "$(azure-tenant-id)"
                     ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
                     ARM_CLIENT_ID: "$(azure-client-id)"
@@ -434,7 +434,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: '$(Build.Repository.Name)'
+              repositoryName: "$(Build.Repository.Name)"
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"

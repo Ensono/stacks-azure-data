@@ -45,7 +45,7 @@ stages:
             env:
               # Dotnet Build
               SELF_REPO_SRC: $(self_repo_src)
-              CLOUD_PROVIDER: "$(cloud_provider)"
+              CLOUD_PLATFORM: "$(cloud_platform)"
               ARM_TENANT_ID: "$(azure-tenant-id)"
               ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
               ARM_CLIENT_ID: "$(azure-client-id)"
@@ -85,7 +85,7 @@ stages:
                   env:
                     ENV_NAME: $(Environment.ShortName)
                     # Azure Authentication
-                    CLOUD_PROVIDER: "$(cloud_provider)"
+                    CLOUD_PLATFORM: "$(cloud_platform)"
                     ARM_CLIENT_ID: $(azure-client-id)
                     ARM_CLIENT_SECRET: $(azure-client-secret)
                     ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
