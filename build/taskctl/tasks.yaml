@@ -42,7 +42,7 @@ tasks:
     description: Create Terraform variables file
     command:
       - /app/build/scripts/Set-TFVars.ps1 | Out-File -Path "${env:TF_FILE_LOCATION}/terraform.tfvars"
-      - ls -l ${env:TF_FILE_LOCATION}
+      - Get-Content -Path "${env:TF_FILE_LOCATION}/terraform.tfvars" -Raw
 
   infra:plan:
     context: powershell
