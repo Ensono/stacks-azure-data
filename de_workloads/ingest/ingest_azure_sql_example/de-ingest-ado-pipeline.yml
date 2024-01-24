@@ -47,7 +47,7 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(jobtype)_$(job)
   - name: dbfs_destination
-    value: 'dbfs:/FileStore/scripts/ingest_azure_sql_example'
+    value: "dbfs:/FileStore/scripts/ingest_azure_sql_example"
   - name: self_repo_spark_src
     value: "de_workloads/$(jobtype)/$(job)/spark_jobs"
 
@@ -180,7 +180,7 @@ stages:
                   env:
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                 # Publish ADF
@@ -225,9 +225,9 @@ stages:
                   parameters:
                     pythonVersion: $(pythonVersion)
                     githubToken: $(github_token)
-                    workingDirectory: './'
-                    unitTestLocation: './$(test_unit_src)'
-                    e2eTestLocation: './$(test_end_to_end_src)'
+                    workingDirectory: "./"
+                    unitTestLocation: "./$(test_unit_src)"
+                    e2eTestLocation: "./$(test_end_to_end_src)"
                     azureSubscriptionId: $(azure-subscription-id)
                     azureResourceGroupName: $(resource_group)
                     azureDataFactoryName: $(datafactoryname)
@@ -304,9 +304,8 @@ stages:
                     # Dotnet Build
                     DATABRICKS_HOST: "$(databricks-host)"
                     DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"    #self_repo_spark_src
+                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
                     DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
-
 
                 # Publish ADF
                 - task: Bash@3
@@ -410,7 +409,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: '$(Build.Repository.Name)'
+              repositoryName: "$(Build.Repository.Name)"
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"

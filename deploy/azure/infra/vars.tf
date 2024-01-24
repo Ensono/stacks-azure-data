@@ -457,7 +457,7 @@ variable "adb_private_zone" {
 
 variable "dns_zone_resource_group" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-stacks-euw-de-hub-network"
   description = "The Resource Group for the Private DNS Zone."
 }
 
@@ -491,7 +491,7 @@ variable "pe_resource_group_location" {
 }
 variable "dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-stacks-euw-de-hub-network"
   description = "Name of the resource group where pvt dns is present."
 }
 
@@ -503,7 +503,7 @@ variable "blob_private_dns_zone_name" {
 
 variable "blob_dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-stacks-euw-de-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
@@ -515,7 +515,7 @@ variable "dfs_private_dns_zone_name" {
 
 variable "dfs_dns_resource_group_name" {
   type        = string
-  default     = "amido-stacks-euw-de-hub-network"
+  default     = "ensono-stacks-euw-de-hub-network"
   description = "Name of the resource group where pvt dns is present for blob."
 }
 
@@ -542,11 +542,11 @@ variable "sql_public_network_access_enabled" {
 }
 
 variable "adb_databricks_hosturl" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "adb_databricks_id" {
-  type = string
+  type    = string
   default = ""
 }
