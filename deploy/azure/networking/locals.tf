@@ -129,4 +129,7 @@ locals {
 
   }
 
+  # Get the hub network name which will be used later to deploy the vmss into it
+  hub_network_name = [for network in local.network_details : network.name if network.is_hub == true]
+
 }
