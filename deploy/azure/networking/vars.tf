@@ -77,16 +77,16 @@ variable "network_details" {
   }))
 
   default = {
-    "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-de-hub" = {
-      name                = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-de-hub"
+    "beaker-stacks-euw-de-hub" = {
+      name                = "beaker-stacks-euw-de-hub"
       address_space       = ["10.2.0.0/16"]
       dns_servers         = []
-      resource_group_name = "${var.name_company}-${lookup(local.location_name_map, var.resource_group_location)}-de-hub-network"
+      resource_group_name = "beaker-stacks-euw-de-hub-network"
       is_hub              = true
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-hub" = {
-          sub_name                                      = "ensono-stacks-euw-de-hub"
+        "beaker-stacks-euw-de-hub" = {
+          sub_name                                      = "beaker-stacks-euw-de-hub"
           sub_address_prefix                            = ["10.2.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -103,23 +103,23 @@ variable "network_details" {
     } },
 
 
-    "ensono-stacks-euw-de-nonprod" = {
-      name                = "ensono-stacks-euw-de-nonprod"
+    "beaker-stacks-euw-de-nonprod" = {
+      name                = "beaker-stacks-euw-de-nonprod"
       address_space       = ["10.3.0.0/16"]
       dns_servers         = []
-      resource_group_name = "ensono-stacks-euw-de-nonprod-network"
+      resource_group_name = "beaker-stacks-euw-de-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-nonprod-pe" = {
-          sub_name                                      = "ensono-stacks-euw-de-nonprod-pe"
+        "beaker-stacks-euw-de-nonprod-pe" = {
+          sub_name                                      = "beaker-stacks-euw-de-nonprod-pe"
           sub_address_prefix                            = ["10.3.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "ensono-stacks-euw-de-nonprod" = {
-          sub_name                                      = "ensono-stacks-euw-de-nonprod"
+        "beaker-stacks-euw-de-nonprod" = {
+          sub_name                                      = "beaker-stacks-euw-de-nonprod"
           sub_address_prefix                            = ["10.3.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -127,23 +127,23 @@ variable "network_details" {
         }
     } },
 
-    "ensono-stacks-euw-de-prod" = {
-      name                = "ensono-stacks-euw-de-prod"
+    "beaker-stacks-euw-de-prod" = {
+      name                = "beaker-stacks-euw-de-prod"
       address_space       = ["10.4.0.0/16"]
       dns_servers         = []
-      resource_group_name = "ensono-stacks-euw-de-prod-network"
+      resource_group_name = "beaker-stacks-euw-de-prod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-prod-pe" = {
-          sub_name                                      = "ensono-stacks-euw-de-prod-pe"
+        "beaker-stacks-euw-de-prod-pe" = {
+          sub_name                                      = "beaker-stacks-euw-de-prod-pe"
           sub_address_prefix                            = ["10.4.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "ensono-stacks-euw-de-prod" = {
-          sub_name                                      = "ensono-stacks-euw-de-prod"
+        "beaker-stacks-euw-de-prod" = {
+          sub_name                                      = "beaker-stacks-euw-de-prod"
           sub_address_prefix                            = ["10.4.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -151,46 +151,46 @@ variable "network_details" {
         }
     } },
 
-    "ensono-stacks-euw-de-qa-nonprod" = {
-      name                = "ensono-stacks-euw-de-qa-nonprod"
+    "beaker-stacks-euw-de-qa-nonprod" = {
+      name                = "beaker-stacks-euw-de-qa-nonprod"
       address_space       = ["10.5.0.0/16"]
       dns_servers         = []
-      resource_group_name = "ensono-stacks-euw-de-qa-nonprod-network"
+      resource_group_name = "beaker-stacks-euw-de-qa-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-qa-nonprod-pe" = {
-          sub_name                                      = "ensono-stacks-euw-de-qa-nonprod-pe"
+        "beaker-stacks-euw-de-qa-nonprod-pe" = {
+          sub_name                                      = "beaker-stacks-euw-de-qa-nonprod-pe"
           sub_address_prefix                            = ["10.5.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "ensono-stacks-euw-de-qa-nonprod" = {
-          sub_name                                      = "ensono-stacks-euw-de-qa-nonprod"
+        "beaker-stacks-euw-de-qa-nonprod" = {
+          sub_name                                      = "beaker-stacks-euw-de-qa-nonprod"
           sub_address_prefix                            = ["10.5.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         }
     } },
-    "ensono-stacks-euw-de-qa-prod" = {
-      name                = "ensono-stacks-euw-de-qa-prod"
+    "beaker-stacks-euw-de-qa-prod" = {
+      name                = "beaker-stacks-euw-de-qa-prod"
       address_space       = ["10.6.0.0/16"]
       dns_servers         = []
-      resource_group_name = "ensono-stacks-euw-de-qa-prod-network"
+      resource_group_name = "beaker-stacks-euw-de-qa-prod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-qa-prod-pe" = {
-          sub_name                                      = "ensono-stacks-euw-de-qa-prod-pe"
+        "beaker-stacks-euw-de-qa-prod-pe" = {
+          sub_name                                      = "beaker-stacks-euw-de-qa-prod-pe"
           sub_address_prefix                            = ["10.6.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "ensono-stacks-euw-de-qa-prod" = {
-          sub_name                                      = "ensono-stacks-euw-de-qa-prod"
+        "beaker-stacks-euw-de-qa-prod" = {
+          sub_name                                      = "beaker-stacks-euw-de-qa-prod"
           sub_address_prefix                            = ["10.6.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
@@ -198,23 +198,23 @@ variable "network_details" {
         }
     } },
 
-    "ensono-stacks-euw-de-test-nonprod" = {
-      name                = "ensono-stacks-euw-de-test-nonprod"
+    "beaker-stacks-euw-de-test-nonprod" = {
+      name                = "beaker-stacks-euw-de-test-nonprod"
       address_space       = ["10.7.0.0/16"]
       dns_servers         = []
-      resource_group_name = "ensono-stacks-euw-de-test-nonprod-network"
+      resource_group_name = "beaker-stacks-euw-de-test-nonprod-network"
       is_hub              = false
       link_to_private_dns = true
       subnet_details = {
-        "ensono-stacks-euw-de-test-nonprod-pe" = {
-          sub_name                                      = "ensono-stacks-euw-de-test-nonprod-pe"
+        "beaker-stacks-euw-de-test-nonprod-pe" = {
+          sub_name                                      = "beaker-stacks-euw-de-test-nonprod-pe"
           sub_address_prefix                            = ["10.7.1.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
           service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
         },
-        "ensono-stacks-euw-de-test-nonprod" = {
-          sub_name                                      = "ensono-stacks-euw-de-test-nonprod"
+        "beaker-stacks-euw-de-test-nonprod" = {
+          sub_name                                      = "beaker-stacks-euw-de-test-nonprod"
           sub_address_prefix                            = ["10.7.2.0/24"]
           private_endpoint_network_policies_enabled     = true
           private_link_service_network_policies_enabled = true
