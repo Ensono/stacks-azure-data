@@ -64,8 +64,6 @@ variables:
   - template: air-infrastructure-data-vars.yml
   - name: tf_state_key
     value: $(domain)
-#  - name: TF_FILE_LOCATION
-#    value: $(self_repo_tf_src)
 
 stages:
   - stage: Build
@@ -75,7 +73,6 @@ stages:
     jobs:
       - job: Validate
         pool:
-          # vmImage: $(pool_vm_image)
           name: $(agentpool_name)
 
         steps:
