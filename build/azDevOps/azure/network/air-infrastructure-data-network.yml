@@ -80,7 +80,7 @@ stages:
   # Iterate around the stages that have been specified. This is based on the parameters and what branch
   # of the the repo that the deployment is being run from
   - ${{ each stage in parameters.stages }}:
-      - stage: ${{ stage.stage v}}
+      - stage: ${{ stage.stage }}
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
