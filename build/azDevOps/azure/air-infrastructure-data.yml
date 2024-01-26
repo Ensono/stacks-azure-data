@@ -30,13 +30,11 @@ parameters:
         dependsOn: Build
         condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
         environment_shortname: nonprod
-        domain_internal: $(base_domain_internal_nonprod)
         deployment_infra: AppInfraNonProd
       - stage: Prod
         dependsOn: Build
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
         environment_shortname: prod
-        domain_internal: $(base_domain_internal_prod)
         deployment_infra: AppInfraProd
 
 pr:
@@ -69,7 +67,7 @@ variables:
 stages:
   - stage: Build
     variables:
-      - group: stacks-credentials-nonprod-kv
+      - group: ensono-sp-creds
 
     jobs:
       - job: Validate
