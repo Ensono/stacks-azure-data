@@ -56,7 +56,7 @@ module "kv_default" {
   pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dns_resource_group_name       = var.dns_resource_group_name
+  dns_resource_group_name       = local.dns_zone_resource_group_name
   public_network_access_enabled = var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
   kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone[0].id) : ""
   virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id)] : []
@@ -285,8 +285,8 @@ module "adls_default" {
   pe_subnet_id                  = var.enable_private_networks ? lower(tostring(data.azurerm_subnet.pe_subnet[0].id)) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dfs_dns_resource_group_name   = var.dns_resource_group_name
-  blob_dns_resource_group_name  = var.dns_resource_group_name
+  dfs_dns_resource_group_name   = local.dns_zone_resource_group_name
+  blob_dns_resource_group_name  = local.dns_zone_resource_group_name
   blob_private_dns_zone_name    = var.blob_private_dns_zone_name
   dfs_private_dns_zone_name     = var.dfs_private_dns_zone_name
   public_network_access_enabled = !var.enable_private_networks
@@ -309,7 +309,7 @@ module "sql" {
   pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
-  dns_resource_group_name       = var.dns_resource_group_name
+  dns_resource_group_name       = local.dns_zone_resource_group_name
   public_network_access_enabled = var.sql_public_network_access_enabled
   //As the default SKU in the module is basic, we need to set this to 0 otherwise it defaults to 60 and never gets applied.
   auto_pause_delay_in_minutes = 0
