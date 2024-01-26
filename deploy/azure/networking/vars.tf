@@ -57,6 +57,7 @@ variable "link_dns_network" {
   default     = false
 }
 
+/*
 variable "network_details" {
   type = map(object({
     name                = string
@@ -224,6 +225,7 @@ variable "network_details" {
 
   }
 }
+*/
 
 variable "create_hub_fw" {
   default     = false
