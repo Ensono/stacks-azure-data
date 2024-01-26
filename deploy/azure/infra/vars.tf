@@ -455,12 +455,6 @@ variable "adb_private_zone" {
   description = "Resource ID of the ADB Private DNS Zone"
 }
 
-variable "dns_zone_resource_group" {
-  type        = string
-  default     = "ensono-stacks-euw-de-hub-network"
-  description = "The Resource Group for the Private DNS Zone."
-}
-
 variable "link_dns_spoke_network" {
   type        = bool
   default     = false
@@ -489,9 +483,9 @@ variable "pe_resource_group_location" {
   default     = "westeurope"
   description = "Location of the resource group to provision private endpoint in."
 }
-variable "dns_resource_group_name" {
+variable "dns_zone_resource_group_name" {
   type        = string
-  default     = "ensono-stacks-euw-de-hub-network"
+  default     = ""
   description = "Name of the resource group where pvt dns is present."
 }
 
@@ -501,22 +495,10 @@ variable "blob_private_dns_zone_name" {
   description = "Specifies the Name of the Private DNS Zone Group for blob."
 }
 
-variable "blob_dns_resource_group_name" {
-  type        = string
-  default     = "ensono-stacks-euw-de-hub-network"
-  description = "Name of the resource group where pvt dns is present for blob."
-}
-
 variable "dfs_private_dns_zone_name" {
   type        = string
   default     = "privatelink.dfs.core.windows.net"
   description = "Specifies the Name of the Private DNS Zone Group for blob."
-}
-
-variable "dfs_dns_resource_group_name" {
-  type        = string
-  default     = "ensono-stacks-euw-de-hub-network"
-  description = "Name of the resource group where pvt dns is present for blob."
 }
 
 ############################################

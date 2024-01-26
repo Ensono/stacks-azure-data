@@ -168,7 +168,6 @@ stages:
                         TF_VAR_resource_group_location: $(region)
 
                         # Variables only required for a private network deployment
-                        TF_VAR_link_dns_spoke_network: false
                         TF_VAR_pe_subnet_name: $(pe_subnet_name)
                         TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
                         TF_VAR_private_subnet_prefix: $(private_subnet_prefix)

@@ -10,4 +10,6 @@ locals {
     sql  = module.sql.sql_server_id
     adb  = module.adb.adb_databricks_id
   } : {}
+
+  dns_zone_resource_group_name = var.dns_zone_resource_group_name != "" ? var.dns_zone_resource_group_name : var.vnet_resource_group_name
 }
