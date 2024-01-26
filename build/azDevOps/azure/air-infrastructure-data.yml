@@ -5,7 +5,7 @@ parameters:
   - name: enable_private_networks
     displayName: Enable Private Networks
     type: boolean
-    default: false
+    default: true
   - name: force_deploy
     displayName: Force deploy regardless of branch
     type: boolean
@@ -58,6 +58,7 @@ trigger:
       - build/azDevOps/*
       - build/taskctl/*
       - deploy/azure/infra/*
+
 variables:
   - template: ../../version-data-vars.yml
   - template: ../../common-vars.yml
@@ -113,7 +114,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
           - group: ensono-sp-creds
-          - group: zm-stacks-euw-de-${{ stage.environment_shortname }}-network
+          - group: ensono-data-networks-${{ stage.environment_shortname }}
 
         jobs:
           - deployment: ${{ stage.deployment_infra }}
@@ -173,12 +174,12 @@ stages:
                         TF_VAR_pe_subnet_name: $(pe_subnet_name)
                         TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
                         TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
-                        TF_VAR_public_subnet_name: $(databricks_public_subnet_name)
+                        TF_VAR_public_subnet_name: $(public_subnet_name)
                         TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
-                        TF_VAR_private_subnet_name: $(databricks_private_subnet_name)
-                        TF_VAR_subnet_name: $(pe_subnet_name)
-                        TF_VAR_vnet_name: $(pe_vnet_name)
-                        TF_VAR_vnet_resource_group_name: $(pe_resource_group_name)
+                        TF_VAR_private_subnet_name: $(private_subnet_name)
+                        TF_VAR_subnet_name: $(subnet_name)
+                        TF_VAR_vnet_name: $(vnet_name)
+                        TF_VAR_vnet_resource_group_name: $(vnet_resource_group_name)
 
                     # Upload the Terraform variables file and the plan for debugging
                     - ${{ if eq(parameters.upload, true) }}:
