@@ -2,6 +2,7 @@ envfile
 .terraform.lock.hcl
 .terraform/
 *tfplan
+*.tfvars
 terraform.tfstate
 .terraform.tfstate.lock.info
 
