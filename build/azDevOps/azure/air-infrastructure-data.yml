@@ -36,6 +36,10 @@ parameters:
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
         environment_shortname: prod
         deployment_infra: AppInfraProd
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
 
 pr:
   branches:
@@ -151,6 +155,7 @@ stages:
                         script: |
                           taskctl infra:vars
                       env:
+                        TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
                         TF_FILE_LOCATION: /app/deploy/azure/infra
 
                         # Deployment Specific Configuration
@@ -192,6 +197,7 @@ stages:
                             script: |
                               taskctl infrastructure_destroy
                           env:
+                            TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
                             ENV_NAME: ${{ stage.environment_shortname }}
 
                             # Azure Authentication
@@ -211,6 +217,7 @@ stages:
                               taskctl infrastructure
                             informationPreference: continue
                           env:
+                            TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
                             ENV_NAME: ${{ stage.environment_shortname }}
 
                             # Azure Authentication
