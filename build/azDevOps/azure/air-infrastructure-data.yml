@@ -177,6 +177,7 @@ stages:
                         TF_VAR_subnet_name: $(subnet_name)
                         TF_VAR_vnet_name: $(vnet_name)
                         TF_VAR_vnet_resource_group_name: $(vnet_resource_group_name)
+                        TF_VAR_dns_zone_resource_group_name: $(dns_zone_resource_group_name)
 
                     # Upload the Terraform variables file and the plan for debugging
                     - ${{ if eq(parameters.upload, true) }}:
