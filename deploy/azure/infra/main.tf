@@ -154,10 +154,10 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 
   depends_on = [module.adb]
 }
-/*
+
 resource "null_resource" "approve_private_endpoints" {
   for_each = local.private_endpoint_list
-  
+
   /*
   {
     blob = module.adls_default.storage_account_ids[0]
@@ -167,7 +167,8 @@ resource "null_resource" "approve_private_endpoints" {
     adb  = module.adb.adb_databricks_id
     # Add more resources as needed
   }
-  
+  */
+
 
   triggers = {
     always_run = timestamp()
@@ -187,7 +188,7 @@ resource "null_resource" "approve_private_endpoints" {
   }
   depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
 }
-*/
+
 
 resource "azurerm_role_assignment" "kv_role" {
   scope                = module.kv_default.id
