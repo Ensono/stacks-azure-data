@@ -235,7 +235,6 @@ data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
 
-/*
 resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
   name                           = "ADF to Log Analytics"
   target_resource_id             = module.adf.adf_factory_id
@@ -270,7 +269,6 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
     }
   }
 }
-*/
 
 # Storage accounts for data lake and config
 module "adls_default" {
