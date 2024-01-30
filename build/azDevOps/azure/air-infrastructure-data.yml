@@ -155,7 +155,7 @@ stages:
                         script: |
                           taskctl infra:vars
                       env:
-                        TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
+                        TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
                         TF_FILE_LOCATION: /app/deploy/azure/infra
 
                         # Deployment Specific Configuration
@@ -197,7 +197,7 @@ stages:
                             script: |
                               taskctl infrastructure_destroy
                           env:
-                            TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
+                            TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
                             ENV_NAME: ${{ stage.environment_shortname }}
 
                             # Azure Authentication
@@ -217,7 +217,7 @@ stages:
                               taskctl infrastructure
                             informationPreference: continue
                           env:
-                            TASKCTL_DEBUG: ${{ lower(parameters.deploy) }}
+                            TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
                             ENV_NAME: ${{ stage.environment_shortname }}
 
                             # Azure Authentication
