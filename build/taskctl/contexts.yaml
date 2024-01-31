@@ -19,7 +19,7 @@ contexts:
         - pwsh
         - -NoProfile
         - -Command
-    quote: "'"
+    # quote: "'"
     envfile:
       generate: true
       exclude:
