@@ -30,7 +30,7 @@ variables:
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.5.1
+    value: 1.5.3
   - name: pool_vm_image
     value: ubuntu-22.04
   - name: agentpool_name
