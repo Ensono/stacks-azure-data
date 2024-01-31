@@ -41,7 +41,7 @@ pipelines:
     - task: infra:destroy:plan
       depends_on:
         - infra:init
-    - task: infra:destroy:apply
+    - task: infra:remove:apply
       depends_on:
         - infra:destroy:plan
 
