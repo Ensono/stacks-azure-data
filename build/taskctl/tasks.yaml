@@ -68,9 +68,7 @@ tasks:
     context: powershell
     description: Destroy Environment.ShortName
     command:
-      # - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
-      # - /app/build/scripts/Terraform-Destroy.ps1
-      - echo "WTAF???!"
+      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
 
   publish:github:
     context: powershell
