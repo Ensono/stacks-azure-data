@@ -214,7 +214,8 @@ stages:
                           inputs:
                             targetType: inline
                             script: |
-                              taskctl infrastructure
+                              taskctl infra:destroy:plan
+                              taskctl infra:destroy:apply
                             informationPreference: continue
                           env:
                             TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
