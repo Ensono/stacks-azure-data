@@ -214,7 +214,6 @@ stages:
                           inputs:
                             targetType: inline
                             script: |
-                              taskctl infra:destroy:plan
                               taskctl infra:destroy:apply
                             informationPreference: continue
                           env:
