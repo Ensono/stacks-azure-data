@@ -202,3 +202,8 @@ tasks:
         } else {
             Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
         }
+
+infra:remove:apply:
+  context: powershell
+  command:
+    - echo "Hello"
