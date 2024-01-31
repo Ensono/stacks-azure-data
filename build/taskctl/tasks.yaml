@@ -62,7 +62,7 @@ tasks:
     context: powershell
     description: Destroy Environment.ShortName
     command:
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,${env:TF_BACKEND_DESTROY_PLAN}" -debug
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,${env:TF_BACKEND_DESTROY_PLAN}" -debug | Out-Null
 
   infra:destroy:apply:
     context: powershell
@@ -70,7 +70,7 @@ tasks:
     command:
       # - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
       # - /app/build/scripts/Terraform-Destroy.ps1
-      - echo "Hello"
+      - echo "WTAF???!"
 
   publish:github:
     context: powershell
