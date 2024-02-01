@@ -68,7 +68,8 @@ tasks:
     context: powershell
     description: Destroy Environment.ShortName
     command:
-      - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
+      # - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
+      /app/build/scripts/Remove-Environment.ps1
 
   publish:github:
     context: powershell
