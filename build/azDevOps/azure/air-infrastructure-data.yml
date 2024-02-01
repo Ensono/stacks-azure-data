@@ -208,6 +208,12 @@ stages:
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                             TF_BACKEND_DESTROY_PLAN: '-input=false,-out="destroy.tfplan"'
 
+                            vnet_name: $(vnet_name)
+                            vnet_resource_group_name: $(vnet_resource_group_name)
+                            tf_state_storage: $(tf_state_storage)
+                            tf_state_container: $(tf_state_container)
+                            subnets: "$(public_subnet_name),$(private_subnet_name)"
+
                     - ${{ if eq(parameters.deploy, true) }}:
                         - task: Bash@3
                           displayName: "Taskctl: Infrastructure"
