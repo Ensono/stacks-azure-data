@@ -219,7 +219,7 @@ stages:
                           displayName: "Taskctl: Infrastructure"
                           inputs:
                             targetType: inline
-                            script: taskctl infrastructure_destroy
+                            script: taskctl infrastructure
                             informationPreference: continue
                           env:
                             TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
