@@ -143,7 +143,7 @@ stages:
           - group: ensono-data-${{ stage.environment_shortname }}
 
         jobs:
-          - deployment: Deploy-${{ stage.stage }}
+          - deployment: Deploy_${{ stage.stage }}
             environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
             pool:
               name: $(agentpool_name)
@@ -232,7 +232,7 @@ stages:
                         TF_VAR_key_vault_name: $(keyvault_name)
                         TF_VAR_include_databricks_resources: "$(include_databricks_resources)"
 
-          - deployment: Test-${{ stage.stage }}
+          - deployment: Test_${{ stage.stage }}
             environment: ${{ variables.domain }}-nonprod
             dependsOn: Deploy-${{ stage.stage }}
             pool:
