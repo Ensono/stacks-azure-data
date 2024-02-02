@@ -261,7 +261,6 @@ stages:
   - stage: Release
     dependsOn:
       - Build
-      - Deploy_Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     jobs:
       - job: CreateGitHubRelease
