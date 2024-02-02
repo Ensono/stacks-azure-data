@@ -140,7 +140,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
           - group: ensono-sp-creds
-          - group: amido-stacks-de-pipeline-${{ stage.environment_shortname }}
+          - group: ensono-data-${{ stage.environment_shortname }}
 
         jobs:
           - deployment: Deploy-${{ stage.stage }}
