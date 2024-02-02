@@ -134,7 +134,7 @@ stages:
               CLOUD_PLATFORM: "$(cloud_platform)"
               TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
 
-  - ${{ each stage in parameters.stage }}:
+  - ${{ each stage in parameters.stages }}:
       - stage: ${{ stage.stage }}
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
