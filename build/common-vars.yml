@@ -38,7 +38,7 @@ variables:
 
   # Service Connections
   - name: service_connection
-    value: Stacks.Pipeline.Builds
+    value: Ensono.Stacks.Pipeline.Builds
   - name: github_release_service_connection
     value: GitHubReleases
 
