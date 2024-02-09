@@ -218,7 +218,7 @@ stages:
                           # Azure Authentication
                           # Terraform Backend Configuration
 
-                        TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+                        TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                         TF_VAR_data_factory_resource_group_name: $(resource_group)
                         TF_VAR_data_factory: $(datafactoryname)
                         TF_VAR_integration_runtime_name: $(integration_runtime_name)
