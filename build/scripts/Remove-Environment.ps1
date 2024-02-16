@@ -49,25 +49,36 @@ function Remove-Environment() {
 
         [string[]]
         # List of subnets to remove
-        $subnets = $env:subnets
+        $subnets = $env:subnets,
+
+        [string]
+        # Path to the terraform files
+        $TF_FILE_LOCATION = $env:TF_FILE_LOCATION,
+
+        [switch]
+        # Specifdy DryRun to see what would happen
+        $dryrun
     )
+
+    # Diable the saving of credentials
+    Disable-AzContextAutosave | Out-Null
 
     # Connect to Azure using the credentials in the environment variables
     $secure_password = $env:ARM_CLIENT_SECRET | ConvertTo-SecureString -AsPlainText -Force
     $creds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:ARM_CLIENT_ID, $secure_password
-    Connect-AzAccount -ServicePrincipal -Credential $creds -Tenant $env:ARM_TENANT_ID
+    $azsub = Connect-AzAccount -ServicePrincipal -Credential $creds -Tenant $env:ARM_TENANT_ID
 
     # Remove the subnets from the appropriate network
     $subnets = $subnets -split ","
     foreach ($subnet in $subnets) {
 
-        Write-Host "Removing Subnet: ${subnet}"
-
         # get the virtual network from which the subnet will be removed
         $_vnet = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $NetworkResourceGroupName
         $_subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnet -VirtualNetwork $_vnet
 
-        if ($_subnet) {
+        Write-Host ("Removing Subnet: {0}" -f $_subnet.Name)
+
+        if ($_subnet -and !$dryRun) {
             Remove-AzVirtualNetworkSubnetConfig -Name $_subnet.Name -VirtualNetwork $_vnet | Set-AzVirtualNetwork -ErrorAction Continue
         }
     }
@@ -81,22 +92,45 @@ function Remove-Environment() {
     $state_key = "{0}{1}" -f $TerraformStateKey, $TerraformWorkspace
 
     $ctx = New-AzStorageContext -StorageAccountName $TerraformStorageAccount -StorageAccountKey $SAKey
-    $container = Get-AzStorageContainer -Name $TerraformContainerName -Context $ctx
 
-    if ($container) {
-        Write-Host ("State Key: {0}, Container: {1}" -f $state_key, $container.Name)
-        Remove-AzStorageBlob -Blob $state_key -Container $container.Name -Context $ctx -Confirm:$false
-    }
+    #if ($ctx) {
+        $container = Get-AzStorageContainer -Name $TerraformContainerName -Context $ctx
+
+        if ($container) {
+            Write-Host ("State Key: {0}, Container: {1}" -f $state_key, $container.Name)
+
+            if (!$dryRun) {
+                Remove-AzStorageBlob -Blob $state_key -Container $container.Name -Context $ctx -Confirm:$false
+            }
+        }
+    #}
 
 
     # Run command to delete the resource group
-    Write-Information -MessageData ("Removing resource group: {0}" -f $ResourceGroupName)
-    Remove-AzResourceGroup -Name $ResourceGroupName -Force
+    Write-Host  ("Removing resource group: {0}" -f $ResourceGroupName)
+    if (!$dryRun) {
+        Remove-AzResourceGroup -Name $ResourceGroupName -Force
+    }
 }
 
 # Use Terraform to get the name of the resource group to delete
 Write-Host "Getting resource group to remove"
-$tf_data = Invoke-Expression -Command "terraform output -json" | ConvertFrom-Json
+
+if (![String]::IsNullOrEmpty($TF_FILE_LOCATION)) {
+    Push-Location -Path $TF_FILE_LOCATION
+}
+
+# Get the resource gropup to be deleted
+if (!(Test-Path -Path env:\resource_group_name)) {
+    $tf_data = Invoke-Expression -Command "terraform output -json" | ConvertFrom-Json
+    $rg_name = $tf_data.resource_group_name
+} else {
+    $rg_name = $env:resource_group_name
+}
+
+if (![String]::IsNullOrEmpty($TF_FILE_LOCATION)) {
+    Pop-Location 
+}
 
 $splat = @{
     NetworkResourceGroupName = $env:vnet_resource_group_name
@@ -104,7 +138,7 @@ $splat = @{
     TerraformStorageAccount = $env:tf_state_storage
     TerraformStateKey = $env:tf_state_key
     TerraformWorkspace = $env:ENV_NAME
-    ResourceGroupName = $tf_data.resource_group_name
+    ResourceGroupName = $rg_name
     subnets = $env:subnets
 }
 

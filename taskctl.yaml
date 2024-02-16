@@ -34,7 +34,7 @@ pipelines:
       depends_on: infra:plan
 
   infrastructure_destroy:
-    #- task: setup:environment
+    # - task: setup:environment
     - task: infra:init
       depends_on:
     #    - setup:environment
