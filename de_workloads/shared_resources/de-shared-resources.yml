@@ -245,7 +245,7 @@ stages:
                         workingDirectory: "./"
                         unitTestLocation: "./$(test_unit_src)"
                         e2eTestLocation: "./$(test_end_to_end_src)"
-                        azureSubscriptionId: $(azure-subscription-id)
+                        azureSubscriptionId: $(ARM_SUBSCRIPTION_ID)
                         azureResourceGroupName: $(resource_group)
                         azureDataFactoryName: $(datafactoryname)
                         azureRegionName: $(region)
@@ -258,6 +258,7 @@ stages:
   - stage: Release
     dependsOn:
       - Build
+      - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     jobs:
       - job: CreateGitHubRelease

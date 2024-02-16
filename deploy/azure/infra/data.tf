@@ -1,5 +1,9 @@
 data "azurerm_client_config" "current" {}
 
+# Configure terraform remote state so that the information for the infrastructure
+# can be retrieved without having to pass it all in
+
+
 data "azurerm_subnet" "pe_subnet" {
   count                = var.enable_private_networks ? 1 : 0
   name                 = var.subnet_name
