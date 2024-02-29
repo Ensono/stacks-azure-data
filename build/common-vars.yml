@@ -34,7 +34,7 @@ variables:
   - name: pool_vm_image
     value: ubuntu-22.04
   - name: agentpool_name
-    value: "rjs-azure-data-pool"
+    value: ubuntu-22.04
 
   # Service Connections
   - name: service_connection
