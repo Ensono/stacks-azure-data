@@ -5,7 +5,7 @@ parameters:
   - name: enable_private_networks
     displayName: Enable Private Networks
     type: boolean
-    default: true
+    default: false
   - name: force_deploy
     displayName: Force deploy regardless of branch
     type: boolean
