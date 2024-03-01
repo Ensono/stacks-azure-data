@@ -76,7 +76,7 @@ stages:
     jobs:
       - job: Validate
         pool:
-          name: $(agentpool_name)
+          vmImage: $(pool_vm_image)
 
         steps:
           - task: Bash@3
@@ -122,7 +122,7 @@ stages:
           - deployment: ${{ stage.deployment_infra }}
             environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
             pool:
-              name: $(agentpool_name)
+              vmImage: $(pool_vm_image)
             strategy:
               runOnce:
                 deploy:
@@ -241,8 +241,7 @@ stages:
     jobs:
       - job: CreateGitHubRelease
         pool:
-          # vmImage: $(pool_vm_image)
-          name: $(agentpool_name)
+          vmImage: $(pool_vm_image)
         steps:
           - task: Bash@3
             displayName: "Clean Workspace"
