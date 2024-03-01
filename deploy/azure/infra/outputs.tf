@@ -20,11 +20,13 @@ output "adls_storage_accounts" {
 }
 
 output "adls_storage_account_endpoints" {
-  value = module.adls_default.primary_blob_endpoints
+  value     = module.adls_default.primary_blob_endpoints
+  sensitive = true
 }
 
 output "adls_dfs-endpoints" {
-  value = module.adls_default.primary_dfs_endpoints
+  value     = module.adls_default.primary_dfs_endpoints
+  sensitive = true
 }
 
 output "adb_databricks_id" {
