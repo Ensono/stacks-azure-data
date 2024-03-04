@@ -44,7 +44,7 @@ resource "azurerm_resource_group" "default" {
 
 # KV for ADF
 module "kv_default" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=feature/kv-purge"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=v3.0.13"
   resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -66,30 +66,9 @@ module "kv_default" {
   depends_on = [module.adf]
 }
 
-# When the KV is created the user being used to deploy the resource is added with permissions
-# to access the KV. However it does not have purge permissions so it is not possible for Terraform
-# to destroy thhe key vault.
-# The following null_resource runs a script that adds the purge permissions#
-/*
-resource "null_resource" "update_sp_permissions" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-        az login --service-principal -u ${data.azurerm_client_config.current.client_id} -p ${var.azure_client_secret} --tenant ${data.azurerm_client_config.current.tenant_id}
-        az keyvault set-policy --name ${module.kv_default.key_vault_name} --object-id ${data.azurerm_client_config.current.client_id} --secret-permissions purge --key-permissions purge --certificate-permissions purge
-    EOT
-  }
-
-  depends_on = [module.kv_default]
-}
-*/
-
 # module call for ADF
 module "adf" {
-  source                          = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adf?ref=master"
+  source                          = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adf?ref=v3.0.13"
   resource_namer                  = module.default_label.id
   resource_group_name             = azurerm_resource_group.default.name
   resource_group_location         = azurerm_resource_group.default.location
@@ -157,18 +136,6 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
 
 resource "null_resource" "approve_private_endpoints" {
   for_each = local.private_endpoint_list
-
-  /*
-  {
-    blob = module.adls_default.storage_account_ids[0]
-    adls = module.adls_default.storage_account_ids[1]
-    kv   = module.kv_default.id
-    sql  = module.sql.sql_server_id
-    adb  = module.adb.adb_databricks_id
-    # Add more resources as needed
-  }
-  */
-
 
   triggers = {
     always_run = timestamp()
@@ -273,7 +240,7 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls?ref=v3.0.13"
   resource_namer                = module.default_label_short.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -296,7 +263,7 @@ module "adls_default" {
 
 # Storage accounts for data lake and config
 module "sql" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=master"
+  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-sql?ref=v3.0.13"
   resource_namer                = format("%s%s", module.default_label.id, random_string.sqlsuffix.result)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -315,7 +282,7 @@ module "sql" {
 }
 
 module "adb" {
-  source                                   = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adb?ref=feature/kv-purge"
+  source                                   = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adb?ref=v3.0.13"
   resource_namer                           = module.default_label.id
   resource_group_name                      = azurerm_resource_group.default.name
   resource_group_location                  = azurerm_resource_group.default.location

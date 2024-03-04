@@ -2,9 +2,9 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: beaker
+    value: cloudcrafter
   - name: project
-    value: water
+    value: datamine
   - name: domain
     value: water-data
   - name: cloud_platform
