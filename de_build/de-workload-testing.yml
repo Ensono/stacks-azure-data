@@ -20,7 +20,6 @@ steps:
     displayName: Set Python Version
     inputs:
       versionSpec: ${{ parameters.pythonVersion }}
-      # githubToken: ${{ parameters.githubToken }}
       addToPath: true
 
   - task: Bash@3

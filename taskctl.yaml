@@ -13,10 +13,7 @@ watchers:
 
 pipelines:
   setup:
-    # - task: debug:env
     - task: buildnumber
-    #  depends_on:
-    #    - debug:env
 
   lint:
     - task: lint:yaml
@@ -24,20 +21,14 @@ pipelines:
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
-    # - task: setup:environment
     - task: infra:init
-    #  depends_on:
-    #    - setup:environment
     - task: infra:plan
       depends_on: infra:init
     - task: infra:apply
       depends_on: infra:plan
 
   infrastructure_destroy:
-    # - task: setup:environment
     - task: infra:init
-      depends_on:
-    #    - setup:environment
     - task: infra:destroy:plan
       depends_on:
         - infra:init

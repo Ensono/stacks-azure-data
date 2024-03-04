@@ -522,13 +522,3 @@ variable "sql_public_network_access_enabled" {
   default     = false
   description = "Allow public network access to sql server. Set as true or false."
 }
-
-variable "adb_databricks_hosturl" {
-  type    = string
-  default = ""
-}
-
-variable "adb_databricks_id" {
-  type    = string
-  default = ""
-}

@@ -187,7 +187,7 @@ stages:
                         # Dotnet Build
                         DATABRICKS_HOST: "$(databricks-host)"
                         DATABRICKS_TOKEN: "$(databricks-token)"
-                        DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)" # self_repo_spark_src
+                        DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"
                         DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
                     # Publish ADF

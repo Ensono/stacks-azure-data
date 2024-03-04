@@ -105,7 +105,7 @@ stages:
               targetType: inline
               script: taskctl lint
             env:
-              TF_FILE_LOCATION: /app/deploy/azure/infra
+              TF_FILE_LOCATION: /app/$(self_repo_tf_src)
               CLOUD_PLATFORM: "$(cloud_platform)"
 
   # Iterate around the stages that have been specified. This is based on the parameters and what branch

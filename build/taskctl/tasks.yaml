@@ -47,15 +47,12 @@ tasks:
     context: powershell
     description: Plan Terraform
     command:
-      # - (Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan"
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" | Out-Null
 
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
     command:
-      #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
-      # - (Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
       - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
 
   infra:destroy:plan:
@@ -67,9 +64,7 @@ tasks:
   infra:destroy:apply:
     context: powershell
     description: Destroy Environment.ShortName
-    command:
-      # - Invoke-Terraform -Apply -Path "${env:TF_FILE_LOCATION}/destroy.tfplan" -Arguments @("-destroy") -debug
-      /app/build/scripts/Remove-Environment.ps1
+    command: /app/build/scripts/Remove-Environment.ps1
 
   publish:github:
     context: powershell
