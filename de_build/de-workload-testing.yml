@@ -1,26 +1,25 @@
 parameters:
-  pythonVersion: ''
-  githubToken: ''
-  workingDirectory: './'
-  unitTestLocation: './$(test_unit_src)'
-  e2eTestLocation: './$(test_end_to_end_src)'
-  junitLocation: '$(junit_src)'
-  azureSubscriptionId: ''
-  azureResourceGroupName: ''
-  azureDataFactoryName: ''
-  azureRegionName: ''
-  azureStorageAccountName: ''
-  azureConfigAccountName: ''
-  azureClientId: ''
-  azureClientSecret: ''
-  azureTenantId: ''
+  pythonVersion: ""
+  githubToken: ""
+  workingDirectory: "./"
+  unitTestLocation: "./$(test_unit_src)"
+  e2eTestLocation: "./$(test_end_to_end_src)"
+  junitLocation: "$(junit_src)"
+  azureSubscriptionId: ""
+  azureResourceGroupName: ""
+  azureDataFactoryName: ""
+  azureRegionName: ""
+  azureStorageAccountName: ""
+  azureConfigAccountName: ""
+  azureClientId: ""
+  azureClientSecret: ""
+  azureTenantId: ""
 
 steps:
   - task: UsePythonVersion@0
     displayName: Set Python Version
     inputs:
       versionSpec: ${{ parameters.pythonVersion }}
-      githubToken: ${{ parameters.githubToken }}
       addToPath: true
 
   - task: Bash@3
@@ -31,7 +30,7 @@ steps:
         pip install poetry
         poetry self add poetry-dotenv-plugin
         poetry install
-      workingDirectory: '${{ parameters.workingDirectory }}'
+      workingDirectory: "${{ parameters.workingDirectory }}"
 
   - task: Bash@3
     displayName: "Unit Tests"
@@ -39,7 +38,7 @@ steps:
       targetType: inline
       script: |
         poetry run pytest -rf -v "${{ parameters.unitTestLocation }}" --junitxml "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}/unit.xml"
-      workingDirectory: '${{ parameters.workingDirectory }}'
+      workingDirectory: "${{ parameters.workingDirectory }}"
     env:
       UNIT_TEST_LOCATION: ${{ parameters.unitTestLocation }}
 
@@ -53,7 +52,7 @@ steps:
         else
           echo "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '${{ parameters.e2eTestLocation }}' does not exist."
         fi
-      workingDirectory: '${{ parameters.workingDirectory }}'
+      workingDirectory: "${{ parameters.workingDirectory }}"
     env:
       E2E_TEST_LOCATION: ${{ parameters.e2eTestLocation }}
       JUNIT_LOCATION: ${{ parameters.junitLocation }}
@@ -71,5 +70,5 @@ steps:
     displayName: "Publish Test Results"
     inputs:
       testResultsFiles: "*.xml"
-      searchFolder: '$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}'
+      searchFolder: "$(System.DefaultWorkingDirectory)/${{ parameters.junitLocation }}"
     condition: succeededOrFailed()

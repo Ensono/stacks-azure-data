@@ -1,0 +1,246 @@
+# State the env vars that need to exist in each stage
+# The default section will always be checked
+
+default:
+  variables:
+    - name: CLOUD_PLATFORM
+      description: Cloud that is being targeted, e.g. aws or azure
+    - name: STAGE
+      description: The stage that is being deployed by this pipeline run
+    - name: TF_FILE_LOCATION
+      description: Path to the Terraform template files, from the perspective of the executing container
+    - name: TESTS_PATH
+      description: Path to the tests folder
+      required: false
+  credentials:
+    azure:
+      - name: ARM_CLIENT_ID
+      - name: ARM_CLIENT_SECRET
+      - name: ARM_SUBSCRIPTION_ID
+      - name: ARM_TENANT_ID
+    aws:
+      - name: AWS_ACCESS_KEY_ID
+      - name: AWS_SECRET_ACCESS_KEY
+      - name: AWS_REGION
+
+stages:
+  - name: networking
+    variables:
+      - name: TF_VAR_name_company
+        required: true
+        description: Company Name - should/will be used in conventional resource naming
+      - name: TF_VAR_name_project
+        required: true
+        description: Project Name - should/will be used in conventional resource naming
+      - name: TF_VAR_tags
+        required: false
+        description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
+      - name: TF_BACKEND_ARGS
+        description: Arguments that should be passed to Terraform during the init process
+      - name: TF_BACKEND_PLAN
+        description: Arguments that should be passed to Terraform during the plan process
+        required: false
+      - name: TF_VAR_create_fw_public_ip
+        required: false
+        description: 'Determines if the networking modules creates a firewall IP address or not. (Default: False)'
+      - name: TF_VAR_create_hub_fw
+        required: false
+        description: 'Determines if the networking modules creates a firewall instance or not. (Default: False)'
+      - name: TF_VAR_create_private_dns_zone
+        required: false
+        description: 'Determines if the networking modules creates a private dns zone. (Default: True)'
+      - name: TF_VAR_enable_private_networks
+        required: false
+        description: 'Enable Private Networking for Secure Data Platform. (Default: False)'
+      - name: TF_VAR_location_name_map
+        required: false
+        description: ' (Default: @{eastasia=ase; eastus=use; eastus2=use2; northeurope=eun; southeastasia=asse; uksouth=uks; ukwest=ukw; westeurope=euw; westus=usw})'
+      - name: TF_VAR_name_component
+        required: false
+        description: 'Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing` (Default: data)'
+      - name: TF_VAR_network_details
+        required: false
+        description: ' (Default: @{amido-stacks-euw-de-hub=; amido-stacks-euw-de-nonprod=; amido-stacks-euw-de-prod=})'
+      - name: TF_VAR_resource_group_location
+        required: false
+        description: ' (Default: uksouth)'
+      - name: TF_VAR_stage
+        required: false
+        description: ' (Default: dev)'
+      - name: TF_VAR_vmss_admin_username
+        required: false
+        description: 'Sets the admin user name. This is used if remote access is required to a VM instance. (Default: adminuser)'
+      - name: TF_VAR_vmss_disable_password_auth
+        required: false
+        description: 'Enables or Disables password authentication. If Password is disabled ssh keys must be provided. (Default: False)'
+      - name: TF_VAR_vmss_instances
+        required: false
+        description: 'Sets the default number of VM instances running in the VMSS. (Default: 1)'
+      - name: TF_VAR_vmss_subnet_name
+        required: false
+        description: 'The subnet name which the VMSS will be provisioned. (Default: build-agent)'
+      - name: TF_VAR_attributes
+        required: false
+        description: Additional attributes for tagging
+
+  - name: infra
+    variables:
+      - name: TF_VAR_administrator_login
+        required: true
+        description: The administrator login name for the new server. Required unless azuread_authentication_only in the azuread_administrator block is true. When omitted, Azure will generate a default username which cannot be subsequently changed. Changing this forces a new resource to be created.
+      - name: TF_VAR_attributes
+        required: false
+        description: Additional attributes for tagging
+      - name: TF_VAR_azuread_administrator
+        required: false
+        description: Specifies whether only AD Users and administrators (like azuread_administrator.0.login_username) can be used to login, or also local database users (like administrator_login). When true, the administrator_login and administrator_login_password properties can be omitted.
+      - name: TF_VAR_contributor_object_ids
+        required: false
+        description: A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault.
+      - name: TF_VAR_name_company
+        required: true
+        description: Company Name - should/will be used in conventional resource naming
+      - name: TF_VAR_name_project
+        required: true
+        description: Project Name - should/will be used in conventional resource naming
+      - name: TF_VAR_pe_resource_group_name
+        required: true
+        description: Name of the resource group to provision private endpoint in.
+      - name: TF_VAR_pe_subnet_id
+        required: true
+        description: ID for the Private Endpoint Subnet
+      - name: TF_VAR_subnet_name
+        required: true
+        description: The name of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint
+      - name: TF_VAR_tags
+        required: true
+        description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
+      - name: TF_VAR_vnet_name
+        required: true
+        description: The VNET in which the Subnet resides.
+      - name: TF_VAR_vnet_resource_group_name
+        required: true
+        description: The name of the resource group for the vnet which the subnet resides.
+      - name: TF_VAR_adb_role_adf
+        required: false
+        description: 'Role assignment for Azure databricks. (Default: Contributor)'
+      - name: TF_VAR_add_rbac_users
+        required: false
+        description: "If set to true, the module will create databricks users and  group named 'project_users' with the specified users as members, and grant workspace and SQL access to this group. Default is false. (Default: True)"
+      - name: TF_VAR_adf_managed-vnet-runtime_name
+        required: false
+        description: 'Specifies the name of the Managed Integration Runtime. Changing this forces a new resource to be created. Must be globally unique. See the Microsoft documentation for all restrictions. (Default: adf-managed-vnet-runtime)'
+      - name: TF_VAR_adls_datalake_role_adf
+        required: false
+        description: 'Role assignment for ADLS Gen2 storage. (Default: Storage Blob Data Contributor)'
+      - name: TF_VAR_blob_dataconfig_role_adf
+        required: false
+        description: 'Role assignment for config blob storage. (Default: Storage Blob Data Contributor)'
+      - name: TF_VAR_container_access_type
+        required: false
+        description: 'value (Default: private)'
+      - name: TF_VAR_databricks_group_display_name
+        required: false
+        description: "If 'add_rbac_users' set to true then specifies databricks group display name (Default: project_users)"
+      - name: TF_VAR_databricks_pat_comment
+        required: false
+        description: 'Comment for databricks PAT (Default: Terraform Provisioning)'
+      - name: TF_VAR_databricks_secret_scope_kv
+        required: false
+        description: 'Name of the databricks secret scope for Key vault. (Default: key-vault-backed)'
+      - name: TF_VAR_databricks_sku
+        required: false
+        description: 'The SKU to use for the databricks instance (Default: premium)'
+      - name: TF_VAR_databricks-host
+        required: false
+        description: 'Name of the Key for databricks host, its not the actual value/password but the by the name its referred to. (Default: databricks-host)'
+      - name: TF_VAR_databricks-token
+        required: false
+        description: 'Name of the Key for databricks token, its not the actual value/password but the by the name its referred to. (Default: databricks-token)'
+      - name: TF_VAR_databricksws_diagnostic_setting_name
+        required: false
+        description: 'The Databricks workspace diagnostic setting name. (Default: Databricks to Log Analytics)'
+      - name: TF_VAR_dns_zone_name
+        required: false
+        description: 'The name of the Private DNS Zone (Default: privatelink.amido-stacks-core-data-euw-de.com)'
+      - name: TF_VAR_dns_zone_resource_group
+        required: false
+        description: 'The Resource Group for the Private DNS Zone. (Default: ensono-euw-hub-network)'
+      - name: TF_VAR_e_2_test_role
+        required: false
+        description: 'Role assignment for end to end Testing. (Default: Storage Blob Data Contributor)'
+      - name: TF_VAR_enable_databricksws_diagnostic
+        required: false
+        description: 'Whether to enable diagnostic settings for the Azure Databricks workspace (Default: True)'
+      - name: TF_VAR_enable_enableDbfsFileBrowser
+        required: false
+        description: 'Whether to enable Dbfs File browser for the Azure Databricks workspace (Default: True)'
+      - name: TF_VAR_enable_private_networks
+        required: false
+        description: 'Enable Private Networking for Secure Data Platform. (Default: False)'
+      - name: TF_VAR_git_integration
+        required: false
+        description: 'A repository integration block for ADF git integration. Can be null, github or vsts. (Default: null)'
+      - name: TF_VAR_kv_role_adf
+        required: false
+        description: 'Role assignment for Key Vault. (Default: Key Vault Secrets User)'
+      - name: TF_VAR_kv_secrets
+        required: false
+        description: "Specifies the name of the Key Vault Secrets. The secrets' values will need to be updated directly once deployed. Existing secrets with the same name will not be overwritten. (Default: secret1)"
+      - name: TF_VAR_la_retention
+        required: false
+        description: 'The workspace data retention in days. Possible values are either 7 (Free Tier only) or range between 30 and 730. (Default: 30)'
+      - name: TF_VAR_la_sku
+        required: false
+        description: 'Specifies the SKU of the Log Analytics Workspace. (Default: PerGB2018)'
+      - name: TF_VAR_managed_virtual_network_enabled
+        required: false
+        description: 'Is Managed Virtual Network enabled? (Default: True)'
+      - name: TF_VAR_name_component
+        required: false
+        description: 'Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing` (Default: data)'
+      - name: TF_VAR_name_pe_blob
+        required: false
+        description: 'Specifies the name for Private endpoint for blob. (Default: private-config-blob)'
+      - name: TF_VAR_name_pe_dfs
+        required: false
+        description: 'Specifies the name for Private endpoint for Adls container. (Default: private-dfs)'
+      - name: TF_VAR_name_pe_kv
+        required: false
+        description: 'Specifies the name for Private endpoint for Azure Key vault. (Default: private-kv)'
+      - name: TF_VAR_name_pe_sql
+        required: false
+        description: 'Specifies the name for Private endpoint for Azure Sql Server. (Default: private-config-sql)'
+      - name: TF_VAR_pe_resource_group_location
+        required: false
+        description: 'Location of the resource group to provision private endpoint in. (Default: westeurope)'
+      - name: TF_VAR_rbac_databricks_users
+        required: false
+        description: "If 'add_rbac_users' set to true then specifies RBAC Databricks users (Default: @{LorraineSnaddon=; MehdiKimakhe=})"
+      - name: TF_VAR_repository_name
+        required: false
+        description: 'Specifies the name of the git repository. (Default: stacks-azure-data-ingest)'
+      - name: TF_VAR_resource_group_location
+        required: false
+        description: ' (Default: uksouth)'
+      - name: TF_VAR_root_folder
+        required: false
+        description: 'Specifies the root folder within the repository. Set to / for the top level. (Default: /data_factory/adf_managed)'
+      - name: TF_VAR_sql_db_names
+        required: false
+        description: 'The name of the MS SQL Database. Changing this forces a new resource to be created. (Default: sqldbtest)'
+      - name: TF_VAR_sql_password
+        required: false
+        description: 'Name of the Key for Sql admin Password, its not the actual value/password but the by the name its referred to. (Default: sql-password)'
+      - name: TF_VAR_sql_role_adf
+        required: false
+        description: 'Role assignment for Sql Server. (Default: Contributor)'
+      - name: TF_VAR_sql_version
+        required: false
+        description: 'The version for the new server. Valid values are: 2.0 (for v11 server) and 12.0 (for v12 server). Changing this forces a new resource to be created. (Default: 12.0)'
+      - name: TF_VAR_stage
+        required: false
+        description: ' (Default: dev)'
+      - name: TF_VAR_storage_account_details
+        required: false
+        description: ' (Default: @{data_config_storage=; data_lake_storage=})'

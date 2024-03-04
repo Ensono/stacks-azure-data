@@ -2,12 +2,12 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: amido
+    value: cloudcrafter
   - name: project
-    value: stacks
+    value: datamine
   - name: domain
-    value: core-data
-  - name: cloud_providers
+    value: datamine
+  - name: cloud_platform
     value: azure
   - name: component
     value: de
@@ -22,23 +22,23 @@ variables:
   # there are some best practices around this if you are going for feature based environments
   # avoid running anything past dev that is not on master
   - name: tf_state_rg
-    value: Stacks-Ancillary-Resources
+    value: stacks-terraform-state
   - name: tf_state_storage
-    value: amidostackstfstate
+    value: stacksstatehjfis
   - name: tf_state_container
     value: tfstate
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.4.2
+    value: 1.5.3
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-22.04
   - name: agentpool_name
-    value: "amido-stacks-core-data-agent-pool"
+    value: ensono-stacks-data-build
 
   # Service Connections
   - name: service_connection
-    value: Stacks.Pipeline.Builds
+    value: Ensono.Stacks.Pipeline.Builds
   - name: github_release_service_connection
     value: GitHubReleases
 

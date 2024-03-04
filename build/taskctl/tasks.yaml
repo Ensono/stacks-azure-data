@@ -21,7 +21,7 @@ tasks:
     context: powershell
     description: Perform Terraform format check
     command:
-      - Invoke-Terraform -Format -Path $env:TF_FILE_LOCATION
+      - Invoke-Terraform -Format -Path $env:TF_FILE_LOCATION -Debug
 
   lint:terraform:validate:
     context: powershell
@@ -34,20 +34,37 @@ tasks:
     context: powershell
     description: Initialise Terraform for Azure
     command:
-      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_ARGS" -Path $env:TF_FILE_LOCATION -Debug
+      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION -Debug
       - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
+
+  infra:vars:
+    context: powershell
+    description: Create Terraform variables file
+    command:
+      - /app/build/scripts/Set-TFVars.ps1 | Tee-Object -FilePath "${env:TF_FILE_LOCATION}/terraform.tfvars"
 
   infra:plan:
     context: powershell
     description: Plan Terraform
     command:
-      (Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" | Out-Null
+
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
     command:
-      #  - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug | out-null
-      - (Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug) -replace "{{"{{"}}", "{{"{{"}}`"{{"{{"}}`"}}"
+      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
+
+  infra:destroy:plan:
+    context: powershell
+    description: Destroy Environment.ShortName
+    command:
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,${env:TF_BACKEND_DESTROY_PLAN}" -debug | Out-Null
+
+  infra:destroy:apply:
+    context: powershell
+    description: Destroy Environment.ShortName
+    command: /app/build/scripts/Remove-Environment.ps1
 
   publish:github:
     context: powershell
@@ -87,23 +104,33 @@ tasks:
     variables:
       sleep: 30
 
+  # The following tasks are used to setup a local environment using the information in the stage_envvars.yml file
+  setup:dev:
+    context: powershell
+    description: Create a shell script to configure the environment variables
+    command:
+      - New-EnvConfig -Path /app/build/config/stage_envvars.yml -ScriptPath /app/local
+
+  setup:environment:
+    context: powershell
+    description: Ensure that the environment is configured correctly
+    command:
+      - Confirm-Environment -Path /app/build/config/stage_envvars.yml
+
   # Databricks tasks
   databricks:connect:
-    context: powershell
+    context: powershell-data
     description: Configure databricks-cli
     command:
       - |
         Write-Output "`nConfigure databricks-cli"
-        $args = @"
-        $env:DATABRICKS_HOST
-        $env:DATABRICKS_TOKEN
-        "@
-        Write-Output $args | & databricks configure --token
+        Set-Content -Path adb_token -Value $env:DATABRICKS_TOKEN
+        & databricks configure --token-file adb_token --host $env:DATABRICKS_HOST
         Write-Output "`nDebug:Databricks workspace list:"
         & databricks workspace list
 
   databricks:createdir:
-    context: powershell
+    context: powershell-data
     description: Create DBFS Dir If Not Exists
     command:
       - |
@@ -121,7 +148,7 @@ tasks:
         }
 
   databricks:upload:
-    context: powershell
+    context: powershell-data
     description: Upload Spark Jobs or Whl to DBFS
     command:
       # - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
@@ -144,7 +171,7 @@ tasks:
 
   # Deworkload Testing tasks
   deworkload:Testing:
-    context: powershell
+    context: powershell-data
     description: Deworkload Unit Testing
     command:
       - |
