@@ -6,7 +6,7 @@ variables:
   - name: project
     value: datamine
   - name: domain
-    value: water-data
+    value: datamine
   - name: cloud_platform
     value: azure
   - name: component
