@@ -9,15 +9,76 @@ contexts:
         - ${PWD}:/app
         - -v
         - /var/run/docker.sock:/var/run/docker.sock
+        - --env-file
+        - envfile
         - -e
         - PSModulePath=/modules
         - -w
         - /app
-        - --env-file
-        - envfile
-        - amidostacks/runner-pwsh-data:0.4.21-unstable
+        - --dns
+        - 1.1.1.1
+        - amidostacks/runner-pwsh:0.4.60-stable
         - pwsh
         - -NoProfile
         - -Command
     quote: "'"
-    before: env | grep -v PATH | grep -v SOURCEVERSIONMESSAGE | grep -v HOME > envfile
+    envfile:
+      generate: true
+      exclude:
+        - path
+        - home
+        - sourceversionmessage
+
+  powershell-python:
+    executable:
+      bin: docker
+      args:
+        - run
+        - --rm
+        - -v
+        - ${PWD}:/app
+        - -v
+        - /var/run/docker.sock:/var/run/docker.sock
+        - -e
+        - PSModulePath=/modules
+        - -w
+        - /app
+        - amidostacks/runner-pwsh-python:0.4.60-stable
+        - pwsh
+        - -NoProfile
+        - -Command
+    quote: "'"
+    envfile:
+      generate: true
+      exclude:
+        - path
+        - home
+        - sourceversionmessage
+
+  powershell-data:
+    executable:
+      bin: docker
+      args:
+        - run
+        - --rm
+        - -v
+        - ${PWD}:/app
+        - -v
+        - /var/run/docker.sock:/var/run/docker.sock
+        - --env-file
+        - envfile
+        - -e
+        - PSModulePath=/modules
+        - -w
+        - /app
+        - amidostacks/runner-pwsh-data:0.4.60-stable
+        - pwsh
+        - -NoProfile
+        - -Command
+    quote: "'"
+    envfile:
+      generate: true
+      exclude:
+        - path
+        - home
+        - sourceversionmessage

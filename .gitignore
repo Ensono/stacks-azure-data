@@ -1,7 +1,8 @@
-envfile
+envfile*
 .terraform.lock.hcl
 .terraform/
-tfplan
+*tfplan
+*.tfvars
 terraform.tfstate
 .terraform.tfstate.lock.info
 
@@ -44,3 +45,6 @@ coverage.xml
 
 #Build
 dist
+
+local
+adb_token

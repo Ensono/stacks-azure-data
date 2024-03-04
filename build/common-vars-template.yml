@@ -7,7 +7,7 @@ variables:
     value: "{{ .Project.Name }}"
   - name: domain
     value: "{{ .Input.Business.Domain }}"
-  - name: cloud_providers
+  - name: cloud_platform
     value: "{{ .Input.Cloud.Platform }}"
   - name: component
     value: "{{ .Input.Business.Component }}"
@@ -30,9 +30,9 @@ variables:
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.4.2
+    value: 1.5.2
   - name: pool_vm_image
-    value: ubuntu-20.04
+    value: ubuntu-22.04
   - name: agentpool_name
     value: "amido-stacks-core-data-agent-pool"
 

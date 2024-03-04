@@ -1,6 +1,6 @@
 variables:
   - name: git_integration
-    value: null  # github removed github integration with ADF
+    value: null # github removed github integration with ADF
   - name: git_integration_prod
     value: null
   - name: sql_admin_login
@@ -27,3 +27,13 @@ variables:
   # GitHub infomration
   - name: create_release
     value: true
+
+  # -------- Network Domain names
+  - name: base_domain_nonprod
+    value: nonprod.stacks.ensono.com
+  - name: base_domain_internal_nonprod
+    value: nonprod.stacks.ensono.internal
+  - name: base_domain_prod
+    value: prod.stacks.ensono.com
+  - name: base_domain_internal_prod
+    value: prod.stacks.ensono.internal

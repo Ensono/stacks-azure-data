@@ -56,6 +56,14 @@ stacks-azure-data
 └── yamllint.conf   # Linter configuration for YAML files used by the independent runner
 ```
 
+### Terraform Locals
+
+In the directories, `deploy/azure/infra` and `deploy/azure/networking` there is a `locals.tf` file. This file is used to calculate values based on given variable values and / or whether to get the values from a data block.
+
+Additionally it is used to store complicated object variables that have been traditionally stored in the `vars.tf` file. For example the `network_details` in the `deploy/azure/networking/locals.tf` describes all of the networking information required to establish the hub and spoke network.
+
+As the details are stored in the locals file they cannot be overridden using variables, so this will need to be updated with respect to specific network requirements, if the defaults do not work.
+
 ## Developing the solution
 
 Please refer to the documentation for getting started with developing Stacks:

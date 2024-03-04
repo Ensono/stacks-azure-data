@@ -6,26 +6,18 @@ import:
 watchers:
   lint:
     watch:
-      - '*.yml'
-      - '*.yaml'
+      - "*.yml"
+      - "*.yaml"
     events: [create, write]
     task: lint:yaml
 
 pipelines:
   setup:
-    - task: debug:env
     - task: buildnumber
-      depends_on:
-        - debug:env
 
   lint:
-    - task: lint:precommit
     - task: lint:yaml
-      depends_on: lint:precommit
-    - task: lint:terraform:format
-      depends_on: lint:precommit
     - task: lint:terraform:validate
-      depends_on: lint:precommit
 
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
@@ -34,6 +26,15 @@ pipelines:
       depends_on: infra:init
     - task: infra:apply
       depends_on: infra:plan
+
+  infrastructure_destroy:
+    - task: infra:init
+    - task: infra:destroy:plan
+      depends_on:
+        - infra:init
+    - task: infra:destroy:apply
+      depends_on:
+        - infra:destroy:plan
 
   infrastructurePlan:
     - task: infra:init

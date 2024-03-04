@@ -2,6 +2,35 @@
 
 name: "$(Build.SourceBranchName)-init"
 
+parameters:
+  - name: force_deploy
+    displayName: Force deploy regardless of branch
+    type: boolean
+    default: false
+  - name: deploy
+    displayName: Deploy Environment
+    type: boolean
+    default: true
+  - name: destroy
+    displayName: Destroy Environment
+    type: boolean
+    default: false
+  - name: stages
+    type: object
+    default:
+      - stage: NonProd
+        dependsOn: Build
+        condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
+        environment_shortname: nonprod
+      - stage: Prod
+        dependsOn: Build
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        environment_shortname: prod
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
+
 pr:
   branches:
     include:
@@ -45,16 +74,15 @@ variables:
   - name: tf_state_key
     value: $(domain)_$(workload_type)_$(pipeline_name)
   - name: dbfs_destination
-    value: 'dbfs:/FileStore/scripts/$(pipeline_name)'
-
+    value: "dbfs:/FileStore/scripts/$(pipeline_name)"
 
 pool:
   name: $(agentpool_name)
 
 stages:
-  - stage: Build_Stage
+  - stage: Build
     variables:
-      - group: stacks-credentials-nonprod-kv
+      - group: ensono-sp-creds
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -107,210 +135,108 @@ stages:
               script: taskctl lint
             env:
               # Dotnet Build
-              CLOUD_PROVIDER: "$(cloud_provider)"
-              ARM_TENANT_ID: "$(azure-tenant-id)"
-              ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-              ARM_CLIENT_ID: "$(azure-client-id)"
-              ARM_CLIENT_SECRET: "$(azure-client-secret)"
-              TF_FILE_LOCATION: ./$(workload_type)/jobs/$(pipeline_name)/
+              CLOUD_PLATFORM: "$(cloud_platform)"
+              TF_FILE_LOCATION: /app/$(self_repo_adf_src)
 
-  #############################################################
-  # Deploy to non Prod
-  #############################################################
-  - stage: Deploy_NonPROD_Stage
-    variables:
-      - group: amido-stacks-de-pipeline-nonprod
-      - group: stacks-credentials-nonprod-kv
-      - name: Environment.ShortName
-        value: dev
-    dependsOn: Build_Stage
-    jobs:
-      - deployment: Deploy_NonPROD
-        displayName: "Deploy To NonPROD"
-        environment: ${{ variables.domain }}-nonprod
-        pool:
-          name: $(agentpool_name)
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.stage }}
+        condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
+        dependsOn: ${{ stage.dependsOn }}
+        variables:
+          - group: ensono-sp-creds
+          - group: ensono-data-${{ stage.environment_shortname }}
 
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: Bash@3
-                  displayName: "Clean Workspace"
-                  inputs:
-                    targetType: "inline"
-                    script: |
-                      echo "Cleaning workspace..."
-                      sudo rm -rf $(Build.SourcesDirectory)/*
-                      sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
-                      sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+        jobs:
+          - deployment: Deploy_${{ stage.stage }}
+            environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
+            pool:
+              name: $(agentpool_name)
 
-                - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-                  parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - task: Bash@3
+                      displayName: "Clean Workspace"
+                      inputs:
+                        targetType: "inline"
+                        script: |
+                          echo "Cleaning workspace..."
+                          sudo rm -rf $(Build.SourcesDirectory)/*
+                          sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+                          sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
 
-                - task: AzureKeyVault@2
-                  inputs:
-                    azureSubscription: $(service_connection)
-                    KeyVaultName: $(keyvault_name)
-                    SecretsFilter: "*"
-                    RunAsPreJob: false
-                  displayName: "Get secrets from the keyvault"
+                    - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                      parameters:
+                        TaskctlVersion: ${{ variables.TaskctlVersion }}
 
-                - task: Bash@3
-                  displayName: "TaskCTL: Databricks"
-                  inputs:
-                    targetType: inline
-                    script: taskctl databricks
-                  env:
-                    # Dotnet Build
-                    DATABRICKS_HOST: "$(databricks-host)"
-                    DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
-                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
+                    - task: AzureKeyVault@2
+                      inputs:
+                        azureSubscription: $(service_connection)
+                        KeyVaultName: $(keyvault_name)
+                        SecretsFilter: "*"
+                        RunAsPreJob: false
+                      displayName: "Get secrets from the keyvault"
 
-                # Publish ADF
-                - task: Bash@3
-                  displayName: "TaskCTL: infrastructure"
-                  inputs:
-                    targetType: inline
-                    script: taskctl -d infrastructure
-                  env:
-                    # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
-                    ARM_TENANT_ID: "$(azure-tenant-id)"
-                    ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-                    ARM_CLIENT_ID: "$(azure-client-id)"
-                    ARM_CLIENT_SECRET: "$(azure-client-secret)"
-                    TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-                    ENV_NAME:
-                      $(Environment.ShortName)
-                      # Azure Authentication
-                      # Terraform Backend Configuration
-                    TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key)
-                    TF_STATE_RG: $(tf_state_rg)
-                    TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
-                    TF_VAR_data_factory_resource_group_name: $(resource_group)
-                    TF_VAR_data_factory: $(datafactoryname)
+                    - task: Bash@3
+                      displayName: "TaskCTL: Databricks"
+                      inputs:
+                        targetType: inline
+                        script: taskctl databricks
+                      env:
+                        # Dotnet Build
+                        DATABRICKS_HOST: "$(databricks-host)"
+                        DATABRICKS_TOKEN: "$(databricks-token)"
+                        DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"
+                        DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
 
-      #   # Start Testing
-      - deployment: Test_NonPROD
-        displayName: "Testing  NonPROD"
-        environment: ${{ variables.domain }}-nonprod
-        dependsOn: Deploy_NonPROD
-        pool:
-          name: $(agentpool_name)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - template: ../../../de_build/de-workload-testing.yml
-                  parameters:
-                    pythonVersion: $(pythonVersion)
-                    githubToken: $(github_token)
-                    workingDirectory: './'
-                    unitTestLocation: './$(test_unit_src)'
-                    e2eTestLocation: './$(test_end_to_end_src)'
-                    azureSubscriptionId: $(azure-subscription-id)
-                    azureResourceGroupName: $(resource_group)
-                    azureDataFactoryName: $(datafactoryname)
-                    azureRegionName: $(region)
-                    azureStorageAccountName: $(blob_adls_storage)
-                    azureConfigAccountName: $(blob_configStorage)
-                    azureClientId: $(azure-client-id)
-                    azureClientSecret: $(azure-client-secret)
-                    azureTenantId: $(azure-tenant-id)
+                    # Publish ADF
+                    - task: Bash@3
+                      displayName: "TaskCTL: infrastructure"
+                      inputs:
+                        targetType: inline
+                        script: taskctl -d infrastructure
+                      env:
+                        # Dotnet Build
+                        CLOUD_PLATFORM: "$(cloud_platform)"
+                        TF_FILE_LOCATION: "/app/$(self_repo_adf_src)"
+                        ENV_NAME: ${{ stage.environment_shortname }}
 
-  #############################################################
-  # Deploy to Prod
-  #############################################################
-  - stage: Deploy_Prod_Stage
-    dependsOn:
-      - Build_Stage
-      - Deploy_NonPROD_Stage
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    variables:
-      - group: amido-stacks-de-pipeline-prod
-      - group: stacks-credentials-prod-kv
-      - name: Environment.ShortName
-        value: prod
-    jobs:
-      - deployment: Deploy_PRDO
-        displayName: "Deploy To PROD"
-        environment: ${{ variables.domain }}-prod
-        pool:
-          name: $(agentpool_name)
+                        TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+                        TF_VAR_data_factory_resource_group_name: $(resource_group)
+                        TF_VAR_data_factory: $(datafactoryname)
 
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: Bash@3
-                  displayName: "Clean Workspace"
-                  inputs:
-                    targetType: "inline"
-                    script: |
-                      echo "Cleaning workspace..."
-                      sudo rm -rf $(Build.SourcesDirectory)/*
-                      sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
-                      sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+          #   # Start Testing
+          - deployment: Test_${{ stage.stage }}
+            dependsOn: Deploy_${{ stage.stage }}
+            environment: ${{ variables.domain }}-${{ stage.stage }}
 
-                - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
-                  parameters:
-                    TaskctlVersion: ${{ variables.TaskctlVersion }}
-
-                - task: AzureKeyVault@2
-                  inputs:
-                    azureSubscription: $(service_connection)
-                    KeyVaultName: $(keyvault_name)
-                    SecretsFilter: "*"
-                    RunAsPreJob: false
-                  displayName: "Get secrets from the keyvault"
-
-                - task: Bash@3
-                  displayName: "TaskCTL: Databricks"
-                  inputs:
-                    targetType: inline
-                    script: taskctl databricks
-                  env:
-                    # Dotnet Build
-                    DATABRICKS_HOST: "$(databricks-host)"
-                    DATABRICKS_TOKEN: "$(databricks-token)"
-                    DATABRICKS_DBFS_LOCATION: "$(dbfs_destination)"  # self_repo_spark_src
-                    DATABRICKS_SOURCE_LOCATION: "./$(self_repo_spark_src)/"
-
-                # Publish ADF
-                - task: Bash@3
-                  displayName: "TaskCTL: infrastructure"
-                  inputs:
-                    targetType: inline
-                    script: taskctl infrastructure
-                  env:
-                    # Dotnet Build
-                    CLOUD_PROVIDER: "$(cloud_provider)"
-                    ARM_TENANT_ID: "$(azure-tenant-id)"
-                    ARM_SUBSCRIPTION_ID: "$(azure-subscription-id)"
-                    ARM_CLIENT_ID: "$(azure-client-id)"
-                    ARM_CLIENT_SECRET: "$(azure-client-secret)"
-                    TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
-                    ENV_NAME:
-                      $(Environment.ShortName)
-                      # Azure Authentication
-                      # Terraform Backend Configuration
-                    TF_STATE_CONTAINER: $(tf_state_container)
-                    TF_STATE_KEY: $(tf_state_key)
-                    TF_STATE_RG: $(tf_state_rg)
-                    TF_STATE_STORAGE: $(tf_state_storage)
-                    TF_BACKEND_ARGS: "key=$(tf_state_key),storage_account_name=$(TF_STATE_STORAGE),resource_group_name=$(TF_STATE_RG),container_name=$(TF_STATE_CONTAINER),subscription_id=$(azure-subscription-id),tenant_id=$(azure-tenant-id),client_id=$(azure-client-id),client_secret= $(azure-client-secret)"
-                    TF_VAR_data_factory_resource_group_name: $(resource_group)
-                    TF_VAR_data_factory: $(datafactoryname)
+            pool:
+              name: $(agentpool_name)
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - template: ../../../de_build/de-workload-testing.yml
+                      parameters:
+                        pythonVersion: $(pythonVersion)
+                        githubToken: $(github_token)
+                        workingDirectory: "./"
+                        unitTestLocation: "./$(test_unit_src)"
+                        e2eTestLocation: "./$(test_end_to_end_src)"
+                        azureSubscriptionId: $(ARM_SUBSCRIPTION_ID)
+                        azureResourceGroupName: $(resource_group)
+                        azureDataFactoryName: $(datafactoryname)
+                        azureRegionName: $(region)
+                        azureStorageAccountName: $(blob_adls_storage)
+                        azureClientId: $(ARM_CLIENT_ID)
+                        azureClientSecret: $(ARM_CLIENT_SECRET)
+                        azureTenantId: $(ARM_TENANT_ID)
 
   - stage: Release
     dependsOn:
-      - Build_Stage
-      - Deploy_Prod_Stage
+      - Build
+      - Prod
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'))
     jobs:
       - job: CreateGitHubRelease
@@ -382,7 +308,7 @@ stages:
             displayName: Create GitHub Release
             inputs:
               gitHubConnection: $(github_release_service_connection)
-              repositoryName: '$(Build.Repository.Name)'
+              repositoryName: "$(Build.Repository.Name)"
               tag: v${newVersion}
               releaseNotesSource: "inline"
               releaseNotesInline: "$(major).$(minor).$(revision)"
