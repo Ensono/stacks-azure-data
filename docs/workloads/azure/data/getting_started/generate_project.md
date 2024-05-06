@@ -80,6 +80,29 @@ git push -u origin main
 
 ```
 
+If you have already created a repo in GitHub and want to push this project to the repo then follow this:
+
+```bash
+
+# Confirm the correct remote repository has been set
+git remote show origin
+
+# If required, set your local branch to main
+git branch -M main
+
+# Add all created project files to be staged for commit
+git add .
+
+#Commit project files
+git commit -m "Initial Commit"
+
+#Pull and rebase on GitHub repo
+git pull --rebase origin main
+
+#Push project to GitHub repo
+git push origin main
+```
+
 ## Next steps
 
 Now you have generated a new data project, [deploy the core infrastructure](./core_data_platform_deployment_azure.md).
