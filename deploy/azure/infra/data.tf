@@ -42,4 +42,3 @@ data "azurerm_private_dns_zone" "adb_private_dns_zone" {
   name                = var.adb_private_zone
   resource_group_name = var.dns_zone_resource_group_name
 }
-
