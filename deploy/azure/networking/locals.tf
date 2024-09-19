@@ -61,7 +61,7 @@ locals {
                 private_link_service_network_policies_enabled = true
                 service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
                 }
-            } 
+            }
         },
 
         "${var.name_company}-${var.name_project}-${lookup(local.location_name_map, var.resource_group_location)}-de-prod" = {
@@ -111,7 +111,7 @@ locals {
                 private_link_service_network_policies_enabled = true
                 service_endpoints                             = ["Microsoft.AzureActiveDirectory", "Microsoft.KeyVault", "Microsoft.ServiceBus", "Microsoft.Sql", "Microsoft.Storage"]
                 }
-            } 
+            }
         },
 
         "${var.name_company}-${var.name_project}-${lookup(local.location_name_map, var.resource_group_location)}-de-qa-prod" = {
