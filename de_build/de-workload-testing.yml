@@ -16,6 +16,18 @@ parameters:
   azureTenantId: ""
 
 steps:
+  - task: Bash@3
+    displayName: "Clean Workspace"
+    inputs:
+      targetType: "inline"
+      script: |
+        echo "Cleaning workspace..."
+        sudo rm -rf $(Build.SourcesDirectory)/*
+        sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
+        sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
+
+  - checkout: self
+
   - task: UsePythonVersion@0
     displayName: Set Python Version
     inputs:
