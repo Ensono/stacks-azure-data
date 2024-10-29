@@ -129,7 +129,7 @@ if (!(Test-Path -Path env:\resource_group_name)) {
 }
 
 if (![String]::IsNullOrEmpty($TF_FILE_LOCATION)) {
-    Pop-Location 
+    Pop-Location
 }
 
 $splat = @{
