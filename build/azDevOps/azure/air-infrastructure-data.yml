@@ -115,8 +115,8 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
-          - group: ensono-sp-creds
-          - group: ensono-data-networks-${{ stage.environment_shortname }}
+          - group: azure-sp-creds
+          - group: data-networks-${{ stage.environment_shortname }}
 
         jobs:
           - deployment: ${{ stage.deployment_infra }}
