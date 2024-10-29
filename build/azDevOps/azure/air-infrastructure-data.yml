@@ -71,7 +71,7 @@ variables:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
 
     jobs:
       - job: Validate
