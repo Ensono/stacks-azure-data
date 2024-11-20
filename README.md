@@ -1,7 +1,10 @@
-# Stacks Azure Data Platform
+# Ensono Stacks: Azure Data Platform
 
-Link to the official documentation:
-[Stacks Azure Data Platform](https://stacks.ensono.com/docs/workloads/azure/data/intro_data_azure).
+📄 **[Stacks Azure Data Platform - Documentation](https://stacks.ensono.com/docs/workloads/azure/data/intro_data_azure)**
+
+🔧 **[Stacks Documentation - GitHub](https://github.com/Ensono/amido.github.io)**
+
+📦 **[Stacks Data Python utilities - GitHub](https://github.com/Ensono/stacks-data)**
 
 ## Overview
 
