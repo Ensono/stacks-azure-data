@@ -2,11 +2,11 @@ variables:
   - name: region
     value: westeurope
   - name: company
-    value: cloudcrafter
+    value: ensono
   - name: project
-    value: datamine
+    value: data
   - name: domain
-    value: datamine
+    value: data
   - name: cloud_platform
     value: azure
   - name: component
@@ -30,9 +30,9 @@ variables:
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 1.5.3
+    value: 2.0.2
   - name: pool_vm_image
-    value: ubuntu-22.04
+    value: ubuntu-24.04
   - name: agentpool_name
     value: ensono-stacks-data-build
 
@@ -44,3 +44,14 @@ variables:
 
   - name: pythonVersion
     value: "3.10"
+
+  # Versioning
+  - name: version_major
+    value: 1
+  - name: version_minor
+    value: 0
+  - name: version_revision
+    value: 0
+    # value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
+    # - name: version_number
+    #   value: $(version_major).$(version_minor).$(version_revision)

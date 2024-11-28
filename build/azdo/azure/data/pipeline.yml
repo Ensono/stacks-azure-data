@@ -62,16 +62,15 @@ trigger:
       - deploy/azure/infra/*
 
 variables:
-  - template: ../../version-data-vars.yml
-  - template: ../../common-vars.yml
-  - template: air-infrastructure-data-vars.yml
+  - template: ../../../common-vars.yml
+  - template: variables.yml
   - name: tf_state_key
     value: $(domain)
 
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
 
     jobs:
       - job: Validate
@@ -87,7 +86,7 @@ stages:
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
 
-          - template: ../templates/air-infrastructure-data-setup.yml
+          - template: ../templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -115,7 +114,7 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
           - group: ensono-data-networks-${{ stage.environment_shortname }}
 
         jobs:
@@ -135,7 +134,7 @@ stages:
                           echo "Cleaning workspace..."
                           sudo rm -rf $(Build.SourcesDirectory)/*
 
-                    - template: ../templates/air-infrastructure-data-setup.yml
+                    - template: ../templates/setup.yml
                       parameters:
                         TaskctlVersion: ${{ variables.TaskctlVersion }}
 

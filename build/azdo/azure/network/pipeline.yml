@@ -28,15 +28,24 @@ parameters:
         environment_shortname: nonprod
         domain_internal: $(base_domain_internal_nonprod)
         deployment_infra: AppInfraNonProd
+      - stage: Prod
+        dependsOn: Build
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        environment_shortname: prod
+        domain_internal: $(base_domain_internal_prod)
+        deployment_infra: AppInfraProd
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
 
 pr: none
 
 trigger: none
 
 variables:
-  - template: ../../../version-data-vars.yml
   - template: ../../../common-vars.yml
-  - template: air-infrastructure-data-network-vars.yml
+  - template: variables.yml
   - name: network_domain
     value: $(domain)-network
   - name: tf_state_key
@@ -47,7 +56,7 @@ variables:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
 
     jobs:
       - job: Validate
@@ -55,7 +64,7 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../templates/air-infrastructure-data-setup.yml
+          - template: ../../templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
@@ -84,7 +93,7 @@ stages:
         dependsOn: ${{ stage.dependsOn }}
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
 
         jobs:
           - deployment: Infra
@@ -95,7 +104,7 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ../../templates/air-infrastructure-data-setup.yml
+                    - template: ../../templates/setup.yml
                       parameters:
                         TaskctlVersion: ${{ variables.TaskctlVersion }}
 

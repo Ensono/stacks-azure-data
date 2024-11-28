@@ -1,33 +1,36 @@
 contexts:
   powershell:
-    executable:
-      bin: docker
-      args:
-        - run
-        - --rm
-        - -v
-        - ${PWD}:/app
-        - -v
-        - /var/run/docker.sock:/var/run/docker.sock
-        - --env-file
-        - envfile
-        - -e
-        - PSModulePath=/modules
-        - -w
-        - /app
-        - --dns
-        - 1.1.1.1
-        - amidostacks/runner-pwsh:0.4.60-stable
-        - pwsh
-        - -NoProfile
+    container:
+      name: ensono/eir-infrastructure
+      shell: pwsh
+      shell_args:
         - -Command
-    quote: "'"
+    # executable:
+    #   bin: docker
+    #   args:
+    #     - run
+    #     - --rm
+    #     - -v
+    #     - ${PWD}:/app
+    #     - -v
+    #     - /var/run/docker.sock:/var/run/docker.sock
+    #     - --env-file
+    #     - envfile
+    #     - -e
+    #     - PSModulePath=/modules
+    #     - -w
+    #     - /app
+    #     - --dns
+    #     - 1.1.1.1
+    #     - ensono/eir-infrastructure
+    #     - pwsh
+    #     - -NoProfile
+    #     - -Command
+    # quote: "'"
     envfile:
-      generate: true
       exclude:
-        - path
-        - home
         - sourceversionmessage
+        - posh_azure_subscription
 
   powershell-python:
     executable:
@@ -43,17 +46,15 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh-python:0.4.60-stable
+        - ensono/eir-infrastucture
         - pwsh
         - -NoProfile
         - -Command
     quote: "'"
     envfile:
-      generate: true
       exclude:
-        - path
-        - home
         - sourceversionmessage
+        - posh_azure_subscription
 
   powershell-data:
     executable:
@@ -71,14 +72,12 @@ contexts:
         - PSModulePath=/modules
         - -w
         - /app
-        - amidostacks/runner-pwsh-data:0.4.60-stable
+        - ensono/eir-azure-data
         - pwsh
         - -NoProfile
         - -Command
     quote: "'"
     envfile:
-      generate: true
       exclude:
-        - path
-        - home
         - sourceversionmessage
+        - posh_azure_subscription

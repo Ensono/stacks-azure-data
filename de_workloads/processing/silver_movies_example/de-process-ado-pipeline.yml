@@ -50,7 +50,6 @@ trigger:
 variables:
   - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
-  - template: ../../../build/version-data-vars.yml
   - name: pipeline_name
     value: "silver_movies_example"
   - name: workload_type
@@ -82,7 +81,7 @@ pool:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -96,7 +95,7 @@ stages:
                 sudo rm -rf $(Build.SourcesDirectory)/*
                 sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                 sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
-          - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+          - template: ../../../build/azDevOps/templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
           - script: |
@@ -143,7 +142,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         dependsOn: ${{ stage.dependsOn }}
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
           - group: ensono-data-${{ stage.environment_shortname }}
 
         jobs:
@@ -166,7 +165,7 @@ stages:
                           sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                           sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
 
-                    - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                    - template: ../../../build/azDevOps/templates/setup.yml
                       parameters:
                         TaskctlVersion: ${{ variables.TaskctlVersion }}
 
