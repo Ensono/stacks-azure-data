@@ -69,17 +69,19 @@ function Remove-Environment() {
     $azsub = Connect-AzAccount -ServicePrincipal -Credential $creds -Tenant $env:ARM_TENANT_ID
 
     # Remove the subnets from the appropriate network
-    $subnets = $subnets -split ","
-    foreach ($subnet in $subnets) {
+    if (![String]::IsNullOrEmpty($subnets)) {
+        $subnets = $subnets -split ","
+        foreach ($subnet in $subnets) {
 
-        # get the virtual network from which the subnet will be removed
-        $_vnet = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $NetworkResourceGroupName
-        $_subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnet -VirtualNetwork $_vnet
+            # get the virtual network from which the subnet will be removed
+            $_vnet = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $NetworkResourceGroupName
+            $_subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnet -VirtualNetwork $_vnet
 
-        Write-Host ("Removing Subnet: {0}" -f $_subnet.Name)
+            Write-Host ("Removing Subnet: {0}" -f $_subnet.Name)
 
-        if ($_subnet -and !$dryRun) {
-            Remove-AzVirtualNetworkSubnetConfig -Name $_subnet.Name -VirtualNetwork $_vnet | Set-AzVirtualNetwork -ErrorAction Continue
+            if ($_subnet -and !$dryRun) {
+                Remove-AzVirtualNetworkSubnetConfig -Name $_subnet.Name -VirtualNetwork $_vnet | Set-AzVirtualNetwork -ErrorAction Continue
+            }
         }
     }
 
@@ -116,19 +118,19 @@ function Remove-Environment() {
 # Use Terraform to get the name of the resource group to delete
 Write-Host "Getting resource group to remove"
 
-if (![String]::IsNullOrEmpty($TF_FILE_LOCATION)) {
-    Push-Location -Path $TF_FILE_LOCATION
+if (![String]::IsNullOrEmpty($env:TF_FILE_LOCATION)) {
+    Push-Location -Path $env:TF_FILE_LOCATION
 }
 
 # Get the resource gropup to be deleted
 if (!(Test-Path -Path env:\resource_group_name)) {
     $tf_data = Invoke-Expression -Command "terraform output -json" | ConvertFrom-Json
-    $rg_name = $tf_data.resource_group_name
+    $rg_name = $tf_data.resource_group_name.value
 } else {
     $rg_name = $env:resource_group_name
 }
 
-if (![String]::IsNullOrEmpty($TF_FILE_LOCATION)) {
+if (![String]::IsNullOrEmpty($env:TF_FILE_LOCATION)) {
     Pop-Location 
 }
 
@@ -141,5 +143,7 @@ $splat = @{
     ResourceGroupName = $rg_name
     subnets = $env:subnets
 }
+
+$splat
 
 Remove-Environment @splat

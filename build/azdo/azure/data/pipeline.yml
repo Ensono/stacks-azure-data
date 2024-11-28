@@ -62,7 +62,7 @@ trigger:
       - deploy/azure/infra/*
 
 variables:
-  - template: ../../../common-vars.yml
+  - template: ../../common-vars.yml
   - template: variables.yml
   - name: tf_state_key
     value: $(domain)
