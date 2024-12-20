@@ -19,7 +19,7 @@ variable "name_component" {
 }
 
 
-variable "stage" {
+variable "environment" {
   type    = string
   default = "dev"
 }
@@ -38,26 +38,8 @@ variable "tags" {
 
 variable "resource_group_location" {
   type    = string
-  default = "uksouth"
+  default = "westeurope"
 
-}
-
-
-# Each region must have corresponding a shortend name for resource naming purposes
-variable "location_name_map" {
-  type = map(string)
-
-  default = {
-    northeurope   = "eun"
-    westeurope    = "euw"
-    uksouth       = "uks"
-    ukwest        = "ukw"
-    eastus        = "use"
-    eastus2       = "use2"
-    westus        = "usw"
-    eastasia      = "ase"
-    southeastasia = "asse"
-  }
 }
 
 variable "git_integration" {
@@ -401,16 +383,10 @@ variable "enable_private_networks" {
   description = "Enable Private Networking for Secure Data Platform."
 }
 
-variable "subnet_name" {
-  type        = string
-  default     = ""
-  description = "The name of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint"
-}
-
 variable "vnet_name" {
   type        = string
   default     = ""
-  description = "The VNET in which the Subnet resides."
+  description = "The VNET in which the pe_subnet resides."
 }
 
 variable "vnet_resource_group_name" {

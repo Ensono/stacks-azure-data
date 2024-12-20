@@ -2,6 +2,8 @@ contexts:
   powershell:
     container:
       name: ensono/eir-infrastructure
+      container_args:
+        - -v c:/Users/rseymour/workspaces/ensono/terraform:/workspace/terraform
       shell: pwsh
       shell_args:
         - -Command

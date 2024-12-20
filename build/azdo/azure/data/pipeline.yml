@@ -178,7 +178,6 @@ stages:
                         TF_VAR_public_subnet_name: $(public_subnet_name)
                         TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
                         TF_VAR_private_subnet_name: $(private_subnet_name)
-                        TF_VAR_subnet_name: $(subnet_name)
                         TF_VAR_vnet_name: $(vnet_name)
                         TF_VAR_vnet_resource_group_name: $(vnet_resource_group_name)
                         TF_VAR_dns_zone_resource_group_name: $(dns_zone_resource_group_name)

@@ -49,11 +49,24 @@ tasks:
     command:
       - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=`"deploy.tfplan`""
 
+  infra:plan:json:
+    context: powershell
+    description: Output the Terraform plan as JSON
+    command: |
+      cd $env:TF_FILE_LOCATION
+      terraform show -json deploy.tfplan > deploy.tfplan.json
+
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
     command:
       - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path deploy.tfplan -Debug
+
+  infra:output:
+    context: powershell
+    description: Display Terraform Outputs
+    command: |
+      Invoke-Terraform -Output -Path $env:TF_FILE_LOCATION
 
   infra:destroy:plan:
     context: powershell
@@ -64,7 +77,12 @@ tasks:
   infra:destroy:apply:
     context: powershell
     description: Destroy Environment.ShortName
-    command: /workspace/.taskctl/build/scripts/Remove-Environment.ps1
+    command: |
+      if ($env:STAGE -eq "infra") {
+        /workspace/.taskctl/build/scripts/Remove-Environment.ps1
+      } else {
+        Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path destroy.tfplan -Debug
+      }
 
   publish:github:
     context: powershell
