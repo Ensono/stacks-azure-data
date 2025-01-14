@@ -1,6 +1,6 @@
 module "networking" {
   count  = var.enable_private_networks ? 1 : 0
-  source = "../../../../terraform/terraform-azurerm-hub-spoke-network"
+  source = "github.com/ensono/terraform-azurerm-hub-spoke-network"
   ## NOTE setting this value to false will cause no resources to be created !!
   network_details         = local.network_details
   resource_group_location = var.resource_group_location

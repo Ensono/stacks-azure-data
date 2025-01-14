@@ -1,7 +1,7 @@
 
 module "terraform-azurerm-ado-build-agent" {
   count                        = var.enable_private_networks ? 1 : 0
-  source                       = "../../../../terraform/terraform-azurerm-ado-build-agent"
+  source                       = "github.com/ensono/terraform-azurerm-ado-build-agent"
   vmss_name                    = module.label_default.id
   vmss_resource_group_name     = module.networking[0].vnets[local.hub_network_name].vnet_resource_group_name
   vmss_resource_group_location = var.resource_group_location

@@ -177,10 +177,41 @@ locals {
           name        = subnet_info.sub_name
           prefix      = subnet_info.sub_address_prefix
           environment = network_info.environment
-        } if subnet_info.is_adf_public_subnet == false
+        } if subnet_info.is_adf_private_subnet == true
       ]
     ]
   )
+
+  # Create the object that will be used to populate the variable groups
+  # and the environment variables file
+  outputs = { for envname, detail in local.environments : envname => {
+    dns_zone_resource_group               = module.networking[0].vnets[local.hub_network_name].vnet_resource_group_name
+    pe_subnet_id                          = [for name, detail in module.networking[0].private_endpoint_subnets : detail.subnet_id if name == envname][0]
+    pe_subnet_name                        = [for pe_subnet in local.pe_subnets : pe_subnet.subnet_name if pe_subnet.environment == envname][0]
+    pe_subnet_prefix                      = [for pe_subnet in local.pe_subnets : jsonencode(pe_subnet.subnet_address_prefix) if pe_subnet.environment == envname][0]
+    vnet_name                             = [for pe_subnet in local.pe_subnets : pe_subnet.vnet_name if pe_subnet.environment == envname][0]
+    vnet_resource_group_name              = [for pe_subnet in local.pe_subnets : pe_subnet.resource_group if pe_subnet.environment == envname][0]
+    nat_gateway_ids                       = [for env, id in module.networking[0].nat_gateway_ids : id if env == envname][0]
+    nat_public_ip_ids                     = [for env, id in module.networking[0].nat_public_ip_ids : id if env == envname][0]
+    public_subnet_name                    = [for subnet in local.public_subnets : subnet.name if subnet.environment == envname][0]
+    public_subnet_prefix                  = [for subnet in local.public_subnets : jsonencode(subnet.prefix) if subnet.environment == envname][0]
+    private_subnet_name                   = [for subnet in local.private_subnets : subnet.name if subnet.environment == envname][0]
+    private_subnet_prefix                 = [for subnet in local.private_subnets : jsonencode(subnet.prefix) if subnet.environment == envname][0]
+    adf_private_nsg_subnet_association_id = [for name, detail in module.networking[0].nsg_subnet_associations : detail.private if name == envname][0]
+    adf_public_nsg_subnet_association_id  = [for name, detail in module.networking[0].nsg_subnet_associations : detail.public if name == envname][0]
+  } if envname != "hub" && var.enable_private_networks }
+
+  # Create a local object for the template mapping so that the script files can be generated
+  templates = flatten([
+    for file in ["envvars.bash.tpl", "envvars.ps1.tpl", "inputs.tfvars.tpl"] : [
+      for name, detail in local.environments : {
+        envname  = name
+        file     = file
+        items    = local.outputs[name]
+        template = "${path.module}/templates/${file}"
+      } if name != "hub"
+    ]
+  ])
 
 }
 

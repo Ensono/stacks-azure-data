@@ -158,12 +158,6 @@ variable "ado_pat" {
   type        = string
   description = "Personal Access Token for the Azure DevOps Organization"
 }
-
-variable "ado_agent_name" {
-  type        = string
-  description = "Name of the Azure DevOps Agent"
-}
-
 variable "ado_project_id" {
   type        = string
   description = "ID of the Azure DevOps Project"
@@ -194,3 +188,8 @@ variable "vmss_admin_ssh_key" {
   description = "SSH Public Key for Admin SSH Access to VMs."
 }
 
+variable "script_file_output_dir" {
+  type        = string
+  default     = "../../../outputs"
+  description = "The path, relative to the templates, where the script files that are generated should be saved."
+}

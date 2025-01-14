@@ -10,6 +10,13 @@ terraform {
       version = "1.4.0"
     }
   }
+
+  #backend "azurerm" {
+  #}
+}
+
+provider "azuredevops" {
+  org_service_url = var.ado_org_url
 }
 
 provider "azurerm" {
