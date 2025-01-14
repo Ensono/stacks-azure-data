@@ -77,12 +77,8 @@ tasks:
   infra:destroy:apply:
     context: powershell
     description: Destroy Environment.ShortName
-    command: |
-      if ($env:STAGE -eq "infra") {
-        /workspace/.taskctl/build/scripts/Remove-Environment.ps1
-      } else {
-        Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path destroy.tfplan -Debug
-      }
+    command:
+      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path destroy.tfplan -Debug
 
   publish:github:
     context: powershell
