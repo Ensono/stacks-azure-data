@@ -52,3 +52,4 @@ adb_token
 
 .taskctl
 terraform.tfstate.d
+outputs
