@@ -16,7 +16,7 @@ module "label_default" {
 module "default_label_short" {
   source              = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
   namespace           = format("%s-%s", substr(var.name_company, 0, 4), substr(var.name_project, 0, 4))
-  stage               = var.stage
+  stage               = var.environment
   name                = "${lookup(local.location_name_map, var.resource_group_location)}-${substr(var.name_component, 0, 6)}"
   attributes          = concat([random_string.random_suffix.result], var.attributes)
   delimiter           = ""

@@ -1,7 +1,8 @@
 # Storage accounts for data lake and config
 module "adls_default" {
 
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls?ref=v3.0.13"
+  # source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-adls?ref=v3.0.13"
+  source                        = "../modules/terraform-azurerm-adls"
   resource_namer                = module.default_label_short.id
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
@@ -9,7 +10,7 @@ module "adls_default" {
   container_access_type         = var.container_access_type
   resource_tags                 = module.default_label_short.tags
   enable_private_network        = var.enable_private_networks
-  pe_subnet_id                  = var.enable_private_networks ? lower(tostring(data.azurerm_subnet.pe_subnet[0].id)) : ""
+  pe_subnet_id                  = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].id) : ""
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dfs_dns_resource_group_name   = local.dns_zone_resource_group_name

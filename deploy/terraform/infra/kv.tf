@@ -1,6 +1,7 @@
 # KV for ADF
 module "kv_default" {
-  source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=v3.0.13"
+  # source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=v3.0.13"
+  source                        = "github.com/ensono/terraform-azurerm-kv"
   resource_namer                = substr(module.default_label_short.id, 0, 24)
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location

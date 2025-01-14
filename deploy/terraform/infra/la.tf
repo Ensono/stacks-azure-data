@@ -13,17 +13,10 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.la.id
   log_analytics_destination_type = "Dedicated"
 
-  dynamic "log" {
+  dynamic "enabled_log" {
     for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.log_category_types
-
     content {
-      category = log.value
-      enabled  = true
-
-      retention_policy {
-        enabled = false
-        days    = 0
-      }
+      category = enabled_log.value
     }
   }
 
@@ -32,12 +25,6 @@ resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
 
     content {
       category = metric.value
-      enabled  = true
-
-      retention_policy {
-        enabled = false
-        days    = 0
-      }
     }
   }
 }

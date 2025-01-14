@@ -208,6 +208,12 @@ variable "kv_secrets" {
   default     = ["secret1", "secret2", "secret3"]
 }
 
+variable "kv_secret_expiration" {
+  type        = string
+  description = "Specify the duration of secrets in the key vault"
+  default     = "8765h"
+}
+
 variable "azure_client_secret" {
   type        = string
   description = "A client secret that was generated for the App Registration."
@@ -505,6 +511,26 @@ variable "adb_databricks_hosturl" {
 }
 
 variable "adb_databricks_id" {
+  type    = string
+  default = ""
+}
+
+variable "adf_private_nsg_subnet_association_id" {
+  type    = string
+  default = ""
+}
+
+variable "adf_public_nsg_subnet_association_id" {
+  type    = string
+  default = ""
+}
+
+variable "nat_gateway_id" {
+  type    = string
+  default = ""
+}
+
+variable "nat_gateway_pip_id" {
   type    = string
   default = ""
 }
