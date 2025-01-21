@@ -8,6 +8,15 @@ pipeline:
     templates:
       - name: variable
         path: build/common-vars-template.yml
+    items:
+      - build/config/stage_envvars.yml
+    replacements:
+      - pattern: storage_account_name=,resource_group_name=,container_name=
+        value: "storage_account_name={{ .Input.Terraform.Backend.Storage }},resource_group_name={{ .Input.Terraform.Backend.Group }},container_name={{ .Input.Terraform.Backend.Container }}"
+      - pattern: default:\s"my_company_name"
+        value: 'default: "{{ .Input.Business.Company }}"'
+      - pattern: default:\s"my_project_name"
+        value: 'default: "{{ .Input.Business.Project }}"'
 
 setup:
   operations:

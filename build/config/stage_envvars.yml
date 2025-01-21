@@ -9,11 +9,10 @@ default:
       description: The stage that is being deployed by this pipeline run
     - name: TF_FILE_LOCATION
       description: Path to the Terraform template files, from the perspective of the executing container
+      default: /workspace/.taskctl/deploy/terraform/TF_STAGE
     - name: TESTS_PATH
       description: Path to the tests folder
       required: false
-    - name: TF_BACKEND_INIT
-      description: Configuration string to be used to configure the Terraform state
   credentials:
     azure:
       - name: ARM_CLIENT_ID
@@ -24,12 +23,18 @@ default:
 stages:
   - name: networking
     variables:
+      - name: TF_BACKEND_INIT
+        required: true
+        description: Configuration to be used to store the Terraform state
+        default: "key=data-networking,storage_account_name=,resource_group_name=,container_name="
       - name: TF_VAR_name_company
         required: true
         description: Company Name - should/will be used in conventional resource naming
+        default: "my_company_name"
       - name: TF_VAR_name_project
         required: true
         description: Project Name - should/will be used in conventional resource naming
+        default: "my_project_name"
       - name: TF_VAR_tags
         required: false
         description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
@@ -78,6 +83,10 @@ stages:
 
   - name: infra
     variables:
+      - name: TF_BACKEND_INIT
+        required: true
+        description: Configuration to be used to store the Terraform state
+        default: "key=data-infrastructure,storage_account_name=,resource_group_name=,container_name="
       - name: TF_VAR_administrator_login
         required: true
         description: The administrator login name for the new server. Required unless azuread_authentication_only in the azuread_administrator block is true. When omitted, Azure will generate a default username which cannot be subsequently changed. Changing this forces a new resource to be created.
