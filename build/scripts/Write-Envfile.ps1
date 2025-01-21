@@ -60,6 +60,7 @@ $config = @{
 
 # Create PSCustomObject to hold the data for each stage, the default details and the cloud credentials
 # this is so that data can be updated later in the process
+$credentials = [ordered]@{}
 $common = [ordered]@{}
 
 # Iterate around the default variables and set the necessary values
@@ -69,7 +70,7 @@ foreach ($var in $data.default.variables) {
     $item = [PSCustomObject]@{
         description = ""
         value = ""
-        required = $false
+        required = $true
     }
 
     # Only proceed if the variable is required
@@ -89,19 +90,23 @@ foreach ($var in $data.default.variables) {
     if ($var.containskey("description")) {
         $item.description = $var.description
     }
+
+    # if it contains a default value add it
+    if ($var.containskey("default")) {
+        $item.value = $var.default
+    }
     
     # Based on the shell, render the template for the variable
     $common[$var.name] = $item
 }
 
 # Add in the credentials for the chosen platform
-$credentials += "`n# Credentials for the {0} platform" -f $Cloud
 foreach ($param in $data.default.credentials.$Cloud) {
     # create the item object for the data
     $item = [PSCustomObject]@{
         description = ""
         value = ""
-        required = $false
+        required = $true
     }
 
     # check to see if the value already exists, and if so add that
@@ -109,7 +114,7 @@ foreach ($param in $data.default.credentials.$Cloud) {
         $item.value = (Get-Item -Path ("env:\{0}" -f $param.name)).Value
     }
 
-    $common[$param.name] = $item
+    $credentials[$param.name] = $item
 }
 
 # Finally add in the specific variables for the stage
@@ -122,6 +127,9 @@ foreach ($itm in $data.stages) {
 
     # set the name of the stage for the file
     $common["STAGE"].value = $itm.name.toLower()
+
+    # set the path for the terraform files
+    $common["TF_FILE_LOCATION"].value = $common["TF_FILE_LOCATION"].value -replace "TF_STAGE", $itm.name.toLower()
 
     # create hashtable for the stage vars
     $stage_vars = [ordered]@{}
@@ -164,15 +172,20 @@ foreach ($itm in $data.stages) {
 
     # write out the file
     $output = @()
-    $combined = $common + $stage_vars
+    $combined = $credentials + $common + $stage_vars
     foreach ($key in $combined.keys) {
         $item = $combined[$key]
+
+        $prepend = ""
+        if (!$item.required) {
+            $prepend = "# "
+        }
 
         if (![string]::isNullOrEmpty($item.description)) {
             $output += "# {0}" -f $item.description
         }
 
-        $output += $config[$Shell].template -f "", $key, $item.value
+        $output += $config[$Shell].template -f $prepend, $key, $item.value
     }
 
     # Ensure that the parent directory exists
