@@ -2,83 +2,24 @@ contexts:
   powershell:
     container:
       name: ensono/eir-infrastructure
-      container_args:
-        - -v c:/Users/rseymour/workspaces/ensono/terraform:/workspace/terraform
       shell: pwsh
       shell_args:
         - -Command
-    # executable:
-    #   bin: docker
-    #   args:
-    #     - run
-    #     - --rm
-    #     - -v
-    #     - ${PWD}:/app
-    #     - -v
-    #     - /var/run/docker.sock:/var/run/docker.sock
-    #     - --env-file
-    #     - envfile
-    #     - -e
-    #     - PSModulePath=/modules
-    #     - -w
-    #     - /app
-    #     - --dns
-    #     - 1.1.1.1
-    #     - ensono/eir-infrastructure
-    #     - pwsh
-    #     - -NoProfile
-    #     - -Command
-    # quote: "'"
-    envfile:
-      exclude:
-        - sourceversionmessage
-        - posh_azure_subscription
-
-  powershell-python:
-    executable:
-      bin: docker
-      args:
-        - run
-        - --rm
-        - -v
-        - ${PWD}:/app
-        - -v
-        - /var/run/docker.sock:/var/run/docker.sock
-        - -e
-        - PSModulePath=/modules
-        - -w
-        - /app
-        - ensono/eir-infrastucture
-        - pwsh
-        - -NoProfile
-        - -Command
-    quote: "'"
     envfile:
       exclude:
         - sourceversionmessage
         - posh_azure_subscription
 
   powershell-data:
-    executable:
-      bin: docker
-      args:
-        - run
-        - --rm
-        - -v
-        - ${PWD}:/app
-        - -v
-        - /var/run/docker.sock:/var/run/docker.sock
-        - --env-file
-        - envfile
-        - -e
-        - PSModulePath=/modules
-        - -w
-        - /app
-        - ensono/eir-azure-data
-        - pwsh
-        - -NoProfile
+    container:
+      name: ensono/eir-azure-data
+      shell: pwsh
+      shell_args:
         - -Command
-    quote: "'"
+    env:
+      VIRTUAL_ENV: /workspace/.taskctl/venv
+      PATH: $VIRTUAL_ENV:$env:PATH
+      PYTHON_PATH: .
     envfile:
       exclude:
         - sourceversionmessage

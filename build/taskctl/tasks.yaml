@@ -29,6 +29,18 @@ tasks:
     command:
       - Invoke-Terraform -Validate -Path $env:TF_FILE_LOCATION
 
+  local:envfile:powershell:
+    context: powershell
+    description: Create environment file for local workstation
+    command:
+      - /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell powershell
+
+  local:envfile:bash:
+    context: powershell
+    description: Create environment file for local workstation
+    command:
+      - /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell bash
+
   # Infrastructure tasks
   infra:init:
     context: powershell
@@ -207,3 +219,25 @@ tasks:
         } else {
             Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
         }
+
+  setup_dev_environment:
+    context: powershell-data
+    description: Setup Dev Environment
+    command: |
+      python3 -m venv $env:VIRTUAL_ENV
+      poetry install --no-interaction --no-ansi --no-dev
+      poetry self add poetry-dotenv-plugin
+      poetry run pre-commit install
+
+  test:
+    context: powershell-data
+    description: Run Tests
+    command: |
+      poetry run python -m pytest de_workloads
+
+  test_e2e:
+    context: powershell-data
+    description: Run E2E Tests
+    command: |
+      poetry run behave de_workloads/shared_resources/tests/end_to_end/features/shared_resources.feature
+      poetry run behave de_workloads/ingest/ingest_azure_sql_example/tests/end_to_end/features/azure_data_ingest.feature

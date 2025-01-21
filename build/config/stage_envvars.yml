@@ -12,16 +12,14 @@ default:
     - name: TESTS_PATH
       description: Path to the tests folder
       required: false
+    - name: TF_BACKEND_INIT
+      description: Configuration string to be used to configure the Terraform state
   credentials:
     azure:
       - name: ARM_CLIENT_ID
       - name: ARM_CLIENT_SECRET
       - name: ARM_SUBSCRIPTION_ID
       - name: ARM_TENANT_ID
-    aws:
-      - name: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-      - name: AWS_REGION
 
 stages:
   - name: networking
@@ -35,8 +33,6 @@ stages:
       - name: TF_VAR_tags
         required: false
         description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
-      - name: TF_BACKEND_INIT
-        description: Arguments that should be passed to Terraform during the init process
       - name: TF_BACKEND_PLAN
         description: Arguments that should be passed to Terraform during the plan process
         required: false
