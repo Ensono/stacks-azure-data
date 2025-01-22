@@ -144,7 +144,7 @@ foreach ($itm in $data.stages) {
         }
 
         # Only proceed if the variable is required
-        if ($var.containskey("required")) {
+        if ($var.containskey("required") -and !$var.containskey("default")) {
             $data.required = $var.required
         }
 
@@ -191,7 +191,7 @@ foreach ($itm in $data.stages) {
     # Ensure that the parent directory exists
     $parent_dir = Split-Path -Path $envfile -Parent
     if (!(Test-Path -Path $parent_dir)) {
-        New-Item -Path $parent_dir -ItemType Directory
+        New-Item -Path $parent_dir -ItemType Directory | Out-Null
     }
 
     Write-Information ("Writing environment file for stage: {0} [{1}]" -f $itm.name, $envfile)

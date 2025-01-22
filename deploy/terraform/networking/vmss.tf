@@ -19,7 +19,7 @@ module "terraform-azurerm-ado-build-agent" {
   # Configure ADO Agent settings
   ado_agent_pool = local.ado_agent_pool_name
   ado_org_url    = var.ado_org_url
-  ado_pat        = var.ado_pat
+  ado_pat        = data.external.env.result["ADO_PAT"]
   ado_project_id = var.ado_project_id
 
   # Configure debugging

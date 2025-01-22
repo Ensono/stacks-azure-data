@@ -154,10 +154,6 @@ variable "ado_org_url" {
   description = "URL of the Azure DevOps Organization"
 }
 
-variable "ado_pat" {
-  type        = string
-  description = "Personal Access Token for the Azure DevOps Organization"
-}
 variable "ado_project_id" {
   type        = string
   description = "ID of the Azure DevOps Project"

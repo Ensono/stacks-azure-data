@@ -8,7 +8,7 @@
 
 resource "azuredevops_variable_group" "ado_vg" {
 
-  for_each = var.enable_private_networks && var.ado_create_variable_group ? {
+  for_each = var.ado_create_variable_group ? {
     for name, detail in local.environments : name => detail if name != "hub"
   } : {}
 
