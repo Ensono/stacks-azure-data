@@ -14,7 +14,7 @@ default:
       description: Path to the tests folder
       required: false
     - name: ENV_NAME
-      description: Name of the environment being deployed to
+      description: Type of subscription that the infra is being deployed to. This determines which environments are deployed.
       default: nonprod
   credentials:
     azure:
@@ -35,7 +35,7 @@ stages:
         required: true
         description: Company Name - should/will be used in conventional resource naming
       - name: TF_VAR_name_project
-        default: "my_project_name"
+        default: "my_project_name_net"
         required: true
         description: Project Name - should/will be used in conventional resource naming
       - name: TF_VAR_tags
@@ -110,6 +110,7 @@ stages:
         default: dev
         description: Data environment to deploy to. This determines which networks the resources connect to
       - name: TF_VAR_name_project
+        default: "my_project_name_infra"
         required: true
         description: Project Name - should/will be used in conventional resource naming
       - name: TF_VAR_administrator_login
