@@ -185,6 +185,7 @@ locals {
   # Create the object that will be used to populate the variable groups
   # and the environment variables file
   outputs = { for envname, detail in local.environments : envname => {
+    name_company                          = var.name_company
     dns_zone_resource_group               = module.networking[0].vnets[local.hub_network_name].vnet_resource_group_name
     pe_subnet_id                          = [for name, detail in module.networking[0].private_endpoint_subnets : detail.subnet_id if name == envname][0]
     pe_subnet_name                        = [for pe_subnet in local.pe_subnets : pe_subnet.subnet_name if pe_subnet.environment == envname][0]

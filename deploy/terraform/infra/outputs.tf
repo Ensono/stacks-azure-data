@@ -4,6 +4,12 @@ output "resource_group_name" {
   depends_on  = [azurerm_resource_group.default]
 }
 
+output "sql_admin_password" {
+  description = "Password for the SQL Admin"
+  value       = local.sql_admin_password
+  sensitive   = true
+}
+
 output "adf_name" {
   description = "Name of the Azure Databricks instance that has been created"
   value       = module.adf.adf_account_name
