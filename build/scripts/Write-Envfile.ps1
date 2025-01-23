@@ -117,8 +117,12 @@ foreach ($param in $data.default.credentials.$Cloud) {
     $credentials[$param.name] = $item
 }
 
-# Finally add in the specific variables for the stage
+# Set a variable for the Terraform file location template
+$template = @{
+    "TF_FILE_LOCATION" = $common["TF_FILE_LOCATION"].value
+}
 
+# Finally add in the specific variables for the stage
 foreach ($itm in $data.stages) {
 
     # determine the filename for the envfile
@@ -129,7 +133,7 @@ foreach ($itm in $data.stages) {
     $common["STAGE"].value = $itm.name.toLower()
 
     # set the path for the terraform files
-    $common["TF_FILE_LOCATION"].value = $common["TF_FILE_LOCATION"].value -replace "TF_STAGE", $itm.name.toLower()
+    $common["TF_FILE_LOCATION"].value = $template["TF_FILE_LOCATION"] -replace "TF_STAGE", $itm.name.toLower()
 
     # create hashtable for the stage vars
     $stage_vars = [ordered]@{}
@@ -144,7 +148,7 @@ foreach ($itm in $data.stages) {
         }
 
         # Only proceed if the variable is required
-        if ($var.containskey("required") -and !$var.containskey("default")) {
+        if ($var.containskey("required")) {
             $data.required = $var.required
         }
 
@@ -158,11 +162,12 @@ foreach ($itm in $data.stages) {
 
         if ($var.containskey("default")) {
             $data.value = $var.default
+            $data.required = $true
         }
 
         # check to see if the value already exists, and if so add that
         if (Test-Path -Path ("env:\{0}" -f $var.name)) {
-            $item.value = (Get-Item -Path ("env:\{0}" -f $var.name)).Value
+            $data.value = (Get-Item -Path ("env:\{0}" -f $var.name)).Value
         }
 
 
@@ -185,7 +190,13 @@ foreach ($itm in $data.stages) {
             $output += "# {0}" -f $item.description
         }
 
-        $output += $config[$Shell].template -f $prepend, $key, $item.value
+        # ensure that True and False are correctly cased
+        $value = $item.value
+        if ($value.tostring() -eq "True" -or $value.tostring() -eq "False") {
+            $value = $value.tostring().tolower()
+        }
+
+        $output += $config[$Shell].template -f $prepend, $key, $value
     }
 
     # Ensure that the parent directory exists
@@ -196,5 +207,6 @@ foreach ($itm in $data.stages) {
 
     Write-Information ("Writing environment file for stage: {0} [{1}]" -f $itm.name, $envfile)
     Set-Content -Path $envfile -Value ($output -join "`n")
+
 }
 

@@ -13,6 +13,9 @@ default:
     - name: TESTS_PATH
       description: Path to the tests folder
       required: false
+    - name: ENV_NAME
+      description: Name of the environment being deployed to
+      default: nonprod
   credentials:
     azure:
       - name: ARM_CLIENT_ID
@@ -51,8 +54,8 @@ stages:
         required: false
         description: "Determines if the networking modules creates a private dns zone. (Default: True)"
       - name: TF_VAR_enable_private_networks
-        required: false
         description: "Enable Private Networking for Secure Data Platform. (Default: False)"
+        default: true
       - name: TF_VAR_name_component
         required: false
         description: "Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` || `middleware` or more generic like `Billing` (Default: data)"
@@ -102,9 +105,20 @@ stages:
         required: true
         description: Configuration to be used to store the Terraform state
         default: "key=data-infrastructure,storage_account_name=,resource_group_name=,container_name="
-      - name: TF_VAR_administrator_login
+      - name: TF_VAR_environment
         required: true
+        default: dev
+        description: Data environment to deploy to. This determines which networks the resources connect to
+      - name: TF_VAR_name_project
+        required: true
+        description: Project Name - should/will be used in conventional resource naming
+      - name: TF_VAR_administrator_login
+        required: false
         description: The administrator login name for the new server. Required unless azuread_authentication_only in the azuread_administrator block is true. When omitted, Azure will generate a default username which cannot be subsequently changed. Changing this forces a new resource to be created.
+      - name: TF_VAR_kv_public_network_access_enabled
+        default: true
+        required: true
+        description: State whether to allow access to the KV from the Internet. This musty be enabled for stb entries to be created initially, when the private ADO agent is not being used.
       - name: TF_VAR_attributes
         required: false
         description: Additional attributes for tagging
@@ -115,28 +129,22 @@ stages:
         required: false
         description: A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault.
       - name: TF_VAR_name_company
-        required: true
+        required: false
         description: Company Name - should/will be used in conventional resource naming
-      - name: TF_VAR_name_project
-        required: true
-        description: Project Name - should/will be used in conventional resource naming
-      - name: TF_VAR_pe_resource_group_name
-        required: true
-        description: Name of the resource group to provision private endpoint in.
       - name: TF_VAR_pe_subnet_id
-        required: true
+        required: false
         description: ID for the Private Endpoint Subnet
       - name: TF_VAR_subnet_name
-        required: true
+        required: false
         description: The name of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint
       - name: TF_VAR_tags
-        required: true
+        required: false
         description: Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
       - name: TF_VAR_vnet_name
-        required: true
+        required: false
         description: The VNET in which the Subnet resides.
       - name: TF_VAR_vnet_resource_group_name
-        required: true
+        required: false
         description: The name of the resource group for the vnet which the subnet resides.
       - name: TF_VAR_adb_role_adf
         required: false
