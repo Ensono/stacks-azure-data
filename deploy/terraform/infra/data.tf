@@ -1,5 +1,11 @@
 data "azurerm_client_config" "current" {}
 
+# Obtain some environment variables that can be used in the terraform configuration
+# This is primarily used to get the name of the environment being deployed
+data "external" "env" {
+  program = ["${path.module}/scripts/env.sh"]
+}
+
 data "azurerm_subnet" "pe_subnet" {
   count                = var.enable_private_networks ? 1 : 0
   name                 = var.pe_subnet_name

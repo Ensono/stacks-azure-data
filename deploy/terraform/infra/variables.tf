@@ -214,13 +214,6 @@ variable "kv_secret_expiration" {
   default     = "8765h"
 }
 
-variable "azure_client_secret" {
-  type        = string
-  description = "A client secret that was generated for the App Registration."
-  sensitive   = true
-}
-
-
 variable "contributor_object_ids" {
   description = "A list of Azure Active Directory user, group or application object IDs that will have contributor role for  the Key Vault."
   type        = list(string)

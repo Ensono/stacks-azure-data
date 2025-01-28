@@ -58,7 +58,7 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
 
 resource "azurerm_key_vault_secret" "service-principal-secret" {
   name            = "service-principal-secret"
-  value           = var.azure_client_secret
+  value           = data.external.env.result["ARM_CLIENT_SECRET"]
   key_vault_id    = module.kv_default.id
   content_type    = "password"
   expiration_date = local.secret_expiration_date

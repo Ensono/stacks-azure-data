@@ -31,7 +31,7 @@ resource "null_resource" "approve_private_endpoints" {
     interpreter = ["pwsh", "-Command"]
     command     = "${path.module}/scripts/Approve-Endpoints.ps1 -ClientId ${data.azurerm_client_config.current.client_id} -TenantId ${data.azurerm_client_config.current.tenant_id} -EndpointIds '${jsonencode(local.private_endpoint_list)}'"
     environment = {
-      ARM_CLIENT_SECRET = var.azure_client_secret
+      ARM_CLIENT_SECRET = data.external.env.result["ARM_CLIENT_SECRET"]
     }
   }
 }

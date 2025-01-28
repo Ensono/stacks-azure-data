@@ -6,7 +6,7 @@ module "sql" {
   resource_group_name           = azurerm_resource_group.default.name
   resource_group_location       = azurerm_resource_group.default.location
   sql_version                   = var.sql_version
-  administrator_login           = local.sql_admin_username
+  administrator_login           = local.sql_admin_password
   sql_db_names                  = var.sql_db_names
   resource_tags                 = module.label_default.tags
   enable_private_network        = var.enable_private_networks
