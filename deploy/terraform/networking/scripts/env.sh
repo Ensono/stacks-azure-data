@@ -9,6 +9,6 @@ cat <<EOF
 {
   "ENV_NAME": "$ENV_NAME",
   "ADO_PAT": "$AZDO_PERSONAL_ACCESS_TOKEN",
-  "STAGE": $STAGE
+  "STAGE": "$STAGE"
 }
 EOF
