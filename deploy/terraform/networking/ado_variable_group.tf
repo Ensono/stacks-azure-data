@@ -13,7 +13,7 @@ resource "azuredevops_variable_group" "ado_vg" {
   } : {}
 
   project_id   = data.azuredevops_project.ado[0].id
-  name         = "${var.ado_variable_group_name_prefix}-${each.key}"
+  name         = "${local.ado_vg_name_prefix}-${each.key}"
   description  = "Azure resource names from the Network deployment for the ${each.key} environment. Do not update this group manually as it is managed by Terraform"
   allow_access = true
 

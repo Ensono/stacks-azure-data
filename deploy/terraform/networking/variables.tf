@@ -165,13 +165,6 @@ variable "ado_create_variable_group" {
   description = "If true, a variable group will be created in Azure DevOps with the necessary information from this Infrastructure"
 }
 
-
-variable "ado_variable_group_name_prefix" {
-  type        = string
-  default     = "data-networks"
-  description = "Prefix for the name of the Variable Group in Azure DevOps. The suffix is the name of the environment"
-}
-
 variable "debug_enabled" {
   type        = bool
   default     = false

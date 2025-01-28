@@ -38,6 +38,12 @@ locals {
   # determine the name of the agent pool, if it has not been provided
   ado_agent_pool_name = var.ado_agent_pool_name == "" ? "${module.label_hub.id}-agent-pool" : var.ado_agent_pool_name
 
+  # determine the prefix for the ado variable group
+  # this is so that it is easy to identify in the Azure DevOps UI and cannot be confused with other projects
+  # using this template
+  tf_stage           = lower(data.external.env.result["STAGE"])
+  ado_vg_name_prefix = "${var.name_company}-${var.name_project}-${var.name_component}-${local.tf_stage}"
+
   # Create the network details list
   # -- HUB Network
   hub_network = [
