@@ -35,7 +35,7 @@ stages:
         required: true
         description: Company Name - should/will be used in conventional resource naming
       - name: TF_VAR_name_project
-        default: "my_project_name_net"
+        default: "my_project_name-net"
         required: true
         description: Project Name - should/will be used in conventional resource naming
       - name: TF_VAR_tags
@@ -110,7 +110,7 @@ stages:
         default: dev
         description: Data environment to deploy to. This determines which networks the resources connect to
       - name: TF_VAR_name_project
-        default: "my_project_name_infra"
+        default: "my_project_name-infra"
         required: true
         description: Project Name - should/will be used in conventional resource naming
       - name: TF_VAR_administrator_login
