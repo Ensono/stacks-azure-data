@@ -2,7 +2,7 @@
 resource "azurerm_lb" "lb" {
   count = var.enable_private_network && var.create_lb && var.managed_vnet == false ? 1 : 0
 
-  name                = local.lb_name
+  name                = "${var.resource_namer}-lb"
   location            = var.resource_group_location
   resource_group_name = var.resource_group_name
 

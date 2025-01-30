@@ -18,8 +18,8 @@ resource "azurerm_databricks_workspace" "example" {
       vnet_address_prefix                                  = var.managed_vnet ? null : (var.vnet_address_prefix == "" ? null : var.vnet_address_prefix)
       public_subnet_network_security_group_association_id  = var.managed_vnet ? null : var.adf_private_nsg_subnet_association_id
       private_subnet_network_security_group_association_id = var.managed_vnet ? null : var.adf_public_nsg_subnet_association_id
-      nat_gateway_name                                     = var.managed_vnet ? null : var.nat_gateway_id
-      public_ip_name                                       = var.managed_vnet ? null : var.nat_gateway_pip_id
+      nat_gateway_name                                     = var.managed_vnet ? null : local.nat_gateway_name
+      public_ip_name                                       = var.managed_vnet ? null : local.public_ip_name
     }
   }
 
