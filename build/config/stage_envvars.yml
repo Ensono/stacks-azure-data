@@ -270,3 +270,39 @@ stages:
       - name: TF_VAR_storage_account_details
         required: false
         description: " (Default: @{data_config_storage=; data_lake_storage=})"
+
+  - name: databricks
+    variables:
+      - name: TF_BACKEND_INIT
+        required: true
+        description: Configuration to be used to store the Terraform state
+        default: "key=data-networking,storage_account_name=,resource_group_name=,container_name="
+      - name: TF_VAR_name_company
+        default: "my_company_name"
+        required: true
+        description: Company Name - should/will be used in conventional resource naming
+      - name: TF_VAR_name_project
+        default: "my_project_name-databricks"
+        required: true
+        description: Project Name - should/will be used in conventional resource naming
+      - name: TF_VAR_adb_databricks_hosturl
+        required: true
+        description: Host URL of the Azure Databricks workspace
+      - name: TF_VAR_adb_databricks_id
+        required: true
+        description: ID of the Azure Databricks workspace
+      - name: TF_VAR_key_vault_id
+        required: true
+        description: ID of the key vault for which the secret scope needs to be set
+      - name: TF_VAR_key_vault_uri
+        required: true
+        description: URI of the Key Vault to target
+      - name: TF_VAR_databricks_enableDbfsFileBrowser
+        required: false
+        description: "Whether to enable Dbfs File browser for the Azure Databricks workspace (Default: True)"
+      - name: TF_VAR_databricks_pat_comment
+        required: false
+        description: "Comment for databricks PAT (Default: Terraform Provisioning)"
+      - name: TF_VAR_databricks_secret_scope_kv
+        required: false
+        description: "Name of the databricks secret scope for Key vault. (Default: key-vault-backed)"

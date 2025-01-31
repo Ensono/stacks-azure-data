@@ -42,15 +42,15 @@ $data = Get-Content -Path $Path -Raw | ConvertFrom-Yaml
 # Create the configuration for each shell
 $config = @{
     powershell = @{
-        template = @"
+        template  = @"
 {0}`$env:{1} = "{2}"
 
 "@
         extension = "ps1"
     }
 
-    bash = @{
-        template = @"
+    bash       = @{
+        template  = @"
 {0} export {1}="{2}"
 
 "@
@@ -69,8 +69,8 @@ foreach ($var in $data.default.variables) {
     # create the item object for the data
     $item = [PSCustomObject]@{
         description = ""
-        value = ""
-        required = $true
+        value       = ""
+        required    = $true
     }
 
     # Only proceed if the variable is required
@@ -105,8 +105,8 @@ foreach ($param in $data.default.credentials.$Cloud) {
     # create the item object for the data
     $item = [PSCustomObject]@{
         description = ""
-        value = ""
-        required = $true
+        value       = ""
+        required    = $true
     }
 
     # check to see if the value already exists, and if so add that
@@ -116,6 +116,15 @@ foreach ($param in $data.default.credentials.$Cloud) {
 
     $credentials[$param.name] = $item
 }
+
+# Create a file for the credentials so that they only need to be set once and then
+# sourced in each file
+$rendered = renderData($credentials)
+$credfile = "$PSScriptRoot/../../{0}/credentials.{1}" -f $config[$Shell].extension, $Target
+
+Write-Information ("Writing credentials file: " -f $credfile)
+Set-Content -Path $credfile -Value ($rendered -join "`n")
+
 
 # Set a variable for the Terraform file location template
 $template = @{
@@ -143,8 +152,8 @@ foreach ($itm in $data.stages) {
         # create the item object for the data
         $data = [PSCustomObject]@{
             description = ""
-            value = ""
-            required = $false
+            value       = ""
+            required    = $false
         }
 
         # Only proceed if the variable is required
@@ -176,10 +185,38 @@ foreach ($itm in $data.stages) {
     }
 
     # write out the file
+    $data = $common + $stage_vars
+    $output = renderData($data)
+
+    # Ensure that the parent directory exists
+    $parent_dir = Split-Path -Path $envfile -Parent
+    if (!(Test-Path -Path $parent_dir)) {
+        New-Item -Path $parent_dir -ItemType Directory | Out-Null
+    }
+
+    # Add in the sourcing of the credentials file in the script
+    switch ($shell) {
+        "powershell" {
+            $source_creds = '. (Split-Path -Parent -Path $PSScriptRoot)/credentials.ps1'
+        }
+        "bash" {
+            $source_creds = '. $(dirname $0)/credentials.bash'
+        }
+    }
+    
+    # Add the source of the creds to the beginning of the output
+    $output = , $source_creds + $output
+
+    Write-Information ("Writing environment file for stage: {0} [{1}]" -f $itm.name, $envfile)
+    Set-Content -Path $envfile -Value ($output -join "`n")
+
+}
+
+function renderData($data) {
     $output = @()
-    $combined = $credentials + $common + $stage_vars
-    foreach ($key in $combined.keys) {
-        $item = $combined[$key]
+
+    foreach ($key in $data.keys) {
+        $item = $data[$key]
 
         $prepend = ""
         if (!$item.required) {
@@ -199,14 +236,5 @@ foreach ($itm in $data.stages) {
         $output += $config[$Shell].template -f $prepend, $key, $value
     }
 
-    # Ensure that the parent directory exists
-    $parent_dir = Split-Path -Path $envfile -Parent
-    if (!(Test-Path -Path $parent_dir)) {
-        New-Item -Path $parent_dir -ItemType Directory | Out-Null
-    }
-
-    Write-Information ("Writing environment file for stage: {0} [{1}]" -f $itm.name, $envfile)
-    Set-Content -Path $envfile -Value ($output -join "`n")
-
+    return $output
 }
-

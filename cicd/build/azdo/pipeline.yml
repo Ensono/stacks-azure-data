@@ -1,0 +1,316 @@
+name: "$(Build.SourceBranchName)-init"
+
+# Configure parameters for running the build
+parameters:
+  - name: enable_private_networks
+    displayName: Enable Private Networks
+    type: boolean
+    default: false
+  - name: force_deploy
+    displayName: Force deploy regardless of branch
+    type: boolean
+    default: false
+  - name: deploy
+    displayName: Deploy Environment
+    type: boolean
+    default: true
+  - name: destroy
+    displayName: Destroy Environment
+    type: boolean
+    default: false
+  - name: upload
+    displayName: Upload generated files
+    type: boolean
+    default: false
+
+  - name: stages
+    type: object
+    default:
+      - stage: NonProd
+        dependsOn: Build
+        condition: ne(variables['Build.SourceBranch'], 'refs/heads/main')
+        environment_shortname: nonprod
+        deployment_infra: AppInfraNonProd
+      - stage: Prod
+        dependsOn: Build
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        environment_shortname: prod
+        deployment_infra: AppInfraProd
+  - name: debug
+    displayName: Turn on debug for the Independent Runner
+    type: boolean
+    default: false
+
+pr:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+
+trigger:
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - build/azDevOps/*
+      - build/taskctl/*
+      - deploy/azure/infra/*
+
+variables:
+  - template: ../../version-data-vars.yml
+  - template: ../../common-vars.yml
+  - template: air-infrastructure-data-vars.yml
+  - name: tf_state_key
+    value: $(domain)
+
+stages:
+  - stage: Build
+    variables:
+      - group: ensono-sp-creds
+
+    jobs:
+      - job: Validate
+        pool:
+          vmImage: $(pool_vm_image)
+
+        steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
+
+          - template: ../templates/air-infrastructure-data-setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Setup"
+            inputs:
+              targetType: inline
+              script: taskctl setup
+            env:
+              DOCKER_IMAGE_TAG: $(version_number)
+
+          - task: Bash@3
+            displayName: "TaskCTL: Lint"
+            inputs:
+              targetType: inline
+              script: taskctl lint
+            env:
+              TF_FILE_LOCATION: /app/$(self_repo_tf_src)
+              CLOUD_PLATFORM: "$(cloud_platform)"
+
+  # Iterate around the stages that have been specified. This is based on the parameters and what branch
+  # of the the repo that the deployment is being run from
+  - ${{ each stage in parameters.stages }}:
+      - stage: ${{ stage.stage }}
+        dependsOn: ${{ stage.dependsOn }}
+        condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
+        variables:
+          - group: ensono-sp-creds
+          - group: ensono-data-networks-${{ stage.environment_shortname }}
+
+        jobs:
+          - deployment: ${{ stage.deployment_infra }}
+            environment: ${{ variables.domain }}-${{ stage.environment_shortname }}
+            pool:
+              vmImage: $(pool_vm_image)
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - task: Bash@3
+                      displayName: "Clean Workspace"
+                      inputs:
+                        targetType: "inline"
+                        script: |
+                          echo "Cleaning workspace..."
+                          sudo rm -rf $(Build.SourcesDirectory)/*
+
+                    - template: ../templates/air-infrastructure-data-setup.yml
+                      parameters:
+                        TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+                    - bash: |
+                        sudo apt-get install -y jq
+                        ip=$(curl https://api.ipify.org/?format=json | jq -r .ip)
+                        echo "$ip"
+                        echo "##vso[task.setvariable variable=build_agent_ip;]$ip"
+                      displayName: "Get Build Agent IP"
+
+                    # Create a tfvars file for the values
+                    # This is so that variables can be set and reused as required
+                    - task: Bash@3
+                      displayName: Create Terraform variables file
+                      inputs:
+                        targetType: inline
+                        script: |
+                          taskctl infra:vars
+                      env:
+                        TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+                        TF_FILE_LOCATION: /app/deploy/azure/infra
+
+                        # Deployment Specific Configuration
+                        # State if the infrastructure is being deployed to a public or private network
+                        # This value is taken from the parameters
+                        TF_VAR_enable_private_networks: ${{ lower(parameters.enable_private_networks) }}
+
+                        # Common variables that are required for both public and private networks
+                        TF_VAR_administrator_login: $(sql_admin_login)
+                        TF_VAR_azure_client_secret: $(azure-client-secret)
+                        TF_VAR_git_integration: $(git_integration)
+                        TF_VAR_name_company: $(company)
+                        TF_VAR_name_component: $(component)
+                        TF_VAR_name_project: $(project)
+                        TF_VAR_resource_group_location: $(region)
+
+                        # Variables only required for a private network deployment
+                        TF_VAR_pe_subnet_name: $(pe_subnet_name)
+                        TF_VAR_pe_subnet_prefix: $(pe_subnet_prefix)
+                        TF_VAR_private_subnet_prefix: $(private_subnet_prefix)
+                        TF_VAR_public_subnet_name: $(public_subnet_name)
+                        TF_VAR_public_subnet_prefix: $(public_subnet_prefix)
+                        TF_VAR_private_subnet_name: $(private_subnet_name)
+                        TF_VAR_subnet_name: $(subnet_name)
+                        TF_VAR_vnet_name: $(vnet_name)
+                        TF_VAR_vnet_resource_group_name: $(vnet_resource_group_name)
+                        TF_VAR_dns_zone_resource_group_name: $(dns_zone_resource_group_name)
+
+                    # Upload the Terraform variables file and the plan for debugging
+                    - ${{ if eq(parameters.upload, true) }}:
+                        - template: ../templates/upload.yml
+
+                    # remove the infrastructure if the parameter has been set
+                    - ${{ if eq(parameters.destroy, true) }}:
+                        - task: Bash@3
+                          displayName: Destroy environment
+                          inputs:
+                            targetType: inline
+                            script: |
+                              taskctl infrastructure_destroy
+                          env:
+                            TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+                            ENV_NAME: ${{ stage.environment_shortname }}
+
+                            # Azure Authentication
+                            CLOUD_PLATFORM: "$(cloud_platform)"
+                            STAGE: infra
+
+                            TF_FILE_LOCATION: /app/deploy/azure/infra
+                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+                            TF_BACKEND_DESTROY_PLAN: '-input=false,-out="destroy.tfplan"'
+
+                            vnet_name: $(vnet_name)
+                            vnet_resource_group_name: $(vnet_resource_group_name)
+                            tf_state_storage: $(tf_state_storage)
+                            tf_state_container: $(tf_state_container)
+                            subnets: "$(public_subnet_name),$(private_subnet_name)"
+
+                    - ${{ if eq(parameters.deploy, true) }}:
+                        - task: Bash@3
+                          displayName: "Taskctl: Infrastructure"
+                          inputs:
+                            targetType: inline
+                            script: taskctl infrastructure
+                            informationPreference: continue
+                          env:
+                            TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
+                            ENV_NAME: ${{ stage.environment_shortname }}
+
+                            # Azure Authentication
+                            CLOUD_PLATFORM: "$(cloud_platform)"
+                            STAGE: infra
+
+                            # Terraform Backend Configuration
+                            TF_FILE_LOCATION: /app/deploy/azure/infra
+                            TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+  - stage: Release
+    dependsOn:
+      - Build
+      - Prod
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['create_release'], 'true'), eq('${{ parameters.deploy }}', true))
+    jobs:
+      - job: CreateGitHubRelease
+        pool:
+          vmImage: $(pool_vm_image)
+        steps:
+          - task: Bash@3
+            displayName: "Clean Workspace"
+            inputs:
+              targetType: "inline"
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/*
+
+          # Check out the repo so that it can be tagged
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              lastTag=$(git tag --sort=-creatordate | head -n 1)
+              if [[ -z $lastTag ]]; then
+                major=$(version_major)
+                minor=$(version_minor)
+                revision=$(version_revision)
+                echo "Last Tag: NOT Present"
+              else
+                IFS='.' read -ra versionParts <<< "${lastTag#v}"
+                major="${versionParts[0]}"
+                minor="${versionParts[1]}"
+                lastrevision="${versionParts[2]}"
+                revision=$((lastrevision + 1))
+                echo "Last Tag: $lastTag"
+              fi
+              newVersion="${major}.${minor}.${revision}"
+              echo "New Version: $newVersion"
+              echo "##vso[task.setvariable variable=major]$major"
+              echo "##vso[task.setvariable variable=minor]$minor"
+              echo "##vso[task.setvariable variable=revision]$revision"
+              echo "##vso[task.setvariable variable=newVersion]$newVersion"
+            displayName: Determine New Version
+
+          - task: Bash@3
+            displayName: Tag Code
+            inputs:
+              targetType: "inline"
+              script: |
+                commit=$(Build.SourceVersion)
+                tag=$(git tag --contains $commit)
+                if [ -z "$tag" ]; then
+                  echo "Tag does not exist for the commit"
+                  git config user.name "BuildService"
+                  git config user.email "builder@${COMPANY}.com"
+                  echo "Creating tag v${newVersion}..."
+                  git tag -a "v${newVersion}" -m "Release created by Azure DevOps"
+                  git push origin "v${newVersion}"
+                  echo "##vso[task.setvariable variable=ShouldCreateRelease]True"
+                else
+                  echo "Tag '$tag' already exists for the commit.Skipping tag creation"
+                  echo "##vso[task.setvariable variable=ShouldCreateRelease]false"
+                fi
+            env:
+              COMPANY: $(company)
+              newVersion: $(newVersion)
+
+          # #           # Create a GitHub release with these packages
+          - task: GitHubRelease@1
+            displayName: Create GitHub Release
+            inputs:
+              gitHubConnection: $(github_release_service_connection)
+              repositoryName: "$(Build.Repository.Name)"
+              tag: v${newVersion}
+              releaseNotesSource: "inline"
+              releaseNotesInline: "$(major).$(minor).$(revision)"
+              tagSource: "gitTag"
+              changeLogCompareToRelease: "lastFullRelease"
+              changeLogType: "commitBased"
+            condition: eq(variables['ShouldCreateRelease'], 'true')

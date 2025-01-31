@@ -3,5 +3,4 @@ resource "databricks_workspace_conf" "this" {
   custom_config = {
     "enableDbfsFileBrowser" : "true"
   }
-  depends_on = [module.adb]
 }

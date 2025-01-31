@@ -32,4 +32,36 @@ locals {
   # Set the admin password for sql
   # This is either from the variable, if it has been set or from the random_password resource
   sql_admin_password = var.administrator_login != "" ? var.administrator_login : random_password.sql_admin.result
+
+  # determine the prefix for the ado variable group
+  # this is so that it is easy to identify in the Azure DevOps UI and cannot be confused with other projects
+  # using this template
+  tf_stage           = lower(data.external.env.result["STAGE"])
+  ado_vg_name_prefix = "${var.name_company}-${var.name_project}-${var.name_component}-${var.environment}-${local.tf_stage}"
+
+  # Create object that will be used for the outputs, this is so that they can be used
+  # in different places
+  outputs = {
+    resource_group_name            = azurerm_resource_group.default.name
+    sql_admin_password             = local.sql_admin_password
+    adf_name                       = module.adf.adf_account_name
+    adf_integration_runtime_name   = module.adf.adf_integration_runtime_name
+    adls_storage_accounts          = module.adls_default.storage_account_names
+    adls_storage_account_endpoints = module.adls_default.primary_blob_endpoints
+    adls_dfs_endpoints             = module.adls_default.primary_dfs_endpoints
+    adb_databricks_id              = module.adb.adb_databricks_id
+    adb_host_url                   = module.adb.databricks_hosturl
+    kv_name                        = module.kv_default.key_vault_name
+  }
+
+  # Create a local object for the template mapping so that the script files can be generated
+  templates = flatten([
+    for file in ["envvars.bash.tpl", "envvars.ps1.tpl", "inputs.tfvars.tpl"] :
+    {
+      envname  = var.environment
+      file     = file
+      items    = local.outputs
+      template = "${path.module}/../templates/${file}"
+    }
+  ])
 }

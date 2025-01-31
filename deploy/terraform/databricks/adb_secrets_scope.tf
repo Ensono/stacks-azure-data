@@ -5,5 +5,5 @@ resource "databricks_secret_scope" "kv" {
     resource_id = module.kv_default.id
     dns_name    = module.kv_default.vault_uri
   }
-  depends_on = [module.adb, module.kv_default]
+
 }

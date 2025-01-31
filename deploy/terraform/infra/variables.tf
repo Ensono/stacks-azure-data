@@ -286,12 +286,6 @@ variable "databricksws_diagnostic_setting_name" {
   description = "The Databricks workspace diagnostic setting name."
 }
 
-variable "databricks_enableDbfsFileBrowser" {
-  type        = bool
-  description = "Whether to enable Dbfs File browser for the Azure Databricks workspace"
-  default     = true
-}
-
 variable "public_network_access_enabled" {
   description = "If set to true, User will be able to access databrick workspace  UI from Azure portal, this should set to false in production."
   type        = bool
@@ -308,18 +302,6 @@ variable "databricks-token" {
   type        = string
   default     = "databricks-token"
   description = "Name of the Key for databricks token, its not the actual value/password but the by the name its referred to."
-}
-
-variable "databricks_secret_scope_kv" {
-  type        = string
-  default     = "key-vault-backed"
-  description = "Name of the databricks secret scope for Key vault."
-}
-
-variable "databricks_pat_comment" {
-  type        = string
-  default     = "Terraform Provisioning"
-  description = "Comment for databricks PAT"
 }
 
 variable "vnet_resource_group" {
@@ -527,4 +509,21 @@ variable "nat_gateway_id" {
 variable "nat_gateway_pip_id" {
   type    = string
   default = ""
+}
+
+variable "script_file_output_dir" {
+  type        = string
+  default     = "../../../outputs"
+  description = "The path, relative to the templates, where the script files that are generated should be saved."
+}
+
+variable "ado_create_variable_group" {
+  type        = bool
+  default     = false
+  description = "If true, a variable group will be created in Azure DevOps with the necessary information from this Infrastructure"
+}
+
+variable "ado_org_url" {
+  type        = string
+  description = "URL of the Azure DevOps Organization"
 }

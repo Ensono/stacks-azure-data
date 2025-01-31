@@ -215,7 +215,7 @@ locals {
         envname  = name
         file     = file
         items    = local.outputs[name]
-        template = "${path.module}/templates/${file}"
+        template = "${path.module}/../templates/${file}"
       } if name != "hub"
     ]
   ])
