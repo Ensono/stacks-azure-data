@@ -30,6 +30,8 @@ param (
     $Target = "local"
 )
 
+. $PSScriptRoot/functions/Render-Data.ps1
+
 # Read in the environment file
 if (!(Test-Path -Path $Path)) {
     Write-Error ("Unable to find environment file: {0}" -f $Path)
@@ -119,8 +121,8 @@ foreach ($param in $data.default.credentials.$Cloud) {
 
 # Create a file for the credentials so that they only need to be set once and then
 # sourced in each file
-$rendered = renderData($credentials)
-$credfile = "$PSScriptRoot/../../{0}/credentials.{1}" -f $config[$Shell].extension, $Target
+$rendered = Render-Data($credentials)
+$credfile = "$PSScriptRoot/../../{1}/credentials.{0}" -f $config[$Shell].extension, $Target
 
 Write-Information ("Writing credentials file: " -f $credfile)
 Set-Content -Path $credfile -Value ($rendered -join "`n")
@@ -186,7 +188,7 @@ foreach ($itm in $data.stages) {
 
     # write out the file
     $data = $common + $stage_vars
-    $output = renderData($data)
+    $output = Render-Data($data)
 
     # Ensure that the parent directory exists
     $parent_dir = Split-Path -Path $envfile -Parent
@@ -212,29 +214,3 @@ foreach ($itm in $data.stages) {
 
 }
 
-function renderData($data) {
-    $output = @()
-
-    foreach ($key in $data.keys) {
-        $item = $data[$key]
-
-        $prepend = ""
-        if (!$item.required) {
-            $prepend = "# "
-        }
-
-        if (![string]::isNullOrEmpty($item.description)) {
-            $output += "# {0}" -f $item.description
-        }
-
-        # ensure that True and False are correctly cased
-        $value = $item.value
-        if ($value.tostring() -eq "True" -or $value.tostring() -eq "False") {
-            $value = $value.tostring().tolower()
-        }
-
-        $output += $config[$Shell].template -f $prepend, $key, $value
-    }
-
-    return $output
-}
