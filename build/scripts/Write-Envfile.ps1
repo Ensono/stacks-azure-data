@@ -212,5 +212,9 @@ foreach ($itm in $data.stages) {
     Write-Information ("Writing environment file for stage: {0} [{1}]" -f $itm.name, $envfile)
     Set-Content -Path $envfile -Value ($output -join "`n")
 
+    # Ensure that the file is writeable
+    if ($IsLinux) {
+        Invoke-Expression ("chmod 666 {0}" -f $envfile)
+    }
 }
 
