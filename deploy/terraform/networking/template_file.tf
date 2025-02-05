@@ -8,15 +8,4 @@ resource "local_file" "variable_output" {
 
 }
 
-# Create a null resource that will change the permissions of the files
-# this is so that they can be easily updated in any demos and by the current user
-resource "null_resource" "change_permissions" {
 
-  triggers = {
-    always_run = timestamp()
-  }
-
-  provisioner "local-exec" {
-    command = "chmod 666 ${path.module}/${var.script_file_output_dir}/terraform/*.bash"
-  }
-}
