@@ -127,6 +127,11 @@ $credfile = "$PSScriptRoot/../../{1}/credentials.{0}" -f $config[$Shell].extensi
 Write-Information ("Writing credentials file: " -f $credfile)
 Set-Content -Path $credfile -Value ($rendered -join "`n")
 
+# Ensure that the file is writeable
+if ($IsLinux) {
+    Invoke-Expression ("chmod 666 {0}" -f $credfile)
+}
+
 
 # Set a variable for the Terraform file location template
 $template = @{
