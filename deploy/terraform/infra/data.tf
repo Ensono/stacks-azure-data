@@ -53,3 +53,9 @@ data "azurerm_private_dns_zone" "adb_private_dns_zone" {
 data "azurerm_monitor_diagnostic_categories" "adf_log_analytics_categories" {
   resource_id = module.adf.adf_factory_id
 }
+
+# Get the UUID of the Azure DevOps project, if it is being updated
+data "azuredevops_project" "ado" {
+  count = var.enable_private_networks && var.ado_create_variable_group ? 1 : 0
+  name  = var.ado_project_id
+}

@@ -35,3 +35,15 @@ variable "databricks_pat_comment" {
   default     = "Terraform Provisioning"
   description = "Comment for databricks PAT"
 }
+
+variable "databricks-token" {
+  type        = string
+  default     = "databricks-token"
+  description = "Name of the Key for databricks token, its not the actual value/password but the by the name its referred to."
+}
+
+variable "kv_secret_expiration" {
+  type        = string
+  description = "Specify the duration of secrets in the key vault"
+  default     = "8765h"
+}

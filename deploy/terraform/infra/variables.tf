@@ -298,12 +298,6 @@ variable "databricks-host" {
   description = "Name of the Key for databricks host, its not the actual value/password but the by the name its referred to."
 }
 
-variable "databricks-token" {
-  type        = string
-  default     = "databricks-token"
-  description = "Name of the Key for databricks token, its not the actual value/password but the by the name its referred to."
-}
-
 variable "vnet_resource_group" {
   type        = string
   default     = ""
@@ -526,4 +520,9 @@ variable "ado_create_variable_group" {
 variable "ado_org_url" {
   type        = string
   description = "URL of the Azure DevOps Organization"
+}
+
+variable "ado_project_id" {
+  type        = string
+  description = "ID of the Azure DevOps Project"
 }

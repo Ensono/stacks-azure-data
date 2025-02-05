@@ -50,8 +50,10 @@ locals {
     adls_storage_account_endpoints = module.adls_default.primary_blob_endpoints
     adls_dfs_endpoints             = module.adls_default.primary_dfs_endpoints
     adb_databricks_id              = module.adb.adb_databricks_id
-    adb_host_url                   = module.adb.databricks_hosturl
+    adb_databricks_hosturl         = module.adb.databricks_hosturl
     kv_name                        = module.kv_default.key_vault_name
+    key_vault_id                   = module.kv_default.id
+    key_vault_uri                  = module.kv_default.uri
   }
 
   # Create a local object for the template mapping so that the script files can be generated
