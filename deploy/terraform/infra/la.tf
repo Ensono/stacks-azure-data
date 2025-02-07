@@ -8,7 +8,7 @@ resource "azurerm_log_analytics_workspace" "la" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
-  name                           = "ADF to Log Analytics"
+  name                           = "ADF to Log Analytics - Test"
   target_resource_id             = module.adf.adf_factory_id
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.la.id
   log_analytics_destination_type = "Dedicated"

@@ -26,15 +26,15 @@ $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -
 # - Create the splat of parameters to pass to the cmdlet
 $splatParams = @{
     ServicePrincipal = $true
-    Credential = $psCredential
-    Tenant     = $TenantId
+    Credential       = $psCredential
+    Tenant           = $TenantId
 }
 
 Write-Host "Connecting to Azure..."
 Connect-AzAccount @splatParams
 
 # convert the json string to a pscustomobject
-$data = $EndpointIds | ConvertFrom-Json
+$data = $EndpointIds -replace "'", "" | ConvertFrom-Json
 
 # Iterate around the IDs that have been passed and approve them
 foreach ($item in $data.PsObject.Properties) {
@@ -42,10 +42,11 @@ foreach ($item in $data.PsObject.Properties) {
 
     # Get the list of endpoints that need to be approved
     # These are the ones that are in a provisioning state
-    $pendingPrivateEndpoints = Get-AzPrivateEndpointConnection -PrivateLinkResourceId $item.Value | Where-Object { $_.ProvisioningState -eq "Pending"}
+    $pendingPrivateEndpoints = Get-AzPrivateEndpointConnection -PrivateLinkResourceId $item.Value | Where-Object { $_.PrivateLinkServiceConnectionState.Status -eq "Pending" }
     foreach ($ep in $pendingPrivateEndpoints) {
-        Write-Host ("`tApproving endpoint: {0}" -f $ep.PrivateEndpoint)
-        Approve-AzPrivateEndpointConnection -ResourceId $ep.PrivateEndpoint -ApprovalType "Approved by Terraform"
+        Write-Host ("`tApproving endpoint: {0}" -f $ep.id)
+
+        Approve-AzPrivateEndpointConnection -ResourceId $ep.id -Description "Approved by Terraform"
     }
     
 }

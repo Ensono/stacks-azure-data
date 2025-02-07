@@ -8,7 +8,7 @@
 
 resource "azuredevops_variable_group" "ado_vg" {
 
-  for_each = var.ado_create_variable_group ? local.outputs : {}
+  count = var.ado_create_variable_group ? 1 : 0
 
   project_id   = data.azuredevops_project.ado[0].id
   name         = local.ado_vg_name_prefix
@@ -17,7 +17,7 @@ resource "azuredevops_variable_group" "ado_vg" {
 
   # Use the dynamic block to create the variables from the local.outputs
   dynamic "variable" {
-    for_each = [for out in local.outputs[each.key] : out]
+    for_each = [for out in local.outputs : out]
     content {
       name  = variable.key
       value = variable.value
