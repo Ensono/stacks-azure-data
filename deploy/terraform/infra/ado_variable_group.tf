@@ -20,7 +20,7 @@ resource "azuredevops_variable_group" "ado_vg" {
     for_each = [for out in local.outputs[var.environment] : out]
     content {
       name  = variable.key
-      value = variable.value
+      value = jsonencode(variable.value)
     }
   }
 

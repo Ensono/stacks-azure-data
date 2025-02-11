@@ -1,13 +1,12 @@
 resource "azurerm_databricks_workspace" "example" {
-  name                                                = var.resource_namer
-  location                                            = var.resource_group_location
-  resource_group_name                                 = var.resource_group_name
-  sku                                                 = var.databricks_sku
-  public_network_access_enabled                       = var.public_network_access_enabled
-  network_security_group_rules_required               = var.managed_vnet ? null : var.network_security_group_rules_required
-  managed_resource_group_name                         = "databricks-rg-${var.resource_group_name}"
-  load_balancer_backend_address_pool_id               = var.create_lb ? azurerm_lb_backend_address_pool.lb_be_pool[0].id : null
-  managed_disk_cmk_rotation_to_latest_version_enabled = false
+  name                                  = var.resource_namer
+  location                              = var.resource_group_location
+  resource_group_name                   = var.resource_group_name
+  sku                                   = var.databricks_sku
+  public_network_access_enabled         = var.public_network_access_enabled
+  network_security_group_rules_required = var.managed_vnet ? null : var.network_security_group_rules_required
+  managed_resource_group_name           = "databricks-rg-${var.resource_group_name}"
+  load_balancer_backend_address_pool_id = var.create_lb ? azurerm_lb_backend_address_pool.lb_be_pool[0].id : null
 
   dynamic "custom_parameters" {
     for_each = var.enable_private_network == false ? toset([]) : toset([1])

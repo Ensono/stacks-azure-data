@@ -1,3 +1,3 @@
 %{ for key, value in items ~}
-${key} = "${replace(value, "\"", "\\\"")}"
+${key} = "${replace(jsonencode(value), "\"", "\\\"")}"
 %{ endfor ~}

@@ -274,7 +274,7 @@ stages:
       - name: TF_BACKEND_INIT
         required: true
         description: Configuration to be used to store the Terraform state
-        default: "key=data-networking,storage_account_name=,resource_group_name=,container_name="
+        default: "key=data-databricks,storage_account_name=,resource_group_name=,container_name="
       - name: TF_VAR_name_company
         default: "my_company_name"
         required: true

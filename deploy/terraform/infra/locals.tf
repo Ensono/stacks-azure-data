@@ -55,7 +55,7 @@ locals {
       kv_name                        = module.kv_default.key_vault_name
       key_vault_id                   = module.kv_default.id
       key_vault_uri                  = module.kv_default.vault_uri
-      private_endpoint_list          = local.private_endpoint_list
+      private_endpoint_list          = jsonencode(local.private_endpoint_list)
     }
   }
 
