@@ -27,7 +27,7 @@ locals {
   }
 
   # Determine the expiration data of the secrets in the key vault
-  secret_expiration_date = timeadd(timestamp(), var.kv_secret_expiration)
+  secret_expiration_date = timeadd(time_static.datum.rfc3339, var.kv_secret_expiration)
 
   # Set the admin password for sql
   # This is either from the variable, if it has been set or from the random_password resource
@@ -71,4 +71,6 @@ locals {
       }
     ]
   ])
+
+
 }

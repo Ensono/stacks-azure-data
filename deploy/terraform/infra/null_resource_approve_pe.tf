@@ -35,5 +35,5 @@ resource "null_resource" "approve_private_endpoints" {
     }
   }
 
-  depends_on = [azurerm_data_factory_managed_private_endpoint.db_auth_pe, azurerm_data_factory_managed_private_endpoint.db_pe, azurerm_data_factory_managed_private_endpoint.sql_pe, azurerm_data_factory_managed_private_endpoint.kv_pe, azurerm_data_factory_managed_private_endpoint.adls_pe, azurerm_data_factory_managed_private_endpoint.blob_pe]
+  depends_on = [time_sleep.wait_for_private_endpoints]
 }

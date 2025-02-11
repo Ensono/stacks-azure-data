@@ -17,7 +17,7 @@ resource "azuredevops_variable_group" "ado_vg" {
 
   # Use the dynamic block to create the variables from the local.outputs
   dynamic "variable" {
-    for_each = [for out in local.outputs : out]
+    for_each = [for out in local.outputs[var.environment] : out]
     content {
       name  = variable.key
       value = variable.value
