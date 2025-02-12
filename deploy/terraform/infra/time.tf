@@ -30,7 +30,7 @@ resource "time_sleep" "wait_for_resources" {
     module.adf,
     module.adls_default,
     module.adb,
-    module.lv_default,
+    module.kv_default,
     module.sql
   ]
 }
