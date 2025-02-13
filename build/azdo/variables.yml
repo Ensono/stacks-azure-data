@@ -20,7 +20,7 @@ variables:
   - name: ado_create_variable_group
     value: true
   - name: ado_org_url
-    value: https://dev.azure.com/ensonodigital
+    value: https://dev.azure.com/ensonodigitaluk
   - name: ado_project_id
     value: Stacks
 

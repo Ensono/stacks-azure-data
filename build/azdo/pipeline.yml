@@ -81,8 +81,6 @@ stages:
               targetType: inline
               script: |
                 taskctl infra:plan
-            env:
-              AZDO_PERSONAL_ACCESS_TOKEN: $(AZDO_PERSONAL_ACCESS_TOKEN)
 
           # Upload all files as artifacts of the build
           # Some will be used in subsequent stages
