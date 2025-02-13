@@ -1,21 +1,28 @@
 variables:
+  - group: azure-sp-creds
+
   - name: region
     value: westeurope
+
   - name: company
     value: ensono
   - name: project
     value: data
+  - name: enable_private_networks
+    value: true
+
   - name: domain
     value: data
-  - name: cloud_platform
-    value: azure
-  - name: component
-    value: de
-  - name: self_repo
-    value: stacks-azure-data-ingest
-  # Terraform Configuration
 
-  # State configuration
+  # Azure DevOps configuration
+  - name: ado_create_agent_pool
+    value: true
+  - name: ado_create_variable_group
+    value: true
+  - name: ado_org_url
+    value: https://dev.azure.com/ensonodigital
+  - name: ado_project_id
+    value: Stacks
 
   # Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
   # Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
@@ -30,9 +37,15 @@ variables:
 
   # Agent configuration
   - name: TaskctlVersion
-    value: 2.0.2
+    value: 2.0.3
   - name: pool_vm_image
     value: ubuntu-24.04
+
+  - name: component
+    value: de
+  - name: self_repo
+    value: stacks-azure-data-ingest
+
   - name: agentpool_name
     value: ensono-stacks-data-build
 

@@ -1,13 +1,19 @@
+parameters:
+  - name: path
+    type: string
+  - name: stage
+    type: string
+
 steps:
   - task: CopyFiles@2
     displayName: "DEBUG: Copy files to staging directory"
     inputs:
       flattenFolders: true
-      contents: $(self_repo_tf_src)/*.tfvars
-      targetFolder: $(Build.ArtifactStagingDirectory)
+      contents: ${{ parameters.path }}
+      targetFolder: $(Build.ArtifactStagingDirectory)/${{ parameters.stage }}
 
   - task: PublishBuildArtifacts@1
     displayName: "DEBUG: Upload generated files"
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: generated
+      pathToPublish: $(Build.ArtifactStagingDirectory)/${{ parameters.stage }}
+      artifactName: ${{ parameters.stage }}

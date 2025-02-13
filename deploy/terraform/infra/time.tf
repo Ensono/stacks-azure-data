@@ -34,3 +34,15 @@ resource "time_sleep" "wait_for_resources" {
     module.sql
   ]
 }
+
+# Create a time resource that waits for the log analytics workspace and the 
+# databricks resouurce.
+# This is so that the diagnostic setting can be deployed
+resource "time_sleep" "wait_for_databricks_and_la" {
+  create_duration = "60s"
+
+  depends_on = [
+    azurerm_log_analytics_workspace.la,
+    module.adb
+  ]
+}

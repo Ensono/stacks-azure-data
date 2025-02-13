@@ -1,0 +1,84 @@
+name: "$(Build.SourceBranchName)-init"
+
+parameters:
+  - name: deploy
+    displayName: Deploy Environment
+    type: boolean
+    default: true
+
+  - name: env_name
+    displayName: NonProd or Prod Environments
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+    type: string
+
+variables:
+  - name: CLOUD_PLATFORM
+    value: azure
+  - name: ENV_NAME
+    value: ${{ parameters.env_name }}
+
+# Define the stages of the infrastructure deployment pipeline
+stages:
+  # Iterate around each of the defined stages that need to be run
+
+  - stage: Networking
+    variables:
+      - template: variables.yml
+      - name: STAGE
+        value: networking
+      - name: TF_FILE_LOCATION
+        value: /workspace/.taskctl/deploy/terraform/networking
+
+    jobs:
+      - job: deploy
+        pool:
+          vmImage: "ubuntu-latest"
+
+        steps:
+          - template: ../templates/setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Initialise Terraform"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:init
+            env:
+              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+          - task: Bash@3
+            displayName: "TaskCTL: Create Variables file"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:vars
+            env:
+              TF_VAR_name_company: $(company)
+              TF_VAR_name_project: $(project)
+              TF_VAR_enable_private_networks: $(enable_private_networks)
+              TF_VAR_resource_group_location: $(region)
+              TF_VAR_ado_create_agent_pool: $(ado_create_agent_pool)
+              TF_VAR_ado_create_variable_group: $(ado_create_variable_group)
+              TF_VAR_ado_org_url: $(ado_org_url)
+              TF_VAR_ado_project_id: $(ado_project_id)
+
+          # Copy tfvars file to staging area for upload at end of run
+          - task: CopyFiles@2
+            displayName: "Copy tfvars to artifact staging area"
+            inputs:
+              flattenFolders: true
+              contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
+              targetFolder: $(Build.ArtifactStagingDirectory)/networking
+
+          # Upload all files as artifacts of the build
+          # Some will be used in subsequent stages
+          - task: PublishBuildArtifacts@1
+            displayName: Upload Generated Files
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)/networking
+              artifactName: networking

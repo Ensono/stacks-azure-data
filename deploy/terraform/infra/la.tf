@@ -7,24 +7,26 @@ resource "azurerm_log_analytics_workspace" "la" {
   tags                = module.label_default.tags
 }
 
-#resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
-#  name                           = "ADF to Log Analytics - Test"
-#  target_resource_id             = module.adf.adf_factory_id
-#  log_analytics_workspace_id     = azurerm_log_analytics_workspace.la.id
-#  log_analytics_destination_type = "Dedicated"
+resource "azurerm_monitor_diagnostic_setting" "adf_log_analytics" {
+  name                           = "ADF to Log Analytics"
+  target_resource_id             = module.adf.adf_factory_id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.la.id
+  log_analytics_destination_type = "Dedicated"
 
-#  dynamic "enabled_log" {
-#    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.log_category_types
-#    content {
-#      category = enabled_log.value
-#    }
-#  }
+  dynamic "enabled_log" {
+    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.log_category_types
+    content {
+      category = enabled_log.value
+    }
+  }
 
-#  dynamic "metric" {
-#    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.metrics
+  dynamic "metric" {
+    for_each = data.azurerm_monitor_diagnostic_categories.adf_log_analytics_categories.metrics
 
-#    content {
-#      category = metric.value
-#    }
-#  }
-#}
+    content {
+      category = metric.value
+    }
+  }
+
+  depends_on = [time_sleep.wait_for_databricks_and_la]
+}
