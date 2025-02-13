@@ -11,6 +11,6 @@ steps:
     inputs:
       targetType: inline
       script: |
-        sudo wget https://github.com/Ensono/taskctl/releases/download/${{ parameters.TaskctlVersion }}/taskctl-linux-amd64
+        sudo wget https://github.com/Ensono/taskctl/releases/download/${{ parameters.TaskctlVersion }}/taskctl-linux-amd64 -O /usr/local/bin/taskctl
         sudo chmod +x /usr/local/bin/taskctl
     
