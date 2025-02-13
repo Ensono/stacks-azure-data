@@ -38,7 +38,7 @@ stages:
           vmImage: "ubuntu-latest"
 
         steps:
-          - template: ../templates/setup.yml
+          - template: templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
