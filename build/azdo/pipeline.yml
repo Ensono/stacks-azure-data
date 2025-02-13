@@ -49,6 +49,7 @@ stages:
               script: |
                 taskctl infra:vars
             env:
+              AZDO_PERSONAL_ACCESS_TOKEN: $(AZDO_PERSONAL_ACCESS_TOKEN)
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
               TF_VAR_enable_private_networks: $(enable_private_networks)
