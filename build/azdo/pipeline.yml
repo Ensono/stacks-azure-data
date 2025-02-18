@@ -7,10 +7,12 @@ parameters:
     default: true
 
   - name: env_name
-    displayName: NonProd or Prod Environments
-    default: nonprod
+    displayName: Environment Name
+    default: dev
     values:
-      - nonprod
+      - dev
+      - qa
+      - uat
       - prod
     type: string
 
@@ -135,7 +137,7 @@ stages:
             displayName: "Copy Terraform Variables file"
             inputs:
               SourceFolder: $(Agent.TempDirectory)/networking/
-              Contents: "*.tfvars"
+              Contents: "$(env_name)-networking-inputs.tfvars"
               TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
 
           - template: templates/setup.yml
