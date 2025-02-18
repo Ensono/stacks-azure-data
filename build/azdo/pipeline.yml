@@ -160,6 +160,7 @@ stages:
               script: |
                 taskctl infra:plan
             env:
+              TF_LOG: trace
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
               TF_VAR_ado_org_url: $(ado_org_url)
