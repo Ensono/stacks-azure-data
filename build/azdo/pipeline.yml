@@ -140,6 +140,12 @@ stages:
               Contents: "$(env_name)-networking-inputs.tfvars"
               TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
 
+          - task: Bash@3
+            inputs:
+              targetType: inline
+              script: |
+                cat $(Build.SourcesDirectory)/deploy/terraform/infra/$(env_name)-networking-inputs.tfvars
+
           - template: templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
