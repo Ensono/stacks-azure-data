@@ -1,3 +1,3 @@
 %{ for key, value in items ~}
-${key} = ${value}
+${key} = ${startswith(value, "[") ? value :}"${value}"
 %{ endfor ~}
