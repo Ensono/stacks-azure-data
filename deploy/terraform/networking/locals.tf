@@ -213,7 +213,7 @@ locals {
 
   # Create a local object for the template mapping so that the script files can be generated
   templates = flatten([
-    for file in ["envvars.bash.tpl", "envvars.ps1.tpl", "inputs.tfvars.tpl"] : [
+    for file in ["envvars.bash.tpl", "envvars.ps1.tpl", "inputs.auto.tfvars.tpl"] : [
       for name, detail in local.environments : {
         envname  = name
         file     = file
