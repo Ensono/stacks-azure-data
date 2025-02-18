@@ -45,7 +45,7 @@ stages:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
 
           - task: Bash@3
-            displayName: "TaskCTL: Create Variables file"
+            displayName: "TaskCTL: Terraform inputs file"
             inputs:
               targetType: inline
               script: |
@@ -152,6 +152,19 @@ stages:
                 taskctl infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+          # Create additional TFVars file so that all variables are set
+          - task: Bash@3
+            displayName: "TaskCTL: Terraform inputs file"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:vars
+            env:
+              TF_VAR_name_company: $(company)
+              TF_VAR_name_project: $(project)
+              TF_VAR_ado_org_url: $(ado_org_url)
+              TF_VAR_ado_project_id: $(ado_project_id)
 
           - task: Bash@3
             displayName: "TaskCTL: Plan Infrastructure"
