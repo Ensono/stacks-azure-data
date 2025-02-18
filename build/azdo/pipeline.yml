@@ -136,7 +136,7 @@ stages:
             inputs:
               SourceFolder: $(Agent.TempDirectory)/networking/
               Contents: "*.tfvars"
-              TargetFolder: $(TF_FILE_LOCATION)
+              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
 
           - template: templates/setup.yml
             parameters:
