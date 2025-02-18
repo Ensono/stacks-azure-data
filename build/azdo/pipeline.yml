@@ -132,14 +132,6 @@ stages:
               artifactName: networking
               targetPath: $(Agent.TempDirectory)/networking
 
-          # Copy the tfvars file from the previous stage to TF_FILE_LOCATION
-          - task: CopyFiles@2
-            displayName: "Copy Terraform Variables file"
-            inputs:
-              SourceFolder: $(Agent.TempDirectory)/networking/
-              Contents: "$(env_name)-networking-inputs.auto.tfvars"
-              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
-
           - template: templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}
@@ -152,6 +144,14 @@ stages:
                 taskctl infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+          # Copy the tfvars file from the downloaded artifact to the deployment directory
+          - task: CopyFiles@2
+            displayName: "Copy Terraform Variables file"
+            inputs:
+              SourceFolder: $(Agent.TempDirectory)/networking/
+              Contents: "$(env_name)-networking-inputs.auto.tfvars"
+              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
 
           - task: Bash@3
             inputs:
