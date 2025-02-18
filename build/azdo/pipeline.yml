@@ -62,8 +62,8 @@ stages:
           - task: CopyFiles@2
             displayName: "Copy tfvars to artifact staging area"
             inputs:
-              flattenFolders: true
-              contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
+              FlattenFolders: true
+              Contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
 
           - task: Bash@3
@@ -99,7 +99,7 @@ stages:
 
           # Upload all files as artifacts of the build
           # Some will be used in subsequent stages
-          - task: PublishPiplineArtifacts@1
+          - task: PublishPipelineArtifact@1
             displayName: Upload Generated Files
             inputs:
               targetPath: $(Build.ArtifactStagingDirectory)/networking
@@ -124,7 +124,7 @@ stages:
         steps:
           # Download the pipeline artifacts from the previous stage as this contains
           # the tfvars file that is needed to pass in the values for the deployment
-          - task: DownloadBuildArtifact@2
+          - task: DownloadPipelineArtifact@2
             inputs:
               buildType: current
               artifactName: networking
@@ -175,7 +175,7 @@ stages:
 
           # Upload all files as artifacts of the build
           # Some will be used in subsequent stages
-          - task: PublishPiplineArtifacts@1
+          - task: PublishPipelineArtifact@1
             displayName: Upload Generated Files
             inputs:
               targetPath: $(Build.ArtifactStagingDirectory)/infra
