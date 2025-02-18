@@ -82,10 +82,101 @@ stages:
               script: |
                 taskctl infra:plan
 
+          - task: Bash@3
+            displayName: "TaskCTL: Apply Infrastructure"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:apply
+
+          # Upload the outputs to the as artifacts
+          - task: CopyFiles@2
+            displayName: Copy stage output files to staging area
+            inputs:
+              flattenFolders: true
+              contents: $(Build.SourcesDirectory)/outputs/terraform/*networking*
+              targetFolder: $(Build.ArtifactStagingDirectory)/networking
+
           # Upload all files as artifacts of the build
           # Some will be used in subsequent stages
-          - task: PublishBuildArtifacts@1
+          - task: PublishPiplineArtifacts@1
             displayName: Upload Generated Files
             inputs:
-              pathToPublish: $(Build.ArtifactStagingDirectory)/networking
+              targetPath: $(Build.ArtifactStagingDirectory)/networking
+              artifact: networking
+
+  - stage: Infrastructure
+    dependsOn:
+      - Networking
+
+    variables:
+      - template: variables.yml
+      - name: STAGE
+        value: infra
+      - name: TF_FILE_LOCATION
+        value: /workspace/.taskctl/deploy/terraform/infra
+
+    jobs:
+      - job: Deploy
+        pool:
+          vmImage: "ubuntu-latest"
+
+        steps:
+          # Download the pipeline artifacts from the previous stage as this contains
+          # the tfvars file that is needed to pass in the values for the deployment
+          - task: DownloadBuildArtifact@2
+            inputs:
+              buildType: current
               artifactName: networking
+              targetPath: $(Agent.TempDirectory)/networking
+
+          # Copy the tfvars file from the previous stage to TF_FILE_LOCATION
+          - task: CopyFiles@2
+            displayName: "Copy Terraform Variables file"
+            inputs:
+              SourceFolder: $(Agent.TempDirectory)/networking/
+              Contents: "*.tfvars"
+              TargetFolder: $(TF_FILE_LOCATION)
+
+          - template: templates/setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Initialise Terraform"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:init
+            env:
+              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+          - task: Bash@3
+            displayName: "TaskCTL: Plan Infrastructure"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:plan
+
+          - task: Bash@3
+            displayName: "TaskCTL: Apply Infrastructure"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:apply
+
+          # Upload the outputs to the as artifacts
+          - task: CopyFiles@2
+            displayName: Copy stage output files to staging area
+            inputs:
+              flattenFolders: true
+              contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
+              targetFolder: $(Build.ArtifactStagingDirectory)/infra
+
+          # Upload all files as artifacts of the build
+          # Some will be used in subsequent stages
+          - task: PublishPiplineArtifacts@1
+            displayName: Upload Generated Files
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)/infra
+              artifact: infra
