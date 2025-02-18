@@ -1,3 +1,7 @@
 %{ for key, value in items ~}
-${key} = ${startswith(value, "[") ? value :}"${value}"
+%{ if startswith(value, "[") ~}
+${key} = ${value}
+%{ else ~}
+${key} = "${value}"
+%{ endif ~}
 %{ endfor ~}
