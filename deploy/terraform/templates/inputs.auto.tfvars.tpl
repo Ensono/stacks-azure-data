@@ -1,3 +1,3 @@
 %{ for key, value in items ~}
-${key} = ${jsonencode(value)}
+${key} = ${tostring(value)}
 %{ endfor ~}
