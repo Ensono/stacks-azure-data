@@ -208,7 +208,9 @@ locals {
     adf_public_nsg_subnet_association_id  = [for name, detail in module.networking[0].nsg_subnet_associations : detail.public if name == envname][0]
     ado_project_id                        = var.ado_project_id
     ado_org_url                           = var.ado_org_url
+    ado_agent_pool_name                   = var.enable_private_networks ? local.ado_agent_pool_name : ""
     enable_private_networks               = var.enable_private_networks
+
   } if envname != "hub" && var.enable_private_networks }
 
   # Create a local object for the template mapping so that the script files can be generated
