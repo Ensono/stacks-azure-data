@@ -47,15 +47,15 @@ locals {
       sql_admin_password             = local.sql_admin_password
       adf_name                       = module.adf.adf_account_name
       adf_integration_runtime_name   = module.adf.adf_integration_runtime_name
-      adls_storage_accounts          = module.adls_default.storage_account_names
-      adls_storage_account_endpoints = module.adls_default.primary_blob_endpoints
-      adls_dfs_endpoints             = module.adls_default.primary_dfs_endpoints
+      adls_storage_accounts          = jsonencode(module.adls_default.storage_account_names)
+      adls_storage_account_endpoints = jsonencode(module.adls_default.primary_blob_endpoints)
+      adls_dfs_endpoints             = jsonencode(module.adls_default.primary_dfs_endpoints)
       adb_databricks_id              = module.adb.adb_databricks_id
       adb_databricks_hosturl         = module.adb.databricks_hosturl
       kv_name                        = module.kv_default.key_vault_name
       key_vault_id                   = module.kv_default.id
       key_vault_uri                  = module.kv_default.vault_uri
-      private_endpoint_list          = local.private_endpoint_list
+      private_endpoint_list          = jsonencode(local.private_endpoint_list)
     }
   }
 
