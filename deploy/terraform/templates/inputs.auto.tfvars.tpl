@@ -1,7 +1,7 @@
 %{ for key, value in items ~}
-%{ if startswith(value, "[") || startswith(value, "{") ~}
-${key} = ${value}
+%{ if type(value) == "string" ~}
+${key} = "${value}""
 %{ else ~}
-${key} = "${value}"
+${key} = ${jsonencode(value)}
 %{ endif ~}
 %{ endfor ~}
