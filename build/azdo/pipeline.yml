@@ -112,6 +112,8 @@ stages:
       - Networking
 
     variables:
+      # Include the networking group that created in the previous stage
+      - group: $(company)-$(project)-$(domain)-networking-$(ENV_NAME)
       - template: variables.yml
       - name: STAGE
         value: infra
@@ -121,7 +123,12 @@ stages:
     jobs:
       - job: Deploy
         pool:
+          # Set the correct pool or build image based on the outputs from the networking stage
+          ${{ if eq(variables.ado_agent_pool_name, '')}}
           vmImage: "ubuntu-latest"
+          ${{ else }}
+          pool: $(ado_agent_pool_name)
+          ${{ endif }}
 
         steps:
           # Download the pipeline artifacts from the previous stage as this contains
