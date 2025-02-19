@@ -1,7 +1,8 @@
 %{ for key, value in items ~}
-%{ if type(value) == "string" ~}
-${key} = "${value}""
+%{ normalised = try(tostring(value), jsonencode(value))}
+%{ if startswith(normalised, "[") || startswith(normalised, "{") ~}
+${key} = ${normalised}
 %{ else ~}
-${key} = ${jsonencode(value)}
+${key} = "${normalised}"
 %{ endif ~}
 %{ endfor ~}
