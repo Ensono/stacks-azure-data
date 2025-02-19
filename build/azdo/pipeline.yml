@@ -124,7 +124,7 @@ stages:
       - job: Deploy
         pool:
           # Set the correct pool or build image based on the outputs from the networking stage
-          ${{ if eq(variables.ado_agent_pool_name, '') }}:
+          ${{ if or(eq(variables.ado_agent_pool_name, ''), eq(variables.ado_agent_pool_name, null)) }}:
             vmImage: "ubuntu-latest"
           ${{ else }}:
             pool: $(ado_agent_pool_name)
