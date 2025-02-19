@@ -125,9 +125,9 @@ stages:
         pool:
           # Set the correct pool or build image based on the outputs from the networking stage
           ${{ if eq(variables.ado_agent_pool_name, '') }}
-          vmImage: "ubuntu-latest"
+            vmImage: "ubuntu-latest"
           ${{ else }}
-          pool: $(ado_agent_pool_name)
+            pool: $(ado_agent_pool_name)
 
         steps:
           # Download the pipeline artifacts from the previous stage as this contains
