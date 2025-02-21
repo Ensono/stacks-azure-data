@@ -6,29 +6,11 @@ parameters:
     type: boolean
     default: true
 
-  - name: env_name
-    displayName: Environment Name
-    default: dev
-    values:
-      - dev
-      - qa
-      - uat
-      - prod
-    type: string
-
-variables:
-  - name: CLOUD_PLATFORM
-    value: azure
-  - name: ENV_NAME
-    value: ${{ parameters.env_name }}
-
-# Define the stages of the infrastructure deployment pipeline
+# Define the stages of the networking deployment pipeline
 stages:
-  # Iterate around each of the defined stages that need to be run
-
   - stage: Networking
     variables:
-      - template: variables.yml
+      - template: ../variables.yml
       - name: STAGE
         value: networking
       - name: TF_FILE_LOCATION
@@ -106,8 +88,3 @@ stages:
             inputs:
               targetPath: $(Build.ArtifactStagingDirectory)/networking
               artifact: networking
-
-  - template: stages/infra.yml
-    parameters:
-      agent_pool_name: $(name)-$(project)-euw-hub-agent-pool
-      use_agent_pool: true
