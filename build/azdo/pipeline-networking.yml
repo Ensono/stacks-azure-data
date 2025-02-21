@@ -6,6 +6,14 @@ parameters:
     type: boolean
     default: true
 
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
 # Define the stages of the networking deployment pipeline
 stages:
   - stage: Networking
@@ -15,6 +23,8 @@ stages:
         value: networking
       - name: TF_FILE_LOCATION
         value: /workspace/.taskctl/deploy/terraform/networking
+      - name: ENV_NAME
+        value: ${{ parameters.environment }}
 
     jobs:
       - job: Deploy
