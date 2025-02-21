@@ -10,7 +10,7 @@ parameters:
 stages:
   - stage: Networking
     variables:
-      - template: ../variables.yml
+      - template: variables.yml
       - name: STAGE
         value: networking
       - name: TF_FILE_LOCATION
