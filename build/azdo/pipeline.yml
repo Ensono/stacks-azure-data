@@ -120,14 +120,15 @@ stages:
       - name: TF_FILE_LOCATION
         value: /workspace/.taskctl/deploy/terraform/infra
 
+    pool:
+      # Set the correct pool or build image based on the outputs from the networking stage
+      # ${{ if eq(variables.ado_agent_pool_name, '') }}:
+      #  vmImage: "ubuntu-latest"
+      ${{ if ne(variables.ado_agent_pool_name, '') }}:
+        name: $(ado_agent_pool_name)
+
     jobs:
       - job: Deploy
-        pool:
-          # Set the correct pool or build image based on the outputs from the networking stage
-          ${{ if eq(variables.ado_agent_pool_name, '') }}:
-            vmImage: "ubuntu-latest"
-          ${{ if ne(variables.ado_agent_pool_name, '') }}:
-            pool: $(ado_agent_pool_name)
 
         steps:
           # Download the pipeline artifacts from the previous stage as this contains
