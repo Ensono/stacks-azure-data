@@ -16,6 +16,11 @@ parameters:
       - prod
     type: string
 
+  - name: pipeline_definition_id
+    displayName: Networking Pipeline Definition ID
+    type: string
+    value: "112"
+
 variables:
   - name: CLOUD_PLATFORM
     value: azure
@@ -46,7 +51,10 @@ stages:
           # the tfvars file that is needed to pass in the values for the deployment
           - task: DownloadPipelineArtifact@2
             inputs:
-              buildType: current
+              buildType: specific
+              definitionId: ${{ parameters.pipeline_definition_id }}
+              buildVersionToDownload: latestFromBranch
+              branchName: $(Build.SourceBranchName)
               artifactName: networking
               targetPath: $(Agent.TempDirectory)/networking
 
