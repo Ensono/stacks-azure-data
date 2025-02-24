@@ -52,7 +52,7 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: specific
-              definitionId: ${{ parameters.pipeline_definition_id }}
+              definition: ${{ parameters.pipeline_definition_id }}
               buildVersionToDownload: latestFromBranch
               branchName: $(Build.SourceBranchName)
               artifactName: networking
