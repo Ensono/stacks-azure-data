@@ -61,7 +61,7 @@ stages:
               buildType: specific
               project: $(System.TeamProject)
               definition: ${{ parameters.pipeline_definition_id }}
-              buildVersionToDownload: latestFromBranch
+              buildVersionToDownload: latest
               branchName: $(Build.SourceBranchName)
               artifactName: networking
               targetPath: $(Agent.TempDirectory)/networking
