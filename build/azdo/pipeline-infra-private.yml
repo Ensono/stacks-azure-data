@@ -57,6 +57,7 @@ stages:
               branchName: $(Build.SourceBranchName)
               artifactName: networking
               targetPath: $(Agent.TempDirectory)/networking
+              project: $(System.TeamProject)
 
           - template: templates/setup.yml
             parameters:
