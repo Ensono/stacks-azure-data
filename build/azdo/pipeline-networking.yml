@@ -32,6 +32,9 @@ stages:
           vmImage: "ubuntu-latest"
 
         steps:
+          # Checkout self repo
+          - checkout: self
+
           - template: templates/setup.yml
             parameters:
               TaskctlVersion: ${{ variables.TaskctlVersion }}

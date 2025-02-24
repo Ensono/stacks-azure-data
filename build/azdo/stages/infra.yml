@@ -36,6 +36,9 @@ stages:
       - job: Deploy
 
         steps:
+          # Checkout self repo
+          - checkout: self
+
           # Download the pipeline artifacts from the previous stage as this contains
           # the tfvars file that is needed to pass in the values for the deployment
           - task: DownloadPipelineArtifact@2
