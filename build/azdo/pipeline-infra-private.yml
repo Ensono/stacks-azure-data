@@ -19,7 +19,7 @@ parameters:
   - name: pipeline_definition_id
     displayName: Networking Pipeline Definition ID
     type: string
-    value: "112"
+    default: "112"
 
 variables:
   - name: CLOUD_PLATFORM
