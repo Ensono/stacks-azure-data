@@ -1,4 +1,7 @@
 # KV for ADF
+
+# Public access has to be enabled to allow access from virtual networks
+
 module "kv_default" {
   # source                        = "git::https://github.com/ensono/stacks-terraform//azurerm/modules/azurerm-kv?ref=v3.0.13"
   source                        = "github.com/ensono/terraform-azurerm-kv"
@@ -14,9 +17,9 @@ module "kv_default" {
   pe_resource_group_name        = var.enable_private_networks ? tostring(data.azurerm_subnet.pe_subnet[0].resource_group_name) : ""
   pe_resource_group_location    = var.pe_resource_group_location
   dns_resource_group_name       = local.dns_zone_resource_group_name
-  public_network_access_enabled = var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
+  public_network_access_enabled = true # var.enable_private_networks ? var.kv_public_network_access_enabled : true # enabled if only public network otherwise cannot connect
   kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone[0].id) : ""
-  virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id)] : []
+  virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id), tostring(data.azurerm_subnet.build_agent_subnet[0].id)] : []
   network_acl_default_action    = "Allow"
   reader_object_ids             = [module.adf.adf_managed_identity]
 

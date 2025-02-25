@@ -413,6 +413,27 @@ variable "link_dns_spoke_network" {
   description = "link DNS zones to network"
 }
 
+############################################
+# PRIVATE ADO AGENT NETWORKING INFORMATION
+############################################
+
+variable "hub_vnet_name" {
+  type        = string
+  default     = ""
+  description = "Hub virtual network that contains the build-agent subnet"
+}
+
+variable "hub_resource_group_name" {
+  type        = string
+  default     = ""
+  description = "Name of the resource group in which the virutal network can be found"
+}
+
+variable "build_agent_subnet_name" {
+  type        = string
+  default     = ""
+  description = "Name of the subnet that the build agent is on"
+}
 
 ############################################
 # PRIVATE ENDPOINT INFORMATION

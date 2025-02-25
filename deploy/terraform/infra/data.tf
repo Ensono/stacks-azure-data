@@ -13,6 +13,14 @@ data "azurerm_subnet" "pe_subnet" {
   resource_group_name  = var.vnet_resource_group_name
 }
 
+# Get the data for the build_agent_subnet to allow the ADO to access the key vault
+data "azurerm_subnet" "build_agent_subnet" {
+  count                = var.enable_private_networks ? 1 : 0
+  name                 = var.build_agent_subnet_name
+  virtual_network_name = var.hub_vnet_name
+  resource_group_name  = var.hub_resource_group_name
+}
+
 data "azurerm_virtual_network" "vnet" {
   count               = var.enable_private_networks ? 1 : 0
   name                = var.vnet_name
