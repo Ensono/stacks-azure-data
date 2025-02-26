@@ -85,6 +85,7 @@ stages:
             inputs:
               targetType: inline
               script: |
+                export USER_ID=$UID
                 taskctl infra:apply
 
           # Upload the outputs to the as artifacts
