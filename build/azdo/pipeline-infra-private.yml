@@ -72,7 +72,7 @@ stages:
               targetType: inline
               script: |
                 export USER_ID=$UID
-                taskctl infra:init
+                taskctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
