@@ -64,7 +64,7 @@ stages:
               TF_VAR_ado_create_variable_group: $(ado_create_variable_group)
               TF_VAR_ado_org_url: $(ado_org_url)
               TF_VAR_ado_project_id: $(ado_project_id)
-              TF_VAR_debug_enabled: ${{ parameters.debug }}
+              TF_VAR_debug_enabled: ${{ lower(parameters.debug) }}
 
           # Copy tfvars file to staging area for upload at end of run
           - task: CopyFiles@2

@@ -15,12 +15,11 @@ resource "azuredevops_agent_queue" "ago_agent_queue" {
 }
 
 # Grant access to all the pipelines in the project
-resource "azuredevops_resource_authorization" "ado_agent_perms" {
+resource "azuredevops_pipeline_authorization" "ado_agent_perms" {
   count = var.enable_private_networks && var.ado_create_agent_pool ? 1 : 0
 
   project_id  = data.azuredevops_project.ado[0].id
   resource_id = azuredevops_agent_queue.ago_agent_queue[0].id
 
-  type       = "queue"
-  authorized = true
+  type = "queue"
 }
