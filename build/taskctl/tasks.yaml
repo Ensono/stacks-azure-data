@@ -75,7 +75,7 @@ tasks:
     command: |
       Push-Location $env:TF_FILE_LOCATION
       Invoke-Terraform -Apply -Path deploy.tfplan -Debug
-      chown -R $env:USER_ID $env:BUILD_SOURCESDIRECTORY/outputs
+      chown -R $env:USER_ID $env:/workspace/.taskctl/outputs
 
   infra:output:
     context: powershell
