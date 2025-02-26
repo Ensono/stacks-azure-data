@@ -1,10 +1,20 @@
 name: "$(Build.SourceBranchName)-init"
 
 parameters:
+  - name: destroy
+    displayName: Destroy Environment
+    type: boolean
+    default: false
+
   - name: deploy
     displayName: Deploy Environment
     type: boolean
     default: true
+
+  - name: debug
+    displayName: Enable Debug
+    type: boolean
+    default: false
 
   - name: environment
     displayName: Environment Group
@@ -54,6 +64,7 @@ stages:
               TF_VAR_ado_create_variable_group: $(ado_create_variable_group)
               TF_VAR_ado_org_url: $(ado_org_url)
               TF_VAR_ado_project_id: $(ado_project_id)
+              TF_VAR_debug_enabled: ${{ parameters.debug }}
 
           # Copy tfvars file to staging area for upload at end of run
           - task: CopyFiles@2
@@ -73,20 +84,37 @@ stages:
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
-          - task: Bash@3
-            displayName: "TaskCTL: Plan Infrastructure"
-            inputs:
-              targetType: inline
-              script: |
-                taskctl infra:plan
+          # If the parameter has been set, destroy the environment
+          - ${{ if eq(parameters.destroy, true) }}:
+              - task: Bash@3
+                displayName: "TaskCTL: [DESTROY] Plan Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:destroy:plan
 
-          - task: Bash@3
-            displayName: "TaskCTL: Apply Infrastructure"
-            inputs:
-              targetType: inline
-              script: |
-                export USER_ID=$UID
-                taskctl infra:apply
+              - task: Bash@3
+                displayName: "TaskCTL: [DESTROY] Apply Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:destroy:apply
+
+          - ${{ if eq(parameters.deploy, true) }}:
+              - task: Bash@3
+                displayName: "TaskCTL: Plan Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:plan
+
+              - task: Bash@3
+                displayName: "TaskCTL: Apply Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    export USER_ID=$UID
+                    taskctl infra:apply
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2
