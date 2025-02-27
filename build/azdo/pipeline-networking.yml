@@ -19,7 +19,7 @@ parameters:
   - name: vmss_ssh_key
     displayName: ADO Agent SSH Key
     type: string
-    default: ""
+    default: " "
 
   - name: environment
     displayName: Environment Group
@@ -70,7 +70,7 @@ stages:
               TF_VAR_ado_org_url: $(ado_org_url)
               TF_VAR_ado_project_id: $(ado_project_id)
               TF_VAR_debug_enabled: ${{ lower(parameters.debug) }}
-              TF_VAR_vmss_admin_ssh_key: ${{ parameters.vmss_ssh_key }}
+              TF_VAR_vmss_admin_ssh_key: ${{ trim(parameters.vmss_ssh_key) }}
 
           # Copy tfvars file to staging area for upload at end of run
           - task: CopyFiles@2
