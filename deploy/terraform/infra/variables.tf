@@ -547,3 +547,13 @@ variable "ado_project_id" {
   type        = string
   description = "ID of the Azure DevOps Project"
 }
+
+############################################
+# Dummy variables
+############################################
+
+variable "ado_agent_pool_name" {
+  type        = string
+  default     = ""
+  description = "This is a placeholder for the name of the agent pool in Azure DevOps. It does NOT need to be set for this deployment"
+}
