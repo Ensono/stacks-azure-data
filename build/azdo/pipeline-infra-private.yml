@@ -50,6 +50,8 @@ stages:
 
     jobs:
       - job: Deploy
+        workspace:
+          clean: all
 
         steps:
           # Checkout self repo
