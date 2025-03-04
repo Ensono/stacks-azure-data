@@ -79,6 +79,7 @@ stages:
               targetType: inline
               script: |
                 export USER_ID=`id -u`
+                export USER_GROUP_ID=`id -g`
                 taskctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -131,20 +132,22 @@ stages:
                   targetType: inline
                   script: |
                     export USER_ID=`id -u`
+                    export USER_GROUP_ID=`id -g`
                     taskctl infra:apply
 
           # Upload the outputs to the as artifacts
-          - task: CopyFiles@2
-            displayName: Copy stage output files to staging area
-            inputs:
-              flattenFolders: true
-              contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
-              targetFolder: $(Build.ArtifactStagingDirectory)/infra
+          - ${{ if eq(parameters.deploy, true) }}:
+              - task: CopyFiles@2
+                displayName: Copy stage output files to staging area
+                inputs:
+                  flattenFolders: true
+                  contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
+                  targetFolder: $(Build.ArtifactStagingDirectory)/infra
 
-          # Upload all files as artifacts of the build
-          # Some will be used in subsequent stages
-          - task: PublishPipelineArtifact@1
-            displayName: Upload Generated Files
-            inputs:
-              targetPath: $(Build.ArtifactStagingDirectory)/infra
-              artifact: infra
+              # Upload all files as artifacts of the build
+              # Some will be used in subsequent stages
+              - task: PublishPipelineArtifact@1
+                displayName: Upload Generated Files
+                inputs:
+                  targetPath: $(Build.ArtifactStagingDirectory)/infra
+                  artifact: infra

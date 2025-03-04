@@ -85,7 +85,8 @@ stages:
             inputs:
               targetType: inline
               script: |
-                export USER_ID=$UID
+                export USER_ID=`id -u`
+                export USER_GROUP_ID=`id -g`
                 taskctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -119,7 +120,8 @@ stages:
                 inputs:
                   targetType: inline
                   script: |
-                    export USER_ID=$UID
+                    export USER_ID=`id -u`
+                    export USER_GROUP_ID=`id -g`
                     taskctl infra:apply
 
           # Upload the outputs to the as artifacts

@@ -213,6 +213,7 @@ locals {
     hub_vnet_name                         = module.networking[0].hub_net_name
     hub_resource_group_name               = module.networking[0].vnets[local.hub_network_name].vnet_resource_group_name
     build_agent_subnet_name               = var.vmss_subnet_name
+    ado_create_variable_group             = var.ado_create_variable_group
   } if envname != "hub" && var.enable_private_networks }
 
   # Create a local object for the template mapping so that the script files can be generated

@@ -38,6 +38,8 @@ stages:
 
     variables:
       - template: variables.yml
+        # Include the networking group that created in the previous stage
+      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
       - name: STAGE
         value: databricks
       - name: TF_FILE_LOCATION
@@ -77,6 +79,7 @@ stages:
               targetType: inline
               script: |
                 export USER_ID=`id -u`
+                export USER_GROUP_ID=`id -g`
                 taskctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-databricks,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -129,4 +132,5 @@ stages:
                   targetType: inline
                   script: |
                     export USER_ID=`id -u`
+                    export USER_GROUP_ID=`id -g`
                     taskctl infra:apply
