@@ -22,9 +22,9 @@ parameters:
     type: string
 
   - name: pipeline_definition_id
-    displayName: Networking Pipeline Definition ID
+    displayName: Infra Pipeline Definition ID
     type: string
-    default: "112"
+    default: "111"
 
 variables:
   - name: CLOUD_PLATFORM
@@ -38,12 +38,10 @@ stages:
 
     variables:
       - template: variables.yml
-        # Include the networking group that created in the previous stage
-      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
       - name: STAGE
-        value: infra
+        value: databricks
       - name: TF_FILE_LOCATION
-        value: /workspace/.taskctl/deploy/terraform/infra
+        value: /workspace/.taskctl/deploy/terraform/databricks
 
     pool:
       name: $(ado_agent_pool_name)
@@ -66,8 +64,8 @@ stages:
               definition: ${{ parameters.pipeline_definition_id }}
               buildVersionToDownload: latest
               branchName: $(Build.SourceBranchName)
-              artifactName: networking
-              targetPath: $(Agent.TempDirectory)/networking
+              artifactName: infra
+              targetPath: $(Agent.TempDirectory)/infra
 
           - template: templates/setup.yml
             parameters:
@@ -81,15 +79,15 @@ stages:
                 export USER_ID=`id -u`
                 taskctl -d infra:init
             env:
-              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-databricks,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # Copy the tfvars file from the downloaded artifact to the deployment directory
           - task: CopyFiles@2
             displayName: "Copy Terraform Variables file"
             inputs:
-              SourceFolder: $(Agent.TempDirectory)/networking/
-              Contents: "$(env_name)-networking-inputs.auto.tfvars"
-              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
+              SourceFolder: $(Agent.TempDirectory)/infra/
+              Contents: "$(env_name)-infra-inputs.auto.tfvars"
+              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/databricks
 
           # If the parameter has been set, destroy the environment
           - ${{ if eq(parameters.destroy, true) }}:
@@ -132,19 +130,3 @@ stages:
                   script: |
                     export USER_ID=`id -u`
                     taskctl infra:apply
-
-          # Upload the outputs to the as artifacts
-          - task: CopyFiles@2
-            displayName: Copy stage output files to staging area
-            inputs:
-              flattenFolders: true
-              contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
-              targetFolder: $(Build.ArtifactStagingDirectory)/infra
-
-          # Upload all files as artifacts of the build
-          # Some will be used in subsequent stages
-          - task: PublishPipelineArtifact@1
-            displayName: Upload Generated Files
-            inputs:
-              targetPath: $(Build.ArtifactStagingDirectory)/infra
-              artifact: infra
