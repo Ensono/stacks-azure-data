@@ -76,8 +76,11 @@ tasks:
     command: |
       Push-Location $env:TF_FILE_LOCATION
       Invoke-Terraform -Apply -Path deploy.tfplan -Debug
-      chown -R $env:USER_ID /workspace/.taskctl/outputs
-      chgrp -R $env:USER_GROUP_ID /workspace/.taskctl/outputs
+      $output_path = "/workspace/.taskctl/outputs"
+      if (Test-Path -Path $output_path) {
+        chown -R $env:USER_ID $output_path
+        chgrp -R $env:USER_GROUP_ID $output_path
+      }
 
   infra:output:
     context: powershell
