@@ -69,7 +69,7 @@ stages:
             inputs:
               buildType: specific
               project: $(System.TeamProject)
-              definition: $(resource.pipelines.infra-pipeline.runID) # ${{ parameters.pipeline_definition_id }}
+              definition: $(resources.pipelines.infra-pipeline.runID) # ${{ parameters.pipeline_definition_id }}
               buildVersionToDownload: latest
               branchName: $(Build.SourceBranchName)
               artifactName: infra
