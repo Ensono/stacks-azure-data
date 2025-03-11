@@ -29,7 +29,7 @@ parameters:
 resources:
   pipelines:
     - pipeline: infra-pipeline
-      source: Stacks Azure Data [INFRA]
+      source: \data\Stacks Azure Data [INFRA]
       trigger: none
 
 variables:
