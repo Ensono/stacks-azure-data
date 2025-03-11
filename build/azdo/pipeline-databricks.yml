@@ -26,13 +26,6 @@ parameters:
     type: string
     default: "111"
 
-resources:
-  pipelines:
-    - pipeline: infra-pipeline
-      source: \data\Stacks Azure Data [INFRA]
-      branch: chore/move-ado-tenant
-      trigger: none
-
 variables:
   - name: CLOUD_PLATFORM
     value: azure
@@ -70,7 +63,7 @@ stages:
             inputs:
               buildType: specific
               project: $(System.TeamProject)
-              definition: $(resources.pipeline.infra-pipeline.runID) # ${{ parameters.pipeline_definition_id }}
+              definition: ${{ parameters.pipeline_definition_id }}
               buildVersionToDownload: latest
               branchName: $(Build.SourceBranchName)
               artifactName: infra
