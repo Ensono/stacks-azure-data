@@ -30,6 +30,7 @@ resources:
   pipelines:
     - pipeline: infra-pipeline
       source: \data\Stacks Azure Data [INFRA]
+      branch: chore/move-ado-tenant
       trigger: none
 
 variables:
