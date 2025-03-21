@@ -11,6 +11,14 @@ parameters:
     type: boolean
     default: true
 
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
   - name: env_name
     displayName: Environment Name
     default: dev

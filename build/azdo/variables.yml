@@ -1,5 +1,8 @@
 variables:
-  - group: azure-sp-creds
+  - ${{ if eq(parameters.environment, 'nonprod')}}:
+      - group: azure-sp-creds
+  - ${{ if eq(parameters.environment, 'prod')}}:
+      - group: azure-sp-creds-prod
 
   - name: region
     value: westeurope
