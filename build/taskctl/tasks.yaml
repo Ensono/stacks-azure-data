@@ -32,14 +32,16 @@ tasks:
   local:envfile:powershell:
     context: powershell
     description: Create environment file for local workstation
-    command:
-      - /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell powershell
+    command: |
+      New-Item -Type Directory -Path local | Out-Null
+      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell powershell
 
   local:envfile:bash:
     context: powershell
     description: Create environment file for local workstation
-    command:
-      - /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell bash
+    command: |
+      New-Item -Type Directory -Path local | Out-Null
+      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell bash
 
   # Infrastructure tasks
   infra:init:
