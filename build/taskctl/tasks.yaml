@@ -29,42 +29,78 @@ tasks:
     command:
       - Invoke-Terraform -Validate -Path $env:TF_FILE_LOCATION
 
+  local:envfile:powershell:
+    context: powershell
+    description: Create environment file for local workstation
+    command: |
+      New-Item -Type Directory -Path local | Out-Null
+      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell powershell
+
+  local:envfile:bash:
+    context: powershell
+    description: Create environment file for local workstation
+    command: |
+      New-Item -Type Directory -Path local | Out-Null
+      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell bash
+
   # Infrastructure tasks
   infra:init:
     context: powershell
     description: Initialise Terraform for Azure
-    command:
-      - Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION -Debug
-      - Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
+    command: |
+      Invoke-Terraform -Init -backend "$env:TF_BACKEND_INIT" -Path $env:TF_FILE_LOCATION -Debug
+      Invoke-Terraform -Workspace -Arguments $env:ENV_NAME -Path $env:TF_FILE_LOCATION -Debug
+      chown -R $env:USER_ID $env:TF_FILE_LOCATION/.terraform
+      chgrp -R $env:USER_GROUP_ID $env:TF_FILE_LOCATION/.terraform
 
   infra:vars:
     context: powershell
     description: Create Terraform variables file
     command:
-      - /app/build/scripts/Set-TFVars.ps1 | Tee-Object -FilePath "${env:TF_FILE_LOCATION}/terraform.tfvars"
+      - /workspace/.taskctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
 
   infra:plan:
     context: powershell
     description: Plan Terraform
     command:
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=tfplan" | Out-Null
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-input=false","-out=`"deploy.tfplan`""
+
+  infra:plan:json:
+    context: powershell
+    description: Output the Terraform plan as JSON
+    command: |
+      cd $env:TF_FILE_LOCATION
+      terraform show -json deploy.tfplan > deploy.tfplan.json
 
   infra:apply:
     context: powershell
     description: Apply Terraform Plan
-    command:
-      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path tfplan -Debug
+    command: |
+      Push-Location $env:TF_FILE_LOCATION
+      Invoke-Terraform -Apply -Path deploy.tfplan -Debug
+      $output_path = "/workspace/.taskctl/outputs"
+      if (Test-Path -Path $output_path) {
+        chown -R $env:USER_ID $output_path
+        chgrp -R $env:USER_GROUP_ID $output_path
+      }
+
+  infra:output:
+    context: powershell
+    description: Display Terraform Outputs
+    command: |
+      Invoke-Terraform -Output -Path $env:TF_FILE_LOCATION
 
   infra:destroy:plan:
     context: powershell
     description: Destroy Environment.ShortName
     command:
-      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,${env:TF_BACKEND_DESTROY_PLAN}" -debug | Out-Null
+      - Invoke-Terraform -Plan -Path $env:TF_FILE_LOCATION -Arguments "-destroy,-input=false,-out=`"destroy.tfplan`"" -debug
 
   infra:destroy:apply:
     context: powershell
     description: Destroy Environment.ShortName
-    command: /app/build/scripts/Remove-Environment.ps1
+    command:
+      - Push-Location $env:TF_FILE_LOCATION && Invoke-Terraform -Apply -Path destroy.tfplan -Debug
 
   publish:github:
     context: powershell
@@ -109,13 +145,13 @@ tasks:
     context: powershell
     description: Create a shell script to configure the environment variables
     command:
-      - New-EnvConfig -Path /app/build/config/stage_envvars.yml -ScriptPath /app/local
+      - New-EnvConfig -Path /workspace/.taskctl/build/config/stage_envvars.yml -ScriptPath /workspace/.taskctl/local
 
   setup:environment:
     context: powershell
     description: Ensure that the environment is configured correctly
     command:
-      - Confirm-Environment -Path /app/build/config/stage_envvars.yml
+      - Confirm-Environment -Path /workspace/.taskctl/build/config/stage_envvars.yml
 
   # Databricks tasks
   databricks:connect:
@@ -193,3 +229,25 @@ tasks:
         } else {
             Write-Host "Skipping E2E tests: The specified E2E_TEST_LOCATION directory '$e2eTestLocation' does not exist."
         }
+
+  setup_dev_environment:
+    context: powershell-data
+    description: Setup Dev Environment
+    command: |
+      python3 -m venv $env:VIRTUAL_ENV
+      poetry install --no-interaction --no-ansi --no-dev
+      poetry self add poetry-dotenv-plugin
+      poetry run pre-commit install
+
+  test:
+    context: powershell-data
+    description: Run Tests
+    command: |
+      poetry run python -m pytest de_workloads
+
+  test_e2e:
+    context: powershell-data
+    description: Run E2E Tests
+    command: |
+      poetry run behave de_workloads/shared_resources/tests/end_to_end/features/shared_resources.feature
+      poetry run behave de_workloads/ingest/ingest_azure_sql_example/tests/end_to_end/features/azure_data_ingest.feature

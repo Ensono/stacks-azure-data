@@ -1,0 +1,73 @@
+variables:
+  - ${{ if eq(parameters.environment, 'nonprod')}}:
+      - group: azure-sp-creds
+  - ${{ if eq(parameters.environment, 'prod')}}:
+      - group: azure-sp-creds-prod
+
+  - name: region
+    value: westeurope
+
+  - name: company
+    value: ensono
+  - name: project
+    value: data
+  - name: enable_private_networks
+    value: true
+
+  - name: domain
+    value: data
+
+  # Azure DevOps configuration
+  - name: ado_create_agent_pool
+    value: true
+  - name: ado_create_variable_group
+    value: true
+  - name: ado_org_url
+    value: https://dev.azure.com/ensonodigitaluk
+  - name: ado_project_id
+    value: Stacks
+
+  # Stacks operates Terraform states based on workspaces **IT IS VERY IMPORTANT** that you ensure a unique name for each application definition
+  # Furthermore **IT IS VERY IMPORTANT** that you change the name of a workspace for each deployment stage
+  # there are some best practices around this if you are going for feature based environments
+  # avoid running anything past dev that is not on master
+  - name: tf_state_rg
+    value: stacks-terraform-state
+  - name: tf_state_storage
+    value: stacksstatehjfis
+  - name: tf_state_container
+    value: tfstate
+
+  # Agent configuration
+  - name: TaskctlVersion
+    value: 2.0.3
+  - name: pool_vm_image
+    value: ubuntu-24.04
+
+  - name: component
+    value: de
+  - name: self_repo
+    value: stacks-azure-data-ingest
+
+  - name: agentpool_name
+    value: ensono-stacks-data-build
+
+  # Service Connections
+  - name: service_connection
+    value: Ensono.Stacks.Pipeline.Builds
+  - name: github_release_service_connection
+    value: GitHubReleases
+
+  - name: pythonVersion
+    value: "3.10"
+
+  # Versioning
+  - name: version_major
+    value: 1
+  - name: version_minor
+    value: 0
+  - name: version_revision
+    value: 0
+    # value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
+    # - name: version_number
+    #   value: $(version_major).$(version_minor).$(version_revision)

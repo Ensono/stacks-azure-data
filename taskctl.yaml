@@ -22,6 +22,8 @@ pipelines:
   # Pipeline to ensure that the infrastructure is valid
   infrastructure:
     - task: infra:init
+    - task: infra:vars
+      depends_on: infra:init
     - task: infra:plan
       depends_on: infra:init
     - task: infra:apply
@@ -36,8 +38,10 @@ pipelines:
       depends_on:
         - infra:destroy:plan
 
-  infrastructurePlan:
+  infrastructure_plan:
     - task: infra:init
+    - task: infra:vars
+      depends_on: infra:init
     - task: infra:plan
       depends_on: infra:init
 

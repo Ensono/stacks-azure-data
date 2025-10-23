@@ -5,6 +5,7 @@ envfile*
 *.tfvars
 terraform.tfstate
 .terraform.tfstate.lock.info
+*plan.json
 
 ## Python / Data Engineering
 # Byte-compiled / optimized / DLL files
@@ -48,3 +49,7 @@ dist
 
 local
 adb_token
+
+.taskctl
+terraform.tfstate.d
+outputs

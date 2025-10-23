@@ -1,0 +1,141 @@
+name: "$(Build.SourceBranchName)-init"
+
+parameters:
+  - name: destroy
+    displayName: Destroy Environment
+    type: boolean
+    default: false
+
+  - name: deploy
+    displayName: Deploy Environment
+    type: boolean
+    default: true
+
+  - name: debug
+    displayName: Enable Debug
+    type: boolean
+    default: false
+
+  - name: vmss_ssh_key
+    displayName: ADO Agent SSH Key
+    type: string
+    default: " "
+
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
+# Define the stages of the networking deployment pipeline
+stages:
+  - stage: Networking
+    variables:
+      - template: variables.yml
+      - name: STAGE
+        value: networking
+      - name: TF_FILE_LOCATION
+        value: /workspace/.taskctl/deploy/terraform/networking
+      - name: ENV_NAME
+        value: ${{ parameters.environment }}
+
+    jobs:
+      - job: Deploy
+        pool:
+          vmImage: "ubuntu-latest"
+
+        steps:
+          # Checkout self repo
+          - checkout: self
+
+          - template: templates/setup.yml
+            parameters:
+              TaskctlVersion: ${{ variables.TaskctlVersion }}
+
+          - task: Bash@3
+            displayName: "TaskCTL: Terraform inputs file"
+            inputs:
+              targetType: inline
+              script: |
+                taskctl infra:vars
+            env:
+              TF_VAR_name_company: $(company)
+              TF_VAR_name_project: $(project)
+              TF_VAR_enable_private_networks: $(enable_private_networks)
+              TF_VAR_resource_group_location: $(region)
+              TF_VAR_ado_create_agent_pool: $(ado_create_agent_pool)
+              TF_VAR_ado_create_variable_group: $(ado_create_variable_group)
+              TF_VAR_ado_org_url: $(ado_org_url)
+              TF_VAR_ado_project_id: $(ado_project_id)
+              TF_VAR_debug_enabled: ${{ lower(parameters.debug) }}
+              TF_VAR_vmss_admin_ssh_key: ${{ trim(parameters.vmss_ssh_key) }}
+
+          # Copy tfvars file to staging area for upload at end of run
+          - task: CopyFiles@2
+            displayName: "Copy tfvars to artifact staging area"
+            inputs:
+              FlattenFolders: true
+              Contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
+              targetFolder: $(Build.ArtifactStagingDirectory)/networking
+
+          - task: Bash@3
+            displayName: "TaskCTL: Initialise Terraform"
+            inputs:
+              targetType: inline
+              script: |
+                export USER_ID=`id -u`
+                export USER_GROUP_ID=`id -g`
+                taskctl -d infra:init
+            env:
+              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+
+          # If the parameter has been set, destroy the environment
+          - ${{ if eq(parameters.destroy, true) }}:
+              - task: Bash@3
+                displayName: "TaskCTL: [DESTROY] Plan Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:destroy:plan
+
+              - task: Bash@3
+                displayName: "TaskCTL: [DESTROY] Apply Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:destroy:apply
+
+          - ${{ if eq(parameters.deploy, true) }}:
+              - task: Bash@3
+                displayName: "TaskCTL: Plan Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    taskctl infra:plan
+
+              - task: Bash@3
+                displayName: "TaskCTL: Apply Infrastructure"
+                inputs:
+                  targetType: inline
+                  script: |
+                    export USER_ID=`id -u`
+                    export USER_GROUP_ID=`id -g`
+                    taskctl infra:apply
+
+          # Upload the outputs to the as artifacts
+          - task: CopyFiles@2
+            displayName: Copy stage output files to staging area
+            inputs:
+              flattenFolders: true
+              contents: $(Build.SourcesDirectory)/outputs/terraform/*networking*
+              targetFolder: $(Build.ArtifactStagingDirectory)/networking
+
+          # Upload all files as artifacts of the build
+          # Some will be used in subsequent stages
+          - task: PublishPipelineArtifact@1
+            displayName: Upload Generated Files
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)/networking
+              artifact: networking
