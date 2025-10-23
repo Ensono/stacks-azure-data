@@ -37,7 +37,7 @@ stages:
       - name: STAGE
         value: networking
       - name: TF_FILE_LOCATION
-        value: /workspace/.eirctl/deploy/terraform/networking
+        value: /eirctl/deploy/terraform/networking
       - name: ENV_NAME
         value: ${{ parameters.environment }}
 

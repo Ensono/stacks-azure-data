@@ -18,7 +18,7 @@ stages:
       - name: STAGE
         value: infra
       - name: TF_FILE_LOCATION
-        value: /workspace/.eirctl/deploy/terraform/infra
+        value: /eirctl/deploy/terraform/infra
 
     pool:
       # Set the correct pool or build image based on the outputs from the networking stage
