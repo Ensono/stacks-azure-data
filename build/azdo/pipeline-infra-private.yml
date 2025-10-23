@@ -59,7 +59,7 @@ stages:
     jobs:
       - job: Deploy
         workspace:
-          clean: all
+          clean: outputs
 
         steps:
           # Clean up any previous .terraform directories to avoid permission issues
@@ -74,6 +74,7 @@ stages:
 
           # Checkout self repo
           - checkout: self
+            clean: true
 
           # Download the pipeline artifacts from the previous stage as this contains
           # the tfvars file that is needed to pass in the values for the deployment
