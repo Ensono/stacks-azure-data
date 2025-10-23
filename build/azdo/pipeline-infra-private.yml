@@ -46,7 +46,7 @@ stages:
 
     variables:
       - template: variables.yml
-        # Include the networking group that created in the previous stage
+      # Include the networking group that created in the previous stage
       - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
       - name: STAGE
         value: infra

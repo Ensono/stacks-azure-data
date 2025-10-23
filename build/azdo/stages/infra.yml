@@ -13,7 +13,7 @@ stages:
 
     variables:
       - template: ../variables.yml
-        # Include the networking group that created in the previous stage
+      # Include the networking group that created in the previous stage
       - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
       - name: STAGE
         value: infra
@@ -24,7 +24,7 @@ stages:
       # Set the correct pool or build image based on the outputs from the networking stage
       # ${{ if eq(variables.ado_agent_pool_name, '') }}:
       #  vmImage: "ubuntu-latest"
-      #${{ if ne(variables.ado_agent_pool_name, '') }}:
+      # ${{ if ne(variables.ado_agent_pool_name, '') }}:
       #  name: $(ado_agent_pool_name)
 
       ${{ if eq(parameters.use_agent_pool, true) }}:
