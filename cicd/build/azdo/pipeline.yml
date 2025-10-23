@@ -87,23 +87,23 @@ stages:
                 echo "Cleaning workspace..."
                 sudo rm -rf $(Build.SourcesDirectory)/*
 
-          - template: ../templates/air-infrastructure-data-setup.yml
+          - template: ../templates/install-eirctl.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              EirctlVersion: ${{ variables.EirctlVersion }}
 
           - task: Bash@3
-            displayName: "TaskCTL: Setup"
+            displayName: "Eirctl: Setup"
             inputs:
               targetType: inline
-              script: taskctl setup
+              script: eirctl setup
             env:
               DOCKER_IMAGE_TAG: $(version_number)
 
           - task: Bash@3
-            displayName: "TaskCTL: Lint"
+            displayName: "Eirctl: Lint"
             inputs:
               targetType: inline
-              script: taskctl lint
+              script: eirctl lint
             env:
               TF_FILE_LOCATION: /app/$(self_repo_tf_src)
               CLOUD_PLATFORM: "$(cloud_platform)"
@@ -135,9 +135,9 @@ stages:
                           echo "Cleaning workspace..."
                           sudo rm -rf $(Build.SourcesDirectory)/*
 
-                    - template: ../templates/air-infrastructure-data-setup.yml
+                    - template: ../templates/install-eirctl.yml
                       parameters:
-                        TaskctlVersion: ${{ variables.TaskctlVersion }}
+                        EirctlVersion: ${{ variables.EirctlVersion }}
 
                     - bash: |
                         sudo apt-get install -y jq
@@ -153,7 +153,7 @@ stages:
                       inputs:
                         targetType: inline
                         script: |
-                          taskctl infra:vars
+                          eirctl infra:vars
                       env:
                         TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
                         TF_FILE_LOCATION: /app/deploy/azure/infra
@@ -195,7 +195,7 @@ stages:
                           inputs:
                             targetType: inline
                             script: |
-                              taskctl infrastructure_destroy
+                              eirctl infrastructure_destroy
                           env:
                             TASKCTL_DEBUG: ${{ lower(parameters.debug) }}
                             ENV_NAME: ${{ stage.environment_shortname }}
@@ -216,10 +216,10 @@ stages:
 
                     - ${{ if eq(parameters.deploy, true) }}:
                         - task: Bash@3
-                          displayName: "Taskctl: Infrastructure"
+                          displayName: "Eirctl: Infrastructure"
                           inputs:
                             targetType: inline
-                            script: taskctl infrastructure
+                            script: eirctl infrastructure
                             informationPreference: continue
                           env:
                             TASKCTL_DEBUG: ${{ lower(parameters.debug) }}

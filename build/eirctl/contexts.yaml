@@ -17,7 +17,7 @@ contexts:
       shell_args:
         - -Command
     env:
-      VIRTUAL_ENV: /workspace/.taskctl/venv
+      VIRTUAL_ENV: /eirctl/venv
       PATH: $VIRTUAL_ENV:$env:PATH
       PYTHON_PATH: .
     envfile:

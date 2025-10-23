@@ -64,23 +64,23 @@ stages:
           vmImage: $(pool_vm_image)
 
         steps:
-          - template: ../../templates/setup.yml
+          - template: ../../templates/install-eirctl.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              EirctlVersion: ${{ variables.EirctlVersion }}
 
           - task: Bash@3
-            displayName: "TaskCTL: Setup"
+            displayName: "Eirctl: Setup"
             inputs:
               targetType: inline
-              script: taskctl setup
+              script: eirctl setup
             env:
               DOCKER_IMAGE_TAG: $(version_number)
 
           - task: Bash@3
-            displayName: "TaskCTL: Lint"
+            displayName: "Eirctl: Lint"
             inputs:
               targetType: inline
-              script: taskctl lint
+              script: eirctl lint
             env:
               # Dotnet Build
               TF_FILE_LOCATION: $(TF_FILE_LOCATION)
@@ -104,9 +104,9 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    - template: ../../templates/setup.yml
+                    - template: ../../templates/install-eirctl.yml
                       parameters:
-                        TaskctlVersion: ${{ variables.TaskctlVersion }}
+                        EirctlVersion: ${{ variables.EirctlVersion }}
 
                     # Create a tfvars file for the values
                     # This is so that variables can be set and reused as required
@@ -115,7 +115,7 @@ stages:
                       inputs:
                         targetType: inline
                         script: |
-                          taskctl infra:vars
+                          eirctl infra:vars
                       env:
                         TF_FILE_LOCATION: $(TF_FILE_LOCATION)
                         TF_VAR_enable_private_networks: true
@@ -137,7 +137,7 @@ stages:
                           inputs:
                             targetType: inline
                             script: |
-                              taskctl infrastructure_destroy
+                              eirctl infrastructure_destroy
                           env:
                             ENV_NAME: ${{ stage.environment_shortname }}
 
@@ -151,10 +151,10 @@ stages:
 
                     - ${{ if eq(parameters.deploy, true) }}:
                         - task: Bash@3
-                          displayName: "Taskctl: Infrastructure"
+                          displayName: "Eirctl: Infrastructure"
                           inputs:
                             targetType: inline
-                            script: taskctl infrastructure
+                            script: eirctl infrastructure
                             informationPreference: continue
                           env:
                             ENV_NAME: ${{ stage.environment_shortname }}

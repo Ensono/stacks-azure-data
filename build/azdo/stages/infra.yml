@@ -18,7 +18,7 @@ stages:
       - name: STAGE
         value: infra
       - name: TF_FILE_LOCATION
-        value: /workspace/.taskctl/deploy/terraform/infra
+        value: /workspace/.eirctl/deploy/terraform/infra
 
     pool:
       # Set the correct pool or build image based on the outputs from the networking stage
@@ -47,16 +47,16 @@ stages:
               artifactName: networking
               targetPath: $(Agent.TempDirectory)/networking
 
-          - template: templates/setup.yml
+          - template: templates/install-eirctl.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              EirctlVersion: $(EirctlVersion)
 
           - task: Bash@3
-            displayName: "TaskCTL: Initialise Terraform"
+            displayName: "Eirctl: Initialise Terraform"
             inputs:
               targetType: inline
               script: |
-                taskctl infra:init
+                eirctl infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
@@ -69,11 +69,11 @@ stages:
               TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
 
           - task: Bash@3
-            displayName: "TaskCTL: Plan Infrastructure"
+            displayName: "Eirctl: Plan Infrastructure"
             inputs:
               targetType: inline
               script: |
-                taskctl infra:plan
+                eirctl infra:plan
             env:
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
@@ -81,11 +81,11 @@ stages:
               TF_VAR_ado_project_id: $(ado_project_id)
 
           - task: Bash@3
-            displayName: "TaskCTL: Apply Infrastructure"
+            displayName: "Eirctl: Apply Infrastructure"
             inputs:
               targetType: inline
               script: |
-                taskctl infra:apply
+                eirctl infra:apply
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2

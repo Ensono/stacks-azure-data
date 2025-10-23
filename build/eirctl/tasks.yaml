@@ -34,14 +34,14 @@ tasks:
     description: Create environment file for local workstation
     command: |
       New-Item -Type Directory -Path local | Out-Null
-      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell powershell
+      /eirctl/build/scripts/Write-Envfile.ps1 -Shell powershell
 
   local:envfile:bash:
     context: powershell
     description: Create environment file for local workstation
     command: |
       New-Item -Type Directory -Path local | Out-Null
-      /workspace/.taskctl/build/scripts/Write-Envfile.ps1 -Shell bash
+      /eirctl/build/scripts/Write-Envfile.ps1 -Shell bash
 
   # Infrastructure tasks
   infra:init:
@@ -57,7 +57,7 @@ tasks:
     context: powershell
     description: Create Terraform variables file
     command:
-      - /workspace/.taskctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
+      - /eirctl/build/scripts/Set-TFVars.ps1 | Out-File -Path  "${env:TF_FILE_LOCATION}/terraform.tfvars"
 
   infra:plan:
     context: powershell
@@ -78,7 +78,7 @@ tasks:
     command: |
       Push-Location $env:TF_FILE_LOCATION
       Invoke-Terraform -Apply -Path deploy.tfplan -Debug
-      $output_path = "/workspace/.taskctl/outputs"
+      $output_path = "/eirctl/outputs"
       if (Test-Path -Path $output_path) {
         chown -R $env:USER_ID $output_path
         chgrp -R $env:USER_GROUP_ID $output_path
@@ -145,13 +145,13 @@ tasks:
     context: powershell
     description: Create a shell script to configure the environment variables
     command:
-      - New-EnvConfig -Path /workspace/.taskctl/build/config/stage_envvars.yml -ScriptPath /workspace/.taskctl/local
+      - New-EnvConfig -Path /eirctl/build/config/stage_envvars.yml -ScriptPath /eirctl/local
 
   setup:environment:
     context: powershell
     description: Ensure that the environment is configured correctly
     command:
-      - Confirm-Environment -Path /workspace/.taskctl/build/config/stage_envvars.yml
+      - Confirm-Environment -Path /eirctl/build/config/stage_envvars.yml
 
   # Databricks tasks
   databricks:connect:

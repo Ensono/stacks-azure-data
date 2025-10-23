@@ -1,4 +1,6 @@
 variables:
+  - name: EirctlVersion
+    value: 0.4.48
   - name: git_integration
     value: null # github removed github integration with ADF
   - name: git_integration_prod

@@ -9,7 +9,7 @@ default:
       description: The stage that is being deployed by this pipeline run
     - name: TF_FILE_LOCATION
       description: Path to the Terraform template files, from the perspective of the executing container
-      default: /workspace/.taskctl/deploy/terraform/TF_STAGE
+      default: /eirctl/deploy/terraform/TF_STAGE
     - name: TESTS_PATH
       description: Path to the tests folder
       required: false

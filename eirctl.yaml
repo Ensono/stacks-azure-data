@@ -1,7 +1,7 @@
-# Import contexts and tasks for Taskctl
+# Import contexts and tasks for Eirctl
 import:
-  - ./build/taskctl/contexts.yaml
-  - ./build/taskctl/tasks.yaml
+  - ./build/eirctl/contexts.yaml
+  - ./build/eirctl/tasks.yaml
 
 watchers:
   lint:

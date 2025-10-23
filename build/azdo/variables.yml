@@ -39,8 +39,8 @@ variables:
     value: tfstate
 
   # Agent configuration
-  - name: TaskctlVersion
-    value: 2.0.3
+  - name: EirctlVersion
+    value: 0.4.48
   - name: pool_vm_image
     value: ubuntu-24.04
 

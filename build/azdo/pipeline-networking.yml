@@ -37,7 +37,7 @@ stages:
       - name: STAGE
         value: networking
       - name: TF_FILE_LOCATION
-        value: /workspace/.taskctl/deploy/terraform/networking
+        value: /workspace/.eirctl/deploy/terraform/networking
       - name: ENV_NAME
         value: ${{ parameters.environment }}
 
@@ -50,16 +50,16 @@ stages:
           # Checkout self repo
           - checkout: self
 
-          - template: templates/setup.yml
+          - template: templates/install-eirctl.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              EirctlVersion: $(EirctlVersion)
 
           - task: Bash@3
-            displayName: "TaskCTL: Terraform inputs file"
+            displayName: "Eirctl: Terraform inputs file"
             inputs:
               targetType: inline
               script: |
-                taskctl infra:vars
+                eirctl infra:vars
             env:
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
@@ -81,48 +81,48 @@ stages:
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
 
           - task: Bash@3
-            displayName: "TaskCTL: Initialise Terraform"
+            displayName: "Eirctl: Initialise Terraform"
             inputs:
               targetType: inline
               script: |
                 export USER_ID=`id -u`
                 export USER_GROUP_ID=`id -g`
-                taskctl -d infra:init
+                eirctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # If the parameter has been set, destroy the environment
           - ${{ if eq(parameters.destroy, true) }}:
               - task: Bash@3
-                displayName: "TaskCTL: [DESTROY] Plan Infrastructure"
+                displayName: "Eirctl: [DESTROY] Plan Infrastructure"
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl infra:destroy:plan
+                    eirctl infra:destroy:plan
 
               - task: Bash@3
-                displayName: "TaskCTL: [DESTROY] Apply Infrastructure"
+                displayName: "Eirctl: [DESTROY] Apply Infrastructure"
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl infra:destroy:apply
+                    eirctl infra:destroy:apply
 
           - ${{ if eq(parameters.deploy, true) }}:
               - task: Bash@3
-                displayName: "TaskCTL: Plan Infrastructure"
+                displayName: "Eirctl: Plan Infrastructure"
                 inputs:
                   targetType: inline
                   script: |
-                    taskctl infra:plan
+                    eirctl infra:plan
 
               - task: Bash@3
-                displayName: "TaskCTL: Apply Infrastructure"
+                displayName: "Eirctl: Apply Infrastructure"
                 inputs:
                   targetType: inline
                   script: |
                     export USER_ID=`id -u`
                     export USER_GROUP_ID=`id -g`
-                    taskctl infra:apply
+                    eirctl infra:apply
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2
