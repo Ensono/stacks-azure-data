@@ -32,6 +32,4 @@ provider "azurerm" {
 provider "databricks" {
   host                        = provider::corefunc::url_parse(replace(var.adb_databricks_hosturl, "\"", "")).host
   azure_workspace_resource_id = replace(var.adb_databricks_id, "\"", "")
-
 }
-
