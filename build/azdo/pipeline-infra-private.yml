@@ -62,6 +62,16 @@ stages:
           clean: all
 
         steps:
+          # Clean up any previous .terraform directories to avoid permission issues
+          - task: Bash@3
+            displayName: "Cleanup: Remove .terraform directories"
+            inputs:
+              targetType: inline
+              script: |
+                echo "Cleaning workspace..."
+                sudo rm -rf $(Build.SourcesDirectory)/deploy/terraform/*/.terraform
+            continueOnError: true
+
           # Checkout self repo
           - checkout: self
 
