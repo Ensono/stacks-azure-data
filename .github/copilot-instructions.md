@@ -112,6 +112,17 @@ eirctl run lint
 - **Terraform**: Auto-formatting and validation in pre-commit hooks
 - **Pre-commit**: Mandatory for all commits, configured in `.pre-commit-config.yaml`
 
+## Security and Compliance
+
+**CRITICAL**: All AI agents must also follow the comprehensive security guidelines in [copilot-security-instructions.md](copilot-security-instructions.md). This includes:
+
+- GPG commit signing requirements (never bypass with `--no-gpg-sign`)
+- Branch protection and pull request workflows
+- Production change control processes
+- Security standards compliance (ISO 27001, NIST, PCI DSS, FIPS 140-2)
+- Authentication and authorization controls
+- Incident response procedures
+
 ## Common Pitfalls
 
 - Don't modify `locals.tf` values via variables - they're fixed at definition
