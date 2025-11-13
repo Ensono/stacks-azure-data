@@ -1,5 +1,8 @@
 name: "$(Build.SourceBranchName)-networking"
 
+trigger: none
+pr: none
+
 parameters:
   - name: destroy
     displayName: Destroy Environment
