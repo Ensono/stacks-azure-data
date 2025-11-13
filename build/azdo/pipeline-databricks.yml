@@ -1,7 +1,11 @@
 name: "$(Build.SourceBranchName)-databricks"
 
 trigger: none
-pr: none
+
+pr:
+  branches:
+    include:
+      - main
 
 parameters:
   - name: destroy

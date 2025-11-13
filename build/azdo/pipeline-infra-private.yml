@@ -1,7 +1,11 @@
 name: "$(Build.SourceBranchName)-infrastructure"
 
 trigger: none
-pr: none
+
+pr:
+  branches:
+    include:
+      - main
 
 parameters:
   - name: destroy
