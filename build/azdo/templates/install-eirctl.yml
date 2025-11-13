@@ -1,6 +1,12 @@
 parameters:
   - name: EirctlVersion
     type: string
+  - name: CloudName
+    type: string
+    default: AzureCloud
+  - name: AcrName
+    type: string
+    default: ensonostackseuweirdfmu
 
 steps:
   # Install Eirctl so that the tests can be run
@@ -11,3 +17,25 @@ steps:
       script: |
         sudo wget https://github.com/Ensono/eirctl/releases/download/${{ parameters.EirctlVersion }}/eirctl-linux-amd64 -O /usr/local/bin/eirctl
         sudo chmod +x /usr/local/bin/eirctl
+
+  - task: Bash@3
+    displayName: "Azure: Authenticate and ACR login"
+    inputs:
+      targetType: inline
+      script: |
+        set -e
+        echo "Authenticating to Azure and ACR..."
+        : "${ARM_CLIENT_ID:?ARM_CLIENT_ID is required}"
+        : "${ARM_CLIENT_SECRET:?ARM_CLIENT_SECRET is required}"
+        : "${ARM_TENANT_ID:?ARM_TENANT_ID is required}"
+        : "${ARM_SUBSCRIPTION_ID:?ARM_SUBSCRIPTION_ID is required}"
+
+        az cloud set --name ${{ parameters.CloudName }} --only-show-errors
+        az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none --only-show-errors
+        az account set --subscription "$ARM_SUBSCRIPTION_ID" --only-show-errors
+        az acr login --name ${{ parameters.AcrName }} --output none --only-show-errors
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
