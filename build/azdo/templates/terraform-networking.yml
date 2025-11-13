@@ -26,6 +26,7 @@ steps:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
       ARM_TENANT_ID: $(ARM_TENANT_ID)
+      EIRCTL_IMAGE_TAG: $(EirctlImageTag)
       TF_VAR_name_company: $(company)
       TF_VAR_name_project: $(project)
       TF_VAR_enable_private_networks: $(enable_private_networks)
@@ -48,6 +49,7 @@ steps:
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
       ARM_TENANT_ID: $(ARM_TENANT_ID)
+      EIRCTL_IMAGE_TAG: $(EirctlImageTag)
       TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
   - ${{ if eq(parameters.destroy, true) }}:
@@ -62,6 +64,7 @@ steps:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
+          EIRCTL_IMAGE_TAG: $(EirctlImageTag)
 
       - task: Bash@3
         displayName: "Eirctl: [DESTROY] Apply Networking"
@@ -74,6 +77,7 @@ steps:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
+          EIRCTL_IMAGE_TAG: $(EirctlImageTag)
 
   - ${{ if eq(parameters.deploy, true) }}:
       - task: Bash@3
@@ -87,6 +91,7 @@ steps:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
+          EIRCTL_IMAGE_TAG: $(EirctlImageTag)
 
       - task: Bash@3
         displayName: "Eirctl: Import Existing Resources (State Reconciliation)"
@@ -136,6 +141,7 @@ steps:
           ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
+          EIRCTL_IMAGE_TAG: $(EirctlImageTag)
 
       - task: CopyFiles@2
         displayName: Copy stage output files to staging area
