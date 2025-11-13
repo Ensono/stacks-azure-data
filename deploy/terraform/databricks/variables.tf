@@ -1,7 +1,7 @@
 variable "adb_databricks_hosturl" {
   type        = string
   description = "Host URL of the Azure Databricks workspace"
-  default     = ""
+  default     = "https://missingdata.example.com"
 }
 
 variable "adb_databricks_id" {
