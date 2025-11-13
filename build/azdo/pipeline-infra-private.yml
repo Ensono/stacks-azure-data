@@ -162,6 +162,23 @@ stages:
                   flattenFolders: true
                   contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
                   targetFolder: $(Build.ArtifactStagingDirectory)/infra
+              # Ensure artifact staging directory exists (avoids PublishPipelineArtifact path missing error)
+              - task: Bash@3
+                displayName: "Ensure infra artifact directory exists"
+                inputs:
+                  targetType: inline
+                  script: |
+                    mkdir -p $(Build.ArtifactStagingDirectory)/infra
+                    echo "Staging directory prepared: $(Build.ArtifactStagingDirectory)/infra"
+              # Diagnostic listing for troubleshooting (will not fail pipeline)
+              - task: Bash@3
+                displayName: "List infra artifact contents"
+                condition: succeededOrFailed()
+                inputs:
+                  targetType: inline
+                  script: |
+                    echo "Listing contents of infra artifact staging directory";
+                    ls -al $(Build.ArtifactStagingDirectory)/infra || echo "Artifact directory empty (this may be OK if no outputs yet)."
 
               # Upload all files as artifacts of the build
               # Some will be used in subsequent stages
