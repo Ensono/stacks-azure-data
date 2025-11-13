@@ -5,6 +5,11 @@
       "type": "promptString",
       "default": "ensonodigitaluk",
       "description": "Azure DevOps organization name  (e.g. 'ensonodigitaluk')"
+    },
+    {
+      "id": "nvd_api_key",
+      "type": "promptString",
+      "description": "NVD API Key from https://nvd.nist.gov/developers/request-an-api-key"
     }
   ],
   "servers": {
@@ -25,6 +30,13 @@
         "PYPI_INDEX_URLS": "https://mirrors.aliyun.com/pypi/simple/,https://pypi.tuna.tsinghua.edu.cn/simple/",
         "PYPI_CACHE_TTL": "3600",
         "PYPI_LOG_LEVEL": "INFO"
+      }
+    },
+    "nvd": {
+      "command": "uvx",
+      "args": ["mcp-nvd"],
+      "env": {
+        "NVD_API_KEY": "${input:nvd_api_key}"
       }
     }
   }
