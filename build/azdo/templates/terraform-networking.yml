@@ -20,6 +20,8 @@ steps:
     inputs:
       targetType: inline
       script: |
+        export EIRCTL_IMAGE_TAG="${EIRCTL_IMAGE_TAG:-latest}"
+        echo "Using EIRCTL_IMAGE_TAG: $EIRCTL_IMAGE_TAG"
         eirctl infra:vars
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
