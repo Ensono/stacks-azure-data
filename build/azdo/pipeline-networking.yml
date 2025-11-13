@@ -93,7 +93,7 @@ stages:
               flattenFolders: true
               contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
-              
+
           # Ensure artifact staging directory exists (publish step fails if folder missing)
           - task: Bash@3
             displayName: "Ensure networking artifact directory exists"
