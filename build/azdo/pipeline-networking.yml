@@ -1,11 +1,8 @@
 name: "$(Build.SourceBranchName)-networking"
 
+# This pipeline is for manual runs only - PR validation uses pipeline-full-deployment.yml
 trigger: none
-
-pr:
-  branches:
-    include:
-      - main
+pr: none
 
 parameters:
   - name: destroy
@@ -41,6 +38,8 @@ stages:
   - stage: Networking
     variables:
       - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
       - name: STAGE
         value: networking
       - name: TF_FILE_LOCATION
@@ -54,141 +53,7 @@ stages:
           vmImage: "ubuntu-latest"
 
         steps:
-          # Checkout self repo
-          - checkout: self
-
-          - template: templates/install-eirctl.yml
+          - template: templates/terraform-networking.yml
             parameters:
-              EirctlVersion: $(EirctlVersion)
-
-          - task: Bash@3
-            displayName: "Eirctl: Terraform inputs file"
-            inputs:
-              targetType: inline
-              script: |
-                eirctl infra:vars
-            env:
-              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-              ARM_TENANT_ID: $(ARM_TENANT_ID)
-              TF_VAR_name_company: $(company)
-              TF_VAR_name_project: $(project)
-              TF_VAR_enable_private_networks: $(enable_private_networks)
-              TF_VAR_resource_group_location: $(region)
-              TF_VAR_ado_create_agent_pool: $(ado_create_agent_pool)
-              TF_VAR_ado_create_variable_group: $(ado_create_variable_group)
-              TF_VAR_ado_org_url: $(ado_org_url)
-              TF_VAR_ado_project_id: $(ado_project_id)
-              TF_VAR_debug_enabled: ${{ lower(parameters.debug) }}
-              TF_VAR_vmss_admin_ssh_key: ${{ trim(parameters.vmss_ssh_key) }}
-
-          # Copy tfvars file to staging area for upload at end of run
-          - task: CopyFiles@2
-            displayName: "Copy tfvars to artifact staging area"
-            inputs:
-              flattenFolders: true
-              contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
-              targetFolder: $(Build.ArtifactStagingDirectory)/networking
-
-          # Ensure artifact staging directory exists (publish step fails if folder missing)
-          - task: Bash@3
-            displayName: "Ensure networking artifact directory exists"
-            inputs:
-              targetType: inline
-              script: |
-                mkdir -p $(Build.ArtifactStagingDirectory)/networking
-                echo "Staging directory prepared: $(Build.ArtifactStagingDirectory)/networking"
-
-          - task: Bash@3
-            displayName: "Eirctl: Initialise Terraform"
-            inputs:
-              targetType: inline
-              script: |
-                export USER_ID=`id -u`
-                export USER_GROUP_ID=`id -g`
-                eirctl -d infra:init
-            env:
-              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-              ARM_TENANT_ID: $(ARM_TENANT_ID)
-              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
-
-          # If the parameter has been set, destroy the environment
-          - ${{ if eq(parameters.destroy, true) }}:
-              - task: Bash@3
-                displayName: "Eirctl: [DESTROY] Plan Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:plan
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-              - task: Bash@3
-                displayName: "Eirctl: [DESTROY] Apply Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:apply
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-          - ${{ if eq(parameters.deploy, true) }}:
-              - task: Bash@3
-                displayName: "Eirctl: Plan Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:plan
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-              - task: Bash@3
-                displayName: "Eirctl: Apply Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    export USER_ID=`id -u`
-                    export USER_GROUP_ID=`id -g`
-                    eirctl infra:apply
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-          # Upload the outputs to the as artifacts
-          - task: CopyFiles@2
-            displayName: Copy stage output files to staging area
-            inputs:
-              flattenFolders: true
-              contents: $(Build.SourcesDirectory)/outputs/terraform/*networking*
-              targetFolder: $(Build.ArtifactStagingDirectory)/networking
-          # Defensive: list contents for debugging (optional)
-          - task: Bash@3
-            displayName: "List networking artifact contents"
-            condition: succeededOrFailed()
-            inputs:
-              targetType: inline
-              script: |
-                echo "Listing contents of artifact staging directory";
-                ls -al $(Build.ArtifactStagingDirectory)/networking || echo "Artifact directory empty (this may be OK if no outputs yet)."
-
-          # Upload all files as artifacts of the build
-          # Some will be used in subsequent stages
-          - task: PublishPipelineArtifact@1
-            displayName: Upload Generated Files
-            inputs:
-              targetPath: $(Build.ArtifactStagingDirectory)/networking
-              artifact: networking
+              destroy: ${{ parameters.destroy }}
+              deploy: ${{ parameters.deploy }}
