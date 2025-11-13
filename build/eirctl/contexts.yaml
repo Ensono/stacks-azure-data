@@ -1,7 +1,7 @@
 contexts:
   powershell:
     container:
-      name: ensono/eir-infrastructure:1.2.36
+      name: ensono/eir-infrastructure:${EIRCTL_IMAGE_TAG:-latest}
       shell: pwsh
       shell_args:
         - -Command
@@ -12,7 +12,7 @@ contexts:
 
   powershell-data:
     container:
-      name: ensono/eir-azure-data
+      name: ensono/eir-azure-data:${EIRCTL_IMAGE_TAG:-latest}
       shell: pwsh
       shell_args:
         - -Command
