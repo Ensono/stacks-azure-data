@@ -16,6 +16,39 @@ steps:
       EirctlVersion: $(EirctlVersion)
 
   - task: Bash@3
+    displayName: "Docker: Pull eir-infrastructure from ACR"
+    inputs:
+      targetType: inline
+      script: |
+        set -e
+        echo "Authenticating to Azure and ACR..."
+        az account set --subscription "$ARM_SUBSCRIPTION_ID"
+        az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none || true
+        az acr login --name ensonostackseuweirdfmu --output none
+
+        IMAGE_VERSION="$(EirctlVersion)"
+        ACR_IMAGE="ensonostackseuweirdfmu.azurecr.io/eir-infrastructure:${IMAGE_VERSION}"
+        FALLBACK_ACR_IMAGE="ensonostackseuweirdfmu.azurecr.io/eir-infrastructure:latest"
+
+        echo "Pulling $ACR_IMAGE (fallback to latest if needed)"
+        if ! docker pull "$ACR_IMAGE"; then
+          echo "Falling back to $FALLBACK_ACR_IMAGE"
+          docker pull "$FALLBACK_ACR_IMAGE"
+          ACR_IMAGE="$FALLBACK_ACR_IMAGE"
+        fi
+
+        echo "Retagging for eirctl references"
+        docker tag "$ACR_IMAGE" ensono/eir-infrastructure:${IMAGE_VERSION} || true
+        docker tag "$ACR_IMAGE" ensono/eir-infrastructure:latest || true
+        docker tag "$ACR_IMAGE" ghcr.io/ensono/eir-infrastructure:${IMAGE_VERSION} || true
+        docker tag "$ACR_IMAGE" ghcr.io/ensono/eir-infrastructure:latest || true
+    env:
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+  - task: Bash@3
     displayName: "Eirctl: Terraform inputs file"
     inputs:
       targetType: inline
