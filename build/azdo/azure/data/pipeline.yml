@@ -49,6 +49,8 @@ pr:
     include:
       - build/azdo/*
       - build/eirctl/*
+      - de_build/*
+      - de_workloads/*
       - deploy/azure/infra/*
       - deploy/terraform/infra/*
 
@@ -60,6 +62,8 @@ trigger:
     include:
       - build/azdo/*
       - build/eirctl/*
+      - de_build/*
+      - de_workloads/*
       - deploy/azure/infra/*
       - deploy/terraform/infra/*
 

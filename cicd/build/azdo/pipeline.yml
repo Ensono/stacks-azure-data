@@ -50,6 +50,8 @@ pr:
       - build/azdo/*
       - build/eirctl/*
       - cicd/build/azdo/*
+      - de_build/*
+      - de_workloads/*
       - deploy/azure/infra/*
       - deploy/terraform/infra/*
 
@@ -62,6 +64,8 @@ trigger:
       - build/azdo/*
       - build/eirctl/*
       - cicd/build/azdo/*
+      - de_build/*
+      - de_workloads/*
       - deploy/azure/infra/*
       - deploy/terraform/infra/*
 
