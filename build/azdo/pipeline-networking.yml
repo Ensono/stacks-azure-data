@@ -61,6 +61,10 @@ stages:
               script: |
                 eirctl infra:vars
             env:
+              ARM_CLIENT_ID: $(azure-client-id)
+              ARM_CLIENT_SECRET: $(azure-client-secret)
+              ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+              ARM_TENANT_ID: $(azure-tenant-id)
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
               TF_VAR_enable_private_networks: $(enable_private_networks)
@@ -79,7 +83,7 @@ stages:
               flattenFolders: true
               contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
-              
+
           # Ensure artifact staging directory exists (publish step fails if folder missing)
           - task: Bash@3
             displayName: "Ensure networking artifact directory exists"
@@ -98,6 +102,10 @@ stages:
                 export USER_GROUP_ID=`id -g`
                 eirctl -d infra:init
             env:
+              ARM_CLIENT_ID: $(azure-client-id)
+              ARM_CLIENT_SECRET: $(azure-client-secret)
+              ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+              ARM_TENANT_ID: $(azure-tenant-id)
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # If the parameter has been set, destroy the environment
@@ -108,6 +116,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:destroy:plan
+                env:
+                  ARM_CLIENT_ID: $(azure-client-id)
+                  ARM_CLIENT_SECRET: $(azure-client-secret)
+                  ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                  ARM_TENANT_ID: $(azure-tenant-id)
 
               - task: Bash@3
                 displayName: "Eirctl: [DESTROY] Apply Infrastructure"
@@ -115,6 +128,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:destroy:apply
+                env:
+                  ARM_CLIENT_ID: $(azure-client-id)
+                  ARM_CLIENT_SECRET: $(azure-client-secret)
+                  ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                  ARM_TENANT_ID: $(azure-tenant-id)
 
           - ${{ if eq(parameters.deploy, true) }}:
               - task: Bash@3
@@ -123,6 +141,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:plan
+                env:
+                  ARM_CLIENT_ID: $(azure-client-id)
+                  ARM_CLIENT_SECRET: $(azure-client-secret)
+                  ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                  ARM_TENANT_ID: $(azure-tenant-id)
 
               - task: Bash@3
                 displayName: "Eirctl: Apply Infrastructure"
@@ -132,6 +155,11 @@ stages:
                     export USER_ID=`id -u`
                     export USER_GROUP_ID=`id -g`
                     eirctl infra:apply
+                env:
+                  ARM_CLIENT_ID: $(azure-client-id)
+                  ARM_CLIENT_SECRET: $(azure-client-secret)
+                  ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                  ARM_TENANT_ID: $(azure-tenant-id)
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2

@@ -201,6 +201,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(azure-client-id)
+                            ARM_CLIENT_SECRET: $(azure-client-secret)
+                            ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                            ARM_TENANT_ID: $(azure-tenant-id)
 
                             TF_FILE_LOCATION: /app/deploy/azure/infra
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -226,6 +230,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(azure-client-id)
+                            ARM_CLIENT_SECRET: $(azure-client-secret)
+                            ARM_SUBSCRIPTION_ID: $(azure-subscription-id)
+                            ARM_TENANT_ID: $(azure-tenant-id)
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: /app/deploy/azure/infra
