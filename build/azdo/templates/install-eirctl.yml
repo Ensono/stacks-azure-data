@@ -7,10 +7,7 @@ parameters:
   - name: AcrName
     type: string
     default: ensonostackseuweirdfmu
-  - name: InfraImageTag
-    type: string
-    default: "1.2.36"
-  - name: DataImageTag
+  - name: EirctlImageTag
     type: string
     default: "latest"
 
@@ -23,6 +20,15 @@ steps:
       script: |
         sudo wget https://github.com/Ensono/eirctl/releases/download/${{ parameters.EirctlVersion }}/eirctl-linux-amd64 -O /usr/local/bin/eirctl
         sudo chmod +x /usr/local/bin/eirctl
+
+  - task: Cache@2
+    displayName: "Cache: Docker Layers"
+    inputs:
+      key: 'docker-layers | "$(Agent.OS)" | "${{ parameters.EirctlImageTag }}"'
+      path: /var/lib/docker
+      restoreKeys: |
+        docker-layers | "$(Agent.OS)"
+    continueOnError: true
 
   - task: Bash@3
     displayName: "Pre-cache Container Layers"
@@ -45,22 +51,33 @@ steps:
 
         echo "Pulling and retagging images quietly..."
         # Pull infra image quietly and retag to match contexts.yaml
-        if ! docker pull "$ACR_URL/ensono/eir-infrastructure:latest" >/dev/null 2>&1; then
-          echo "Failed to pull $ACR_URL/ensono/eir-infrastructure:latest"
-          exit 1
+        if ! docker image inspect "ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1; then
+          echo "Pulling ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}..."
+          if ! docker pull "$ACR_URL/ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1; then
+            echo "Failed to pull $ACR_URL/ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}"
+            exit 1
+          fi
+          docker tag "$ACR_URL/ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}" "ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1
+        else
+          echo "Image ensono/eir-infrastructure:${{ parameters.EirctlImageTag }} already exists locally"
         fi
-        docker tag "$ACR_URL/ensono/eir-infrastructure:latest" "ensono/eir-infrastructure:${{ parameters.InfraImageTag }}" >/dev/null 2>&1
 
         # Pull data image quietly and retag (best-effort)
-        if docker pull "$ACR_URL/ensono/eir-azure-data:latest" >/dev/null 2>&1; then
-          docker tag "$ACR_URL/ensono/eir-azure-data:latest" "ensono/eir-azure-data:${{ parameters.DataImageTag }}" >/dev/null 2>&1
+        if ! docker image inspect "ensono/eir-azure-data:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1; then
+          echo "Pulling ensono/eir-azure-data:${{ parameters.EirctlImageTag }}..."
+          if docker pull "$ACR_URL/ensono/eir-azure-data:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1; then
+            docker tag "$ACR_URL/ensono/eir-azure-data:${{ parameters.EirctlImageTag }}" "ensono/eir-azure-data:${{ parameters.EirctlImageTag }}" >/dev/null 2>&1
+          else
+            echo "Warning: Could not pull $ACR_URL/ensono/eir-azure-data:${{ parameters.EirctlImageTag }} (continuing)"
+          fi
         else
-          echo "Warning: Could not pull $ACR_URL/ensono/eir-azure-data:latest (continuing)"
+          echo "Image ensono/eir-azure-data:${{ parameters.EirctlImageTag }} already exists locally"
         fi
 
-        echo "Images ready: ensono/eir-infrastructure:${{ parameters.InfraImageTag }}, ensono/eir-azure-data:${{ parameters.DataImageTag }}"
+        echo "Images ready: ensono/eir-infrastructure:${{ parameters.EirctlImageTag }}, ensono/eir-azure-data:${{ parameters.EirctlImageTag }}"
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
       ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
       ARM_TENANT_ID: $(ARM_TENANT_ID)
+      EIRCTL_IMAGE_TAG: ${{ parameters.EirctlImageTag }}
