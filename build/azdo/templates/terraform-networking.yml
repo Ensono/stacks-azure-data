@@ -15,6 +15,25 @@ steps:
     parameters:
       EirctlVersion: $(EirctlVersion)
 
+  - task: Cache@2
+    displayName: "Cache: Docker image"
+    inputs:
+      key: 'docker | "$(Agent.OS)" | "ensono/eir-infrastructure" | "$(EirctlVersion)"'
+      path: $(Pipeline.Workspace)/.docker-cache
+      cacheHitVar: DOCKER_CACHE_RESTORED
+
+  - task: Bash@3
+    displayName: "Docker: Restore cached image"
+    condition: eq(variables.DOCKER_CACHE_RESTORED, 'true')
+    inputs:
+      targetType: inline
+      script: |
+        if [ -f $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar ]; then
+          echo "Loading cached Docker image..."
+          docker load -i $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar
+          echo "Cached image loaded successfully"
+        fi
+
   - task: Bash@3
     displayName: "Eirctl: Terraform inputs file"
     inputs:
@@ -120,3 +139,14 @@ steps:
         inputs:
           targetPath: $(Build.ArtifactStagingDirectory)/networking
           artifact: networking
+
+  - task: Bash@3
+    displayName: "Docker: Save image to cache"
+    condition: and(succeeded(), ne(variables.DOCKER_CACHE_RESTORED, 'true'))
+    inputs:
+      targetType: inline
+      script: |
+        mkdir -p $(Pipeline.Workspace)/.docker-cache
+        echo "Saving Docker image to cache..."
+        docker save ensono/eir-infrastructure:latest -o $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar
+        echo "Docker image cached successfully"
