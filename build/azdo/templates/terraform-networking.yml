@@ -15,10 +15,6 @@ steps:
     parameters:
       EirctlVersion: $(EirctlVersion)
 
-  - template: pull-acr-image.yml
-    parameters:
-      EirctlVersion: $(EirctlVersion)
-
   - task: Bash@3
     displayName: "Eirctl: Terraform inputs file"
     inputs:
