@@ -36,6 +36,14 @@ parameters:
     type: string
     default: "ensono-data-euw-hub-agent-pool"
 
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
 variables:
   - name: CLOUD_PLATFORM
     value: azure

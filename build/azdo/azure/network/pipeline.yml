@@ -39,6 +39,14 @@ parameters:
     type: boolean
     default: false
 
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
 pr: none
 
 trigger: none
