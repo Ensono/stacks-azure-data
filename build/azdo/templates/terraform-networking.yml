@@ -89,6 +89,41 @@ steps:
           ARM_TENANT_ID: $(ARM_TENANT_ID)
 
       - task: Bash@3
+        displayName: "Eirctl: Import Existing Resources (State Reconciliation)"
+        continueOnError: true
+        inputs:
+          targetType: inline
+          script: |
+            set +e  # Allow script to continue on errors
+
+            echo "Importing existing resources into Terraform state..."
+
+            # Import Azure DevOps agent pool (if exists)
+            eirctl infra:exec -- terraform import \
+              'module.azure_devops.azuredevops_agent_pool.ensono_pool[0]' \
+              '$(ado_project_id)/ensono-data-euw-hub-agent-pool' 2>/dev/null || echo "Agent pool import skipped or already in state"
+
+            # Import resource groups (if they exist)
+            eirctl infra:exec -- terraform import \
+              'module.networking.azurerm_resource_group.hub[0]' \
+              '/subscriptions/$(ARM_SUBSCRIPTION_ID)/resourceGroups/ensono-data-euw-hub' 2>/dev/null || echo "Hub RG import skipped or already in state"
+
+            eirctl infra:exec -- terraform import \
+              'module.networking.azurerm_resource_group.dev[0]' \
+              '/subscriptions/$(ARM_SUBSCRIPTION_ID)/resourceGroups/ensono-data-euw-data-dev-network' 2>/dev/null || echo "Dev RG import skipped or already in state"
+
+            eirctl infra:exec -- terraform import \
+              'module.networking.azurerm_resource_group.qa[0]' \
+              '/subscriptions/$(ARM_SUBSCRIPTION_ID)/resourceGroups/ensono-data-euw-data-qa-network' 2>/dev/null || echo "QA RG import skipped or already in state"
+
+            echo "Import phase complete. Continuing with apply..."
+        env:
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
+
+      - task: Bash@3
         displayName: "Eirctl: Apply Networking"
         inputs:
           targetType: inline
