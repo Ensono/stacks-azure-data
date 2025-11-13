@@ -7,6 +7,15 @@ pr:
     include:
       - main
 
+resources:
+  pipelines:
+    - pipeline: networking
+      source: "Stacks Azure Data [NETWORKING]"
+      trigger:
+        branches:
+          include:
+            - "*"
+
 parameters:
   - name: destroy
     displayName: Destroy Environment

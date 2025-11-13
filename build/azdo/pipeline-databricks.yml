@@ -7,6 +7,15 @@ pr:
     include:
       - main
 
+resources:
+  pipelines:
+    - pipeline: infrastructure
+      source: "Stacks Azure Data [INFRA]"
+      trigger:
+        branches:
+          include:
+            - "*"
+
 parameters:
   - name: destroy
     displayName: Destroy Environment
