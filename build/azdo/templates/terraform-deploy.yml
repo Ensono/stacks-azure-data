@@ -37,6 +37,7 @@ steps:
           buildType: current
           artifactName: ${{ parameters.download_artifact }}
           targetPath: $(Agent.TempDirectory)/${{ parameters.download_artifact }}
+        continueOnError: true
 
   - template: install-eirctl.yml
     parameters:
@@ -64,6 +65,7 @@ steps:
           SourceFolder: $(Agent.TempDirectory)/${{ parameters.download_artifact }}/
           Contents: "${{ parameters.artifact_file }}"
           TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/${{ parameters.stage_name }}
+        continueOnError: true
 
   - ${{ if eq(parameters.destroy, true) }}:
       - task: Bash@3
