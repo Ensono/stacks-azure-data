@@ -1,5 +1,8 @@
 name: "$(Build.SourceBranchName)-infrastructure"
 
+trigger: none
+pr: none
+
 parameters:
   - name: destroy
     displayName: Destroy Environment
