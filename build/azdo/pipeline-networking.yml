@@ -76,9 +76,18 @@ stages:
           - task: CopyFiles@2
             displayName: "Copy tfvars to artifact staging area"
             inputs:
-              FlattenFolders: true
-              Contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
+              flattenFolders: true
+              contents: $(Build.SourcesDirectory)/deploy/terraform/networking/*.tfvars
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
+              
+          # Ensure artifact staging directory exists (publish step fails if folder missing)
+          - task: Bash@3
+            displayName: "Ensure networking artifact directory exists"
+            inputs:
+              targetType: inline
+              script: |
+                mkdir -p $(Build.ArtifactStagingDirectory)/networking
+                echo "Staging directory prepared: $(Build.ArtifactStagingDirectory)/networking"
 
           - task: Bash@3
             displayName: "Eirctl: Initialise Terraform"
@@ -131,6 +140,15 @@ stages:
               flattenFolders: true
               contents: $(Build.SourcesDirectory)/outputs/terraform/*networking*
               targetFolder: $(Build.ArtifactStagingDirectory)/networking
+          # Defensive: list contents for debugging (optional)
+          - task: Bash@3
+            displayName: "List networking artifact contents"
+            condition: succeededOrFailed()
+            inputs:
+              targetType: inline
+              script: |
+                echo "Listing contents of artifact staging directory";
+                ls -al $(Build.ArtifactStagingDirectory)/networking || echo "Artifact directory empty (this may be OK if no outputs yet)."
 
           # Upload all files as artifacts of the build
           # Some will be used in subsequent stages
