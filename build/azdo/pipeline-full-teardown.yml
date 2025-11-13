@@ -1,0 +1,151 @@
+name: "$(Build.SourceBranchName)-full-teardown"
+
+# This pipeline destroys all infrastructure in the correct order: Databricks → Infrastructure → Networking
+trigger: none
+pr: none
+
+parameters:
+  - name: env_name
+    displayName: Environment Name
+    default: dev
+    values:
+      - dev
+      - qa
+      - uat
+      - prod
+    type: string
+
+  - name: use_agent_pool
+    displayName: Use Self-Hosted Agent Pool
+    type: boolean
+    default: false
+
+  - name: agent_pool_name
+    displayName: Agent Pool Name
+    type: string
+    default: "ensono-data-euw-hub-agent-pool"
+
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
+  - name: confirm_destroy
+    displayName: "⚠️ CONFIRM DESTRUCTION - Type 'DESTROY' to proceed"
+    type: string
+    default: ""
+
+variables:
+  - name: CLOUD_PLATFORM
+    value: azure
+  - name: ENV_NAME
+    value: ${{ parameters.env_name }}
+
+stages:
+  # Stage 1: Destroy Databricks (must be destroyed first)
+  - stage: DestroyDatabricks
+    displayName: "Destroy Databricks"
+    condition: eq('${{ parameters.confirm_destroy }}', 'DESTROY')
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
+      - name: STAGE
+        value: databricks
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/databricks
+
+    pool:
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        vmImage: "ubuntu-latest"
+
+    jobs:
+      - job: Destroy
+        workspace:
+          clean: outputs
+
+        steps:
+          - template: templates/terraform-deploy.yml
+            parameters:
+              stage_name: databricks
+              tf_backend_key: $(company)-$(project)-$(domain)-databricks
+              download_artifact: ""
+              artifact_file: ""
+              destroy: true
+              deploy: false
+
+  # Stage 2: Destroy Infrastructure (depends on Databricks being destroyed)
+  - stage: DestroyInfrastructure
+    displayName: "Destroy Infrastructure"
+    dependsOn: DestroyDatabricks
+    condition: and(succeeded(), eq('${{ parameters.confirm_destroy }}', 'DESTROY'))
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
+      - name: STAGE
+        value: infra
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/infra
+
+    pool:
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        vmImage: "ubuntu-latest"
+
+    jobs:
+      - job: Destroy
+        workspace:
+          clean: outputs
+
+        steps:
+          - template: templates/terraform-deploy.yml
+            parameters:
+              stage_name: infra
+              tf_backend_key: $(company)-$(project)-$(domain)-infra
+              download_artifact: ""
+              artifact_file: ""
+              destroy: true
+              deploy: false
+
+  # Stage 3: Destroy Networking (must be destroyed last)
+  - stage: DestroyNetworking
+    displayName: "Destroy Networking"
+    dependsOn: DestroyInfrastructure
+    condition: and(succeeded(), eq('${{ parameters.confirm_destroy }}', 'DESTROY'))
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - name: STAGE
+        value: networking
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/networking
+
+    pool:
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        vmImage: "ubuntu-latest"
+
+    jobs:
+      - job: Destroy
+        workspace:
+          clean: outputs
+
+        steps:
+          - template: templates/terraform-networking.yml
+            parameters:
+              destroy: true
+              deploy: false
