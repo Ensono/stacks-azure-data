@@ -1,20 +1,7 @@
 name: "$(Build.SourceBranchName)-databricks"
 
 trigger: none
-
-pr:
-  branches:
-    include:
-      - main
-
-resources:
-  pipelines:
-    - pipeline: infrastructure
-      source: "Stacks Azure Data [INFRA]"
-      trigger:
-        branches:
-          include:
-            - "*"
+pr: none
 
 parameters:
   - name: destroy

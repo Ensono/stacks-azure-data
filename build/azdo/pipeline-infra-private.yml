@@ -1,20 +1,8 @@
-name: "$(Build.SourceBranchName)-infrastructure"
+name: "$(Build.SourceBranchName)-infra-private"
 
 trigger: none
 
-pr:
-  branches:
-    include:
-      - main
-
-resources:
-  pipelines:
-    - pipeline: networking
-      source: "Stacks Azure Data [NETWORKING]"
-      trigger:
-        branches:
-          include:
-            - "*"
+pr: none
 
 parameters:
   - name: destroy
