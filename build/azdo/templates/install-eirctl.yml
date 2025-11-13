@@ -7,6 +7,12 @@ parameters:
   - name: AcrName
     type: string
     default: ensonostackseuweirdfmu
+  - name: InfraImageTag
+    type: string
+    default: "1.2.36"
+  - name: DataImageTag
+    type: string
+    default: "latest"
 
 steps:
   # Install Eirctl so that the tests can be run
@@ -19,11 +25,11 @@ steps:
         sudo chmod +x /usr/local/bin/eirctl
 
   - task: Bash@3
-    displayName: "Azure: Authenticate and ACR login"
+    displayName: "Pre-cache Container Layers"
     inputs:
       targetType: inline
       script: |
-        set -e
+        set -euo pipefail
         echo "Authenticating to Azure and ACR..."
         : "${ARM_CLIENT_ID:?ARM_CLIENT_ID is required}"
         : "${ARM_CLIENT_SECRET:?ARM_CLIENT_SECRET is required}"
@@ -34,8 +40,25 @@ steps:
         az login --service-principal -u "$ARM_CLIENT_ID" -p "$ARM_CLIENT_SECRET" --tenant "$ARM_TENANT_ID" --output none --only-show-errors
         az account set --subscription "$ARM_SUBSCRIPTION_ID" --only-show-errors
         az acr login --name ${{ parameters.AcrName }} --output none --only-show-errors
-        # pre-pull this to avoid delays later
-        docker pull ensono/eir-infrastructure:latest || true
+
+        ACR_URL="${{ parameters.AcrName }}.azurecr.io"
+
+        echo "Pulling and retagging images quietly..."
+        # Pull infra image quietly and retag to match contexts.yaml
+        if ! docker pull "$ACR_URL/ensono/eir-infrastructure:latest" >/dev/null 2>&1; then
+          echo "Failed to pull $ACR_URL/ensono/eir-infrastructure:latest"
+          exit 1
+        fi
+        docker tag "$ACR_URL/ensono/eir-infrastructure:latest" "ensono/eir-infrastructure:${{ parameters.InfraImageTag }}" >/dev/null 2>&1
+
+        # Pull data image quietly and retag (best-effort)
+        if docker pull "$ACR_URL/ensono/eir-azure-data:latest" >/dev/null 2>&1; then
+          docker tag "$ACR_URL/ensono/eir-azure-data:latest" "ensono/eir-azure-data:${{ parameters.DataImageTag }}" >/dev/null 2>&1
+        else
+          echo "Warning: Could not pull $ACR_URL/ensono/eir-azure-data:latest (continuing)"
+        fi
+
+        echo "Images ready: ensono/eir-infrastructure:${{ parameters.InfraImageTag }}, ensono/eir-azure-data:${{ parameters.DataImageTag }}"
     env:
       ARM_CLIENT_ID: $(ARM_CLIENT_ID)
       ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
