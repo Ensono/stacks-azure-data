@@ -1,13 +1,11 @@
 variable "adb_databricks_hosturl" {
   type        = string
   description = "Host URL of the Azure Databricks workspace"
-  default     = "https://missingdata.example.com"
 }
 
 variable "adb_databricks_id" {
   type        = string
   description = "ID of the Azure Databricks workspace"
-  default     = ""
 }
 
 variable "databricks_secret_scope_kv" {
@@ -19,13 +17,11 @@ variable "databricks_secret_scope_kv" {
 variable "key_vault_id" {
   type        = string
   description = "ID of the key vault for which the secret scope needs to be set"
-  default     = ""
 }
 
 variable "key_vault_uri" {
   type        = string
   description = "URI of the Key Vault to target"
-  default     = ""
 }
 
 variable "databricks_enableDbfsFileBrowser" {
