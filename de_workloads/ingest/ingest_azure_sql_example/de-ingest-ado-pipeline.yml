@@ -50,7 +50,6 @@ trigger:
 variables:
   - template: ../../../build/common-vars.yml
   - template: ../../../de_build/job-pipeline-vars.yml
-  - template: ../../../build/version-data-vars.yml
   - name: job
     value: "ingest_azure_sql_example"
   - name: jobtype
@@ -86,7 +85,7 @@ pool:
 stages:
   - stage: Build
     variables:
-      - group: ensono-sp-creds
+      - group: azure-sp-creds
     jobs:
       - job: Build_Job
         displayName: "Build_Job"
@@ -100,9 +99,9 @@ stages:
                 sudo rm -rf $(Build.SourcesDirectory)/*
                 sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                 sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
-          - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+          - template: ../../../build/azDevOps/templates/setup.yml
             parameters:
-              TaskctlVersion: ${{ variables.TaskctlVersion }}
+              EirctlVersion: ${{ variables.EirctlVersion }}
           - script: |
               lastTag=$(git tag --sort=-creatordate | head -n 1)
               if [[ -z $lastTag ]]; then
@@ -129,14 +128,14 @@ stages:
             displayName: "TaskCTL: Setup"
             inputs:
               targetType: inline
-              script: taskctl setup
+              script: eirctl setup
             env:
               DOCKER_IMAGE_TAG: $(newVersion)
           - task: Bash@3
             displayName: "TaskCTL: Lint"
             inputs:
               targetType: inline
-              script: taskctl lint
+              script: eirctl lint
             env:
               CLOUD_PLATFORM: "$(cloud_platform)"
               TF_FILE_LOCATION: /app/$(self_repo_adf_src)
@@ -146,7 +145,7 @@ stages:
         condition: and(succeeded(), or(${{ stage.condition }}, ${{ parameters.force_deploy }}))
         dependsOn: ${{ stage.dependsOn }}
         variables:
-          - group: ensono-sp-creds
+          - group: azure-sp-creds
           - group: ensono-data-${{ stage.environment_shortname }}
 
         jobs:
@@ -169,9 +168,9 @@ stages:
                           sudo rm -rf $(Build.SourcesDirectory)/.pytest_cache/*
                           sudo rm -f $(Build.SourcesDirectory)/.pytest_cache/.gitignore
 
-                    - template: ../../../build/azDevOps/templates/air-infrastructure-data-setup.yml
+                    - template: ../../../build/azDevOps/templates/setup.yml
                       parameters:
-                        TaskctlVersion: ${{ variables.TaskctlVersion }}
+                        EirctlVersion: ${{ variables.EirctlVersion }}
 
                     # Publish Config files
                     - task: AzureCLI@2
@@ -197,7 +196,7 @@ stages:
                       displayName: "TaskCTL: Databricks"
                       inputs:
                         targetType: inline
-                        script: taskctl databricks
+                        script: eirctl databricks
                       env:
                         DATABRICKS_HOST: "$(databricks-host)"
                         DATABRICKS_TOKEN: "$(databricks-token)"
@@ -209,7 +208,7 @@ stages:
                       displayName: "TaskCTL: infrastructure"
                       inputs:
                         targetType: inline
-                        script: taskctl infrastructure
+                        script: eirctl infrastructure
                       env:
                         CLOUD_PLATFORM: "$(cloud_platform)"
                         TF_FILE_LOCATION: "/app/$(self_repo_adf_src)"
