@@ -13,10 +13,10 @@ python = "^3.9, <3.12"
 stacks-data = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.3.1"
+pytest = "^9.0.1"
 black = "^25.11.0"
 pre-commit = "^4.4.0"
-flake8 = "^6.0.0"
+flake8 = "^7.3.0"
 flake8-docstrings = "^1.7.0"
 pydocstyle = "^6.3.0"
 tomli = "^2.3.0"
