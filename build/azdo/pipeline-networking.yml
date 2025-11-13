@@ -54,6 +54,20 @@ stages:
             parameters:
               EirctlVersion: $(EirctlVersion)
 
+          # Set up Azure credentials for Terraform
+          - task: AzureCLI@2
+            displayName: "Set Azure credentials for Terraform"
+            inputs:
+              azureSubscription: $(service_connection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              addSpnToEnvironment: true
+              inlineScript: |
+                echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+                echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
+                echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(az account show --query id -o tsv)"
+                echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+
           - task: Bash@3
             displayName: "Eirctl: Terraform inputs file"
             inputs:
@@ -98,6 +112,10 @@ stages:
                 export USER_GROUP_ID=`id -g`
                 eirctl -d infra:init
             env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-networking,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # If the parameter has been set, destroy the environment
@@ -108,6 +126,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:destroy:plan
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
 
               - task: Bash@3
                 displayName: "Eirctl: [DESTROY] Apply Infrastructure"
@@ -115,6 +138,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:destroy:apply
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
 
           - ${{ if eq(parameters.deploy, true) }}:
               - task: Bash@3
@@ -123,6 +151,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:plan
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
 
               - task: Bash@3
                 displayName: "Eirctl: Apply Infrastructure"
@@ -132,6 +165,11 @@ stages:
                     export USER_ID=`id -u`
                     export USER_GROUP_ID=`id -g`
                     eirctl infra:apply
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2
