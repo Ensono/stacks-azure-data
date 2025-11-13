@@ -88,6 +88,71 @@ steps:
 
   - ${{ if eq(parameters.destroy, true) }}:
       - task: Bash@3
+        displayName: "Terraform: Extract variables from state for destroy"
+        inputs:
+          targetType: inline
+          script: |
+            cd $(Build.SourcesDirectory)/deploy/terraform/${{ parameters.stage_name }}
+
+            # Create a minimal tfvars file from state outputs if artifact wasn't available
+            if [ ! -f *.auto.tfvars ]; then
+              echo "No tfvars file found, attempting to extract from state..."
+
+              # Initialize terraform to access state
+              export USER_ID=`id -u`
+              export USER_GROUP_ID=`id -g`
+
+              # For databricks, we need to query the infra state for required variables
+              if [ "${{ parameters.stage_name }}" == "databricks" ]; then
+                echo "Querying infrastructure state for Databricks variables..."
+
+                # Get terraform state from infrastructure
+                cd $(Build.SourcesDirectory)/deploy/terraform/infra
+
+                # Pull latest state
+                terraform init -backend-config="key=$(company)-$(project)-$(domain)-infra" \
+                  -backend-config="storage_account_name=$(tf_state_storage)" \
+                  -backend-config="resource_group_name=$(tf_state_rg)" \
+                  -backend-config="container_name=$(tf_state_container)" > /dev/null 2>&1 || true
+
+                # Extract outputs
+                ADB_HOST=$(terraform output -raw adb_databricks_hosturl 2>/dev/null || echo "")
+                ADB_ID=$(terraform output -raw adb_databricks_id 2>/dev/null || echo "")
+                KV_ID=$(terraform output -raw key_vault_id 2>/dev/null || echo "")
+                KV_URI=$(terraform output -raw key_vault_uri 2>/dev/null || echo "")
+
+                # Go back to databricks dir and create tfvars
+                cd $(Build.SourcesDirectory)/deploy/terraform/databricks
+
+                if [ -n "$ADB_HOST" ] && [ -n "$ADB_ID" ]; then
+                  cat > destroy-temp.auto.tfvars << 'EOFVARS'
+            adb_databricks_hosturl = "$ADB_HOST"
+            adb_databricks_id = "$ADB_ID"
+            key_vault_id = "$KV_ID"
+            key_vault_uri = "$KV_URI"
+            EOFVARS
+                  # Substitute variables
+                  sed -i "s|\$ADB_HOST|$ADB_HOST|g" destroy-temp.auto.tfvars
+                  sed -i "s|\$ADB_ID|$ADB_ID|g" destroy-temp.auto.tfvars
+                  sed -i "s|\$KV_ID|$KV_ID|g" destroy-temp.auto.tfvars
+                  sed -i "s|\$KV_URI|$KV_URI|g" destroy-temp.auto.tfvars
+                  echo "Created temporary tfvars from infrastructure state"
+                  cat destroy-temp.auto.tfvars
+                else
+                  echo "Warning: Could not extract variables from state, destroy may fail"
+                fi
+              fi
+            else
+              echo "Tfvars file exists, using it for destroy"
+            fi
+        env:
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
+        continueOnError: true
+
+      - task: Bash@3
         displayName: "Eirctl: [DESTROY] Plan ${{ parameters.stage_name }}"
         inputs:
           targetType: inline
