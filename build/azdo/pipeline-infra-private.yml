@@ -1,4 +1,4 @@
-name: "$(Build.SourceBranchName)-init"
+name: "$(Build.SourceBranchName)-infrastructure"
 
 parameters:
   - name: destroy
