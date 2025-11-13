@@ -1,7 +1,7 @@
-name: "$(Build.SourceBranchName)-infra-private"
+name: "$(Build.SourceBranchName)-infrastructure"
 
+# This pipeline is for manual runs only - PR validation uses pipeline-full-deployment.yml
 trigger: none
-
 pr: none
 
 parameters:
@@ -60,6 +60,8 @@ stages:
 
     variables:
       - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
       # Include the networking group that created in the previous stage
       - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
       - name: STAGE
@@ -80,150 +82,11 @@ stages:
           clean: outputs
 
         steps:
-          # Clean up any previous .terraform directories to avoid permission issues
-          - task: Bash@3
-            displayName: "Cleanup: Remove .terraform directories"
-            inputs:
-              targetType: inline
-              script: |
-                echo "Cleaning workspace..."
-                sudo rm -rf $(Build.SourcesDirectory)/deploy/terraform/*/.terraform
-            continueOnError: true
-
-          # Checkout self repo
-          - checkout: self
-            clean: true
-
-          # Download the pipeline artifacts from the previous stage as this contains
-          # the tfvars file that is needed to pass in the values for the deployment
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              buildType: specific
-              project: $(System.TeamProject)
-              definition: ${{ parameters.pipeline_definition_id }}
-              buildVersionToDownload: latest
-              branchName: $(Build.SourceBranchName)
-              artifactName: networking
-              targetPath: $(Agent.TempDirectory)/networking
-
-          - template: templates/install-eirctl.yml
+          - template: templates/terraform-deploy.yml
             parameters:
-              EirctlVersion: $(EirctlVersion)
-
-          - task: Bash@3
-            displayName: "Eirctl: Initialise Terraform"
-            inputs:
-              targetType: inline
-              script: |
-                export USER_ID=`id -u`
-                export USER_GROUP_ID=`id -g`
-                eirctl -d infra:init
-            env:
-              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-              ARM_TENANT_ID: $(ARM_TENANT_ID)
-              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
-
-          # Copy the tfvars file from the downloaded artifact to the deployment directory
-          - task: CopyFiles@2
-            displayName: "Copy Terraform Variables file"
-            inputs:
-              SourceFolder: $(Agent.TempDirectory)/networking/
-              Contents: "$(env_name)-networking-inputs.auto.tfvars"
-              TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/infra
-
-          # If the parameter has been set, destroy the environment
-          - ${{ if eq(parameters.destroy, true) }}:
-              - task: Bash@3
-                displayName: "Eirctl: [DESTROY] Plan Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:plan
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-                  TF_VAR_name_company: $(company)
-                  TF_VAR_name_project: $(project)
-                  TF_VAR_ado_org_url: $(ado_org_url)
-                  TF_VAR_ado_project_id: $(ado_project_id)
-
-              - task: Bash@3
-                displayName: "Eirctl: [DESTROY] Apply Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl infra:destroy:apply
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-          - ${{ if eq(parameters.deploy, true) }}:
-              - task: Bash@3
-                displayName: "Eirctl: Plan Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    eirctl -d infra:plan
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-                  TF_VAR_name_company: $(company)
-                  TF_VAR_name_project: $(project)
-                  TF_VAR_ado_org_url: $(ado_org_url)
-                  TF_VAR_ado_project_id: $(ado_project_id)
-
-              - task: Bash@3
-                displayName: "Eirctl: Apply Infrastructure"
-                inputs:
-                  targetType: inline
-                  script: |
-                    export USER_ID=`id -u`
-                    export USER_GROUP_ID=`id -g`
-                    eirctl infra:apply
-                env:
-                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                  ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-          # Upload the outputs to the as artifacts
-          - ${{ if eq(parameters.deploy, true) }}:
-              - task: CopyFiles@2
-                displayName: Copy stage output files to staging area
-                inputs:
-                  flattenFolders: true
-                  contents: $(Build.SourcesDirectory)/outputs/terraform/*infra*
-                  targetFolder: $(Build.ArtifactStagingDirectory)/infra
-              # Ensure artifact staging directory exists (avoids PublishPipelineArtifact path missing error)
-              - task: Bash@3
-                displayName: "Ensure infra artifact directory exists"
-                inputs:
-                  targetType: inline
-                  script: |
-                    mkdir -p $(Build.ArtifactStagingDirectory)/infra
-                    echo "Staging directory prepared: $(Build.ArtifactStagingDirectory)/infra"
-              # Diagnostic listing for troubleshooting (will not fail pipeline)
-              - task: Bash@3
-                displayName: "List infra artifact contents"
-                condition: succeededOrFailed()
-                inputs:
-                  targetType: inline
-                  script: |
-                    echo "Listing contents of infra artifact staging directory";
-                    ls -al $(Build.ArtifactStagingDirectory)/infra || echo "Artifact directory empty (this may be OK if no outputs yet)."
-
-              # Upload all files as artifacts of the build
-              # Some will be used in subsequent stages
-              - task: PublishPipelineArtifact@1
-                displayName: Upload Generated Files
-                inputs:
-                  targetPath: $(Build.ArtifactStagingDirectory)/infra
-                  artifact: infra
+              stage_name: infra
+              tf_backend_key: $(company)-$(project)-$(domain)-infra
+              download_artifact: networking
+              artifact_file: $(env_name)-networking-inputs.auto.tfvars
+              destroy: ${{ parameters.destroy }}
+              deploy: ${{ parameters.deploy }}
