@@ -105,6 +105,40 @@ eirctl run lint
 3. Use eirctl for environment management: `eirctl run local:envfile:bash`
 4. Databricks local development requires connection via `eirctl run databricks:connect`
 
+#### Local Unit Testing Requirements
+
+**Java Version Compatibility**: PySpark 3.4.x requires Java 8, 11, or 17. Java 21+ is NOT compatible.
+
+If Spark-based unit tests fail with `java.lang.NoSuchMethodException: java.nio.DirectByteBuffer.<init>(long,int)`, you need to install a compatible Java version:
+
+```bash
+# Install Java 17 (Debian/Ubuntu)
+sudo apt install openjdk-17-jdk
+
+# Set JAVA_HOME for the session
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+```
+
+**Maven Dependencies**: PySpark requires specific Maven dependencies that may not be in your local Maven cache. If tests fail with missing JAR errors, install them:
+
+```bash
+# Required dependencies for PySpark 3.4.x with Azure/Delta support
+mkdir -p ~/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.12.7
+curl -o ~/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.12.7/jackson-core-2.12.7.jar \
+  https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.12.7/jackson-core-2.12.7.jar
+
+mkdir -p ~/.m2/repository/com/google/guava/guava/27.0-jre
+curl -o ~/.m2/repository/com/google/guava/guava/27.0-jre/guava-27.0-jre.jar \
+  https://repo1.maven.org/maven2/com/google/guava/guava/27.0-jre/guava-27.0-jre.jar
+
+mkdir -p ~/.m2/repository/com/google/guava/failureaccess/1.0
+curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.jar \
+  https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0/failureaccess-1.0.jar
+```
+
+**Note**: Non-Spark tests (configuration validation, data quality schema tests) will pass without these requirements.
+
 ## Code Quality Standards
 
 - **Python**: Black formatting, flake8 linting, pydocstyle for docstrings
@@ -130,6 +164,18 @@ eirctl run lint
 - Private endpoints only work when `enable_private_networks = true`
 - ADO variable groups must exist before pipeline runs
 - Spark job parameters from ADF are positional, not named
+
+## Troubleshooting
+
+### Local Unit Test Failures
+
+**Symptom**: Tests pass for configuration validation but Spark tests fail  
+**Cause**: Java version incompatibility or missing Maven dependencies  
+**Solution**: See "Local Unit Testing Requirements" in the Local Development section
+
+**Symptom**: `poetry update` shows dependency conflicts  
+**Cause**: Python version constraints or conflicting package versions  
+**Solution**: Check `pyproject.toml` for version constraints (Python 3.10-3.11 supported)
 
 ## Key Files to Reference
 
