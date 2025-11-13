@@ -26,6 +26,16 @@ parameters:
     type: string
     default: "111"
 
+  - name: use_agent_pool
+    displayName: Use Self-Hosted Agent Pool
+    type: boolean
+    default: false
+
+  - name: agent_pool_name
+    displayName: Agent Pool Name
+    type: string
+    default: "ensono-data-euw-hub-agent-pool"
+
 variables:
   - name: CLOUD_PLATFORM
     value: azure
@@ -46,7 +56,11 @@ stages:
         value: /eirctl/deploy/terraform/databricks
 
     pool:
-      name: $(ado_agent_pool_name)
+      # Set the correct pool or build image based on the parameters
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        vmImage: "ubuntu-latest"
 
     jobs:
       - job: Deploy
