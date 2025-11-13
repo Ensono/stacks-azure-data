@@ -7,6 +7,7 @@ authors = [
 ]
 readme = "README.md"
 homepage = "https://github.com/Ensono/stacks-azure-data"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9, <3.12"
