@@ -1,3 +1,5 @@
+name: "$(Build.SourceBranchName)-infra"
+
 # Define the parameters that this template uses
 parameters:
   - name: agent_pool_name
