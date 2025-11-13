@@ -144,7 +144,7 @@ curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.ja
 - **Python**: Black formatting, flake8 linting, pydocstyle for docstrings
 - **YAML**: yamllint with project-specific config in `yamllint.conf`
 - **Terraform**: Auto-formatting and validation in pre-commit hooks
-- **Pre-commit**: Mandatory for all commits, configured in `.pre-commit-config.yaml`
+- **Pre-commit**: Mandatory for all commits, configured in `.pre-commit-config.yaml` ensure that this is enabled before committing
 
 ## Security and Compliance
 
@@ -169,12 +169,12 @@ curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.ja
 
 ### Local Unit Test Failures
 
-**Symptom**: Tests pass for configuration validation but Spark tests fail  
-**Cause**: Java version incompatibility or missing Maven dependencies  
+**Symptom**: Tests pass for configuration validation but Spark tests fail
+**Cause**: Java version incompatibility or missing Maven dependencies
 **Solution**: See "Local Unit Testing Requirements" in the Local Development section
 
-**Symptom**: `poetry update` shows dependency conflicts  
-**Cause**: Python version constraints or conflicting package versions  
+**Symptom**: `poetry update` shows dependency conflicts
+**Cause**: Python version constraints or conflicting package versions
 **Solution**: Check `pyproject.toml` for version constraints (Python 3.10-3.11 supported)
 
 ## Key Files to Reference
