@@ -19,8 +19,8 @@ pre-commit = "^3.2.0"
 flake8 = "^6.0.0"
 flake8-docstrings = "^1.7.0"
 pydocstyle = "^6.3.0"
-tomli = "^2.3.0"  # bumped from ^2.0.1 (minor/patch updates only; low risk)
-pytest-mock = "^3.15.1"  # bumped from ^3.11.1 (minor improvements; backward compatible)
+tomli = "^2.3.0"
+pytest-mock = "^3.15.1"
 
 [build-system]
 requires = ["poetry-core"]
