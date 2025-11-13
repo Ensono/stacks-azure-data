@@ -47,9 +47,11 @@ pr:
       - "main"
   paths:
     include:
-      - build/azDevOps/*
-      - build/taskctl/*
+      - build/azdo/*
+      - build/eirctl/*
+      - cicd/build/azdo/*
       - deploy/azure/infra/*
+      - deploy/terraform/infra/*
 
 trigger:
   branches:
@@ -57,9 +59,11 @@ trigger:
       - "main"
   paths:
     include:
-      - build/azDevOps/*
-      - build/taskctl/*
+      - build/azdo/*
+      - build/eirctl/*
+      - cicd/build/azdo/*
       - deploy/azure/infra/*
+      - deploy/terraform/infra/*
 
 variables:
   - template: ../../version-data-vars.yml

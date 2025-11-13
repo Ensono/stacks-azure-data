@@ -47,9 +47,10 @@ pr:
       - "main"
   paths:
     include:
-      - build/azDevOps/*
+      - build/azdo/*
       - build/eirctl/*
       - deploy/azure/infra/*
+      - deploy/terraform/infra/*
 
 trigger:
   branches:
@@ -57,9 +58,10 @@ trigger:
       - "main"
   paths:
     include:
-      - build/azDevOps/*
+      - build/azdo/*
       - build/eirctl/*
       - deploy/azure/infra/*
+      - deploy/terraform/infra/*
 
 variables:
   - template: ../../common-vars.yml
