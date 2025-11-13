@@ -55,6 +55,12 @@ eirctl run databricks
 eirctl run lint
 ```
 
+If using something other than rootful Docker then specify a `DOCKER_HOST`:
+
+```bash
+export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
+```
+
 ### 4. Configuration Patterns
 
 - **Data Sources**: Use `de_workloads/generate_examples/test_config_*.yaml` as templates
@@ -169,12 +175,12 @@ curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.ja
 
 ### Local Unit Test Failures
 
-**Symptom**: Tests pass for configuration validation but Spark tests fail  
-**Cause**: Java version incompatibility or missing Maven dependencies  
+**Symptom**: Tests pass for configuration validation but Spark tests fail
+**Cause**: Java version incompatibility or missing Maven dependencies
 **Solution**: See "Local Unit Testing Requirements" in the Local Development section
 
-**Symptom**: `poetry update` shows dependency conflicts  
-**Cause**: Python version constraints or conflicting package versions  
+**Symptom**: `poetry update` shows dependency conflicts
+**Cause**: Python version constraints or conflicting package versions
 **Solution**: Check `pyproject.toml` for version constraints (Python 3.10-3.11 supported)
 
 ## Key Files to Reference
