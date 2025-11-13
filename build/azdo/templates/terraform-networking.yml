@@ -31,6 +31,24 @@ steps:
         if [ -f $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar ]; then
           echo "Loading cached Docker image..."
           docker load -i $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar
+          # Retag common references used by eirctl to maximize cache hit
+          for SRC in \
+            ensono/eir-infrastructure:latest \
+            ghcr.io/ensono/eir-infrastructure:latest; do
+            if docker image inspect "$SRC" >/dev/null 2>&1; then
+              docker tag "$SRC" ensono/eir-infrastructure:$(EirctlVersion) || true
+              docker tag "$SRC" ghcr.io/ensono/eir-infrastructure:$(EirctlVersion) || true
+            fi
+          done
+          # Ensure latest tags exist too
+          for SRC in \
+            ensono/eir-infrastructure:$(EirctlVersion) \
+            ghcr.io/ensono/eir-infrastructure:$(EirctlVersion); do
+            if docker image inspect "$SRC" >/dev/null 2>&1; then
+              docker tag "$SRC" ensono/eir-infrastructure:latest || true
+              docker tag "$SRC" ghcr.io/ensono/eir-infrastructure:latest || true
+            fi
+          done
           echo "Cached image loaded successfully"
         fi
 
@@ -148,5 +166,21 @@ steps:
       script: |
         mkdir -p $(Pipeline.Workspace)/.docker-cache
         echo "Saving Docker image to cache..."
-        docker save ensono/eir-infrastructure:latest -o $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar
+        IMAGE=""
+        for CAND in \
+          ghcr.io/ensono/eir-infrastructure:$(EirctlVersion) \
+          ensono/eir-infrastructure:$(EirctlVersion) \
+          ghcr.io/ensono/eir-infrastructure:latest \
+          ensono/eir-infrastructure:latest; do
+          if docker image inspect "$CAND" >/dev/null 2>&1; then
+            IMAGE="$CAND"
+            break
+          fi
+        done
+        if [ -n "$IMAGE" ]; then
+          echo "Caching image: $IMAGE"
+          docker save "$IMAGE" -o $(Pipeline.Workspace)/.docker-cache/eir-infrastructure.tar
+        else
+          echo "WARNING: No eir-infrastructure image found to cache"
+        fi
         echo "Docker image cached successfully"
