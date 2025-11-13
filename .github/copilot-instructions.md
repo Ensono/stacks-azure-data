@@ -148,7 +148,7 @@ curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.ja
 
 ## Security and Compliance
 
-**CRITICAL**: All AI agents must also follow the comprehensive security guidelines in [copilot-security-instructions.md](copilot-security-instructions.md). This includes:
+**CRITICAL**: All AI agents must also follow the comprehensive security guidelines in [copilot-security-instructions.md](./copilot-security-instructions.md). This includes:
 
 - GPG commit signing requirements (never bypass with `--no-gpg-sign`)
 - Branch protection and pull request workflows
