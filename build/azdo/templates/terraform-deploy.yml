@@ -42,6 +42,7 @@ steps:
   - template: install-eirctl.yml
     parameters:
       EirctlVersion: $(EirctlVersion)
+      EirctlImageTag: $(EirctlImageTag)
 
   - task: Bash@3
     displayName: "Eirctl: Initialise Terraform"
