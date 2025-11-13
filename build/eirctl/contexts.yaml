@@ -1,0 +1,26 @@
+contexts:
+  powershell:
+    container:
+      name: ensono/eir-infrastructure
+      shell: pwsh
+      shell_args:
+        - -Command
+    envfile:
+      exclude:
+        - sourceversionmessage
+        - posh_azure_subscription
+
+  powershell-data:
+    container:
+      name: ensono/eir-azure-data
+      shell: pwsh
+      shell_args:
+        - -Command
+    env:
+      VIRTUAL_ENV: /eirctl/venv
+      PATH: $VIRTUAL_ENV:$env:PATH
+      PYTHON_PATH: .
+    envfile:
+      exclude:
+        - sourceversionmessage
+        - posh_azure_subscription

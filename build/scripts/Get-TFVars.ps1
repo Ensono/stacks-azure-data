@@ -12,7 +12,7 @@ param (
 
     [string]
     # Name of the variable file
-    $file = "vars.tf"
+    $file = "variables.tf"
 )
 
 # create the stages
