@@ -98,6 +98,20 @@ stages:
             parameters:
               EirctlVersion: $(EirctlVersion)
 
+          # Set up Azure credentials as pipeline variables
+          - task: AzureCLI@2
+            displayName: "Setup: Azure Authentication"
+            inputs:
+              azureSubscription: $(service_connection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              addSpnToEnvironment: true
+              inlineScript: |
+                echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+                echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
+                echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$(az account show --query id -o tsv)"
+                echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+
           - task: Bash@3
             displayName: "Eirctl: Initialise Terraform"
             inputs:
@@ -107,6 +121,10 @@ stages:
                 export USER_GROUP_ID=`id -g`
                 eirctl -d infra:init
             env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-databricks,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # Copy the tfvars file from the downloaded artifact to the deployment directory
@@ -126,6 +144,10 @@ stages:
                   script: |
                     eirctl infra:destroy:plan
                 env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
                   TF_VAR_name_company: $(company)
                   TF_VAR_name_project: $(project)
                   TF_VAR_ado_org_url: $(ado_org_url)
@@ -137,6 +159,11 @@ stages:
                   targetType: inline
                   script: |
                     eirctl infra:destroy:apply
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
 
           - ${{ if eq(parameters.deploy, true) }}:
               - task: Bash@3
@@ -146,6 +173,10 @@ stages:
                   script: |
                     eirctl -d infra:plan
                 env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
                   TF_VAR_name_company: $(company)
                   TF_VAR_name_project: $(project)
                   TF_VAR_ado_org_url: $(ado_org_url)
@@ -159,3 +190,8 @@ stages:
                     export USER_ID=`id -u`
                     export USER_GROUP_ID=`id -g`
                     eirctl infra:apply
+                env:
+                  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                  ARM_TENANT_ID: $(ARM_TENANT_ID)
