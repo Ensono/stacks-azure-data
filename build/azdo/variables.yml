@@ -41,6 +41,8 @@ variables:
   # Agent configuration
   - name: EirctlVersion
     value: 0.9.6
+  - name: EirctlImageTag
+    value: latest
   - name: pool_vm_image
     value: ubuntu-24.04
 
