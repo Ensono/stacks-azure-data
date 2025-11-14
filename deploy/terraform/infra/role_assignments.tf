@@ -33,4 +33,6 @@ resource "azurerm_role_assignment" "adb_role" {
   scope                = module.adb.adb_databricks_id
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
+
+  depends_on = [data.azurerm_databricks_workspace.verify_adb]
 }
