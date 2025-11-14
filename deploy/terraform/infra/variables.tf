@@ -18,7 +18,6 @@ variable "name_component" {
   default     = "data"
 }
 
-
 variable "environment" {
   type    = string
   default = "dev"

@@ -66,7 +66,7 @@ variables:
   - template: ../../common-vars.yml
   - template: air-infrastructure-data-vars.yml
   - name: tf_state_key
-    value: $(company)-$(project)-$(domain)-azdo
+    value: $(company)-$(project)-$(domain)-$(env_name)-infra
 
 stages:
   - stage: Build

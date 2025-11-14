@@ -60,7 +60,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/databricks
       - name: tf_state_key
-        value: $(company)-$(project)-$(domain)-databricks
+        value: $(company)-$(project)-$(domain)-$(env_name)-databricks
 
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
@@ -77,7 +77,7 @@ stages:
           - template: templates/terraform-deploy.yml
             parameters:
               stage_name: databricks
-              tf_state_key: $(company)-$(project)-$(domain)-databricks
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-databricks
               download_artifact: ""
               artifact_file: ""
               destroy: true
@@ -99,7 +99,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/infra
       - name: tf_state_key
-        value: $(company)-$(project)-$(domain)-infra
+        value: $(company)-$(project)-$(domain)-$(env_name)-infra
 
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
@@ -116,7 +116,7 @@ stages:
           - template: templates/terraform-deploy.yml
             parameters:
               stage_name: infra
-              tf_state_key: $(company)-$(project)-$(domain)-infra
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-infra
               download_artifact: ""
               artifact_file: ""
               destroy: true
@@ -137,7 +137,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/networking
       - name: tf_state_key
-        value: $(company)-$(project)-$(domain)-networking
+        value: $(company)-$(project)-$(domain)-$(env_name)-networking
 
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
@@ -153,6 +153,6 @@ stages:
         steps:
           - template: templates/terraform-networking.yml
             parameters:
-              tf_state_key: $(company)-$(project)-$(domain)-networking
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-networking
               destroy: true
               deploy: false

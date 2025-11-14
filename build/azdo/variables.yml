@@ -10,7 +10,7 @@ variables:
   - name: company
     value: ensono
   - name: project
-    value: data
+    value: stacks
   - name: enable_private_networks
     value: true
 
