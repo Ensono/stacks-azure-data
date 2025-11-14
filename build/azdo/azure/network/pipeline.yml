@@ -158,7 +158,6 @@ stages:
                             ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             TF_FILE_LOCATION: $(TF_FILE_LOCATION)
-                            tf_state_key: $(tf_state_key)
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                             TF_BACKEND_DESTROY_PLAN: '-input=false,-out="destroy.tfplan"'
 
@@ -182,6 +181,5 @@ stages:
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: $(TF_FILE_LOCATION)
-                            tf_state_key: $(tf_state_key)
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                             TF_VAR_enable_private_networks: true

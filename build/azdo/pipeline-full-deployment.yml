@@ -86,6 +86,7 @@ stages:
         steps:
           - template: templates/terraform-networking.yml
             parameters:
+              tf_state_key: $(company)-$(project)-$(domain)-networking
               destroy: ${{ parameters.destroy }}
               deploy: ${{ parameters.deploy }}
 
