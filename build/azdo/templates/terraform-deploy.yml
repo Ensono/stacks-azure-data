@@ -121,17 +121,24 @@ steps:
           TF_VAR_ado_org_url: $(ado_org_url)
           TF_VAR_ado_project_id: $(ado_project_id)
 
-      - task: AzureCLI@2
+      - task: Bash@3
         displayName: "Add Hosted Agent IP to KeyVault ACL"
         inputs:
-          azureSubscription: $(azure_service_connection)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
+          targetType: inline
+          script: |
+            # Login to Azure using service principal
+            az login --service-principal \
+              --username "$ARM_CLIENT_ID" \
+              --password "$ARM_CLIENT_SECRET" \
+              --tenant "$ARM_TENANT_ID" \
+              --output none
+
+            az account set --subscription "$ARM_SUBSCRIPTION_ID"
+
             # Find KeyVault in the subscription with matching tags
             # The KeyVault is part of the infrastructure being deployed
             KV_NAME=$(az keyvault list \
-              --subscription $(ARM_SUBSCRIPTION_ID) \
+              --subscription "$ARM_SUBSCRIPTION_ID" \
               --query "[?starts_with(name, '$(company)$(project)')].name | [0]" \
               -o tsv 2>/dev/null || echo "")
 
@@ -156,6 +163,11 @@ steps:
               echo "Waiting 30 seconds for network rule propagation..."
               sleep 30
             fi
+        env:
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
         continueOnError: false
 
       - task: Bash@3
@@ -172,14 +184,21 @@ steps:
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
 
-      - task: AzureCLI@2
+      - task: Bash@3
         displayName: "Remove Hosted Agent IP from KeyVault ACL"
         condition: and(always(), eq(variables['KV_ACL_ADDED'], 'true'))
         inputs:
-          azureSubscription: $(azure_service_connection)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
+          targetType: inline
+          script: |
+            # Login to Azure using service principal
+            az login --service-principal \
+              --username "$ARM_CLIENT_ID" \
+              --password "$ARM_CLIENT_SECRET" \
+              --tenant "$ARM_TENANT_ID" \
+              --output none
+
+            az account set --subscription "$ARM_SUBSCRIPTION_ID"
+
             echo "Removing agent IP $(AGENT_PUBLIC_IP) from KeyVault $(KV_NAME) network ACL"
 
             az keyvault network-rule remove \
@@ -188,6 +207,11 @@ steps:
               --output none
 
             echo "KeyVault ACL cleanup completed"
+        env:
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
         continueOnError: true
 
       - task: Bash@3
