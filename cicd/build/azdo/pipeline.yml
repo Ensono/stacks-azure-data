@@ -203,8 +203,13 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             TF_FILE_LOCATION: /app/deploy/azure/infra
+                            tf_state_key: $(tf_state_key)
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                             TF_BACKEND_DESTROY_PLAN: '-input=false,-out="destroy.tfplan"'
 
@@ -228,9 +233,14 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: /app/deploy/azure/infra
+                            tf_state_key: $(tf_state_key)
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
   - stage: Release

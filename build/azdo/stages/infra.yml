@@ -21,6 +21,8 @@ stages:
         value: infra
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/infra
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-infra
 
     pool:
       # Set the correct pool or build image based on the outputs from the networking stage
