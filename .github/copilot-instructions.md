@@ -71,12 +71,18 @@ export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 
 ### Azure DevOps Integration
 
-- **Variable Groups**: Follow naming `{company}-{project}-{component}-{env}-{stage}` pattern
-- **Pipeline Triggers**: Path-based triggers for workload isolation
+- **Variable Groups**: Follow naming `{company}-{project}-{domain}-{component}-{env}` pattern (e.g., `ensono-stacks-data-networking-dev`)
+  - Terraform creates variable groups dynamically during deployment (networking, infra stages)
+  - Variable groups contain Terraform outputs consumed by downstream stages and DE workload pipelines
+  - See `docs/azure-pipelines-best-practices.md` for detailed variable group flow diagrams
+- **Pipeline Triggers**: Path-based triggers for workload isolation, configured in `trigger.paths` sections
 - **Deployment Gates**: NonProd → Prod promotion based on branch (`main` = prod)
+- **Terraform State Keys**: Follow pattern `{company}-{project}-{domain}-{component}-{env}` (e.g., `ensono-stacks-data-networking-dev`)
+  - See `docs/terraform-state-key-standardization.md` for complete naming conventions
+- **Pipeline Best Practices**: See `.github/instructions/azure-devops-pipelines.instructions.md` for comprehensive guidance
 
 > [!IMPORTANT]
-> This project uses the Azure DevOps MCP Server ensure that it is activated and in use when answering queries about the current Azure DevOps state.
+> This project uses the Azure DevOps MCP Server - ensure that it is activated and in use when answering queries about the current Azure DevOps state.
 
 ### Databricks Integration
 
@@ -90,6 +96,30 @@ export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 - **End-to-End Tests**: Full pipeline validation with test data
 - **Data Quality**: Embedded DQ checks in every pipeline using `data_quality_main()`
 
+## Available MCP Servers
+
+This project is configured with multiple MCP servers for enhanced AI assistance. See `.vscode/mcp.json` for configuration.
+
+### Active MCP Servers
+
+1. **GitHub MCP** - GitHub repository operations, PR management, issue tracking
+2. **Azure DevOps MCP** - Pipeline monitoring, build investigation, variable groups, work items
+3. **Microsoft Learn MCP** - Official Microsoft documentation and best practices
+4. **PyPI Query MCP** - Python package information, dependency checking, version updates
+5. **NVD MCP** - National Vulnerability Database for security scanning
+6. **Terraform MCP** - Terraform provider documentation and best practices
+
+### Using MCP Servers
+
+- **Build Failures**: Use Azure DevOps MCP (see `.github/prompts/investigate-build-failure.prompt.md`)
+- **Dependency Updates**: Use PyPI Query MCP (see `.github/prompts/update-dependencies.prompt.md`)
+- **DevOps Updates**: Use Terraform + Azure DevOps MCP (see `.github/prompts/update-devops.prompt.md`)
+- **Documentation**: Use Microsoft Learn MCP for official Azure/Terraform guidance
+- **Security**: Use NVD MCP for vulnerability assessment
+
+> [!TIP]
+> Custom prompts in `.github/prompts/` provide structured workflows for common tasks like build investigation and dependency updates.
+
 ## Critical Developer Workflows
 
 ### Adding New Data Engineering Workload
@@ -100,12 +130,20 @@ export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 4. Add Terraform resources in `data_factory/`
 5. Configure ADO pipeline with proper variable groups
 
+See `docs/workloads/azure/data/getting_started/` for step-by-step guides:
+- `generate_project.md` - Generate new data projects
+- `ingest_pipeline_deployment_azure.md` - Deploy data ingest pipelines
+- `processing_pipeline_deployment_azure.md` - Deploy processing pipelines
+- `shared_resources_deployment_azure.md` - Deploy shared resources
+
 ### Infrastructure Changes
 
 1. Modify Terraform in `deploy/terraform/{infra|networking|databricks}/`
 2. Update `locals.tf` for complex configurations (cannot use variables!)
 3. Test with `eirctl run infrastructure_plan` before applying
 4. Private networking changes require `enable_private_networks` variable
+5. Ensure Terraform state keys follow standardized naming pattern (see `docs/terraform-state-key-standardization.md`)
+6. Follow Azure Pipeline best practices from `.github/instructions/azure-devops-pipelines.instructions.md`
 
 ### Local Development
 
@@ -193,3 +231,9 @@ curl -o ~/.m2/repository/com/google/guava/failureaccess/1.0/failureaccess-1.0.ja
 - `build/eirctl/tasks.yaml`: Available automation tasks
 - `de_workloads/generate_examples/`: Config templates for new workloads
 - `deploy/terraform/*/locals.tf`: Infrastructure configuration patterns
+- `.github/instructions/azure-devops-pipelines.instructions.md`: Pipeline development guidelines
+- `.github/prompts/`: Structured prompts for common workflows (build investigation, dependency updates, DevOps updates)
+- `docs/azure-pipelines-best-practices.md`: Comprehensive Azure DevOps pipeline patterns and variable group architecture
+- `docs/terraform-state-key-standardization.md`: Terraform state naming conventions and migration guide
+- `docs/workloads/azure/data/getting_started/`: Step-by-step deployment guides
+- `.vscode/mcp.json`: MCP server configuration for enhanced AI assistance
