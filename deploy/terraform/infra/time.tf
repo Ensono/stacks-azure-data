@@ -56,3 +56,13 @@ resource "time_sleep" "wait_after_private_endpoint_approval" {
     null_resource.approve_private_endpoints
   ]
 }
+
+# Create a sleep function that will wait for 2 minutes after Databricks workspace
+# operations to allow Azure control plane propagation
+resource "time_sleep" "wait_after_databricks" {
+  create_duration = "120s"
+
+  depends_on = [
+    module.adb
+  ]
+}

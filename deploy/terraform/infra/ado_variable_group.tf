@@ -1,6 +1,6 @@
 # This resource runs once all the resources have been deployed
 #
-# It takes all of the outputs and puts them into the named resource group 
+# It takes all of the outputs and puts them into the named resource group
 # in Azure DevOps
 
 # NOTE: If the variable group is updated manually and this resource is run again
@@ -24,5 +24,13 @@ resource "azuredevops_variable_group" "ado_vg" {
     }
   }
 
-  depends_on = [module.adf, module.adls_default, module.adf, module.sql]
+  depends_on = [
+    module.adf,
+    module.adls_default,
+    module.adb,
+    module.sql,
+    module.kv_default,
+    time_sleep.wait_after_private_endpoint_approval,
+    time_sleep.wait_after_databricks
+  ]
 }
