@@ -133,21 +133,21 @@ steps:
               --tenant "$ARM_TENANT_ID" \
               --output none
 
-            az account set --subscription \"$ARM_SUBSCRIPTION_ID\"
+            az account set --subscription "$ARM_SUBSCRIPTION_ID"
 
             # Find KeyVault by resource group
             # Resource group name follows: {company}-{project}-{location}-{component}-{environment}
-            RG_NAME=\"$(company)-$(project)-$(region)-$(domain)-$(env_name)\"
+            RG_NAME="$(company)-$(project)-$(region)-$(domain)-$(env_name)"
 
             KV_NAME=$(az keyvault list \
-              --resource-group \"$RG_NAME\" \
-              --query \"[0].name\" \
-              -o tsv 2>/dev/null || echo \"\")
+              --resource-group "$RG_NAME" \
+              --query "[0].name" \
+              -o tsv 2>/dev/null || echo "")
 
-            if [ -z \"$KV_NAME\" ]; then
-              echo \"KeyVault not found in resource group $RG_NAME, skipping ACL configuration\"
-              echo \"This is expected on first deployment\"
-              echo \"##vso[task.setvariable variable=KV_ACL_ADDED]false\"
+            if [ -z "$KV_NAME" ]; then
+              echo "KeyVault not found in resource group $RG_NAME, skipping ACL configuration"
+              echo "This is expected on first deployment"
+              echo "##vso[task.setvariable variable=KV_ACL_ADDED]false"
             else
               echo "Found KeyVault: $KV_NAME"
               echo "Adding agent IP $(AGENT_PUBLIC_IP) to KeyVault network ACL"
