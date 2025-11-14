@@ -57,7 +57,7 @@ variables:
   - name: network_domain
     value: $(domain)-network
   - name: tf_state_key
-    value: $(network_domain)
+    value: $(company)-$(project)-$(domain)-network
   - name: TF_FILE_LOCATION
     value: /app/deploy/azure/networking
 

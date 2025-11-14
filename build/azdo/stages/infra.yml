@@ -65,7 +65,7 @@ stages:
               ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
               ARM_TENANT_ID: $(ARM_TENANT_ID)
               EIRCTL_IMAGE_TAG: $(EirctlImageTag)
-              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # Copy the tfvars file from the downloaded artifact to the deployment directory
           - task: CopyFiles@2
