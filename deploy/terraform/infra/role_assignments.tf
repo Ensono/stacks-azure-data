@@ -34,5 +34,5 @@ resource "azurerm_role_assignment" "adb_role" {
   role_definition_name = var.adb_role_adf
   principal_id         = module.adf.adf_managed_identity
 
-  depends_on = [time_sleep.wait_after_databricks]
+  depends_on = [data.azurerm_databricks_workspace.verify_adb]
 }

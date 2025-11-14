@@ -42,6 +42,10 @@
       "env": {
         "NVD_API_KEY": "${input:nvd_api_key}"
       }
+    },
+    "terraform": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server:0.3.2"]
     }
   }
 }
