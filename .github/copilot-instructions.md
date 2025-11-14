@@ -75,6 +75,9 @@ export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 - **Pipeline Triggers**: Path-based triggers for workload isolation
 - **Deployment Gates**: NonProd → Prod promotion based on branch (`main` = prod)
 
+> [!IMPORTANT]
+> This project uses the Azure DevOps MCP Server ensure that it is activated and in use when answering queries about the current Azure DevOps state.
+
 ### Databricks Integration
 
 - Spark jobs use `stacks.data` imports for standardized logging, data quality, and ADF parameter handling
