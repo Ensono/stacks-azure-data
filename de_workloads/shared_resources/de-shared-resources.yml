@@ -69,7 +69,7 @@ variables:
   - name: self_repo_adf_src
     value: "de_workloads/$(job)/data_factory"
   - name: tf_state_key
-    value: $(domain)_$(job)
+    value: $(company)-$(project)-$(domain)-$(job)
 
 pool:
   name: $(agentpool_name)

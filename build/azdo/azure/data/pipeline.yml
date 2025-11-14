@@ -73,7 +73,7 @@ variables:
   - template: ../../common-vars.yml
   - template: variables.yml
   - name: tf_state_key
-    value: $(domain)
+    value: $(company)-$(project)-$(domain)-data
 
 stages:
   - stage: Build

@@ -73,7 +73,7 @@ variables:
   - name: blob_config_destination
     value: "config/$(jobtype)/$(job)"
   - name: tf_state_key
-    value: $(domain)_$(jobtype)_$(job)
+    value: $(company)-$(project)-$(domain)-$(jobtype)-$(job)
   - name: dbfs_destination
     value: "dbfs:/FileStore/scripts/ingest_azure_sql_example"
   - name: self_repo_spark_src
