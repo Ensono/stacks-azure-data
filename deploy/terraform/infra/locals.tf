@@ -37,7 +37,7 @@ locals {
   # this is so that it is easy to identify in the Azure DevOps UI and cannot be confused with other projects
   # using this template
   tf_stage           = lower(data.external.env.result["STAGE"])
-  ado_vg_name_prefix = "${var.name_company}-${var.name_project}-${var.name_component}-${var.environment}-${local.tf_stage}"
+  ado_vg_name_prefix = "${var.name_company}-${var.name_project}-${var.name_component}-${var.environment}-${local.tf_stage}-managed"
 
   # Create object that will be used for the outputs, this is so that they can be used
   # in different places

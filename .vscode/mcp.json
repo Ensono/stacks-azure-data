@@ -22,6 +22,10 @@
       "command": "npx",
       "args": ["-y", "@azure-devops/mcp", "${input:ado_org}"]
     },
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
     "pypi-query": {
       "command": "uvx",
       "args": ["--from", "pypi-query-mcp-server", "pypi-query-mcp"],
