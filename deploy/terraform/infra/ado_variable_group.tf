@@ -31,6 +31,6 @@ resource "azuredevops_variable_group" "ado_vg" {
     module.sql,
     module.kv_default,
     time_sleep.wait_after_private_endpoint_approval,
-    time_sleep.wait_after_databricks
+    data.azurerm_databricks_workspace.verify_adb
   ]
 }
