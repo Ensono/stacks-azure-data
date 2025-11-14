@@ -69,7 +69,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/databricks
       - name: tf_state_key
-        value: $(company)-$(project)-$(domain)-databricks
+        value: $(company)-$(project)-$(domain)-$(env_name)-databricks
 
     pool:
       # Set the correct pool or build image based on the parameters
@@ -87,7 +87,7 @@ stages:
           - template: templates/terraform-deploy.yml
             parameters:
               stage_name: databricks
-              tf_state_key: $(company)-$(project)-$(domain)-databricks
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-databricks
               download_artifact: infra
               artifact_file: $(env_name)-infra-inputs.auto.tfvars
               destroy: ${{ parameters.destroy }}
