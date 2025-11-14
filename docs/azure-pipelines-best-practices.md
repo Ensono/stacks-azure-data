@@ -10,6 +10,7 @@ purpose: "Comprehensive guide for Azure DevOps pipeline development following Mi
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Variable Group Flow Diagram](#variable-group-flow-diagram)
 - [Pipeline Architecture](#pipeline-architecture)
 - [Security Best Practices](#security-best-practices)
 - [Template Design Patterns](#template-design-patterns)
@@ -35,6 +36,206 @@ This document provides comprehensive guidance for developing Azure DevOps pipeli
 3. **Template-Driven**: Reuse templates to ensure consistency and reduce duplication
 4. **Fail-Fast**: Detect issues early in the pipeline to reduce feedback cycles
 5. **Observable**: Comprehensive logging and monitoring at every stage
+
+---
+
+## Variable Group Flow Diagram
+
+### Overview
+
+The Stacks Azure Data Platform uses a sophisticated variable group system where Azure DevOps variable groups are dynamically created by Terraform during infrastructure deployment. These variable groups contain outputs from the Terraform deployments and are then consumed by subsequent pipeline stages and DE workload pipelines.
+
+### Variable Group Lifecycle
+
+```mermaid
+graph TB
+    subgraph "Input Variables"
+        A[azure-sp-creds]:::inputGroup
+        B[azure-sp-creds-prod]:::inputGroup
+        C[variables.yml Template]:::template
+    end
+
+    subgraph "Pipeline: Full Deployment"
+        D[Stage: Networking]:::stage
+        E[Stage: Infrastructure]:::stage
+        F[Stage: Databricks]:::stage
+    end
+
+    subgraph "Terraform Creates Variable Groups"
+        G[Networking TF Creates:<br/>company-project-data-networking-ENV]:::createdGroup
+        H[Infrastructure TF Creates:<br/>company-project-data-ENV-infra-managed]:::createdGroup
+    end
+
+    subgraph "Variable Group Contents"
+        I1[Networking VG Contains:<br/>- pe_subnet_id<br/>- vnet_name<br/>- nat_gateway_id<br/>- public_subnet_name<br/>- private_subnet_name<br/>- ado_agent_pool_name<br/>- enable_private_networks]:::vgContent
+        I2[Infrastructure VG Contains:<br/>- resource_group_name<br/>- adf_name<br/>- adls_storage_accounts<br/>- adb_databricks_hosturl<br/>- kv_name<br/>- key_vault_uri<br/>- private_endpoint_list]:::vgContent
+    end
+
+    subgraph "DE Workload Pipelines"
+        J1[Ingest Pipelines<br/>de-ingest-ado-pipeline.yml]:::workload
+        J2[Processing Pipelines<br/>de-process-ado-pipeline.yml]:::workload
+        J3[Shared Resources<br/>de-shared-resources.yml]:::workload
+    end
+
+    subgraph "Consumed Variable Groups"
+        K1[azure-sp-creds]:::consumedGroup
+        K2[ensono-data-ENV<br/>Dynamic environment-specific group]:::consumedGroup
+    end
+
+    %% Input flow
+    A --> D
+    B --> D
+    C --> D
+    C --> E
+    C --> F
+
+    %% Networking stage creates VG
+    D -->|Terraform creates| G
+    G -->|Contains| I1
+
+    %% Infrastructure stage consumes networking VG
+    G --> E
+    E -->|Terraform creates| H
+    H -->|Contains| I2
+
+    %% Databricks stage consumes networking VG
+    G --> F
+
+    %% DE Workloads consume created VGs
+    K1 --> J1
+    K1 --> J2
+    K1 --> J3
+    K2 --> J1
+    K2 --> J2
+    K2 --> J3
+
+    %% Link created groups to consumed groups
+    G -.->|Becomes| K2
+    H -.->|Becomes| K2
+
+    classDef inputGroup fill:#e1f5ff,stroke:#0078d4,stroke-width:2px,color:#000
+    classDef createdGroup fill:#fff4ce,stroke:#ca5010,stroke-width:2px,color:#000
+    classDef consumedGroup fill:#dff6dd,stroke:#107c10,stroke-width:2px,color:#000
+    classDef template fill:#f3f2f1,stroke:#605e5c,stroke-width:2px,color:#000
+    classDef stage fill:#e8daef,stroke:#8e44ad,stroke-width:2px,color:#000
+    classDef workload fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    classDef vgContent fill:#fff9c4,stroke:#f57f17,stroke-width:1px,color:#000,text-align:left
+```
+
+### Detailed Flow Explanation
+
+#### 1. **Input Variable Groups** (Manually Created)
+
+These are created manually in Azure DevOps and contain service principal credentials:
+
+- **`azure-sp-creds`**: Non-production service principal credentials
+  - `arm_client_id`
+  - `arm_client_secret`
+  - `arm_tenant_id`
+  - `arm_subscription_id`
+
+- **`azure-sp-creds-prod`**: Production service principal credentials
+  - Same structure as non-prod, but for production subscription
+
+#### 2. **Networking Stage Creates Variable Groups**
+
+The **Networking** stage deploys Terraform that creates variable groups dynamically:
+
+**Variable Group Naming Pattern:**
+```
+{company}-{project}-{domain}-networking-{env_name}
+Example: ensono-stacks-data-networking-dev
+```
+
+**Created by:** `deploy/terraform/networking/ado_variable_group.tf`
+
+**Contains:** Network infrastructure outputs
+- `pe_subnet_id`: Private endpoint subnet ID
+- `pe_subnet_name`: Private endpoint subnet name
+- `vnet_name`: Virtual network name
+- `vnet_resource_group_name`: VNet resource group
+- `nat_gateway_id`: NAT Gateway ID
+- `public_subnet_name`: Databricks public subnet name
+- `public_subnet_prefix`: Public subnet address prefix
+- `private_subnet_name`: Databricks private subnet name
+- `private_subnet_prefix`: Private subnet address prefix
+- `ado_agent_pool_name`: Self-hosted agent pool name (if enabled)
+- `enable_private_networks`: Boolean flag for private networking
+
+#### 3. **Infrastructure Stage Consumes and Creates**
+
+The **Infrastructure** stage:
+1. **Consumes** the networking variable group created in stage 1
+2. Uses those values to deploy infrastructure in the correct network
+3. **Creates** its own variable group with infrastructure outputs
+
+**Variable Group Naming Pattern:**
+```
+{company}-{project}-{component}-{env_name}-infra-managed
+Example: ensono-stacks-data-dev-infra-managed
+```
+
+**Created by:** `deploy/terraform/infra/ado_variable_group.tf`
+
+**Contains:** Infrastructure resource outputs
+- `resource_group_name`: Main resource group name
+- `adf_name`: Azure Data Factory name
+- `adf_integration_runtime_name`: Integration runtime name
+- `adls_storage_accounts`: JSON array of storage account names
+- `adls_storage_account_endpoints`: Blob endpoints
+- `adls_dfs_endpoints`: Data Lake endpoints
+- `adb_databricks_id`: Databricks workspace ID
+- `adb_databricks_hosturl`: Databricks workspace URL
+- `kv_name`: Key Vault name
+- `key_vault_id`: Key Vault resource ID
+- `key_vault_uri`: Key Vault URI
+- `private_endpoint_list`: JSON of private endpoints
+
+#### 4. **Databricks Stage Consumes**
+
+The **Databricks** stage:
+1. **Consumes** the networking variable group (for network configuration)
+2. Uses those values to configure Databricks in the correct network context
+
+#### 5. **DE Workload Pipelines Consume**
+
+Data Engineering workload pipelines consume the created variable groups:
+
+**Consumed Variable Groups:**
+```yaml
+variables:
+  - group: azure-sp-creds
+  - group: ensono-data-${environment_shortname}
+```
+
+The `ensono-data-${environment_shortname}` group is a placeholder that maps to the infrastructure-managed variable group created by Terraform. Workloads use these to:
+- Connect to Azure Data Factory
+- Access Data Lake Storage accounts
+- Authenticate with Databricks
+- Retrieve secrets from Key Vault
+
+### Variable Group Naming Convention
+
+| Pipeline Stage | Variable Group Name Pattern | Created By | Purpose |
+|---------------|----------------------------|------------|---------|
+| **Networking** | `{company}-{project}-{domain}-networking-{env}` | Terraform | Network infrastructure IDs and names |
+| **Infrastructure** | `{company}-{project}-{component}-{env}-infra-managed` | Terraform | Data platform resource IDs and connection strings |
+| **DE Workloads** | `ensono-data-{env}` | Manual/Terraform | Environment-specific configurations for DE pipelines |
+
+### Important Notes
+
+1. **Terraform-Managed Groups**: Variable groups created by Terraform should never be manually edited in Azure DevOps. Any manual changes will be overwritten on the next Terraform apply.
+
+2. **Environment Separation**: Each environment (dev, qa, uat, prod) gets its own set of variable groups, ensuring complete isolation.
+
+3. **Dynamic Creation**: The `for_each` loop in Terraform creates variable groups for all non-hub environments defined in the networking configuration.
+
+4. **Dependency Chain**:
+   - Networking VG → Infrastructure stage
+   - Networking VG → Databricks stage
+   - Infrastructure VG → DE Workload pipelines
+
+5. **Access Control**: All created variable groups have `allow_access = true`, permitting all pipelines in the project to access them. For tighter security, configure pipeline permissions in Azure DevOps.
 
 ---
 

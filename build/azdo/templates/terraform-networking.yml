@@ -95,6 +95,8 @@ steps:
         inputs:
           targetType: inline
           script: |
+            export USER_ID=`id -u`
+            export USER_GROUP_ID=`id -g`
             eirctl infra:apply
         env:
           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
