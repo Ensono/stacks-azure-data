@@ -25,7 +25,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_auth_pe" {
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "browser_authentication"
 
-  depends_on = [time_sleep.wait_for_resources]
+  depends_on = [time_sleep.wait_for_resources, time_sleep.wait_after_databricks]
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
@@ -35,7 +35,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "db_pe" {
   target_resource_id = module.adb.adb_databricks_id
   subresource_name   = "databricks_ui_api"
 
-  depends_on = [time_sleep.wait_for_resources]
+  depends_on = [time_sleep.wait_for_resources, time_sleep.wait_after_databricks]
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
@@ -45,7 +45,7 @@ resource "azurerm_data_factory_managed_private_endpoint" "kv_pe" {
   target_resource_id = module.kv_default.id
   subresource_name   = "vault"
 
-  depends_on = [time_sleep.wait_for_resources]
+  depends_on = [time_sleep.wait_for_resources, time_sleep.wait_after_databricks]
 }
 
 resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
@@ -55,5 +55,5 @@ resource "azurerm_data_factory_managed_private_endpoint" "sql_pe" {
   target_resource_id = module.sql.sql_server_id
   subresource_name   = "sqlServer"
 
-  depends_on = [time_sleep.wait_for_resources]
+  depends_on = [time_sleep.wait_for_resources, time_sleep.wait_after_databricks]
 }

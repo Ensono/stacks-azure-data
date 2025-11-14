@@ -3,6 +3,7 @@
       "ms-python.python",
       "ms-python.vscode-pylance",
       "ms-python.flake8",
-      "ms-azuretools.vscode-azureterraform"
+      "ms-azuretools.vscode-azureterraform",
+      "ms-azure-devops.azure-pipelines"
     ]
 }
