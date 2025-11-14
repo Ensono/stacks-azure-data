@@ -214,6 +214,7 @@ stages:
                         TF_FILE_LOCATION: "./$(self_repo_adf_src)/"
                         ENV_NAME: ${{ stage.environment_shortname }}
 
+                        tf_state_key: $(tf_state_key)
                         TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
                         TF_VAR_data_factory_resource_group_name: $(resource_group)
                         TF_VAR_data_factory: $(datafactoryname)

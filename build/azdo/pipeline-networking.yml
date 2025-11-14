@@ -46,6 +46,8 @@ stages:
         value: /eirctl/deploy/terraform/networking
       - name: ENV_NAME
         value: ${{ parameters.environment }}
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-networking
 
     jobs:
       - job: Deploy

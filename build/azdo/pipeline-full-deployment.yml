@@ -75,6 +75,8 @@ stages:
         value: networking
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/networking
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-networking
 
     jobs:
       - job: Deploy
@@ -102,6 +104,8 @@ stages:
         value: infra
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/infra
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-infra
 
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
@@ -118,7 +122,7 @@ stages:
           - template: templates/terraform-deploy.yml
             parameters:
               stage_name: infra
-              tf_backend_key: $(company)-$(project)-$(domain)-infra
+              tf_state_key: $(company)-$(project)-$(domain)-infra
               download_artifact: networking
               artifact_file: $(env_name)-networking-inputs.auto.tfvars
               destroy: ${{ parameters.destroy }}
@@ -139,6 +143,8 @@ stages:
         value: databricks
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/databricks
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-databricks
 
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
@@ -155,7 +161,7 @@ stages:
           - template: templates/terraform-deploy.yml
             parameters:
               stage_name: databricks
-              tf_backend_key: $(company)-$(project)-$(domain)-databricks
+              tf_state_key: $(company)-$(project)-$(domain)-databricks
               download_artifact: infra
               artifact_file: $(env_name)-infra-inputs.auto.tfvars
               destroy: ${{ parameters.destroy }}
