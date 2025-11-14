@@ -15,6 +15,16 @@ parameters:
     type: boolean
     default: true
 
+  - name: env_name
+    displayName: Environment Name
+    default: dev
+    values:
+      - dev
+      - qa
+      - uat
+      - prod
+    type: string
+
   - name: debug
     displayName: Enable Debug
     type: boolean
@@ -45,7 +55,7 @@ stages:
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/networking
       - name: ENV_NAME
-        value: ${{ parameters.environment }}
+        value: ${{ parameters.env_name }}
       - name: tf_state_key
         value: $(company)-$(project)-$(domain)-$(env_name)-networking
 

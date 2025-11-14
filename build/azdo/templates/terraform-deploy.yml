@@ -25,7 +25,7 @@ steps:
       script: |
         echo "Cleaning workspace..."
         sudo rm -rf $(Build.SourcesDirectory)/deploy/terraform/*/.terraform
-    continueOnError: true
+    continueOnError: true  # Safe to continue if cleanup fails (directories may not exist on first run)
 
   - checkout: self
     clean: true
@@ -37,7 +37,6 @@ steps:
           buildType: current
           artifactName: ${{ parameters.download_artifact }}
           targetPath: $(Agent.TempDirectory)/${{ parameters.download_artifact }}
-        continueOnError: true
 
   - template: install-eirctl.yml
     parameters:
@@ -65,7 +64,6 @@ steps:
           SourceFolder: $(Agent.TempDirectory)/${{ parameters.download_artifact }}/
           Contents: "${{ parameters.artifact_file }}"
           TargetFolder: $(Build.SourcesDirectory)/deploy/terraform/${{ parameters.stage_name }}
-        continueOnError: true
 
   - ${{ if eq(parameters.destroy, true) }}:
 
@@ -129,13 +127,6 @@ steps:
           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
           ARM_TENANT_ID: $(ARM_TENANT_ID)
 
-      - task: CopyFiles@2
-        displayName: Copy stage output files to staging area
-        inputs:
-          flattenFolders: true
-          contents: $(Build.SourcesDirectory)/outputs/terraform/*${{ parameters.stage_name }}*
-          targetFolder: $(Build.ArtifactStagingDirectory)/${{ parameters.stage_name }}
-
       - task: Bash@3
         displayName: "Ensure ${{ parameters.stage_name }} artifact directory exists"
         inputs:
@@ -143,6 +134,13 @@ steps:
           script: |
             mkdir -p $(Build.ArtifactStagingDirectory)/${{ parameters.stage_name }}
             echo "Staging directory prepared: $(Build.ArtifactStagingDirectory)/${{ parameters.stage_name }}"
+
+      - task: CopyFiles@2
+        displayName: Copy stage output files to staging area
+        inputs:
+          flattenFolders: true
+          contents: $(Build.SourcesDirectory)/outputs/terraform/*${{ parameters.stage_name }}*
+          targetFolder: $(Build.ArtifactStagingDirectory)/${{ parameters.stage_name }}
 
       - task: PublishPipelineArtifact@1
         displayName: Upload Generated Files
