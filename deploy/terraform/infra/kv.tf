@@ -21,9 +21,8 @@ module "kv_default" {
   kv_private_dns_zone_id        = var.enable_private_networks ? tostring(data.azurerm_private_dns_zone.kv_private_dns_zone[0].id) : ""
   virtual_network_subnet_ids    = var.enable_private_networks ? [tostring(data.azurerm_subnet.pe_subnet[0].id), tostring(data.azurerm_subnet.build_agent_subnet[0].id)] : []
   network_acl_default_action    = var.enable_private_networks ? "Deny" : "Allow"
+  network_acl_bypass            = "AzureServices" # Allow Azure trusted services (e.g., Azure Pipelines) to bypass firewall
   reader_object_ids             = [module.adf.adf_managed_identity]
 
   depends_on = [module.adf]
 }
-
-
