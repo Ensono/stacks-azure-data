@@ -1,0 +1,5 @@
+=== Workstation
+
+NOTE: Before starting the deployment of any infrastructure from a local workstation, please ensure that all the <<requirements>> have been met.
+
+include::networking.adoc[]

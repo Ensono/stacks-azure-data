@@ -61,6 +61,23 @@ If using something other than rootful Docker then specify a `DOCKER_HOST`:
 export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 ```
 
+**Azure DevOps Pipeline Commands**: The following eirctl commands are used in CI/CD:
+
+- `eirctl infra:vars` - Generate Terraform input variables file (networking stage only)
+- `eirctl infra:init` - Initialize Terraform with backend configuration
+- `eirctl infra:plan` - Create Terraform execution plan
+- `eirctl infra:apply` - Apply Terraform changes
+- `eirctl infra:destroy:plan` - Plan Terraform destruction
+- `eirctl infra:destroy:apply` - Execute Terraform destruction
+
+**Environment Variables Required**:
+- `ARM_CLIENT_ID`, `ARM_CLIENT_SECRET`, `ARM_SUBSCRIPTION_ID`, `ARM_TENANT_ID` - Azure authentication
+- `TF_BACKEND_INIT` - Backend configuration string: `key={state_key},storage_account_name={sa},resource_group_name={rg},container_name={container}`
+- `TF_VAR_name_company`, `TF_VAR_name_project` - Naming convention variables
+- `TF_VAR_ado_org_url`, `TF_VAR_ado_project_id` - Azure DevOps integration
+- `EIRCTL_IMAGE_TAG` - Specific eirctl Docker image version (optional, defaults to latest)
+- `USER_ID`, `USER_GROUP_ID` - User context for containerized operations (set via `id -u` and `id -g`)
+
 ### 4. Configuration Patterns
 
 - **Data Sources**: Use `de_workloads/generate_examples/test_config_*.yaml` as templates
@@ -71,14 +88,48 @@ export DOCKER_HOST="unix:///run/user/$(id -u)/podman/podman.sock"
 
 ### Azure DevOps Integration
 
+- **Pipeline Architecture**: Three-stage deployment sequence with artifact dependencies
+  - **Stage 1: Networking** (`pipeline-networking.yml`) - Creates VNets, subnets, NSGs, and agent pools
+  - **Stage 2: Infrastructure** (`pipeline-infra-private.yml`) - Deploys Data Lake, Key Vault, Data Factory, and creates variable groups
+  - **Stage 3: Databricks** (`pipeline-databricks.yml`) - Configures Databricks workspace with private endpoints
+  - Full deployment orchestrated by `pipeline-full-deployment.yml` for PR validation
+
+- **Reusable Templates**: 
+  - `templates/terraform-networking.yml` - Networking-specific deployment with `infra:vars` generation
+  - `templates/terraform-deploy.yml` - Generic infrastructure deployment with KeyVault ACL management
+  - `templates/install-eirctl.yml` - Standardized eirctl installation
+
+- **Artifact Flow**: Each stage produces artifacts consumed by downstream stages
+  - Networking → `{env_name}-networking-inputs.auto.tfvars` → Infrastructure
+  - Infrastructure → `{env_name}-infra-inputs.auto.tfvars` → Databricks
+  - Artifacts published via `PublishPipelineArtifact@1` and consumed via `DownloadPipelineArtifact@2`
+
 - **Variable Groups**: Follow naming `{company}-{project}-{domain}-{component}-{env}` pattern (e.g., `ensono-stacks-data-networking-dev`)
-  - Terraform creates variable groups dynamically during deployment (networking, infra stages)
+  - Terraform creates variable groups dynamically during deployment (networking stage creates its own group, consumed by infra and databricks)
   - Variable groups contain Terraform outputs consumed by downstream stages and DE workload pipelines
   - See `docs/azure-pipelines-best-practices.md` for detailed variable group flow diagrams
-- **Pipeline Triggers**: Path-based triggers for workload isolation, configured in `trigger.paths` sections
-- **Deployment Gates**: NonProd → Prod promotion based on branch (`main` = prod)
+
+- **Pipeline Triggers**: 
+  - Manual pipelines: `trigger: none`, `pr: none` for individual stage deployments
+  - PR validation: `pipeline-full-deployment.yml` triggers on PRs to `main` branch
+  - Path-based triggers for workload isolation in DE workload pipelines
+
+- **Deployment Gates**: 
+  - NonProd → Prod promotion based on `environment` parameter (nonprod/prod)
+  - Environment-specific variable groups loaded via template parameters
+  - Self-hosted agent pool support via `use_agent_pool` parameter
+
 - **Terraform State Keys**: Follow pattern `{company}-{project}-{domain}-{component}-{env}` (e.g., `ensono-stacks-data-networking-dev`)
+  - Networking: `$(company)-$(project)-$(domain)-$(env_name)-networking`
+  - Infrastructure: `$(company)-$(project)-$(domain)-$(env_name)-infra`
+  - Databricks: `$(company)-$(project)-$(domain)-$(env_name)-databricks`
   - See `docs/terraform-state-key-standardization.md` for complete naming conventions
+
+- **Security Features**:
+  - KeyVault ACL management for hosted agents (adds/removes agent IP dynamically)
+  - Workspace cleanup with `.terraform` directory removal before checkout
+  - Service principal authentication with ARM environment variables
+
 - **Pipeline Best Practices**: See `.github/instructions/azure-devops-pipelines.instructions.md` for comprehensive guidance
 
 > [!IMPORTANT]
@@ -144,6 +195,18 @@ See `docs/workloads/azure/data/getting_started/` for step-by-step guides:
 4. Private networking changes require `enable_private_networks` variable
 5. Ensure Terraform state keys follow standardized naming pattern (see `docs/terraform-state-key-standardization.md`)
 6. Follow Azure Pipeline best practices from `.github/instructions/azure-devops-pipelines.instructions.md`
+
+**Deployment Sequence for Full Infrastructure**:
+1. Run `pipeline-networking.yml` - Deploys VNets, subnets, NSGs, creates networking variable group
+2. Run `pipeline-infra-private.yml` - Deploys ADLS Gen2, Key Vault, ADF (requires networking artifacts)
+3. Run `pipeline-databricks.yml` - Configures Databricks workspace (requires infra artifacts)
+
+**For PR Validation**: Use `pipeline-full-deployment.yml` which orchestrates all three stages automatically
+
+**Stage Dependencies**:
+- Infrastructure stage depends on Networking stage completion
+- Databricks stage depends on Infrastructure stage completion
+- Each stage downloads artifacts from its predecessor
 
 ### Local Development
 

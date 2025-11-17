@@ -1,0 +1,32 @@
+==== Networking
+
+The Ensono Stacks data infrastructure expects to have a hub-spoke network topology by default. The Terraform files in the `deploy/terraform/networking` folder provide this platform.
+
+A number of environment variables should be set when running from a workstation:
+
+* 
+
+The templates allow multiple environments to be deployed, which is configured through variables. The variables that can be set are detailed below.
+
+include::../configuration/inputs_networking.adoc[]
+
+As can be seen from the `environments` variable, a list of environments can be passed in. Each entry for this list uses the same structure, thus:
+
+[source]
+----
+[env]:[is_prod?]:[address_prefix]
+----
+
+[options="autowidth,header",stripes="even"]
+|===
+| Setting | Description | Example
+| `env` | Name of the environmment to create | `dev`
+| `is_prod?` | Whether or not the environment is to be considered a production environment.
+
+This allows environments to be split across different subscriptions. | `false`
+| `address_prefix` | The adddress space to be used for the virtual network in this environment. All the subnets will be caculated from this value | `10.3.0.0/16`
+|===
+
+NOTE: It is imperative that the `hub` environment is always defined. This is due to the hub-spoke nature of the network and the environments cannot exist with out it.
+
+
