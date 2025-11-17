@@ -1,0 +1,16 @@
+---
+id: getting-started-setup
+title: Setup
+weight: 30
+tags:
+  - getting-started
+---
+
+== Setup
+
+Before the infrastruture can be deployed, a number of environment variables need to be set. These variables configure the how Terarform authenticates with Azure and which templates are deployed.
+
+The first step is to open the scaffolded project in the chosen IDE. The following example uses VSCode.
+
+---
+---

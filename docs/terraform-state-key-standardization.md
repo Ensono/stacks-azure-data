@@ -218,7 +218,7 @@ Each component in the state key serves a specific purpose:
 
 ### Pattern 1: Infrastructure Pipelines
 
-**Used by**: 9 pipeline files
+**Used by**: 8 pipeline files
 **Pattern**: `$(company)-$(project)-$(domain)-$(env_name)-<component>`
 
 #### Files Using This Pattern:
@@ -228,10 +228,9 @@ Each component in the state key serves a specific purpose:
 3. `build/azdo/pipeline-databricks.yml`
 4. `build/azdo/pipeline-infra-private.yml`
 5. `build/azdo/pipeline-networking.yml`
-6. `build/azdo/stages/infra.yml`
-7. `build/azdo/azure/data/pipeline.yml`
-8. `build/azdo/azure/network/pipeline.yml`
-9. `cicd/build/azdo/pipeline.yml`
+6. `build/azdo/azure/data/pipeline.yml`
+7. `build/azdo/azure/network/pipeline.yml`
+8. `cicd/build/azdo/pipeline.yml`
 
 #### Example State Keys Generated:
 
@@ -450,7 +449,6 @@ Variable declarations at stage level didn't include environment
 - `build/azdo/pipeline-databricks.yml` (1 stage)
 - `build/azdo/pipeline-infra-private.yml` (1 stage)
 - `build/azdo/pipeline-networking.yml` (1 stage)
-- `build/azdo/stages/infra.yml` (1 stage)
 - `build/azdo/azure/data/pipeline.yml` (root level)
 - `build/azdo/azure/network/pipeline.yml` (root level)
 - `cicd/build/azdo/pipeline.yml` (root level)
@@ -903,7 +901,6 @@ terraform {
 - `build/azdo/pipeline-databricks.yml` - Updated 1 state key declaration + 1 template call
 - `build/azdo/pipeline-infra-private.yml` - Updated 1 state key declaration + 1 template call
 - `build/azdo/pipeline-networking.yml` - Updated 1 state key declaration
-- `build/azdo/stages/infra.yml` - Updated 1 state key declaration
 - `build/azdo/azure/data/pipeline.yml` - Updated 1 state key declaration (renamed component)
 - `build/azdo/azure/network/pipeline.yml` - Updated 1 state key declaration (fixed component name)
 - `cicd/build/azdo/pipeline.yml` - Updated 1 state key declaration (renamed component)
@@ -921,8 +918,8 @@ terraform {
 
 - No changes needed (already using correct pattern for their context)
 
-**Total Files Modified**: 13
-**Total State Key Declarations Updated**: 15
+**Total Files Modified**: 12
+**Total State Key Declarations Updated**: 14
 
 ---
 

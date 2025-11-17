@@ -1,0 +1,29 @@
+---
+id: getting-started-prerequisites
+title: Prerequisites
+weight: 20
+tags:
+  - getting-started
+---
+
+== Prerequisites
+
+The following prerequisites are required to deploy the Ensono Stacks Data platform in Azure from a workstation:
+
+[options="header,autowidth",stripes="even"]
+|===
+| Tool | Notes
+| https://git-scm.com/[Git] | It is recommended that `git` is used as the source control system for the project.
+| https://github.com/Ensono/stacks-cli/releases/tag/v0.4.33[Stacks CLI] | Used to scaffold new projects
+| https://github.com/Ensono/taskctl/releases/tag/2.0.2[Taskctl] | Taskctl is the tool that is responsible for running and controlling the Ensono Indepdent Runner.
+a|
+* https://www.docker.com/products/docker-desktop/[Docker Desktop]
+* https://rancherdesktop.io/[Rancher Desktop]
+* https://podman-desktop.io/[Podman Desktop]
+| Docker engine to run the Ensono Independent Runner images
+| https://code.visualstudio.com/Download[VSCode] |
+IDE for editing the configuration required for the deployment of the platform.
+
+We recommend VSCode and indeed we use features such as https://code.visualstudio.com/docs/devcontainers/containers[Dev Containers] but any IDE will suffice.
+| Azure Service Principal | A Service Principal (SPN) is required to allow Terraform to authenticate against Azure and deploy the infrastructure. The SPN must have the `Contributor` role on the subscription that is being deployed to.
+|===

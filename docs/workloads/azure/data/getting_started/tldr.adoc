@@ -1,0 +1,74 @@
+---
+id: getting-started-tldr
+title: TL;DR
+weight: 25
+tags:
+  - getting-started
+---
+
+== TL;DR
+
+The <<Getting Started>> section walks through the process of deploying the necessary components for an Ensono Data project. However for the impatient the following provides all of the steps on a single page.
+
+[cols="10%h,~a",options="header"]
+|===
+| Step | Command
+| {counter:step} |
+Install the Taskctl command line tool
+
+* PowerShell
+
+[source,powershell]
+----
+$ New-Item -Type Directory -Path $env:HOME/tools
+$ Invoke-RestMethod -Uri https://github.com/Ensono/taskctl/releases/download/2.0.3/taskctl-windows-amd64.exe -Out $env:HOME/tools/taskctl.exe
+$ $env:PATH += ";$env:HOME/tools"
+----
+
+* Bash
+
+[source,bash]
+----
+$ mkdir -p $HOME/tools
+$ curl -L https://github.com/Ensono/taskctl/releases/download/2.0.3/taskctl-linux-amd64 -O $HOME/tools/taskctl
+$ chmod +x $HOME/tools/taskctl
+$ export PATH=$HOME/tools:$PATH
+----
+
+| {counter:step} |
+Create directory from which to run editor and create scaffold configuration file
+
+[source,bash]
+----
+mkdir ~/demos
+----
+
+| {counter:step} |
+
+Create the scaffold configuration file.
+
+[source, bash]
+----
+cat include::../../../../../stacks-cli/data-scaffold-example.yml > ./scaffold.yml
+----
+
+| {counter:step} | 
+Update the internal configuration file for Stacks-CLI
+
+[source,bash]
+----
+$ stacks-cli scaffold ./scaffold.yml
+----
+
+| {counter:step} |
+Create a local directory into which the local environment variables will be created
+
+[source,powershell]
+----
+$ mkdir local
+----
+|===
+
+Commands that need to be added to the table above
+
+- create the local envfile for the networking side of things
