@@ -111,6 +111,8 @@ stages:
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
         name: ${{ parameters.agent_pool_name }}
+      ${{ elseif ne(variables['ado_agent_pool_name'], '') }}:
+        name: $(ado_agent_pool_name)
       ${{ else }}:
         vmImage: "ubuntu-latest"
 
@@ -150,6 +152,8 @@ stages:
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
         name: ${{ parameters.agent_pool_name }}
+      ${{ elseif ne(variables['ado_agent_pool_name'], '') }}:
+        name: $(ado_agent_pool_name)
       ${{ else }}:
         vmImage: "ubuntu-latest"
 
