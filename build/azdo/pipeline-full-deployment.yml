@@ -111,10 +111,10 @@ stages:
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
         name: ${{ parameters.agent_pool_name }}
-      ${{ elseif ne(variables['ado_agent_pool_name'], '') }}:
-        name: $(ado_agent_pool_name)
       ${{ else }}:
-        vmImage: "ubuntu-latest"
+        name: $[coalesce(variables['ado_agent_pool_name'], 'Azure Pipelines')]
+        ${{ if eq(parameters.use_agent_pool, false) }}:
+          vmImage: ubuntu-latest
 
     jobs:
       - job: Deploy
@@ -152,10 +152,10 @@ stages:
     pool:
       ${{ if eq(parameters.use_agent_pool, true) }}:
         name: ${{ parameters.agent_pool_name }}
-      ${{ elseif ne(variables['ado_agent_pool_name'], '') }}:
-        name: $(ado_agent_pool_name)
       ${{ else }}:
-        vmImage: "ubuntu-latest"
+        name: $[coalesce(variables['ado_agent_pool_name'], 'Azure Pipelines')]
+        ${{ if eq(parameters.use_agent_pool, false) }}:
+          vmImage: ubuntu-latest
 
     jobs:
       - job: Deploy
