@@ -76,7 +76,10 @@ stages:
       ${{ if eq(parameters.use_agent_pool, true) }}:
         name: ${{ parameters.agent_pool_name }}
       ${{ else }}:
-        vmImage: "ubuntu-latest"
+        # Use the agent pool from the networking variable group if available, otherwise use Azure Pipelines
+        name: $[coalesce(variables['ado_agent_pool_name'], 'Azure Pipelines')]
+        ${{ if eq(parameters.use_agent_pool, false) }}:
+          vmImage: ubuntu-latest
 
     jobs:
       - job: Deploy
