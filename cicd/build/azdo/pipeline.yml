@@ -66,7 +66,7 @@ variables:
   - template: ../../common-vars.yml
   - template: air-infrastructure-data-vars.yml
   - name: tf_state_key
-    value: $(domain)
+    value: $(company)-$(project)-$(domain)-$(env_name)-infra
 
 stages:
   - stage: Build
@@ -203,6 +203,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             TF_FILE_LOCATION: /app/deploy/azure/infra
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -228,6 +232,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: infra
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: /app/deploy/azure/infra
