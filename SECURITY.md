@@ -113,6 +113,7 @@ Attack requires local filesystem access and ability to create symlinks.
 #### Mitigations
 
 1. **Upgrade to filelock >= 3.20.1** (Recommended)
+
    ```bash
    poetry add filelock@^3.20.1
    ```
@@ -148,6 +149,7 @@ A TOCTOU race condition vulnerability exists in the `SoftFileLock` implementatio
 #### Mitigations
 
 1. **Upgrade to filelock >= 3.20.3** (Recommended)
+
    ```bash
    poetry add filelock@^3.20.3
    ```
