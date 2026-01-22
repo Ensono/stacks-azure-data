@@ -3,6 +3,14 @@
 Link to the official documentation:
 [Stacks Azure Data Platform](https://stacks.ensono.com/docs/workloads/azure/data/intro_data_azure).
 
+## Security
+
+⚠️ **Windows Users:** Be aware of a known security vulnerability in nbconvert (CVE-2025-53000) that affects PDF conversion on Windows systems. See [SECURITY.md](SECURITY.md) for details and mitigation strategies.
+
+⚠️ **filelock Vulnerabilities:** Two TOCTOU race condition vulnerabilities have been identified in filelock (CVE-2025-68146 and CVE-2026-22701). Ensure you are using filelock >= 3.20.3. See [SECURITY.md](SECURITY.md) for details.
+
+For general security concerns, please review our [Security Policy](SECURITY.md).
+
 ## Overview
 
 The Ensono Stacks Azure Data Platform solution provides a framework for accelerating the deployment of a production-ready modern data platform in Azure.
