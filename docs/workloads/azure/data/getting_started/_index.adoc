@@ -1,0 +1,15 @@
+---
+id: getting-started
+title: Getting Started
+weight: 10
+tags:
+  - getting-started
+---
+
+== Getting Started
+
+This section details has to deploy the infrastructure for the Ensono Stacks Data platform in Azure from a workstation.
+
+NOTE: For information on deploying the infrastructure from Azure DevOps, please see the <<azure_devops>> section.
+
+

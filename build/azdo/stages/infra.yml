@@ -1,3 +1,5 @@
+name: "$(Build.SourceBranchName)-infra"
+
 # Define the parameters that this template uses
 parameters:
   - name: agent_pool_name
@@ -19,6 +21,8 @@ stages:
         value: infra
       - name: TF_FILE_LOCATION
         value: /eirctl/deploy/terraform/infra
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-$(env_name)-infra
 
     pool:
       # Set the correct pool or build image based on the outputs from the networking stage
@@ -58,7 +62,12 @@ stages:
               script: |
                 eirctl infra:init
             env:
-              TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              EIRCTL_IMAGE_TAG: $(EirctlImageTag)
+              TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
 
           # Copy the tfvars file from the downloaded artifact to the deployment directory
           - task: CopyFiles@2
@@ -75,6 +84,11 @@ stages:
               script: |
                 eirctl infra:plan
             env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              EIRCTL_IMAGE_TAG: $(EirctlImageTag)
               TF_VAR_name_company: $(company)
               TF_VAR_name_project: $(project)
               TF_VAR_ado_org_url: $(ado_org_url)
@@ -86,6 +100,12 @@ stages:
               targetType: inline
               script: |
                 eirctl infra:apply
+            env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              EIRCTL_IMAGE_TAG: $(EirctlImageTag)
 
           # Upload the outputs to the as artifacts
           - task: CopyFiles@2
