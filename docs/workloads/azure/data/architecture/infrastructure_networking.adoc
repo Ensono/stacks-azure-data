@@ -1,0 +1,9 @@
+
+== Infrastructure & Networking
+
+All of the core data platform resources are defined using Terraform. The templates are grouped into two sub-folders within the deploy/azure directory:
+
+* `infra` - deploys Azure Databricks and associated components for Data pipelines
+* `networking` - deploys the private networks, if required, to run the pipelines in a secure manner.
+
+include::./networking/index.adoc[]

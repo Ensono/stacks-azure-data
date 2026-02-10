@@ -71,7 +71,7 @@ variables:
   - name: self_repo_spark_src
     value: "de_workloads/$(workload_type)/$(pipeline_name)/spark_jobs"
   - name: tf_state_key
-    value: $(domain)_$(workload_type)_$(pipeline_name)
+    value: $(company)-$(project)-$(domain)-$(workload_type)-$(pipeline_name)
   - name: dbfs_destination
     value: "dbfs:/FileStore/scripts/$(pipeline_name)"
 

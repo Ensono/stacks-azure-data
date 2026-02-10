@@ -1,0 +1,9 @@
+
+== Platform Deployment
+
+This section provides an overview of configuring and deploying the core data platform infrastructure in Azure. The project supports deploying the environment from a local machine and from Azure DevOps.
+
+All of the following steps are to be performed in the Azure data project, which contains all the templates for the infrastructure and the data platform.
+
+include::workstation/index.adoc[]
+

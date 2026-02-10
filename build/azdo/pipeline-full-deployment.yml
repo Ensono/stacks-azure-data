@@ -1,0 +1,173 @@
+name: "$(Build.SourceBranchName)-full-deployment"
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: destroy
+    displayName: Destroy Environment
+    type: boolean
+    default: false
+
+  - name: deploy
+    displayName: Deploy Environment
+    type: boolean
+    default: true
+
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
+  - name: env_name
+    displayName: Environment Name
+    default: dev
+    values:
+      - dev
+      - qa
+      - uat
+      - prod
+    type: string
+
+  - name: use_agent_pool
+    displayName: Use Self-Hosted Agent Pool
+    type: boolean
+    default: false
+
+  - name: agent_pool_name
+    displayName: Agent Pool Name
+    type: string
+    default: "ensono-data-euw-hub-agent-pool"
+
+  - name: debug
+    displayName: Enable Debug
+    type: boolean
+    default: false
+
+  - name: vmss_ssh_key
+    displayName: ADO Agent SSH Key
+    type: string
+    default: " "
+
+variables:
+  - name: CLOUD_PLATFORM
+    value: azure
+  - name: ENV_NAME
+    value: ${{ parameters.env_name }}
+
+stages:
+  # Stage 1: Networking
+  - stage: Networking
+    displayName: "Networking Deployment"
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - name: STAGE
+        value: networking
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/networking
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-$(env_name)-networking
+
+    jobs:
+      - job: Deploy
+        pool:
+          vmImage: "ubuntu-latest"
+
+        steps:
+          - template: templates/terraform-networking.yml
+            parameters:
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-networking
+              destroy: ${{ parameters.destroy }}
+              deploy: ${{ parameters.deploy }}
+
+  # Stage 2: Infrastructure
+  - stage: Infrastructure
+    displayName: "Infrastructure Deployment"
+    dependsOn: Networking
+    condition: succeeded('Networking')
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
+      - name: STAGE
+        value: infra
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/infra
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-$(env_name)-infra
+
+    pool:
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        name: $[coalesce(variables['ado_agent_pool_name'], 'Azure Pipelines')]
+        ${{ if eq(parameters.use_agent_pool, false) }}:
+          vmImage: ubuntu-latest
+
+    jobs:
+      - job: Deploy
+        workspace:
+          clean: outputs
+
+        steps:
+          - template: templates/terraform-deploy.yml
+            parameters:
+              stage_name: infra
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-infra
+              download_artifact: networking
+              artifact_file: $(env_name)-networking-inputs.auto.tfvars
+              destroy: ${{ parameters.destroy }}
+              deploy: ${{ parameters.deploy }}
+
+  # Stage 3: Databricks
+  - stage: Databricks
+    displayName: "Databricks Deployment"
+    dependsOn: Infrastructure
+    condition: succeeded('Infrastructure')
+
+    variables:
+      - template: variables.yml
+        parameters:
+          environment: ${{ parameters.environment }}
+      - group: ${{ variables.company }}-${{ variables.project }}-${{ variables.domain }}-networking-${{ variables.ENV_NAME }}
+      - name: STAGE
+        value: databricks
+      - name: TF_FILE_LOCATION
+        value: /eirctl/deploy/terraform/databricks
+      - name: tf_state_key
+        value: $(company)-$(project)-$(domain)-$(env_name)-databricks
+
+    pool:
+      ${{ if eq(parameters.use_agent_pool, true) }}:
+        name: ${{ parameters.agent_pool_name }}
+      ${{ else }}:
+        name: $[coalesce(variables['ado_agent_pool_name'], 'Azure Pipelines')]
+        ${{ if eq(parameters.use_agent_pool, false) }}:
+          vmImage: ubuntu-latest
+
+    jobs:
+      - job: Deploy
+        workspace:
+          clean: outputs
+
+        steps:
+          - template: templates/terraform-deploy.yml
+            parameters:
+              stage_name: databricks
+              tf_state_key: $(company)-$(project)-$(domain)-$(env_name)-databricks
+              download_artifact: infra
+              artifact_file: $(env_name)-infra-inputs.auto.tfvars
+              destroy: ${{ parameters.destroy }}
+              deploy: ${{ parameters.deploy }}

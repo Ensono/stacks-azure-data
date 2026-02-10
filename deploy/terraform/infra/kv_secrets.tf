@@ -4,7 +4,11 @@ resource "azurerm_key_vault_secret" "databricks-host" {
   key_vault_id    = module.kv_default.id
   content_type    = "host"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.adb, module.kv_default]
+  depends_on      = [module.adb, module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 # Add secrets to KV. Please note this is just going to add secret names to KV. The actual value of that secret needs to be updated manually in Azure Key Vault. Existing secrets with the same name will not be overwritten.
@@ -15,7 +19,11 @@ resource "azurerm_key_vault_secret" "secrets" {
   key_vault_id    = module.kv_default.id
   content_type    = "password"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [value, expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "sql_password" {
@@ -24,7 +32,11 @@ resource "azurerm_key_vault_secret" "sql_password" {
   key_vault_id    = module.kv_default.id
   content_type    = "password"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "sql_connect_string" {
@@ -34,7 +46,11 @@ resource "azurerm_key_vault_secret" "sql_connect_string" {
   key_vault_id    = module.kv_default.id
   content_type    = "connectionString"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "sql_password_string" {
@@ -44,7 +60,11 @@ resource "azurerm_key_vault_secret" "sql_password_string" {
   key_vault_id    = module.kv_default.id
   content_type    = "password"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "service-principal-secret" {
@@ -53,7 +73,11 @@ resource "azurerm_key_vault_secret" "service-principal-secret" {
   key_vault_id    = module.kv_default.id
   content_type    = "password"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "azure-client-id" {
@@ -62,7 +86,11 @@ resource "azurerm_key_vault_secret" "azure-client-id" {
   key_vault_id    = module.kv_default.id
   content_type    = "spn"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
 
 resource "azurerm_key_vault_secret" "azure-tenant-id" {
@@ -71,5 +99,9 @@ resource "azurerm_key_vault_secret" "azure-tenant-id" {
   key_vault_id    = module.kv_default.id
   content_type    = "spn"
   expiration_date = local.secret_expiration_date
-  depends_on      = [module.kv_default]
+  depends_on      = [module.kv_default, time_sleep.wait_after_private_endpoint_approval]
+
+  lifecycle {
+    ignore_changes = [expiration_date]
+  }
 }
