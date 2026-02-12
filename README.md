@@ -1,7 +1,10 @@
-# Stacks Azure Data Platform
+# Ensono Stacks: Azure Data Platform
 
-Link to the official documentation:
-[Stacks Azure Data Platform](https://stacks.ensono.com/docs/workloads/azure/data/intro_data_azure).
+📄 **[Stacks Azure Data Platform - Documentation](https://stacks.ensono.com/docs/workloads/azure/data/intro_data_azure)**
+
+🔧 **[Stacks Documentation - GitHub](https://github.com/Ensono/amido.github.io)**
+
+📦 **[Stacks Data Python utilities - GitHub](https://github.com/Ensono/stacks-data)**
 
 ## Security
 
@@ -15,7 +18,7 @@ For general security concerns, please review our [Security Policy](SECURITY.md).
 
 The Ensono Stacks Azure Data Platform solution provides a framework for accelerating the deployment of a production-ready modern data platform in Azure.
 
-![Ensono Stacks Data Overview](./docs/workloads/azure/data/images/stacks-data-overview.png)
+![Ensono Stacks Data Overview](./docs/images/stacks-data-overview.png)
 
 1. Use the [Ensono Stacks CLI](https://stacks.ensono.com/docs/stackscli/about) to generate a new data platform project.
 2. Build and deploy the data platform infrastructure into your Azure environment.
@@ -38,7 +41,7 @@ The solution utilises the [Stacks Data Python library](https://stacks.ensono.com
 
 ### High-level architecture
 
-![High-level architecture](./docs/workloads/azure/data/images/Stacks_Azure_Data_Platform-HLD.png)
+![High-level architecture](./docs/images/Stacks_Azure_Data_Platform-HLD.png)
 
 ## Repository structure
 
