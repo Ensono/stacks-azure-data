@@ -37,7 +37,7 @@ zipp = ">=3.19.1"  # CVE-2024-5569: Path traversal vulnerability (Dependabot PR 
 
 [tool.poetry.group.dev.dependencies]
 pytest = {version = "^9.0.1", python = ">=3.10,<3.12"}
-black = "^25.11.0"
+black = "^26.3.1"
 pre-commit = {version = "^4.4.0", python = ">=3.10,<3.12"}
 flake8 = "^7.3.0"
 flake8-docstrings = "^1.7.0"
