@@ -1,7 +1,7 @@
 contexts:
   powershell:
     container:
-      name: ensono/eir-infrastructure
+      name: ensono/eir-infrastructure:1.2.37
       shell: pwsh
       shell_args:
         - -Command
@@ -12,7 +12,7 @@ contexts:
 
   powershell-data:
     container:
-      name: ensono/eir-azure-data
+      name: ensono/eir-azure-data:1.2.37
       shell: pwsh
       shell_args:
         - -Command
