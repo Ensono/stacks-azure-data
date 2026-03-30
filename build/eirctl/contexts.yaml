@@ -5,6 +5,12 @@ contexts:
       shell: pwsh
       shell_args:
         - -Command
+    env:
+      # Azure authentication for Terraform
+      ARM_CLIENT_ID: $ARM_CLIENT_ID
+      ARM_CLIENT_SECRET: $ARM_CLIENT_SECRET
+      ARM_SUBSCRIPTION_ID: $ARM_SUBSCRIPTION_ID
+      ARM_TENANT_ID: $ARM_TENANT_ID
     envfile:
       exclude:
         - sourceversionmessage
