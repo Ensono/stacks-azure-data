@@ -39,6 +39,14 @@ parameters:
     type: boolean
     default: false
 
+  - name: environment
+    displayName: Environment Group
+    type: string
+    default: nonprod
+    values:
+      - nonprod
+      - prod
+
 pr: none
 
 trigger: none
@@ -49,7 +57,7 @@ variables:
   - name: network_domain
     value: $(domain)-network
   - name: tf_state_key
-    value: $(network_domain)
+    value: $(company)-$(project)-$(domain)-$(env_name)-networking
   - name: TF_FILE_LOCATION
     value: /app/deploy/azure/networking
 
@@ -144,6 +152,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: networking
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             TF_FILE_LOCATION: $(TF_FILE_LOCATION)
                             TF_BACKEND_INIT: "key=$(tf_state_key),storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -162,6 +174,10 @@ stages:
                             # Azure Authentication
                             CLOUD_PLATFORM: "$(cloud_platform)"
                             STAGE: networking
+                            ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+                            ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+                            ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                            ARM_TENANT_ID: $(ARM_TENANT_ID)
 
                             # Terraform Backend Configuration
                             TF_FILE_LOCATION: $(TF_FILE_LOCATION)

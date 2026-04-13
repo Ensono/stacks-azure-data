@@ -1,0 +1,218 @@
+// BEGIN_TF_DOCS
+===== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_ado_agent_pool_name]] <<input_ado_agent_pool_name,ado_agent_pool_name>>
+|Name of the Azure DevOps Agent Pool to which this agent belongs
+|`string`
+|`""`
+|no
+
+|[[input_ado_create_agent_pool]] <<input_ado_create_agent_pool,ado_create_agent_pool>>
+|If true, an agent pool will be created in Azure DevOps with the necessary information from this Infrastructure
+|`bool`
+|`false`
+|no
+
+|[[input_ado_create_variable_group]] <<input_ado_create_variable_group,ado_create_variable_group>>
+|If true, a variable group will be created in Azure DevOps with the necessary information from this Infrastructure
+|`bool`
+|`false`
+|no
+
+|[[input_ado_org_url]] <<input_ado_org_url,ado_org_url>>
+|URL of the Azure DevOps Organization
+|`string`
+|n/a
+|yes
+
+|[[input_ado_pat]] <<input_ado_pat,ado_pat>>
+|Personal Access Token for the Azure DevOps Organization
+|`string`
+|n/a
+|yes
+
+|[[input_ado_project_id]] <<input_ado_project_id,ado_project_id>>
+|ID of the Azure DevOps Project
+|`string`
+|n/a
+|yes
+
+|[[input_ado_variable_group_name_prefix]] <<input_ado_variable_group_name_prefix,ado_variable_group_name_prefix>>
+|Prefix for the name of the Variable Group in Azure DevOps. The suffix is the name of the environment
+|`string`
+|`"data-networks"`
+|no
+
+|[[input_attributes]] <<input_attributes,attributes>>
+|Additional attributes for tagging
+|`list`
+|`[]`
+|no
+
+|[[input_build_agent_ip]] <<input_build_agent_ip,build_agent_ip>>
+|IP address of the build agent
+|`string`
+|`""`
+|no
+
+|[[input_create_fw_public_ip]] <<input_create_fw_public_ip,create_fw_public_ip>>
+|Determines if the networking modules creates a firewall IP address or not.
+|`bool`
+|`false`
+|no
+
+|[[input_create_hub_fw]] <<input_create_hub_fw,create_hub_fw>>
+|Determines if the networking modules creates a firewall instance or not.
+|`bool`
+|`false`
+|no
+
+|[[input_create_private_dns_zone]] <<input_create_private_dns_zone,create_private_dns_zone>>
+|Determines if the networking modules creates a private dns zone.
+|`bool`
+|`true`
+|no
+
+|[[input_debug_enabled]] <<input_debug_enabled,debug_enabled>>
+|If debug enabled then SSH will be enabled inbound on the NSG
+|`bool`
+|`false`
+|no
+
+|[[input_deploy_all_environments]] <<input_deploy_all_environments,deploy_all_environments>>
+|If true, all environments will be deployed regardless of subscription type, e.g. nonprod or prod
+|`bool`
+|`false`
+|no
+
+|[[input_dns_zone_name]] <<input_dns_zone_name,dns_zone_name>>
+|The name of the Private DNS Zone. Must be a valid domain name. Changing this forces a new resource to be created.
+|`list(string)`
+|
+
+[source]
+----
+[
+  "privatelink.vaultcore.azure.net",
+  "privatelink.azuredatabricks.net",
+  "privatelink.database.windows.net",
+  "privatelink.blob.core.windows.net",
+  "privatelink.dfs.core.windows.net"
+]
+----
+
+|no
+
+|[[input_enable_private_networks]] <<input_enable_private_networks,enable_private_networks>>
+|Enable Private Networking for Secure Data Platform.
+|`bool`
+|`false`
+|no
+
+|[[input_environments]] <<input_environments,environments>>
+|List of environments and networks to create. The format is `name:is_prod_subscription:address_space`
+|`list(string)`
+|
+
+[source]
+----
+[
+  "hub::10.2.0.0/16",
+  "dev:false:10.3.0.0/16",
+  "qa:false:10.4.0.0/16",
+  "uat:true:10.5.0.0/16",
+  "prod:true:10.6.0.0/16"
+]
+----
+
+|no
+
+|[[input_is_prod_subscription]] <<input_is_prod_subscription,is_prod_subscription>>
+|Flag to state if the subscription being deployed to is the production subscription or not. This so that the environments are created properly.
+|`bool`
+|`false`
+|no
+
+|[[input_link_dns_network]] <<input_link_dns_network,link_dns_network>>
+|Should the DNS be linked with the VNETs?
+|`bool`
+|`false`
+|no
+
+|[[input_name_company]] <<input_name_company,name_company>>
+|Company Name - should/will be used in conventional resource naming
+|`string`
+|n/a
+|yes
+
+|[[input_name_component]] <<input_name_component,name_component>>
+|Component Name - should/will be used in conventional resource naming. Typically this will be a logical name for this part of the system i.e. `API` \|\| `middleware` or more generic like `Billing`
+|`string`
+|`"data"`
+|no
+
+|[[input_name_project]] <<input_name_project,name_project>>
+|Project Name - should/will be used in conventional resource naming
+|`string`
+|n/a
+|yes
+
+|[[input_resource_group_location]] <<input_resource_group_location,resource_group_location>>
+|n/a
+|`string`
+|`"westeurope"`
+|no
+
+|[[input_script_file_output_dir]] <<input_script_file_output_dir,script_file_output_dir>>
+|The path, relative to the templates, where the script files that are generated should be saved.
+|`string`
+|`"../../../outputs"`
+|no
+
+|[[input_stage]] <<input_stage,stage>>
+|n/a
+|`string`
+|`"dev"`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags to be assigned to all resources, NB if global tagging is enabled these will get overwritten periodically
+|`map(string)`
+|`{}`
+|no
+
+|[[input_vmss_admin_ssh_key]] <<input_vmss_admin_ssh_key,vmss_admin_ssh_key>>
+|SSH Public Key for Admin SSH Access to VMs.
+|`string`
+|`""`
+|no
+
+|[[input_vmss_admin_username]] <<input_vmss_admin_username,vmss_admin_username>>
+|Sets the admin user name. This is used if remote access is required to a VM instance.
+|`string`
+|`"adminuser"`
+|no
+
+|[[input_vmss_disable_password_auth]] <<input_vmss_disable_password_auth,vmss_disable_password_auth>>
+|Enables or Disables password authentication. If Password is disabled ssh keys must be provided.
+|`bool`
+|`false`
+|no
+
+|[[input_vmss_instances]] <<input_vmss_instances,vmss_instances>>
+|Sets the default number of VM instances running in the VMSS.
+|`number`
+|`1`
+|no
+
+|[[input_vmss_subnet_name]] <<input_vmss_subnet_name,vmss_subnet_name>>
+|The subnet name which the VMSS will be provisioned.
+|`string`
+|`"build-agent"`
+|no
+
+|===
+// END_TF_DOCS

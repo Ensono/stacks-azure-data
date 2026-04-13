@@ -1,5 +1,5 @@
 variables:
-  - ${{ if eq(parameters.environment, 'nonprod')}}:
+  - ${{ if ne(parameters.environment, 'prod')}}:
       - group: azure-sp-creds
   - ${{ if eq(parameters.environment, 'prod')}}:
       - group: azure-sp-creds-prod
@@ -10,7 +10,7 @@ variables:
   - name: company
     value: ensono
   - name: project
-    value: data
+    value: stacks
   - name: enable_private_networks
     value: true
 
@@ -40,7 +40,7 @@ variables:
 
   # Agent configuration
   - name: EirctlVersion
-    value: 0.4.48
+    value: 0.9.6
   - name: pool_vm_image
     value: ubuntu-24.04
 

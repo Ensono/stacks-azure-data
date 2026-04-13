@@ -1,0 +1,8 @@
+
+== Generate Project
+
+To be able to deploy the necessary infrastructure for the data environment a project needs to be generated. This is done using the https://github.com/Ensono/stacks-cli[Ensono Stacks CLI] tool.
+
+=== Prepare the Scaffold configuration
+
+The `stacks-cli scaffold` command will be used to generate the new data project.

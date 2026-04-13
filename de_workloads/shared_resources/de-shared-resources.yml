@@ -68,8 +68,6 @@ variables:
     value: "$(self_repo_job_dir)/spark_jobs"
   - name: self_repo_adf_src
     value: "de_workloads/$(job)/data_factory"
-  - name: tf_state_key
-    value: $(domain)_$(job)
 
 pool:
   name: $(agentpool_name)
@@ -140,6 +138,8 @@ stages:
         variables:
           - group: azure-sp-creds
           - group: ensono-data-${{ stage.environment_shortname }}
+          - name: tf_state_key
+            value: $(company)-$(project)-$(domain)-${{ stage.environment_shortname }}-$(job)
 
         jobs:
           - deployment: Deploy_${{ stage.stage }}

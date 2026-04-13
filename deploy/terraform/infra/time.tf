@@ -4,10 +4,10 @@
 # will not be updated on each Terraform run
 resource "time_static" "datum" {}
 
-# Create a sleep function, that will wait for a minute for all private endpoints to
+# Create a sleep function, that will wait for 2 minutes for all private endpoints to
 # be created
 resource "time_sleep" "wait_for_private_endpoints" {
-  create_duration = "60s"
+  create_duration = "120s"
 
   depends_on = [
     azurerm_data_factory_managed_private_endpoint.db_auth_pe,
@@ -35,7 +35,7 @@ resource "time_sleep" "wait_for_resources" {
   ]
 }
 
-# Create a time resource that waits for the log analytics workspace and the 
+# Create a time resource that waits for the log analytics workspace and the
 # databricks resouurce.
 # This is so that the diagnostic setting can be deployed
 resource "time_sleep" "wait_for_databricks_and_la" {
@@ -43,6 +43,31 @@ resource "time_sleep" "wait_for_databricks_and_la" {
 
   depends_on = [
     azurerm_log_analytics_workspace.la,
+    module.adb
+  ]
+}
+
+# Create a sleep function that will wait for 2 minutes after private endpoint approval
+# to allow network propagation and firewall rules to become effective
+resource "time_sleep" "wait_after_private_endpoint_approval" {
+  create_duration = "120s"
+
+  depends_on = [
+    null_resource.approve_private_endpoints
+  ]
+}
+
+# Data source to verify Databricks workspace is fully available
+# Uses built-in retry mechanism instead of fixed wait time
+data "azurerm_databricks_workspace" "verify_adb" {
+  name                = module.label_default.id
+  resource_group_name = azurerm_resource_group.default.name
+
+  timeouts {
+    read = "10m"
+  }
+
+  depends_on = [
     module.adb
   ]
 }
