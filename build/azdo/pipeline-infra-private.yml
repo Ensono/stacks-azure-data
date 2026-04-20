@@ -106,13 +106,22 @@ stages:
             parameters:
               EirctlVersion: $(EirctlVersion)
 
-          - task: Bash@3
+          # Terraform Init with Azure authentication
+          - task: AzureCLI@2
             displayName: "Eirctl: Initialise Terraform"
             inputs:
-              targetType: inline
-              script: |
+              azureSubscription: $(service_connection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              addSpnToEnvironment: true
+              inlineScript: |
                 export USER_ID=`id -u`
                 export USER_GROUP_ID=`id -g`
+                export ARM_CLIENT_ID=$servicePrincipalId
+                export ARM_CLIENT_SECRET=$servicePrincipalKey
+                export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+                export ARM_TENANT_ID=$tenantId
+                
                 eirctl -d infra:init
             env:
               TF_BACKEND_INIT: "key=$(company)-$(project)-$(domain)-infra,storage_account_name=$(tf_state_storage),resource_group_name=$(tf_state_rg),container_name=$(tf_state_container)"
@@ -127,11 +136,19 @@ stages:
 
           # If the parameter has been set, destroy the environment
           - ${{ if eq(parameters.destroy, true) }}:
-              - task: Bash@3
+              - task: AzureCLI@2
                 displayName: "Eirctl: [DESTROY] Plan Infrastructure"
                 inputs:
-                  targetType: inline
-                  script: |
+                  azureSubscription: $(service_connection)
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  addSpnToEnvironment: true
+                  inlineScript: |
+                    export ARM_CLIENT_ID=$servicePrincipalId
+                    export ARM_CLIENT_SECRET=$servicePrincipalKey
+                    export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+                    export ARM_TENANT_ID=$tenantId
+                    
                     eirctl infra:destroy:plan
                 env:
                   TF_VAR_name_company: $(company)
@@ -139,19 +156,35 @@ stages:
                   TF_VAR_ado_org_url: $(ado_org_url)
                   TF_VAR_ado_project_id: $(ado_project_id)
 
-              - task: Bash@3
+              - task: AzureCLI@2
                 displayName: "Eirctl: [DESTROY] Apply Infrastructure"
                 inputs:
-                  targetType: inline
-                  script: |
+                  azureSubscription: $(service_connection)
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  addSpnToEnvironment: true
+                  inlineScript: |
+                    export ARM_CLIENT_ID=$servicePrincipalId
+                    export ARM_CLIENT_SECRET=$servicePrincipalKey
+                    export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+                    export ARM_TENANT_ID=$tenantId
+                    
                     eirctl infra:destroy:apply
 
           - ${{ if eq(parameters.deploy, true) }}:
-              - task: Bash@3
+              - task: AzureCLI@2
                 displayName: "Eirctl: Plan Infrastructure"
                 inputs:
-                  targetType: inline
-                  script: |
+                  azureSubscription: $(service_connection)
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  addSpnToEnvironment: true
+                  inlineScript: |
+                    export ARM_CLIENT_ID=$servicePrincipalId
+                    export ARM_CLIENT_SECRET=$servicePrincipalKey
+                    export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+                    export ARM_TENANT_ID=$tenantId
+                    
                     eirctl -d infra:plan
                 env:
                   TF_VAR_name_company: $(company)
@@ -159,13 +192,21 @@ stages:
                   TF_VAR_ado_org_url: $(ado_org_url)
                   TF_VAR_ado_project_id: $(ado_project_id)
 
-              - task: Bash@3
+              - task: AzureCLI@2
                 displayName: "Eirctl: Apply Infrastructure"
                 inputs:
-                  targetType: inline
-                  script: |
+                  azureSubscription: $(service_connection)
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  addSpnToEnvironment: true
+                  inlineScript: |
                     export USER_ID=`id -u`
                     export USER_GROUP_ID=`id -g`
+                    export ARM_CLIENT_ID=$servicePrincipalId
+                    export ARM_CLIENT_SECRET=$servicePrincipalKey
+                    export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+                    export ARM_TENANT_ID=$tenantId
+                    
                     eirctl infra:apply
 
           # Upload the outputs to the as artifacts
